@@ -2,6 +2,8 @@ package com.safering.safebike;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -10,8 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.safering.safebike.exercisereport.ExerciseReportFragment;
+import com.safering.safebike.friend.FriendFragment;
+import com.safering.safebike.setting.SettingFragment;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG_MAIN = "main";
+    private static final String TAG_EXERCISEREPORT = "exercisereport";
+    private static final String TAG_FRIEND = "friend";
+    private static final String TAG_SETTING = "setting";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -30,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment()).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
     }
 
@@ -72,22 +83,38 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_safebike) {
+            emptyBackStack();
+        } else if (id == R.id.nav_exercise_report) {
+            Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_EXERCISEREPORT);
 
-        } else if (id == R.id.nav_slideshow) {
+            if (old == null) {
+                emptyBackStack();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new ExerciseReportFragment(), TAG_EXERCISEREPORT).addToBackStack(null).commit();
+            }
+        } else if (id == R.id.nav_friend) {
+            Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_FRIEND);
 
-        } else if (id == R.id.nav_manage) {
+            if (old == null) {
+                emptyBackStack();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new FriendFragment(), TAG_FRIEND).addToBackStack(null).commit();
+            }
+        } else if (id == R.id.nav_setting) {
+            Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_SETTING);
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            if (old == null) {
+                emptyBackStack();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new SettingFragment(), TAG_SETTING).addToBackStack(null).commit();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
+    }
+
+    private void emptyBackStack() {
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }
