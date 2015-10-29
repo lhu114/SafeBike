@@ -5,4 +5,17 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_login_sign">회원가입</string>
+    <string name="btn_go_login">로그인</string>
+    <string name="btn_login">로그인</string>
+    <string name="btn_find_pass">비밀번호찾기</string>
+    <string name="btn_temp_pass">임시비밀번호보내기</string>
+    <string name="btn_go_next">다음페이지로</string>
+    <string name="btn_display_policy">정책보기</string>
+    <string name="btn_display_agree">약관보기</string>
+    <string name="btn_complete">완료</string>
+    <string name="btn_go_main">안전운행시작하기</string>
 </resources>
