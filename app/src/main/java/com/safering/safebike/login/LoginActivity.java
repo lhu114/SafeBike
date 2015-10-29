@@ -17,9 +17,10 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         loginFragment = new LoginFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.login_container,loginFragment,"loginss");
+        ft.add(R.id.login_container, loginFragment, "loginss");
         ft.commit();
 
 
@@ -29,8 +30,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(LoginActivity.this,"LoginActivityResume",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(LoginActivity.this,"Stack Count : " + getSupportFragmentManager().getBackStackEntryCount(),Toast.LENGTH_SHORT).show();
 
     }
+
+
 
 }

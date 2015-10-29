@@ -1,30 +1,103 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.safering.safebike.login.SignUpFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.safering.safebike.login.SignUpFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_go_next"
-        android:id="@+id/btn_go_next"
-        android:layout_gravity="left|top" />
+    </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_display_policy"
-        android:id="@+id/btn_display_policy"
-        android:layout_gravity="center_horizontal|top" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_display_agree"
-        android:id="@+id/btn_display_agree"
-        android:layout_gravity="right|top" />
+        <EditText
+            android:id="@+id/edit_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_user_name" />
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/edit_user_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_user_email" />
+
+        <EditText
+            android:id="@+id/edit_user_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_user_password" />
+
+        <EditText
+            android:id="@+id/edit_user_password_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_user_password_confirm" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/check_policy"
+                android:hint="@string/check_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_display_policy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignRight="@id/check_policy"
+                android:text="@string/btn_display_policy" />
+
+            <CheckBox
+                android:id="@+id/check_agree"
+                android:hint="@string/check_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/check_policy" />
+
+            <Button
+                android:id="@+id/btn_display_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/check_policy"
+
+                android:text="@string/btn_display_agree" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_go_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_go_next" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

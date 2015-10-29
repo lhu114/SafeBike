@@ -38,6 +38,9 @@ public class LoginInputFragment extends Fragment {
                 //서버와 체크해서 확인
                 //인증 성공시 메인 페이지로 이동
                 if(logdummy == 1){
+                    Intent intent = new Intent((LoginActivity)getActivity(),MainActivity.class);
+                    startActivity(intent);
+
                     ((LoginActivity)getActivity()).finish();
                 }
                 //인증 실패시 실패 다이얼로그 띄우기
