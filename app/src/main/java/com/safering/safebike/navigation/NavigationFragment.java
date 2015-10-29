@@ -12,6 +12,7 @@ import com.safering.safebike.R;
 
 public class NavigationFragment extends Fragment {
 
+
     public NavigationFragment() {
         // Required empty public constructor
     }
