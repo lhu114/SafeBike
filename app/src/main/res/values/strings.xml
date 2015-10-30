@@ -17,4 +17,7 @@
     <string name="nav_exercise_report">기록</string>
     <string name="nav_friend">친구</string>
     <string name="nav_setting">설정</string>
+    <string name="btn_menu_search">검색</string>
+    <string name="btn_menu_cancel">취소</string>
+    <string name="edit_keyword" />
 </resources>
