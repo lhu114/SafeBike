@@ -132,6 +132,9 @@ public class NavigationFragment extends Fragment {
     }
 
     private void searchDestination(final String keyword) {
+        mListAdapter = new ArrayAdapter<POI>(getContext(), android.R.layout.simple_list_item_1);
+        listView.setAdapter(mListAdapter);
 
+//        mListAdapter.add(poi);
     }
 }
