@@ -41,6 +41,12 @@
     <string name="btn_menu_search">검색</string>
     <string name="btn_menu_cancel">취소</string>
     <string name="edit_keyword" />
+    <string name="profile_friend"></string>
+    <string name="remove_friend">친구삭제</string>
+    <string name="search_friend_address">검색</string>
+    <string name="search_friend_direct">아이디/이메일 입력</string>
+
+
 </resources>
 <!-- TODO: Remove or change this placeholder text -->
 
