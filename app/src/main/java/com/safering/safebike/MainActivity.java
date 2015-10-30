@@ -85,46 +85,29 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment oldNaviTag = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
         if (id == R.id.nav_safebike) {
-            if (oldNaviTag != null) {
-                getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).addToBackStack(null).commit();
-            } else {
-                emptyBackStack();
-            }
+            emptyBackStack();
+
         } else if (id == R.id.nav_exercise_report) {
             Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_EXERCISEREPORT);
 
             if (old == null) {
-                if (oldNaviTag != null) {
-                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                } else {
-                    emptyBackStack();
-                }
+                emptyBackStack();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new ExerciseReportFragment(), TAG_EXERCISEREPORT).addToBackStack(null).commit();
             }
         } else if (id == R.id.nav_friend) {
             Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_FRIEND);
 
             if (old == null) {
-                if (oldNaviTag != null) {
-                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                } else {
-                    emptyBackStack();
-                }
+                emptyBackStack();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new FriendFragment(), TAG_FRIEND).addToBackStack(null).commit();
             }
         } else if (id == R.id.nav_setting) {
             Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_SETTING);
 
             if (old == null) {
-                if (oldNaviTag != null) {
-                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                } else {
-                    emptyBackStack();
-                }
+                emptyBackStack();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new SettingFragment(), TAG_SETTING).addToBackStack(null).commit();
             }
         }

@@ -47,6 +47,10 @@
     <string name="search_friend_direct">아이디/이메일 입력</string>
 
 
+    <string name="btn_delete_recent">검색 기록 삭제</string>
+    <string name="btn_delete_favorite">즐겨찾기 기록 삭제</string>
+    <string name="text_message_favorite">즐겨찾기 기록이 없습니다.</string>
+    <string name="text_messag_recent">최근 검색 기록이 없습니다.</string>
 </resources>
 <!-- TODO: Remove or change this placeholder text -->
 
