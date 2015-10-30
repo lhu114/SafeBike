@@ -15,6 +15,7 @@ import com.safering.safebike.navigation.NavigationFragment;
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
+    private static final String TAG_NAVIGATION = "navigation";
 
     public MainFragment() {
         // Required empty public constructor
@@ -47,7 +48,7 @@ public class MainFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new NavigationFragment()).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new NavigationFragment(), TAG_NAVIGATION).addToBackStack(null).commit();
 
             }
         });

@@ -18,8 +18,10 @@ import com.safering.safebike.setting.SettingFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String DEBUG_TAG = "safebike";
 
     private static final String TAG_MAIN = "main";
+    private static final String TAG_NAVIGATION = "navigation";
     private static final String TAG_EXERCISEREPORT = "exercisereport";
     private static final String TAG_FRIEND = "friend";
     private static final String TAG_SETTING = "setting";
@@ -82,28 +84,46 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment oldNaviTag = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
         if (id == R.id.nav_safebike) {
-            emptyBackStack();
+            if (oldNaviTag != null) {
+                getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).addToBackStack(null).commit();
+            } else {
+                emptyBackStack();
+            }
         } else if (id == R.id.nav_exercise_report) {
             Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_EXERCISEREPORT);
 
             if (old == null) {
-                emptyBackStack();
+                if (oldNaviTag != null) {
+                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                } else {
+                    emptyBackStack();
+                }
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new ExerciseReportFragment(), TAG_EXERCISEREPORT).addToBackStack(null).commit();
             }
         } else if (id == R.id.nav_friend) {
             Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_FRIEND);
 
             if (old == null) {
-                emptyBackStack();
+                if (oldNaviTag != null) {
+                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                } else {
+                    emptyBackStack();
+                }
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new FriendFragment(), TAG_FRIEND).addToBackStack(null).commit();
             }
         } else if (id == R.id.nav_setting) {
             Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_SETTING);
 
             if (old == null) {
-                emptyBackStack();
+                if (oldNaviTag != null) {
+                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                } else {
+                    emptyBackStack();
+                }
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new SettingFragment(), TAG_SETTING).addToBackStack(null).commit();
             }
         }
@@ -115,6 +135,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void emptyBackStack() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        fm.popBackStack (TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }
