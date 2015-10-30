@@ -5,10 +5,17 @@
     android:orientation="vertical"
     tools:context="com.safering.safebike.login.ConnectionDeviceFragment">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></LinearLayout>
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="기기선택" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,6 +30,13 @@
 
         </ListView>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"></LinearLayout>
+
         <ListView
             android:id="@+id/listview_backlight"
             android:layout_width="wrap_content"
@@ -33,6 +47,7 @@
 
 
     </LinearLayout>
+
     <Button
         android:id="@+id/btn_complete"
         android:layout_width="match_parent"

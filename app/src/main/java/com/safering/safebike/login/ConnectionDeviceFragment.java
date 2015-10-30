@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.safering.safebike.R;
 
@@ -33,6 +34,12 @@ public class ConnectionDeviceFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_connection_device, container, false);
 
+        TextView header = new TextView(getContext());
+        header.setText("헤더뷰");
+
+        TextView header1 = new TextView(getContext());
+        header1.setText("헤더뷰");
+
         ArrayList<String> bandList = new ArrayList<>();
         bandList.add("hand1");
         bandList.add("hand2");
@@ -44,10 +51,14 @@ public class ConnectionDeviceFragment extends Fragment {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,bandList);
 
         ListView listView = (ListView)view.findViewById(R.id.listview_band);
-        listView.setAdapter(arrayAdapter);
-        arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,backlightList);
+        listView.addHeaderView(header1);
 
+        listView.setAdapter(arrayAdapter);
+
+        arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1,backlightList);
         listView = (ListView)view.findViewById(R.id.listview_backlight);
+        listView.addHeaderView(header);
+
         listView.setAdapter(arrayAdapter);
 
 

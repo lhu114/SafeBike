@@ -33,4 +33,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="btn_onoff_band">진동밴드</string>
     <string name="btn_onoff_backlight">후미등</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

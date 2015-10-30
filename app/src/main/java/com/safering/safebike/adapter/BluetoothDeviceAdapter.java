@@ -30,6 +30,12 @@ public class BluetoothDeviceAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
+        if(convertView != null){
+
+        }
+        else{
+
+        }
         return null;
     }
 }
