@@ -81,7 +81,7 @@ public class NavigationFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menu_search) {
+        if (id == R.id.menu_fwd_search) {
             /*
              * 최근이용, 즐겨찾기 탭 활성화
              */
@@ -92,12 +92,5 @@ public class NavigationFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void searchDestination(final String keyword) {
-        mListAdapter = new ArrayAdapter<POI>(getContext(), android.R.layout.simple_list_item_1);
-        listView.setAdapter(mListAdapter);
-
-//        mListAdapter.add(poi);
     }
 }

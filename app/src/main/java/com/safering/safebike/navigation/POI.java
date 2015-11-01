@@ -10,9 +10,30 @@ public class POI {
     String	middleAddrName;
     String	lowerAddrName;
     String	detailAddrName;
-    Double	frontLat;
-    Double	frontLon;
-    Double	noorLat;
-    Double	noorLon;
+    double	frontLat;
+    double	frontLon;
+    double	noorLat;
+    double	noorLon;
 
+
+//    @Override
+//    public String toString() {
+//        return name;
+//    }
+//
+//    public double getLatitude() {
+//        return (Double.parseDouble(frontLat) + Double.parseDouble(noorLat)) / 2;
+//    }
+//
+//    public double getLongitude() {
+//        return (Double.parseDouble(frontLon) + Double.parseDouble(noorLon)) / 2;
+//    }
+//
+//    public String getAddress() {
+//        return upperAddrName + " " + middleAddrName + " " + lowerAddrName + " " + detailAddrName;
+//    }
+//
+//    public double getLatitudeL1() {
+//        return 0;
+//    }
 }

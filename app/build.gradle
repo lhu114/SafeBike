@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    useLibrary 'org.apache.http.legacy'
     buildTypes {
         release {
             minifyEnabled false
@@ -27,4 +28,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.android.support:support-v4:23.1.0'
     compile project(':MPChartLib')
+    compile 'com.google.code.gson:gson:2.4'
+    compile project(':asyncHttp')
 }
