@@ -1,12 +1,14 @@
 package com.safering.safebike;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.safering.safebike.navigation.NavigationFragment;
 
@@ -53,7 +55,18 @@ public class MainFragment extends Fragment {
             }
         });
 
+        btn = (Button) view.findViewById(R.id.btn_fwd_start_navigation);
+
+        Intent intent = getActivity().getIntent();
+        if (intent != null) {
+            String intentMessage = intent.getStringExtra("change_button");
+
+            Toast.makeText(getContext(), intentMessage, Toast.LENGTH_SHORT).show();
+        }
+
         return view;
     }
+
+
 
 }

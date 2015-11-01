@@ -31,4 +31,15 @@
         android:layout_alignTop="@+id/btn_onoff_band"
         android:layout_toEndOf="@+id/btn_fwd_navigation" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_fwd_start_navigation"
+        android:id="@+id/btn_fwd_start_navigation"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="84dp"
+        android:visibility="gone"/>
+
 </RelativeLayout>

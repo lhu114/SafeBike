@@ -1,5 +1,7 @@
 package com.safering.safebike.navigation;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.MenuItemCompat;
@@ -10,11 +12,11 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.safering.safebike.R;
 
@@ -27,10 +29,14 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
     ArrayAdapter<POI> mAdapter;
 
+    POI poi;
+
     private static final String TAG_TAB_RECENT = "RECENT";
     private static final String TAG_TAB_FAVORITE = "FAVORITE";
     private static final String TAG_TAB_RECENT_NAME = "최근이용";
     private static final String TAG_TAB_FAVORITE_NAME = "즐겨찾기";
+
+    private static final String KEY_POI_NAME = "poiName";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +52,25 @@ public class ParentRctFvActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView_destination_search);
         mAdapter = new ArrayAdapter<POI>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                poi = (POI) listView.getItemAtPosition(position);
+                String poiName = poi.name;
+
+//                Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
+                intent.putExtra(KEY_POI_NAME, poiName);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        Toast.makeText(ParentRctFvActivity.this, "onCreateOptionsMenu", Toast.LENGTH_SHORT).show();
         getMenuInflater().inflate(R.menu.menu_parent_rctfv, menu);
 
         MenuItem item = menu.findItem(R.id.menu_search);
@@ -79,7 +98,18 @@ public class ParentRctFvActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ParentRctFvActivity.this, "search", Toast.LENGTH_SHORT).show();
+                String searchKeyword = keywordView.getText().toString();
+
+                /*
+                 * 검색 버튼으로 찾을 때 처리
+                 */
+//                searchPOIFromKeywordView(searchKeyword);
+
+                String poiName = searchKeyword;
+                Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
+                intent.putExtra(KEY_POI_NAME, poiName);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
         });
 
@@ -99,25 +129,29 @@ public class ParentRctFvActivity extends AppCompatActivity {
             tabHost.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
 
-            NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, keyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
-                @Override
-                public void onSuccess(SearchPOIInfo result) {
-                    clearAll();
+            poi = new POI();
+            poi.name = keyword;
 
-                    for (POI poi : result.pois.poiList) {
-                        mAdapter.add(poi);
-//                        addMarker(poi);
-                    }
-                    if (result.pois.poiList.size() > 0) {
-//                        moveMap(result.pois.poiList.get(0).getLatitude(), result.pois.poiList.get(0).getLongitude());
-                    }
-                }
-
-                @Override
-                public void onFail(int code) {
-
-                }
-            });
+            mAdapter.add(poi);
+//            NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, keyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
+//                @Override
+//                public void onSuccess(SearchPOIInfo result) {
+//                    clearAll();
+//
+//                    for (POI poi : result.pois.poiList) {
+//                        mAdapter.add(poi);
+////                        addMarker(poi);
+//                    }
+//                    if (result.pois.poiList.size() > 0) {
+////                        moveMap(result.pois.poiList.get(0).getLatitude(), result.pois.poiList.get(0).getLongitude());
+//                    }
+//                }
+//
+//                @Override
+//                public void onFail(int code) {
+//
+//                }
+//            });
         } else {
             tabHost.setVisibility(View.VISIBLE);
             listView.setVisibility(View.GONE);
