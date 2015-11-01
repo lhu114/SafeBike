@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.safering.safebike.friend.FriendProfileActivity">
+    tools:context="com.safering.safebike.account.ProfileEditActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,66 +45,76 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text_friendid_profile"
             android:layout_below="@id/text_friendemail_profile"
-            android:text="2015/5/35 가입" />
+            android:text="2015/5/35 가입"
+
+            />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="하루활동량" />
+            android:weightSum="1">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="주행거리" />
+                android:text="이름" />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1500km" />
 
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:weightSum="1">
 
-            <TextView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="평균속력" />
+                android:text="비밀번호" />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="60km/h" />
 
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:weightSum="1">
 
-            <TextView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="소모칼로리" />
+                android:text="비밀번호확인" />
 
-            <TextView
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2700cal" />
 
+                android:layout_weight="1" />
         </LinearLayout>
+
+
     </LinearLayout>
+    <Button
+        android:id="@+id/btn_edit_compelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       android:layout_gravity="bottom"
+        android:text="@string/btn_edit_compelete"
+        />
+
 </LinearLayout>

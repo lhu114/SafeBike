@@ -9,8 +9,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.safering.safebike.account.AccountFragment;
 import com.safering.safebike.exercisereport.ExerciseReportFragment;
 import com.safering.safebike.friend.FriendFragment;
 import com.safering.safebike.setting.SettingFragment;
@@ -44,6 +49,21 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
+        NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
+        View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
+        Button btn = (Button)header.findViewById(R.id.btn_account_setting);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountFragment(), "ACCOUNT").addToBackStack(null).commit();
+
+            }
+        });
     }
 
     @Override
@@ -79,6 +99,8 @@ public class MainActivity extends AppCompatActivity
 //
 //        return super.onOptionsItemSelected(item);
 //    }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

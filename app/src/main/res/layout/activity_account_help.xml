@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.safering.safebike.friend.FriendProfileActivity">
+    tools:context="com.safering.safebike.account.AccountHelpActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:layout_alignTop="@id/image_friend_profile"
             android:layout_below="@id/image_friend_profile"
             android:layout_toRightOf="@id/image_friend_profile"
-            android:text="친구이름" />
+            android:text="SafeBike" />
 
         <TextView
             android:id="@+id/text_friendemail_profile"
@@ -38,73 +38,49 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text_friendid_profile"
             android:layout_below="@id/text_friendid_profile"
-            android:text="adkalfkfwk@google.com" />
+            android:text="copyright 2015 SAFE BIKE" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text_friendid_profile"
             android:layout_below="@id/text_friendemail_profile"
-            android:text="2015/5/35 가입" />
+            android:text="ALL RIGHT RESERVED" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:orientation="vertical">
 
-        <TextView
+        <Button
+            android:id="@+id/btn_show_use"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="하루활동량" />
+            android:text="@string/btn_show_use"
+            />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_qna_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="@string/btn_qna_email"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="주행거리" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1500km" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_policy_profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="@string/btn_policy_profile"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="평균속력" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="60km/h" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_license"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="소모칼로리" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2700cal" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/btn_license"
+            />
     </LinearLayout>
+
 </LinearLayout>
