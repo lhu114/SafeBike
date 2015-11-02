@@ -88,7 +88,7 @@ public class PropertyManager {
     }
 
     public void setServiceCondition(String serviceCondition) {
-        mEditor.putString(SERVICE_CONDITION, "");
+        mEditor.putString(SERVICE_CONDITION, serviceCondition);
         mEditor.commit();
     }
 

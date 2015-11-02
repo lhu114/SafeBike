@@ -32,12 +32,12 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_FRIEND = "friend";
     private static final String TAG_SETTING = "setting";
 
-    String serviceCondition = "";
+//    String serviceCondition = "";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Toast.makeText(MainActivity.this, "MainActivity.onCreate", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "MainActivity.onCreate", Toast.LENGTH_SHORT).show();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -52,10 +52,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        serviceCondition = PropertyManager.getInstance().getServiceCondition();
+//        serviceCondition = PropertyManager.getInstance().getServiceCondition();
+
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction().add(R.id.container, MainFragment.newInstance(serviceCondition), TAG_MAIN).commit();
+//        }
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, MainFragment.newInstance(serviceCondition), TAG_MAIN).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
 
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
@@ -78,13 +82,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Toast.makeText(MainActivity.this, "MainActivity.onNewIntent", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
-        if (intent != null) {
-            String serviceCondition = intent.getStringExtra("change_button");
-
-            Toast.makeText(MainActivity.this, serviceCondition, Toast.LENGTH_SHORT).show();
-        }
+//        if (intent != null) {
+//            if (intent.getStringExtra("d"));
+//            String serviceCondition = PropertyManager.getInstance().getServiceCondition();
+//
+//            Toast.makeText(MainActivity.this, serviceCondition, Toast.LENGTH_SHORT).show();
+//        }
 
     }
 

@@ -65,9 +65,7 @@
         </activity>
         <activity android:name=".navigation.SelectRouteActivity" >
         </activity>
-        <activity android:name=".navigation.StartNavigationActivity"
-            android:launchMode="singleTask"
-            android:alwaysRetainTaskState="true">
+        <activity android:name=".navigation.StartNavigationActivity">
         </activity>
     </application>
 

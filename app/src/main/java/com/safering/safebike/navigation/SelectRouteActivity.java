@@ -54,6 +54,9 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 PropertyManager.getInstance().setDestinationLongitude("");
                 PropertyManager.getInstance().setServiceCondition(SERVICE_RUNNING);
 
+//                Toast.makeText(SelectRouteActivity.this, "SelectRouteActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+
+
                 /*
                  * 자전거 한계 및 책임 다이얼로그 띄우고 확인하면 startActivity 아니면 그대로
                  */

@@ -19,17 +19,16 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_onoff_band"
         android:id="@+id/btn_onoff_band"
-        android:layout_marginTop="89dp"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/btn_fwd_navigation" />
+        android:layout_above="@+id/temp"
+        android:layout_toStartOf="@+id/temp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_onoff_backlight"
         android:id="@+id/btn_onoff_backlight"
-        android:layout_alignTop="@+id/btn_onoff_band"
-        android:layout_toEndOf="@+id/btn_fwd_navigation" />
+        android:layout_above="@+id/temp"
+        android:layout_toEndOf="@+id/temp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -41,5 +40,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="84dp"
         android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="200dp"
+        android:id="@+id/temp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

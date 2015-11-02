@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
+import com.safering.safebike.property.PropertyManager;
 
 
 /**
@@ -20,42 +21,49 @@ import com.safering.safebike.navigation.StartNavigationActivity;
 public class MainFragment extends Fragment {
     private static final String TAG_NAVIGATION = "navigation";
     private static final String ARG_NAME = "name";
+    private static final String SERVICE_RUNNING = "running";
 
-    String getMessage;
+//    String serviceCondition;
     Button fwdNavigation, startNavigation;
 
     public MainFragment() {
         // Required empty public constructor
     }
 
-    public static MainFragment newInstance(String name) {
-        MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_NAME, name);
-        fragment.setArguments(args);
-
-        return fragment;
-    }
+//    public static MainFragment newInstance(String name) {
+//        MainFragment fragment = new MainFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_NAME, name);
+//        fragment.setArguments(args);
+//
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            getMessage = getArguments().getString(ARG_NAME);
-        }
+//        if (getArguments() != null) {
+//            serviceCondition = getArguments().getString(ARG_NAME);
+//        }
 
-        Toast.makeText(getContext(), "MainFragment.onCreate : " + getMessage, Toast.LENGTH_SHORT).show();
+
 
         /*
          * SharedPreferences Service Condition 불러오기 String 에 저장
          */
+//        serviceCondition = PropertyManager.getInstance().getServiceCondition();
+
+        Toast.makeText(getContext(), "MainFragment.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         Button btn = (Button) view.findViewById(R.id.btn_onoff_band);
@@ -84,9 +92,9 @@ public class MainFragment extends Fragment {
         });
 
 
-
-        if (getMessage != null && getMessage.equals(RUNNING_NAVIGATION)) {
-//            Toast.makeText(getContext(), "MainFragment.onCreateView : " + getMessage, Toast.LENGTH_SHORT).show();
+//        if (serviceCondition != null && serviceCondition.equals(SERVICE_RUNNING)) {
+        if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
+            Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
             fwdNavigation.setVisibility(View.GONE);
 
