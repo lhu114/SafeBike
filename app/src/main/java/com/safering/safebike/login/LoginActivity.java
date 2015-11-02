@@ -11,6 +11,7 @@ import com.safering.safebike.R;
 
 public class LoginActivity extends AppCompatActivity {
     //private static final String FRAGMENT_LOGIN_TAG = "login_fragment";
+    //2015/11/02
     private Fragment loginFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
