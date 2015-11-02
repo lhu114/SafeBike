@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+//        emptyBackStack();
+//        Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
+//        getSupportFragmentManager().popBackStack(TAG_MAIN, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Toast.makeText(MainActivity.this, "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
 //        if (intent != null) {
@@ -163,4 +166,6 @@ public class MainActivity extends AppCompatActivity
     private void emptyBackStack() {
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
+
+
 }
