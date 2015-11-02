@@ -20,7 +20,6 @@ import com.safering.safebike.navigation.StartNavigationActivity;
 public class MainFragment extends Fragment {
     private static final String TAG_NAVIGATION = "navigation";
     private static final String ARG_NAME = "name";
-    private static final String CHANGE_BUTTON = "changeButton";
 
     String getMessage;
     Button fwdNavigation, startNavigation;
@@ -47,6 +46,10 @@ public class MainFragment extends Fragment {
         }
 
         Toast.makeText(getContext(), "MainFragment.onCreate : " + getMessage, Toast.LENGTH_SHORT).show();
+
+        /*
+         * SharedPreferences Service Condition 불러오기 String 에 저장
+         */
     }
 
     @Override
@@ -80,7 +83,9 @@ public class MainFragment extends Fragment {
             }
         });
 
-        if (getMessage != null && getMessage.equals(CHANGE_BUTTON)) {
+
+
+        if (getMessage != null && getMessage.equals(RUNNING_NAVIGATION)) {
 //            Toast.makeText(getContext(), "MainFragment.onCreateView : " + getMessage, Toast.LENGTH_SHORT).show();
 
             fwdNavigation.setVisibility(View.GONE);

@@ -15,14 +15,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.property.PropertyManager;
 
 public class StartNavigationActivity extends AppCompatActivity  implements OnMapReadyCallback {
     private GoogleMap mMap;
+
+    private static final String RUNNING_NAVIGATION = "changeButton";
+    private static final String SERVICE_FINISH = "finish";
+
+    double DestinationLati;
+    double DestinationLongi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_navigation);
+
+        getDestinationSharedPreferences();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_map);
@@ -37,10 +46,12 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
                 /*
                  * 운동 기록 처리, 자동으로 안내를 종료할지에 대한 시나리오, 사용자 직접 종료 또는 자동 종료에 따른 운동 기록 값 전달
                  */
+                PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("change_button", "changeButton");
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
+
                 finish();
             }
         });
@@ -57,7 +68,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
         switch (item.getItemId()){
             case android.R.id.home:
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-                intent.putExtra("change_button", "changeButton");
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
 
                 finish();
@@ -70,11 +81,9 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-        intent.putExtra("change_button", "changeButton");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
-        /*
-         * finish 처리 궁금 - 메인이동해서 백키 눌렀을 때 이전 스택에 남아있는 문제
-         */
+
         finish();
     }
 
@@ -88,4 +97,14 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    private void getDestinationSharedPreferences() {
+        String tmpDestiLati, tmpDestiLongi;
+
+        tmpDestiLati = PropertyManager.getInstance().getDestinationLatitude();
+        tmpDestiLongi = PropertyManager.getInstance().getDestinationLongitude();
+
+        /*
+         *  String -> double 캐스팅 필요
+         */
+    }
 }

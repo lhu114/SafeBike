@@ -17,11 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.safering.safebike.R;
+import com.safering.safebike.property.PropertyManager;
 
 public class SelectRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     private static final int REQUEST_START_NAVIGATION = 2;
+    private static final String SERVICE_RUNNING = "running";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +45,19 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 emptyBackStack();
 
                 /*
-                 * FLAG_ACTIVITY_NO_HISTORY 알아보기
+                 * 출발지 목적지 좌표 저장
+                 */
+
+                PropertyManager.getInstance().setStartingLatitude("");
+                PropertyManager.getInstance().setStartingLongitude("");
+                PropertyManager.getInstance().setDestinationLatitude("");
+                PropertyManager.getInstance().setDestinationLongitude("");
+                PropertyManager.getInstance().setServiceCondition(SERVICE_RUNNING);
+
+                /*
+                 * 자전거 한계 및 책임 다이얼로그 띄우고 확인하면 startActivity 아니면 그대로
                  */
                 Intent intent = new Intent(SelectRouteActivity.this, StartNavigationActivity.class);
-//                startActivityForResult(intent, REQUEST_START_NAVIGATION);
                 startActivity(intent);
                 finish();
             }

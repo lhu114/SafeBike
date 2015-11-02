@@ -10,11 +10,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.safering.safebike.account.AccountFragment;
 import com.safering.safebike.exercisereport.ExerciseReportFragment;
 import com.safering.safebike.friend.FriendFragment;
+import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.SettingFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -27,13 +32,12 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_FRIEND = "friend";
     private static final String TAG_SETTING = "setting";
 
-    Intent intent;
-    String intentMessage = "fwdNavigation";
+    String serviceCondition = "";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(MainActivity.this, "MainActivity.onCreate", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, "MainActivity.onCreate", Toast.LENGTH_SHORT).show();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -48,31 +52,41 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        intent = getIntent();
-
-        if (intent != null) {
-            intentMessage = intent.getStringExtra("change_button");
-
-            Toast.makeText(MainActivity.this, intentMessage, Toast.LENGTH_SHORT).show();
-        }
+        serviceCondition = PropertyManager.getInstance().getServiceCondition();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, MainFragment.newInstance(intentMessage), TAG_MAIN).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, MainFragment.newInstance(serviceCondition), TAG_MAIN).commit();
         }
+
+        NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
+        View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
+        Button btn = (Button)header.findViewById(R.id.btn_account_setting);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new AccountFragment(), "ACCOUNT").addToBackStack(null).commit();
+
+            }
+        });
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        Toast.makeText(MainActivity.this, "MainActivity.onNewIntent", Toast.LENGTH_SHORT).show();
-//
-//        if (intent != null) {
-//            String intentMessage = intent.getStringExtra("change_button");
-//
-//            Toast.makeText(MainActivity.this, intentMessage, Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Toast.makeText(MainActivity.this, "MainActivity.onNewIntent", Toast.LENGTH_SHORT).show();
+
+        if (intent != null) {
+            String serviceCondition = intent.getStringExtra("change_button");
+
+            Toast.makeText(MainActivity.this, serviceCondition, Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     @Override
     protected void onPause() {
@@ -94,6 +108,13 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+        /*
+         *  SharedPreferences Service Condition 값이 Running 이면 네비게이션 안내를 종료하겠습니까? 다이얼로그 나오고 예 누르면 Service Condition -> finish ,
+         *  SharedPreferences 값 다 날리기
+         *
+         *  SharedPreferences Service Condition 값이 finish 이면 두번 눌렀을 때 종료
+         */
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -135,8 +156,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void emptyBackStack() {
-//        FragmentManager fm = getSupportFragmentManager();
-//        fm.popBackStack (TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }
