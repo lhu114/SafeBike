@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.safering.safebike.R;
 
 
-public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
     private static final String DEBUG_TAG = "safebike";
 
     private static final int REQUEST_SEARCH_POI = 1;
@@ -49,19 +49,30 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         super.onCreate(savedInstanceState);
 
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate");
+        Toast.makeText(getContext(), "NavigationFragment.onCreate", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(DEBUG_TAG, "NavigationFragment.onCreateView");
+        Toast.makeText(getContext(), "NavigationFragment.onCreateView", Toast.LENGTH_SHORT).show();
         // Inflate the layout for this fragment
         try {
             view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
-//            SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-//                    .findFragmentById(R.id.map);
-//            mapFragment.getMapAsync(this);
+//            MapView mapView = (MapView) view.findViewById(R.id.main_map);
+//            mapView.onCreate(savedInstanceState);
+//            mapView.onResume();
+//
+//            MapsInitializer.initialize(getActivity().getApplicationContext());
+//
+//
+//
+//            mMap = mapView.getMap();
+//
+//            mMap.setOnMapClickListener(this);
+//            mMap.setOnMapLongClickListener(this);
 
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
             addressLayout.setVisibility(View.INVISIBLE);
@@ -83,7 +94,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         } catch (InflateException e) {            /*
              * 구글맵 View가 이미 inflate되어 있는 상태이므로, 에러를 무시합니다.
              */
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return view;
     }
 
@@ -129,12 +143,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(getContext(), "NavigationFragment.onActivityResult", Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_SEARCH_POI && resultCode == Activity.RESULT_OK) {
             String poiName = data.getStringExtra(KEY_POI_NAME);
 
-            Toast.makeText(getContext(), "NavigationFragment.onActivityResult / " + poiName, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "NavigationFragment.onActivityResult / " + poiName, Toast.LENGTH_SHORT).show();
+//            activateDestination();
             textView.setText(poiName);
 
             addressLayout.setVisibility(View.VISIBLE);
@@ -147,7 +163,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     startActivity(intent);
                 }
             });
-
         }
 
         /*
@@ -155,10 +170,26 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
          */
     }
 
+//    public void activateDestination() {
+//        addressLayout.setVisibility(View.VISIBLE);
+//        fabFindRoute.setVisibility(View.VISIBLE);
+//
+//        fabFindRoute.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
 //        mMap = googleMap;
 //
+//        mMap.setOnMapClickListener(this);
+//        mMap.setOnMapLongClickListener(this);
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -168,5 +199,23 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapClick(LatLng latLng) {
 
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+//        activateDestination();
+
+        Toast.makeText(getContext(), "onMapLongClick", Toast.LENGTH_SHORT).show();
+
+        addressLayout.setVisibility(View.VISIBLE);
+        fabFindRoute.setVisibility(View.VISIBLE);
+
+        fabFindRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

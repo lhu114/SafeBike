@@ -1,7 +1,12 @@
 package com.safering.safebike;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,7 +37,15 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_FRIEND = "friend";
     private static final String TAG_SETTING = "setting";
 
+    private static final String SERVICE_FINISH = "finish";
+    private static final String SERVICE_RUNNING = "running";
+
+    public static final int MESSAGE_BACK_KEY = 1;
+    public static final int TIME_BACK_TIMEOUT = 2000;
+    private boolean isBackPressed = false;
 //    String serviceCondition = "";
+
+    Fragment mainFragment;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,9 +71,17 @@ public class MainActivity extends AppCompatActivity
 //            getSupportFragmentManager().beginTransaction().add(R.id.container, MainFragment.newInstance(serviceCondition), TAG_MAIN).commit();
 //        }
 
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
+
+//        if (savedInstanceState == null) {
+//            mainFragment = new MainFragment();
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.add(R.id.container, mainFragment, TAG_MAIN);
+//            ft.commit();
+//        }
 
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
         View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
@@ -87,6 +108,12 @@ public class MainActivity extends AppCompatActivity
 //        getSupportFragmentManager().popBackStack(TAG_MAIN, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Toast.makeText(MainActivity.this, "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
+        Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
+
+        if (old != null) {
+            getSupportFragmentManager().popBackStack();
+        }
+
 //        if (intent != null) {
 //            if (intent.getStringExtra("d"));
 //            String serviceCondition = PropertyManager.getInstance().getServiceCondition();
@@ -108,13 +135,44 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(MainActivity.this, "MainActivity.onResume", Toast.LENGTH_SHORT).show();
     }
 
+    Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MESSAGE_BACK_KEY :
+                    isBackPressed = false;
+
+                    break;
+            }
+        }
+    };
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_FINISH)) {
+            if (isBackPressed) {
+                mHandler.removeMessages(MESSAGE_BACK_KEY);
+                super.onBackPressed();
+            } else {
+                isBackPressed = true;
+                Toast.makeText(this, "뒤로 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                mHandler.sendEmptyMessageDelayed(MESSAGE_BACK_KEY, TIME_BACK_TIMEOUT);
+            }
+        } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
+            onMainFinishNavigationDialog();
+
+
+//            getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.detach(mainFragment);
+//            ft.attach(mainFragment);
+//            ft.commit();
+
         }
 
         /*
@@ -123,6 +181,38 @@ public class MainActivity extends AppCompatActivity
          *
          *  SharedPreferences Service Condition 값이 finish 이면 두번 눌렀을 때 종료
          */
+    }
+
+    public void onMainFinishNavigationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_info);
+        builder.setTitle("내비게이션 안내종료");
+        builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+
+                /*
+                 *   오늘 아침에 처리할 부분(UI 변경 위해 replace 맞는지 여쭤보기
+                 */
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
+
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.detach(mainFragment);
+//                ft.attach(mainFragment);
+//                ft.commit();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+//        builder.setCancelable(false);
+
+        builder.create().show();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

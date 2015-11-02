@@ -21,7 +21,6 @@ import com.safering.safebike.property.PropertyManager;
 public class StartNavigationActivity extends AppCompatActivity  implements OnMapReadyCallback {
     private GoogleMap mMap;
 
-    private static final String RUNNING_NAVIGATION = "changeButton";
     private static final String SERVICE_FINISH = "finish";
 
     double DestinationLati;
@@ -51,8 +50,6 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 //                /*
 //                 * 다이얼로그로 종료시 처리
 //                 */
-//
-//
 //            }
 //        });
     }
@@ -62,8 +59,8 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
     public void onFinishNavigationDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("네비게이션 안내종료");
-        builder.setMessage("정말로 종료하시겠습니까");
+        builder.setTitle("내비게이션 안내종료");
+        builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
