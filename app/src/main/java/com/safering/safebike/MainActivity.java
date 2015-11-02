@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_FRIEND = "friend";
     private static final String TAG_SETTING = "setting";
 
+    Intent intent;
+    String intentMessage = "fwdNavigation";
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,23 +48,31 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Toast.makeText(MainActivity.this, "MainActivity.onNewIntent", Toast.LENGTH_SHORT).show();
+        intent = getIntent();
 
         if (intent != null) {
-            String intentMessage = intent.getStringExtra("change_button");
+            intentMessage = intent.getStringExtra("change_button");
 
             Toast.makeText(MainActivity.this, intentMessage, Toast.LENGTH_SHORT).show();
         }
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().add(R.id.container, MainFragment.newInstance(intentMessage), TAG_MAIN).commit();
+        }
     }
+
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        Toast.makeText(MainActivity.this, "MainActivity.onNewIntent", Toast.LENGTH_SHORT).show();
+//
+//        if (intent != null) {
+//            String intentMessage = intent.getStringExtra("change_button");
+//
+//            Toast.makeText(MainActivity.this, intentMessage, Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
 
     @Override
     protected void onPause() {

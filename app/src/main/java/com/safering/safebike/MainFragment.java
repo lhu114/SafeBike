@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.safering.safebike.navigation.NavigationFragment;
+import com.safering.safebike.navigation.StartNavigationActivity;
 
 
 /**
@@ -18,11 +19,35 @@ import com.safering.safebike.navigation.NavigationFragment;
  */
 public class MainFragment extends Fragment {
     private static final String TAG_NAVIGATION = "navigation";
+    private static final String ARG_NAME = "name";
+    private static final String CHANGE_BUTTON = "changeButton";
+
+    String getMessage;
+    Button fwdNavigation, startNavigation;
 
     public MainFragment() {
         // Required empty public constructor
     }
 
+    public static MainFragment newInstance(String name) {
+        MainFragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_NAME, name);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            getMessage = getArguments().getString(ARG_NAME);
+        }
+
+        Toast.makeText(getContext(), "MainFragment.onCreate : " + getMessage, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,8 +71,8 @@ public class MainFragment extends Fragment {
             }
         });
 
-        btn = (Button) view.findViewById(R.id.btn_fwd_navigation);
-        btn.setOnClickListener(new View.OnClickListener() {
+        fwdNavigation = (Button) view.findViewById(R.id.btn_fwd_navigation);
+        fwdNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new NavigationFragment(), TAG_NAVIGATION).addToBackStack(null).commit();
@@ -55,18 +80,23 @@ public class MainFragment extends Fragment {
             }
         });
 
-        btn = (Button) view.findViewById(R.id.btn_fwd_start_navigation);
+        if (getMessage != null && getMessage.equals(CHANGE_BUTTON)) {
+//            Toast.makeText(getContext(), "MainFragment.onCreateView : " + getMessage, Toast.LENGTH_SHORT).show();
 
-        Intent intent = getActivity().getIntent();
-        if (intent != null) {
-            String intentMessage = intent.getStringExtra("change_button");
+            fwdNavigation.setVisibility(View.GONE);
 
-            Toast.makeText(getContext(), intentMessage, Toast.LENGTH_SHORT).show();
+            startNavigation = (Button) view.findViewById(R.id.btn_fwd_start_navigation);
+            startNavigation.setVisibility(View.VISIBLE);
+            startNavigation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), StartNavigationActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+            });
         }
 
         return view;
     }
-
-
-
 }

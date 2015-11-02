@@ -39,6 +39,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
                  */
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra("change_button", "changeButton");
                 startActivity(intent);
                 finish();
             }
