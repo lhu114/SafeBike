@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -95,14 +94,14 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 /*
                  * 운행 하기 직전 메인 네비게이션 화면 pop
                  */
-                Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
-
-                if (old != null) {
-                    Toast.makeText(SelectRouteActivity.this, "pop", Toast.LENGTH_SHORT);
-                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                } else {
-                    Toast.makeText(SelectRouteActivity.this, "null", Toast.LENGTH_SHORT);
-                }
+//                Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
+//
+//                if (old != null) {
+//                    Toast.makeText(SelectRouteActivity.this, "pop", Toast.LENGTH_SHORT);
+//                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                } else {
+//                    Toast.makeText(SelectRouteActivity.this, "null", Toast.LENGTH_SHORT);
+//                }
 
                 /*
                  * 출발지 목적지 좌표 저장

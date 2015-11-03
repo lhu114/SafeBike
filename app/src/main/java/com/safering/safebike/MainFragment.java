@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
@@ -54,7 +53,7 @@ public class MainFragment extends Fragment {
          */
 //        serviceCondition = PropertyManager.getInstance().getServiceCondition();
 
-        Toast.makeText(getContext(), "MainFragment.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "MainFragment.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -62,7 +61,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -86,7 +85,7 @@ public class MainFragment extends Fragment {
         fwdNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "btn_fwd_navigation.Clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "btn_fwd_navigation.Clicked", Toast.LENGTH_SHORT).show();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, new NavigationFragment(), TAG_NAVIGATION).addToBackStack(null).commit();
             }
         });
@@ -94,7 +93,7 @@ public class MainFragment extends Fragment {
 
 //        if (serviceCondition != null && serviceCondition.equals(SERVICE_RUNNING)) {
         if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
-            Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
             fwdNavigation.setVisibility(View.GONE);
 

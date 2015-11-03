@@ -70,7 +70,6 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
                 finish();
@@ -98,7 +97,6 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
             case android.R.id.home:
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
                 finish();
@@ -114,7 +112,6 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 
         Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
         finish();

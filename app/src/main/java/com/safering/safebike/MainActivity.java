@@ -126,13 +126,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Toast.makeText(MainActivity.this, "MainActivity.onPause", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, "MainActivity.onPause", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(MainActivity.this, "MainActivity.onResume", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, "MainActivity.onResume", Toast.LENGTH_SHORT).show();
     }
 
     Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -150,18 +150,23 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        Toast.makeText(this, "MainActivity.onBackPressed", Toast.LENGTH_SHORT).show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_FINISH)) {
-            if (isBackPressed) {
-                mHandler.removeMessages(MESSAGE_BACK_KEY);
-                super.onBackPressed();
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
             } else {
-                isBackPressed = true;
-                Toast.makeText(this, "뒤로 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-                mHandler.sendEmptyMessageDelayed(MESSAGE_BACK_KEY, TIME_BACK_TIMEOUT);
+                if (isBackPressed) {
+                    mHandler.removeMessages(MESSAGE_BACK_KEY);
+                    super.onBackPressed();
+                } else {
+                    isBackPressed = true;
+                    Toast.makeText(this, "뒤로 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                    mHandler.sendEmptyMessageDelayed(MESSAGE_BACK_KEY, TIME_BACK_TIMEOUT);
+                }
             }
         } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
             onMainFinishNavigationDialog();
