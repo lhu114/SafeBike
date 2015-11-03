@@ -19,6 +19,7 @@
 
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="325dp"
-        android:layout_alignBottom="@+id/image_favorite"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/image_favorite"
+        android:layout_marginStart="55dp" />
 </RelativeLayout>

@@ -47,16 +47,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 //                /*
 //                 * 운행 하기 직전 메인 네비게이션 화면 pop
 //                 */
-//
-//                Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
-//
-//                if (old != null) {
-//                    Toast.makeText(SelectRouteActivity.this, "pop", Toast.LENGTH_SHORT);
-//                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                } else {
-//                    Toast.makeText(SelectRouteActivity.this, "null", Toast.LENGTH_SHORT);
-//                }
-//
+
 //                /*
 //                 * 출발지 목적지 좌표 저장
 //                 */
@@ -83,7 +74,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     /*
      * 안내시작 버튼 처리
      */
-    public void onStartNavigationDialog(View view) {
+    public void onStartNavigationBtn(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle("자전거 길안내에 대한 한계 및 책임");
@@ -91,18 +82,6 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         builder.setPositiveButton("동의", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /*
-                 * 운행 하기 직전 메인 네비게이션 화면 pop
-                 */
-//                Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
-//
-//                if (old != null) {
-//                    Toast.makeText(SelectRouteActivity.this, "pop", Toast.LENGTH_SHORT);
-//                    getSupportFragmentManager().popBackStack(TAG_NAVIGATION, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                } else {
-//                    Toast.makeText(SelectRouteActivity.this, "null", Toast.LENGTH_SHORT);
-//                }
-
                 /*
                  * 출발지 목적지 좌표 저장
                  */

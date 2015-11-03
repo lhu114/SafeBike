@@ -22,7 +22,7 @@
         android:id="@+id/btn_delete_favorite"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"

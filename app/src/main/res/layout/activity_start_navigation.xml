@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn_finish_navigation"
                 android:id="@+id/btn_finish_navigation"
-                android:onClick="onFinishNavigationDialog" />
+                android:onClick="onFinishNavigationBtn" />
         </LinearLayout>
     </LinearLayout>
 

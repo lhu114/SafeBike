@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn_start_navigation"
                 android:id="@+id/btn_start_navigation"
-                android:onClick="onStartNavigationDialog" />
+                android:onClick="onStartNavigationBtn" />
         </LinearLayout>
     </LinearLayout>
 

@@ -1,6 +1,9 @@
 package com.safering.safebike.navigation;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.safering.safebike.R;
 
@@ -40,16 +42,43 @@ public class FavoriteFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.listView_favorite);
         mAdapter = new FavoriteAdapter();
         listView.setAdapter(mAdapter);
-
+        initData();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listView.getItemAtPosition(position);
-                Toast.makeText(getContext(), "clicked", Toast.LENGTH_SHORT);
+                /*
+                 *  해당 아이템에 목적지 안내시작 화면으로 넘김
+                 */
+                Intent intent = new Intent();
+                startActivity(new Intent(getContext(), SelectRouteActivity.class));
+                getActivity().finish();
             }
         });
 
-        initData();
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setIcon(android.R.drawable.ic_dialog_info);
+//        builder.setTitle("전체 항목 삭제");
+                builder.setMessage("전체 항목을 삭제하시겠습니까");
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+//        builder.setCancelable(false);
+
+                builder.create().show();
+            }
+        });
 
         if (mAdapter.getCount() > 0) {
             messageView.setVisibility(View.GONE);

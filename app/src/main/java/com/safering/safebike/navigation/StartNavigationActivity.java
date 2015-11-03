@@ -59,7 +59,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
     /*
      * 안내종료 버튼 처리
      */
-    public void onFinishNavigationDialog(View view) {
+    public void onFinishNavigationBtn(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle("내비게이션 안내종료");
@@ -76,7 +76,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
                 intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 startActivity(intent);
 
-                finish();
+//                finish();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -104,7 +104,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
                 intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 startActivity(intent);
 
-                finish();
+//                finish();
 
                 return true;
         }
@@ -120,7 +120,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
         intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
         startActivity(intent);
 
-        finish();
+//        finish();
     }
 
     @Override
