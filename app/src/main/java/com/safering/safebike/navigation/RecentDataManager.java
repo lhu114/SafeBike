@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.safering.safebike.property.MyApplication;
 
@@ -34,8 +35,9 @@ public class RecentDataManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d("safebike", "RecentDataManager.onCreate");
         String sql = "CREATE TABLE " + RecentDB.RecentTable.TABLE_NAME + "(" +
-                RecentDB.RecentTable._ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                RecentDB.RecentTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 RecentDB.RecentTable.COLUMN_POI_NAME + " TEXT NOT NULL, " +
                 RecentDB.RecentTable.COLUMN_SEARCH_DATE + " TEXT)";
         db.execSQL(sql);
@@ -115,6 +117,13 @@ public class RecentDataManager extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteRecentAll() {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.delete(RecentDB.RecentTable.TABLE_NAME, null, null);
+        db.close();
+    }
+
 //    public List<RecentItem> getRecentList() {
 //
 //    }
@@ -133,7 +142,7 @@ public class RecentDataManager extends SQLiteOpenHelper {
             args = new String[] {"%" + keyword + "%"};
         }
 
-        String orderBy = RecentDB.RecentTable.COLUMN_POI_NAME + "COLLATE LOCALIZED ASC";
+        String orderBy = RecentDB.RecentTable.COLUMN_POI_NAME + " COLLATE LOCALIZED ASC";
         Cursor c = db.query(RecentDB.RecentTable.TABLE_NAME, columns, selection, args, null, null, orderBy);
 
         return c;

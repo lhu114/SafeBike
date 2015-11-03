@@ -30,6 +30,5 @@
         android:id="@+id/text_rct_search_date"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="325dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true" />
 </RelativeLayout>

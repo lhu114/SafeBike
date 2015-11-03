@@ -36,13 +36,14 @@ public class RecentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Toast.makeText(getContext(), "RecentFragment.onCreate", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Toast.makeText(getContext(), "RecentFragment.onCreateView", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_recent, container, false);
 
         messageView = (TextView) view.findViewById(R.id.text_messag_recent);
@@ -56,6 +57,10 @@ public class RecentFragment extends Fragment {
             @Override
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (columnIndex == nameColumnIndex) {
+                    /*
+                     *  View 에 글 넣어주기
+                     */
+
                     return true;
                 }
 
@@ -68,6 +73,10 @@ public class RecentFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "clicked", Toast.LENGTH_SHORT).show();
+
+                /*
+                 * ParentRctFvActivity 에 있는 setResult 처리
+                 */
             }
         });
 
@@ -82,7 +91,8 @@ public class RecentFragment extends Fragment {
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        RecentDataManager.getInstance().deleteRecentAll();
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -101,9 +111,15 @@ public class RecentFragment extends Fragment {
          *  DB 있을 떄 없을 때 뷰 처리
          */
 
-        messageView.setVisibility(View.GONE);
-        listView.setVisibility(View.VISIBLE);
+        Cursor c = RecentDataManager.getInstance().getRecentCursor(null);
 
+        if (c.getCount() > 0) {
+            messageView.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+            deleteRctBtn.setVisibility(View.VISIBLE);
+        } else {
+
+        }
 
         return view;
     }
@@ -111,16 +127,18 @@ public class RecentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        Toast.makeText(getContext(), "RecentFragment.onResume", Toast.LENGTH_SHORT).show();
         Cursor c = RecentDataManager.getInstance().getRecentCursor(null);
         nameColumnIndex = c.getColumnIndex(RecentDB.RecentTable.COLUMN_POI_NAME);
+
         mAdapter.changeCursor(c);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        Toast.makeText(getContext(), "RecentFragment.onDestroy", Toast.LENGTH_SHORT).show();
         mAdapter.changeCursor(null);
     }
 }

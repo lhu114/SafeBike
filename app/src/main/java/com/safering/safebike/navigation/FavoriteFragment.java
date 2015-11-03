@@ -42,7 +42,9 @@ public class FavoriteFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.listView_favorite);
         mAdapter = new FavoriteAdapter();
         listView.setAdapter(mAdapter);
+
         initData();
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

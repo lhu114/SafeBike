@@ -56,17 +56,30 @@ public class ParentRctFvActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 poi = (POI) listView.getItemAtPosition(position);
-                String poiName = poi.name;
 
-//                Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
+                if(poi != null) {
+                    String poiName = poi.name;
 
-                /*
-                 *  검색어 RecentDb 에 저장 처리 필요
-                 */
-                Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
-                intent.putExtra(KEY_POI_NAME, poiName);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+//                  Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
+
+                    /*
+                     *  검색어 RecentDb 에 저장 처리 필요
+                     */
+
+                    if (!TextUtils.isEmpty(poiName)) {
+                    /*
+                     *  검색어 RecentDb 에 저장 처리 필요
+                     */
+                        RecentItem item = new RecentItem();
+                        item.rctPOIName = poiName;
+
+                        RecentDataManager.getInstance().insertRecent(item);
+                        Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
+                        intent.putExtra(KEY_POI_NAME, poiName);
+                        setResult(Activity.RESULT_OK, intent);
+                        finish();
+                    }
+                }
             }
         });
     }
