@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
+    private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
+    private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
 //    String serviceCondition = "";
 
     Fragment mainFragment;
@@ -114,13 +116,20 @@ public class MainActivity extends AppCompatActivity
 //        intent = getIntent();
 
         if (intent != null) {
-            String compareMessage = intent.getStringExtra(KEY_POP_NAVIGATION_FRAGMENT);
-            if (compareMessage != null && compareMessage.equals(VALUE_POP_NAVIGATION_FRAGMENT)) {
+            String popMsg = intent.getStringExtra(KEY_POP_NAVIGATION_FRAGMENT);
+            String replaceMsg = intent.getStringExtra(KEY_REPLACE_MAIN_FRAGMENT);
+            Toast.makeText(MainActivity.this, "MainActivity.onNewIntent.replaceMsg : " + replaceMsg, Toast.LENGTH_SHORT).show();
+            if (popMsg != null && popMsg.equals(VALUE_POP_NAVIGATION_FRAGMENT)) {
                 Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
                 if (old != null) {
                     Toast.makeText(MainActivity.this, "MainActivity.onNewIntent.popBackStack", Toast.LENGTH_SHORT).show();
                     getSupportFragmentManager().popBackStack();
+                }
+
+                if (replaceMsg != null && replaceMsg.equals(VALUE_REPLACE_MAIN_FRAGMENT)) {
+                    Toast.makeText(MainActivity.this, "MainActivity.onNewIntent.Replace.MainFragment", Toast.LENGTH_SHORT).show();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
                 }
             }
         }
@@ -172,7 +181,11 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
-            onMainFinishNavigationDialog();
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                onMainFinishNavigationDialog();
+            }
         }
 
         /*
@@ -192,10 +205,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
-
+                Toast.makeText(MainActivity.this, "Replace.MainFragment", Toast.LENGTH_SHORT).show();
                 /*
                  *   오늘 아침에 처리할 부분(UI 변경 위해 replace 맞는지 여쭤보기
                  */
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
 
 //                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

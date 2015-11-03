@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +26,8 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 
     private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
+    private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
+    private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
 
     double DestinationLati;
     double DestinationLongi;
@@ -32,6 +35,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toast.makeText(this, "StartNavigationActivity.onCreate", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_start_navigation);
 
         getDestinationSharedPreferences();
@@ -72,11 +76,12 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 //                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
+                intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
                 startActivity(intent);
 
-                finish();
+//                finish();  -> Clear Top 때문에 의미 없음?
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -93,6 +98,25 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Toast.makeText(this, "StartNavigationActivity.onNewIntent", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, "StartNavigationActivity.onResume", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(this, "StartNavigationActivity.onPause", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(this, "StartNavigationActivity.onDestroy", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -100,11 +124,14 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
         switch (item.getItemId()){
             case android.R.id.home:
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 startActivity(intent);
 
-//                finish();
+                finish();
+                /*
+                 * 왜 finish 안했었는데 종료될까...
+                 */
 
                 return true;
         }
@@ -116,11 +143,14 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 //        Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onBackPressed : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
         startActivity(intent);
 
-//        finish();
+        finish();
+        /*
+         * 플래그와 finish 관계 여쭤보기
+         */
     }
 
     @Override

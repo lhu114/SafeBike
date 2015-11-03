@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
@@ -41,7 +42,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Toast.makeText(getContext(), "MainFragment.onCreate", Toast.LENGTH_SHORT).show();
 //        if (getArguments() != null) {
 //            serviceCondition = getArguments().getString(ARG_NAME);
 //        }
@@ -59,6 +60,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Toast.makeText(getContext(), "MainFragment.onCreateView", Toast.LENGTH_SHORT).show();
         // Inflate the layout for this fragment
 
 //        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
@@ -104,11 +106,17 @@ public class MainFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), StartNavigationActivity.class);
                     startActivity(intent);
-                    getActivity().finish();
+//                    getActivity().finish();
                 }
             });
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getContext(), "MainFragment.onResume", Toast.LENGTH_SHORT).show();
     }
 }
