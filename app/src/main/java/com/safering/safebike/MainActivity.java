@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity
     public static final int MESSAGE_BACK_KEY = 1;
     public static final int TIME_BACK_TIMEOUT = 2000;
     private boolean isBackPressed = false;
+
+    private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
+    private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
 //    String serviceCondition = "";
 
     Fragment mainFragment;
@@ -108,19 +111,19 @@ public class MainActivity extends AppCompatActivity
 //        getSupportFragmentManager().popBackStack(TAG_MAIN, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Toast.makeText(MainActivity.this, "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
-        Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
+//        intent = getIntent();
 
-        if (old != null) {
-            getSupportFragmentManager().popBackStack();
+        if (intent != null) {
+            String compareMessage = intent.getStringExtra(KEY_POP_NAVIGATION_FRAGMENT);
+            if (compareMessage != null && compareMessage.equals(VALUE_POP_NAVIGATION_FRAGMENT)) {
+                Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
+
+                if (old != null) {
+                    Toast.makeText(MainActivity.this, "MainActivity.onNewIntent.popBackStack", Toast.LENGTH_SHORT).show();
+                    getSupportFragmentManager().popBackStack();
+                }
+            }
         }
-
-//        if (intent != null) {
-//            if (intent.getStringExtra("d"));
-//            String serviceCondition = PropertyManager.getInstance().getServiceCondition();
-//
-//            Toast.makeText(MainActivity.this, serviceCondition, Toast.LENGTH_SHORT).show();
-//        }
-
     }
 
     @Override
@@ -150,7 +153,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "MainActivity.onBackPressed", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "MainActivity.onBackPressed", Toast.LENGTH_SHORT).show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -170,14 +173,6 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
             onMainFinishNavigationDialog();
-
-
-//            getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.detach(mainFragment);
-//            ft.attach(mainFragment);
-//            ft.commit();
-
         }
 
         /*

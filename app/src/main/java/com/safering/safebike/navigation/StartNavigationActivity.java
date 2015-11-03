@@ -23,6 +23,9 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 
     private static final String SERVICE_FINISH = "finish";
 
+    private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
+    private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
+
     double DestinationLati;
     double DestinationLongi;
 
@@ -70,6 +73,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 startActivity(intent);
 
                 finish();
@@ -97,6 +101,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
             case android.R.id.home:
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 startActivity(intent);
 
                 finish();
@@ -112,6 +117,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
 
         Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
         startActivity(intent);
 
         finish();
