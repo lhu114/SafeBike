@@ -76,7 +76,7 @@ public class StartNavigationActivity extends AppCompatActivity  implements OnMap
                 intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 startActivity(intent);
 
-//                finish();
+                finish();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

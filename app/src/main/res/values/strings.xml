@@ -64,6 +64,8 @@
     <string name="btn_finish_navigation">안내종료</string>
     <string name="btn_fwd_start_navigation">네비게이션 동작 중</string>
     <string name="text_fv_poi_name">목적지</string>
+    <string name="text_rct_poi_name">목적지</string>
+    <string name="text_rct_search_date">날짜</string>
 </resources>
 <!-- TODO: Remove or change this placeholder text -->
 

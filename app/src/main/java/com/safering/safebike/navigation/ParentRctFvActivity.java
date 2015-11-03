@@ -60,6 +60,9 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
 //                Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
 
+                /*
+                 *  검색어 RecentDb 에 저장 처리 필요
+                 */
                 Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
                 intent.putExtra(KEY_POI_NAME, poiName);
                 setResult(Activity.RESULT_OK, intent);
@@ -100,16 +103,26 @@ public class ParentRctFvActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String searchKeyword = keywordView.getText().toString();
 
+                if (!TextUtils.isEmpty(searchKeyword)) {
+                  /*
+                 *  검색어 RecentDb 에 저장 처리 필요
+                 */
+                    RecentItem item = new RecentItem();
+                    item.rctPOIName = searchKeyword;
+
+                    RecentDataManager.getInstance().insertRecent(item);
+
                 /*
                  * 검색 버튼으로 찾을 때 처리
                  */
 //                searchPOIFromKeywordView(searchKeyword);
 
-                String poiName = searchKeyword;
-                Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
-                intent.putExtra(KEY_POI_NAME, poiName);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                    String poiName = searchKeyword;
+                    Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
+                    intent.putExtra(KEY_POI_NAME, poiName);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
             }
         });
 
