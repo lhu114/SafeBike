@@ -93,6 +93,14 @@ public class RecentFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         RecentDataManager.getInstance().deleteRecentAll();
                         mAdapter.notifyDataSetChanged();
+                        /*
+                         *  Adpater clear 처리 필요
+                         */
+
+                        messageView.setVisibility(View.VISIBLE);
+                        listView.setVisibility(View.GONE);
+                        deleteRctBtn.setVisibility(View.GONE);
+
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
