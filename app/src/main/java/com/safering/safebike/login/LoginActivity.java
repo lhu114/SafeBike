@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         loginFragment = new LoginFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.login_container, loginFragment, "loginss");
-        ft.commit();
+
     }
 
     @Override
