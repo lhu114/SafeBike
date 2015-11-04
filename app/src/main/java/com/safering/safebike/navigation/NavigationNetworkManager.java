@@ -130,4 +130,34 @@ public class NavigationNetworkManager {
             }
         });
     }
+
+    /*
+    * saveFavorite(){
+    * 즐겨찾기 추가 지점 저장
+    * //PARAMETER : 유저 이메일,목적지
+    * //결과값 : INT
+    * }
+    *
+    * */
+
+    /*
+    * saveExercise(){
+    * 운동기록들 저장
+    * //PARAMETER : 유저 이메일,칼로리,거리,속력
+    * //결과값 : INT
+    * }
+    *
+    * */
+
+    /*
+    * getFavorite(){
+    * 즐겨찾기 추가 지점 가져오기
+    * //PARAMETER : 유저 이메일,구분값
+    * //결과값 : JSON(즐겨찾기 지점들)
+    * }
+    *
+    * */
+
+
+
 }

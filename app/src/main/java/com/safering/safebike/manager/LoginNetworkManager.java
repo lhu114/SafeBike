@@ -87,7 +87,9 @@ public class LoginNetworkManager {
     //회원 가입했을때 유저정보 저장
     public void saveUserInform(Context context, int page, int count, final OnResultListener listener) {
         RequestParams params = new RequestParams();
-        //params.put(); ... 이름,이메일,비밀번호
+        //params.put(); ...
+        //PARAMETER : 유저 이름,이메일,가입일,비밀번호 ->사진은 회원가입땐 안함
+        //결과값 : INT
 
         client.get(context, LOGIN_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -104,36 +106,12 @@ public class LoginNetworkManager {
         });
     }
 
-    public void saveUserImage(Context context, int page, int count, final OnResultListener listener) {
-        RequestParams params = new RequestParams();
-        //params.put(); ... 이름,이메일,비밀번호
-/*
 
-        try {
-            File file = new File("filepath");
-            params.put("files",file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-*/ // 유저의 사진서버에 전송
-
-        client.get(context, LOGIN_URL, params, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                int fail = -1;
-                listener.onFail(fail);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                int success = 1;
-                listener.onSuccess(success);
-            }
-        });
-    }
 
     public void cancelAll(Context context) {
         client.cancelRequests(context, true);
 
     }
+
+
 }
