@@ -66,6 +66,9 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                     Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
+                    /*
+                     * 주소 조합 다시!!!
+                     */
                     if (!poi.secondNo.equals("")) {
                         defineAddress = poi.getAddress() + poi.getDetailAddress();
 

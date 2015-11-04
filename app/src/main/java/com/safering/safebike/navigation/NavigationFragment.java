@@ -161,6 +161,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             
             tvPoiAddress.setText(poiAddress);
 
+            /*
+             * 맵 이동하면서 poi 마커 찍기
+             */
             addressLayout.setVisibility(View.VISIBLE);
             fabFindRoute.setVisibility(View.VISIBLE);
 
