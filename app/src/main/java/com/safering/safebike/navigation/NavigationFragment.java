@@ -62,7 +62,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         try {
             view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
-            SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.main_map);
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
             mapFragment.getMapAsync(this);
 
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
@@ -102,8 +102,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d(DEBUG_TAG, "NavigationFragment.onDestroyView");
-
+        Toast.makeText(getContext(), "NavigationFragment.onDestroyView", Toast.LENGTH_SHORT).show();
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
 
@@ -111,6 +110,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 parent.removeView(view);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(getContext(), "NavigationFragment.onDestroy", Toast.LENGTH_SHORT).show();
     }
 
     @Override
