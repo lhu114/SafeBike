@@ -143,7 +143,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Toast.makeText(getContext(), "NavigationFragment.onActivityResult", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "NavigationFragment.onActivityResult", Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_SEARCH_POI && resultCode == Activity.RESULT_OK) {

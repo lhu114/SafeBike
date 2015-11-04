@@ -1,8 +1,10 @@
 package com.safering.safebike.navigation;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,8 @@ import com.safering.safebike.R;
  * A simple {@link Fragment} subclass.
  */
 public class RecentFragment extends Fragment {
+    private static final String KEY_POI_NAME = "poiName";
+
     ListView listView;
     SimpleCursorAdapter mAdapter;
     TextView messageView;
@@ -76,6 +80,12 @@ public class RecentFragment extends Fragment {
                 /*
                  * ParentRctFvActivity 에 있는 setResult 처리
                  */
+
+                String poiName = "hello";
+                Intent intent = new Intent(getContext(), NavigationFragment.class);
+                intent.putExtra(KEY_POI_NAME, poiName);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                getActivity().finish();
             }
         });
 
