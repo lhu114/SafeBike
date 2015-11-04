@@ -71,6 +71,11 @@ public class PropertyManager {
         return mPrefs.getString(USER_JOIN, "");
     }
 
+    public void setStartingLatitude(String startingLatitude) {
+        mEditor.putString(STARTING_LATITUDE, startingLatitude);
+        mEditor.commit();
+    }
+
     public String getStartingLatitude() {
         return mPrefs.getString(STARTING_LATITUDE, "");
     }
