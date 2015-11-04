@@ -143,26 +143,27 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(getContext(), "NavigationFragment.onActivityResult", Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
+        String poiName = data.getStringExtra(KEY_POI_NAME);
 
-        if (requestCode == REQUEST_SEARCH_POI && resultCode == Activity.RESULT_OK) {
-            String poiName = data.getStringExtra(KEY_POI_NAME);
+        if (poiName != null) {
+            if (requestCode == REQUEST_SEARCH_POI && resultCode == Activity.RESULT_OK) {
 
-//            Toast.makeText(getContext(), "NavigationFragment.onActivityResult / " + poiName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poiName, Toast.LENGTH_SHORT).show();
 //            activateDestination();
-            textView.setText(poiName);
+                textView.setText(poiName);
 
-            addressLayout.setVisibility(View.VISIBLE);
-            fabFindRoute.setVisibility(View.VISIBLE);
+                addressLayout.setVisibility(View.VISIBLE);
+                fabFindRoute.setVisibility(View.VISIBLE);
 
-            fabFindRoute.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-                    startActivity(intent);
-                }
-            });
+                fabFindRoute.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
         }
 
         /*
