@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -155,29 +156,32 @@ public class ParentRctFvActivity extends AppCompatActivity {
             tabHost.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
 
-            poi = new POI();
-            poi.name = keyword;
+            Log.d("safebike", keyword);
+//            poi = new POI();
+//            poi.name = keyword;
+//
+//            mAdapter.add(poi);
 
-            mAdapter.add(poi);
-//            NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, keyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
-//                @Override
-//                public void onSuccess(SearchPOIInfo result) {
-//                    clearAll();
-//
-//                    for (POI poi : result.pois.poiList) {
-//                        mAdapter.add(poi);
-////                        addMarker(poi);
-//                    }
-//                    if (result.pois.poiList.size() > 0) {
-////                        moveMap(result.pois.poiList.get(0).getLatitude(), result.pois.poiList.get(0).getLongitude());
-//                    }
-//                }
-//
-//                @Override
-//                public void onFail(int code) {
-//
-//                }
-//            });
+
+            NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, keyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
+                @Override
+                public void onSuccess(SearchPOIInfo result) {
+                    clearAll();
+
+                    for (POI poi : result.pois.poiList) {
+                        mAdapter.add(poi);
+//                        addMarker(poi);
+                    }
+                    if (result.pois.poiList.size() > 0) {
+//                        moveMap(result.pois.poiList.get(0).getLatitude(), result.pois.poiList.get(0).getLongitude());
+                    }
+                }
+
+                @Override
+                public void onFail(int code) {
+
+                }
+            });
         } else {
             tabHost.setVisibility(View.VISIBLE);
             listView.setVisibility(View.GONE);

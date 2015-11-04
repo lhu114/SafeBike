@@ -37,7 +37,7 @@ public class NavigationNetworkManager {
 
     AsyncHttpClient client;
     Gson gson;
-    Header[] headers;
+    Header[] headers = null;
 
     private NavigationNetworkManager() {
         try {
@@ -65,11 +65,14 @@ public class NavigationNetworkManager {
         gson = new Gson();
         headers = new Header[2];
 
-        headers[0] = new BasicHeader(KEY_HEADERS_ACCEPT, VALUE_HEADERS_ACCEPT);
-        headers[1] = new BasicHeader(KEY_HEADERS_APPKEY, VALUE_HEADERS_APPKEY);
+//        headers[0] = new BasicHeader(KEY_HEADERS_ACCEPT, VALUE_HEADERS_ACCEPT);
+//        headers[1] = new BasicHeader(KEY_HEADERS_APPKEY, VALUE_HEADERS_APPKEY);
+
+        headers[0] = new BasicHeader("Accept", "application/json");
+        headers[1] = new BasicHeader("appKey", "fae4be30-90e4-3c96-b227-0086b07ae5e1");
     }
 
-    public static NavigationNetworkManager getInstance() {
+    public static synchronized NavigationNetworkManager getInstance() {
         if (instance == null) {
             instance = new NavigationNetworkManager();
         }
@@ -92,19 +95,30 @@ public class NavigationNetworkManager {
 
     public static final String SEARCH_POI_URL = "https://apis.skplanetx.com/tmap/pois";
 
-    private static final String KEY_POI_VERSION = "version";
-    private static final String KEY_POI_SEARCHKEYWORD = "searchKeyword";
-    private static final String KEY_POI_RESCOORDTYPE = "resCoordType";
-
-    private static final int VALUE_POI_VERSION = 1;
-    private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
+//    private static final String KEY_POI_VERSION = "version";
+//    private static final String KEY_POI_SEARCH_KEYWORD = "searchKeyword";
+//    private static final String KEY_POI_RESCOORDTYPE = "resCoordType";
+//
+//    private static final int VALUE_POI_VERSION = 1;
+//    private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
 
     public void searchPOI(Context context, String keyword, final OnResultListener<SearchPOIInfo> listener) {
         RequestParams params = new RequestParams();
-        params.put(KEY_POI_VERSION, VALUE_POI_VERSION);
-        params.put(KEY_POI_SEARCHKEYWORD, keyword);
-        params.put(KEY_POI_RESCOORDTYPE, VALUE_POI_RESCOORDTYPE);
+//        params.put(KEY_POI_VERSION, VALUE_POI_VERSION);
+//        params.put(KEY_POI_SEARCH_KEYWORD, keyword);
+//        params.put(KEY_POI_RESCOORDTYPE, VALUE_POI_RESCOORDTYPE);
 
+        params.put("version", 1);
+        params.put("searchKeyword", keyword);
+        params.put("resCoordType", "WGS84GEO");
+
+        Log.d("safebike", "keyword : " + keyword);
+        int count = headers.length;
+        for(int i = 0; i < count; i++) {
+            Log.d("safebike", "headers : " + headers[i]);
+        }
+
+        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
         client.get(context, SEARCH_POI_URL, headers, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -114,7 +128,14 @@ public class NavigationNetworkManager {
                 listener.onFail(statusCode);
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", code);
+                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+
+                int count = headers.length;
+                for(int i = 0; i < count; i++) {
+                    Log.d("safebike", "headers : " + headers[i]);
+                }
+
+
             }
 
             @Override
@@ -126,7 +147,8 @@ public class NavigationNetworkManager {
                 listener.onSuccess(result.searchPoiInfo);
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", code);
+                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+                Log.d("safebike", "headers : " + headers);
             }
         });
     }
