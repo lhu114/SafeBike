@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
 //    String serviceCondition = "";
 
-    Fragment mainFragment;
+//    Fragment mainFragment;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
