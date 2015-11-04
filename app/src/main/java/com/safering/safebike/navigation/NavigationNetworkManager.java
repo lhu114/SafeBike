@@ -63,9 +63,8 @@ public class NavigationNetworkManager {
         }
 
         gson = new Gson();
-        client.setCookieStore(new PersistentCookieStore(MyApplication.getContext()));
-
         headers = new Header[2];
+
         headers[0] = new BasicHeader(KEY_HEADERS_ACCEPT, VALUE_HEADERS_ACCEPT);
         headers[1] = new BasicHeader(KEY_HEADERS_APPKEY, VALUE_HEADERS_APPKEY);
     }

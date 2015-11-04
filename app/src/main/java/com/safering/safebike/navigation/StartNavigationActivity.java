@@ -19,7 +19,7 @@ import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.property.PropertyManager;
 
-public class StartNavigationActivity extends AppCompatActivity  implements OnMapReadyCallback {
+public class StartNavigationActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     private static final String SERVICE_FINISH = "finish";

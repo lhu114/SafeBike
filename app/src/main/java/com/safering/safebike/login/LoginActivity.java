@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Toast.makeText(this, "LoginActivity.onCreate", Toast.LENGTH_SHORT).show();
 
         PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
 
