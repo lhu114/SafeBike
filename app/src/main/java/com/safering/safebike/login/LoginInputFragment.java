@@ -40,7 +40,6 @@ public class LoginInputFragment extends Fragment {
                 if(logdummy == 1){
                     Intent intent = new Intent((LoginActivity)getActivity(),MainActivity.class);
                     startActivity(intent);
-
                     ((LoginActivity)getActivity()).finish();
                 }
                 //인증 실패시 실패 다이얼로그 띄우기

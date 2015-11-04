@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
@@ -19,8 +20,16 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         String userEmail = PropertyManager.getInstance().getUserEmail();
         String userPassword = PropertyManager.getInstance().getUserPassword();
-
+        Log.i("Userid", PropertyManager.getInstance().getUserId());
+        Log.i("UserPass",PropertyManager.getInstance().getUserPassword());
         if(TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)){
+
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {goLogin();}
+            },1000);
+        }
+        else if(TextUtils.equals(userEmail,"@EMAIL")){
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {goLogin();}
