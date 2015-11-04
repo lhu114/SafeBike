@@ -65,11 +65,9 @@ public class NavigationNetworkManager {
         gson = new Gson();
         headers = new Header[2];
 
-//        headers[0] = new BasicHeader(KEY_HEADERS_ACCEPT, VALUE_HEADERS_ACCEPT);
-//        headers[1] = new BasicHeader(KEY_HEADERS_APPKEY, VALUE_HEADERS_APPKEY);
+        headers[0] = new BasicHeader(KEY_HEADERS_ACCEPT, VALUE_HEADERS_ACCEPT);
+        headers[1] = new BasicHeader(KEY_HEADERS_APPKEY, VALUE_HEADERS_APPKEY);
 
-        headers[0] = new BasicHeader("Accept", "application/json");
-        headers[1] = new BasicHeader("appKey", "fae4be30-90e4-3c96-b227-0086b07ae5e1");
     }
 
     public static synchronized NavigationNetworkManager getInstance() {
@@ -95,22 +93,18 @@ public class NavigationNetworkManager {
 
     public static final String SEARCH_POI_URL = "https://apis.skplanetx.com/tmap/pois";
 
-//    private static final String KEY_POI_VERSION = "version";
-//    private static final String KEY_POI_SEARCH_KEYWORD = "searchKeyword";
-//    private static final String KEY_POI_RESCOORDTYPE = "resCoordType";
-//
-//    private static final int VALUE_POI_VERSION = 1;
-//    private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
+    private static final String KEY_POI_VERSION = "version";
+    private static final String KEY_POI_SEARCH_KEYWORD = "searchKeyword";
+    private static final String KEY_POI_RESCOORDTYPE = "resCoordType";
+
+    private static final int VALUE_POI_VERSION = 1;
+    private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
 
     public void searchPOI(Context context, String keyword, final OnResultListener<SearchPOIInfo> listener) {
         RequestParams params = new RequestParams();
-//        params.put(KEY_POI_VERSION, VALUE_POI_VERSION);
-//        params.put(KEY_POI_SEARCH_KEYWORD, keyword);
-//        params.put(KEY_POI_RESCOORDTYPE, VALUE_POI_RESCOORDTYPE);
-
-        params.put("version", 1);
-        params.put("searchKeyword", keyword);
-        params.put("resCoordType", "WGS84GEO");
+        params.put(KEY_POI_VERSION, VALUE_POI_VERSION);
+        params.put(KEY_POI_SEARCH_KEYWORD, keyword);
+        params.put(KEY_POI_RESCOORDTYPE, VALUE_POI_RESCOORDTYPE);
 
         Log.d("safebike", "keyword : " + keyword);
         int count = headers.length;
@@ -134,8 +128,6 @@ public class NavigationNetworkManager {
                 for(int i = 0; i < count; i++) {
                     Log.d("safebike", "headers : " + headers[i]);
                 }
-
-
             }
 
             @Override

@@ -15,8 +15,12 @@ public class POI {
     double	noorLat;
     double	noorLon;
 
+    @Override
+    public String toString() {
+        return name;
+    }
 
-//    @Override
+    //    @Override
 //    public String toString() {
 //        return name;
 //    }

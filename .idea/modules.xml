@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/MPChartLib/MPChartLib.iml" filepath="$PROJECT_DIR$/MPChartLib/MPChartLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/SafeBike.iml" filepath="$PROJECT_DIR$/SafeBike.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/asyncHttp/asyncHttp.iml" filepath="$PROJECT_DIR$/asyncHttp/asyncHttp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/asyncHttpLib/asyncHttpLib.iml" filepath="$PROJECT_DIR$/asyncHttpLib/asyncHttpLib.iml" />
     </modules>
   </component>
 </project>
