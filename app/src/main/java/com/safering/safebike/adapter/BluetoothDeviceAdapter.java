@@ -29,13 +29,20 @@ public class BluetoothDeviceAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
-        if(convertView != null){
-
+        BluetoothItemView view;
+        if(convertView == null){
+            view = new BluetoothItemView(parent.getContext());
         }
         else{
-
+            view = (BluetoothItemView)convertView;
         }
-        return null;
+        view.setBluetoothData(items.get(position));
+        return view;
+    }
+
+    public void add(BluetoothDeviceItem item){
+        items.add(item);
+        notifyDataSetChanged();
+
     }
 }

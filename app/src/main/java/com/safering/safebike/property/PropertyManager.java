@@ -7,10 +7,10 @@ import android.preference.PreferenceManager;
  * Created by Tacademy on 2015-10-29.
  */
 public class PropertyManager {
-    private static PropertyManager instance;
-
-    public static final String USER_EMAIL = "yhms4432";
-    public static final String USER_PASSWORD = "hj023285";
+    public static final String USER_ID = "@ID";
+    public static final String USER_EMAIL = "@EMAIL";
+    public static final String USER_JOIN = "@JOIN";
+    public static final String USER_PASSWORD = "@PASS";
 
     public static final String STARTING_LATITUDE = "startingLatitude";
     public static final String STARTING_LONGITUDE = "startingPointLongitude";
@@ -18,11 +18,12 @@ public class PropertyManager {
     public static final String DESTINATION_LONGITUDE = "destinationLongitude";
     public static final String SERVICE_CONDITION = "SERVICE_CONDITION";
 
+    private static PropertyManager instance;
     SharedPreferences mPrefs;
     SharedPreferences.Editor mEditor;
 
-    public static PropertyManager getInstance(){
-        if(instance == null){
+    public static PropertyManager getInstance() {
+        if (instance == null) {
             instance = new PropertyManager();
         }
         return instance;
@@ -33,13 +34,13 @@ public class PropertyManager {
         mEditor = mPrefs.edit();
     }
 
-    public void setUserEmail(String id) {
-        mEditor.putString(USER_EMAIL, id);
+    public void setUserEmail(String userEmail) {
+        mEditor.putString(USER_EMAIL, userEmail);
         mEditor.commit();
     }
 
     public String getUserEmail() {
-        return mPrefs.getString(USER_EMAIL,"");
+        return mPrefs.getString(USER_EMAIL, "");
     }
 
     public void setUserPassword(String password) {
@@ -51,13 +52,32 @@ public class PropertyManager {
         return mPrefs.getString(USER_PASSWORD, "");
     }
 
+    public void setUserId(String userId) {
+        mEditor.putString(USER_ID, userId);
+        mEditor.commit();
+    }
+
+    public String getUserId() {
+        return mPrefs.getString(USER_ID, "");
+
+    }
+
+    public void setUserJoin(String userJoin) {
+        mEditor.putString(USER_JOIN, userJoin);
+        mEditor.commit();
+    }
+
+    public String getUserJoin() {
+        return mPrefs.getString(USER_JOIN, "");
+    }
+
     public void setStartingLatitude(String startingLatitude) {
         mEditor.putString(STARTING_LATITUDE, startingLatitude);
         mEditor.commit();
     }
 
     public String getStartingLatitude() {
-         return mPrefs.getString(STARTING_LATITUDE, "");
+        return mPrefs.getString(STARTING_LATITUDE, "");
     }
 
     public void setStartingLongitude(String startingLongitude) {
@@ -95,4 +115,6 @@ public class PropertyManager {
     public String getServiceCondition() {
         return  mPrefs.getString(SERVICE_CONDITION, "");
     }
+
+
 }

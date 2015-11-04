@@ -58,4 +58,10 @@ public class FriendAdapter extends BaseAdapter{
         notifyDataSetChanged();
 
     }
+
+    public void remove(int position){
+        items.remove(position);
+        notifyDataSetChanged();
+
+    }
 }

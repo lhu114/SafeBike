@@ -28,9 +28,12 @@ import com.safering.safebike.setting.SettingFragment;
  * A simple {@link Fragment} subclass.
  */
 public class FriendFragment extends Fragment {
-
-    FriendAdapter adapter;
+    public static final int FRIEND_NO_SELECT = 0;
+    public static final String FRIEND_INFORM = "friendInform";
+    FriendAdapter fAdapter;
     ListView listView;
+    FriendItem friendItem;
+
     public FriendFragment() {
         // Required empty public constructor
     }
@@ -41,42 +44,44 @@ public class FriendFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
-         adapter = new FriendAdapter(0);
+        fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
         listView = (ListView)view.findViewById(R.id.listview_myfriend);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                //Toast.makeText(getContext(),"item click",Toast.LENGTH_SHORT).show();
+                friendItem = (FriendItem)fAdapter.getItem(position);
 
                 PopupMenu popupMenu = new PopupMenu(getContext(),view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_popup_friend,popupMenu.getMenu());
-                popupMenu.getMenu().getItem(0).setTitle("friend");
+                popupMenu.getMenu().getItem(0).setTitle(friendItem.friendId);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        //item.getItemId()에 따라 다르게 처리
-                        FriendItem friend = (FriendItem)adapter.getItem(position);
-                        Toast.makeText(getContext(),"id : " + friend.friendId,Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getContext(),FriendProfileActivity.class);
-                        intent.putExtra("friendInform",friend);
-                        startActivity(intent);
-                        return true;
+                        if(item.getTitle().equals(friendItem.friendId)) {
+                            Intent intent = new Intent(getContext(), FriendProfileActivity.class);
+                            intent.putExtra(FRIEND_INFORM, friendItem);
+                            startActivity(intent);
+                            return true;
+                        }
+                        else{
+                            //친구삭제 -- 서버에 전송
+                            fAdapter.remove(position);
+                            return true;
+                        }
 
                     }
                 });
                 popupMenu.show();
-                //팝업 클릭시 FriendProfileActivity
             }
         });
-        listView.setAdapter(adapter);
+        listView.setAdapter(fAdapter);
 
-        setAdapter();//네트워크로 친구리스트 받아서 뷰에 표시
+        setFriendList();//네트워크로 친구리스트 받아서 뷰에 표시
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //새로운 액티비티 띄우기
                 Intent intent = new Intent((MainActivity)getActivity(),FriendAddActivity.class);
                 startActivity(intent);
             }
@@ -84,12 +89,18 @@ public class FriendFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //setFriendList(); 네트워크에서 친구리스트 받아오기
+    }
 
-    public void setAdapter(){
+    public void setFriendList(){
+        //네트워크로 받아서 처리
         for (int i = 0; i < 20; i++) {
             FriendItem friendItem = new FriendItem();
             friendItem.friendId = "friend" + i;
-            adapter.add(friendItem);
+            fAdapter.add(friendItem);
         }
 
     }

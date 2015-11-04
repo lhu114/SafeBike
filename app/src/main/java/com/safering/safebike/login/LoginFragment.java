@@ -39,7 +39,6 @@ public class LoginFragment extends Fragment {
                 FragmentTransaction ft = ((LoginActivity) getActivity()).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.login_container,loginInputFragment);
                 ft.addToBackStack(null);
-
                 ft.commit();
             }
         });
