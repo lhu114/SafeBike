@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
  * Created by Tacademy on 2015-10-29.
  */
 public class PropertyManager {
+    public static final String USER_IMAGE_PATH = "@IMAGE_PATH";
+
     public static final String USER_ID = "@ID";
     public static final String USER_EMAIL = "@EMAIL";
     public static final String USER_JOIN = "@JOIN";
