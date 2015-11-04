@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.safering.safebike.R;
 
@@ -61,18 +62,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         try {
             view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
-//            MapView mapView = (MapView) view.findViewById(R.id.main_map);
-//            mapView.onCreate(savedInstanceState);
-//            mapView.onResume();
-//
-//            MapsInitializer.initialize(getActivity().getApplicationContext());
-//
-//
-//
-//            mMap = mapView.getMap();
-//
-//            mMap.setOnMapClickListener(this);
-//            mMap.setOnMapLongClickListener(this);
+            SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.main_map);
+            mapFragment.getMapAsync(this);
 
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
             addressLayout.setVisibility(View.INVISIBLE);
@@ -94,16 +85,20 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         } catch (InflateException e) {            /*
              * 구글맵 View가 이미 inflate되어 있는 상태이므로, 에러를 무시합니다.
              */
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return view;
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        setUpMapIfNeeded();
+//    }
+
     /*
-     * 프래그먼트가 화면에서 사라질 때 프래그먼트의 뷰를 컨테이너 뷰에서 제거
-     */
+         * 프래그먼트가 화면에서 사라질 때 프래그먼트의 뷰를 컨테이너 뷰에서 제거
+         */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -183,14 +178,22 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //            }
 //        });
 //    }
-
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
-//        mMap = googleMap;
-//
-//        mMap.setOnMapClickListener(this);
-//        mMap.setOnMapLongClickListener(this);
+        mMap = googleMap;
+
+        mMap.setOnMapClickListener(this);
+        mMap.setOnMapLongClickListener(this);
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -208,6 +211,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         Toast.makeText(getContext(), "onMapLongClick", Toast.LENGTH_SHORT).show();
 
+        /*
+         *  클릭 좌표 가져와서 네트워크 요청하고 주소 받아와서 View 에 던지기
+         */
         addressLayout.setVisibility(View.VISIBLE);
         fabFindRoute.setVisibility(View.VISIBLE);
 
@@ -220,3 +226,4 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         });
     }
 }
+
