@@ -30,13 +30,16 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     private static final int REQUEST_SEARCH_POI = 1;
     private static final String KEY_POI_NAME = "poiName";
+    private static final String KEY_POI_LATITUDE = "poiLatitude";
+    private static final String KEY_POI_LONGITUDE = "poiLongitude";
+    private static final String KEY_POI_ADDRESS = "poiAddress";
 
     private GoogleMap mMap;
 
     View view;
     LinearLayout addressLayout;
     FloatingActionButton fabFindRoute;
-    TextView textView;
+    TextView tvPoiAddress;
 
     ArrayAdapter<POI> mListAdapter;
 
@@ -68,7 +71,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
             addressLayout.setVisibility(View.INVISIBLE);
 
-            textView = (TextView) view.findViewById(R.id.text_poi_name);
+            tvPoiAddress = (TextView) view.findViewById(R.id.text_poi_address);
 
             fabFindRoute = (FloatingActionButton) view.findViewById(R.id.btn_find_route);
             fabFindRoute.setVisibility(View.GONE);
@@ -146,10 +149,17 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_SEARCH_POI && resultCode == Activity.RESULT_OK) {
+            double poiLatitude = data.getDoubleExtra(KEY_POI_LATITUDE, 0);
+            double poiLongitude = data.getDoubleExtra(KEY_POI_LONGITUDE, 0);
             String poiName = data.getStringExtra(KEY_POI_NAME);
+            String poiAddress = data.getStringExtra(KEY_POI_ADDRESS);
+
             Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poiName, Toast.LENGTH_SHORT).show();
+            Log.d("safebike", "poiLatitude : " + Double.toString(poiLatitude) + " poiLongitude : " + Double.toString(poiLongitude));
+            Log.d("safebike", "poiName : " + data.getStringExtra(KEY_POI_NAME) + " poiAddress : " + data.getStringExtra(KEY_POI_ADDRESS));
 //            activateDestination();
-            textView.setText(poiName);
+            
+            tvPoiAddress.setText(poiAddress);
 
             addressLayout.setVisibility(View.VISIBLE);
             fabFindRoute.setVisibility(View.VISIBLE);
@@ -158,6 +168,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                    /*
+                     * 위에서 받은 데이터 전달 출발지, 목적지 다 보내야함
+                     */
                     startActivity(intent);
                 }
             });

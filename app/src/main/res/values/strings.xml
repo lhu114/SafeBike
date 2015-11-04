@@ -66,6 +66,7 @@
     <string name="text_fv_poi_name">목적지</string>
     <string name="text_rct_poi_name">목적지</string>
     <string name="text_rct_search_date">날짜</string>
+    <string name="text_poi_address">주소</string>
 </resources>
 <!-- TODO: Remove or change this placeholder text -->
 
