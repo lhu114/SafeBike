@@ -12,6 +12,12 @@ public class PropertyManager {
     public static final String USER_JOIN = "@JOIN";
     public static final String USER_PASSWORD = "@PASS";
 
+    public static final String STARTING_LATITUDE = "startingLatitude";
+    public static final String STARTING_LONGITUDE = "startingPointLongitude";
+    public static final String DESTINATION_LATITUDE = "destinationLatitude";
+    public static final String DESTINATION_LONGITUDE = "destinationLongitude";
+    public static final String SERVICE_CONDITION = "SERVICE_CONDITION";
+
     private static PropertyManager instance;
     SharedPreferences mPrefs;
     SharedPreferences.Editor mEditor;
@@ -65,9 +71,45 @@ public class PropertyManager {
         return mPrefs.getString(USER_JOIN, "");
     }
 
-    /*public boolean isBackupSync() {
-        return mPrefs.getBoolean("perf_sync", false);
-    }*/
+    public String getStartingLatitude() {
+        return mPrefs.getString(STARTING_LATITUDE, "");
+    }
+
+    public void setStartingLongitude(String startingLongitude) {
+        mEditor.putString(STARTING_LONGITUDE, startingLongitude);
+        mEditor.commit();
+    }
+
+    public String getStartingLongitude() {
+        return mPrefs.getString(STARTING_LONGITUDE, "");
+    }
+
+    public void setDestinationLatitude(String destinationLatitude) {
+        mEditor.putString(DESTINATION_LATITUDE, destinationLatitude);
+        mEditor.commit();
+    }
+
+    public String getDestinationLatitude() {
+        return mPrefs.getString(DESTINATION_LATITUDE, "");
+    }
+
+    public void setDestinationLongitude(String destinationLongitude) {
+        mEditor.putString(DESTINATION_LONGITUDE, destinationLongitude);
+        mEditor.commit();
+    }
+
+    public String getDestinationLongitude() {
+        return mPrefs.getString(DESTINATION_LONGITUDE, "");
+    }
+
+    public void setServiceCondition(String serviceCondition) {
+        mEditor.putString(SERVICE_CONDITION, serviceCondition);
+        mEditor.commit();
+    }
+
+    public String getServiceCondition() {
+        return  mPrefs.getString(SERVICE_CONDITION, "");
+    }
 
 
 }
