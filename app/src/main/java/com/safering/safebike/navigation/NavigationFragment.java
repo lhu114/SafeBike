@@ -24,27 +24,41 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.safering.safebike.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnCameraChangeListener {
     private static final String DEBUG_TAG = "safebike";
 
     private static final int REQUEST_SEARCH_POI = 1002;
-    private static final String KEY_POI_NAME = "poiName";
-    private static final String KEY_POI_LATITUDE = "poiLatitude";
-    private static final String KEY_POI_LONGITUDE = "poiLongitude";
-    private static final String KEY_POI_ADDRESS = "poiAddress";
+    private static final String KEY_POI_OBJECT = "poiobject";
+//    private static final String KEY_POI_NAME = "poiName";
+//    private static final String KEY_POI_LATITUDE = "poiLatitude";
+//    private static final String KEY_POI_LONGITUDE = "poiLongitude";
+//    private static final String KEY_POI_ADDRESS = "poiAddress";
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
-    Location mLocation;
+    Location mLocation, mLastLocation;
+
     LocationRequest mLocationRequest;
+
+    final Map<POI, Marker> mMarkerResolver = new HashMap<POI, Marker>();
+    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
 
     View view;
     LinearLayout addressLayout;
@@ -120,7 +134,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onStop() {
         super.onStop();
-        stopLocationUpdates();
     }
 
     /*
@@ -143,6 +156,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onDestroy() {
         super.onDestroy();
         Toast.makeText(getContext(), "NavigationFragment.onDestroy", Toast.LENGTH_SHORT).show();
+
+//        stopLocationUpdates();
     }
 
     @Override
@@ -174,34 +189,41 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (requestCode == REQUEST_SEARCH_POI) {
             if (resultCode == Activity.RESULT_OK) {
-                double poiLatitude = data.getDoubleExtra(KEY_POI_LATITUDE, 0);
-                double poiLongitude = data.getDoubleExtra(KEY_POI_LONGITUDE, 0);
-                String poiName = data.getStringExtra(KEY_POI_NAME);
-                String poiAddress = data.getStringExtra(KEY_POI_ADDRESS);
+                POI poi = (POI) data.getSerializableExtra(KEY_POI_OBJECT);
 
-                Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poiName, Toast.LENGTH_SHORT).show();
-                Log.d("safebike", "poiLatitude : " + Double.toString(poiLatitude) + " poiLongitude : " + Double.toString(poiLongitude));
-                Log.d("safebike", "poiName : " + data.getStringExtra(KEY_POI_NAME) + " poiAddress : " + data.getStringExtra(KEY_POI_ADDRESS));
+//                double poiLatitude = data.getDoubleExtra(KEY_POI_LATITUDE, 0);
+//                double poiLongitude = data.getDoubleExtra(KEY_POI_LONGITUDE, 0);
+//                String poiName = data.getStringExtra(KEY_POI_NAME);
+//                String poiAddress = data.getStringExtra(KEY_POI_ADDRESS);
+
+                Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poi.name, Toast.LENGTH_SHORT).show();
+                Log.d("safebike", "poiLatitude : " + Double.toString(poi.getLatitude()) + " poiLongitude : " + Double.toString(poi.getLongitude()));
+                Log.d("safebike", "poiName : " + poi.name + " poiAddress : " + poi.getAddress());
 //            activateDestination();
 
-                tvPoiAddress.setText(poiAddress);
+                if (poi != null) {
+                    tvPoiAddress.setText(getDefineAddress(poi));
 
-            /*
-             * 맵 이동하면서 poi 마커 찍기
-             */
-                addressLayout.setVisibility(View.VISIBLE);
-                fabFindRoute.setVisibility(View.VISIBLE);
+                    /*
+                     * 맵 이동하면서 poi 마커 찍기
+                     */
+                    moveMap(poi.getLatitude(), poi.getLongitude());
+                    addMarker(poi);
 
-                fabFindRoute.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                    addressLayout.setVisibility(View.VISIBLE);
+                    fabFindRoute.setVisibility(View.VISIBLE);
+
+                    fabFindRoute.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), SelectRouteActivity.class);
                     /*
                      * 위에서 받은 데이터 전달 출발지, 목적지 다 보내야함
                      */
-                        startActivity(intent);
-                    }
-                });
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
         }
     }
@@ -238,9 +260,17 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
-        mMap.getProjection();
+
+        if (mLocation != null) {
+            initialMoveMap(mLocation.getLatitude(), mLocation.getLongitude());
+            mLocation = null;
+        } else if (mLastLocation != null) {
+            initialMoveMap(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        }
+//        moveMap();
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -254,15 +284,18 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     protected  void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mListener);
     }
 
     protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mListener);
     }
+
     @Override
     public void onConnected(Bundle bundle) {
         startLocationUpdates();
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
     }
 
     @Override
@@ -275,10 +308,16 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
+    LocationListener mListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            if (mMap != null) {
+                moveMap(location.getLatitude(), location.getLongitude());
+            } else {
+                mLocation = location;
+            }
+        }
+    };
 
     @Override
     public void onMapClick(LatLng latLng) {
@@ -304,6 +343,87 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 startActivity(intent);
             }
         });
+    }
+
+    private void moveMap(double latitude, double longitude) {
+        if (mMap != null) {
+            CameraPosition.Builder builder = new CameraPosition.Builder();
+            builder.target(new LatLng(latitude, longitude));
+            builder.zoom(16);
+
+            CameraPosition position = builder.build();
+            CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
+            mMap.animateCamera(update);
+        }
+    }
+
+    private void initialMoveMap(double latitude, double longitude) {
+        CameraPosition.Builder builder = new CameraPosition.Builder();
+        builder.target(new LatLng(latitude, longitude));
+        builder.zoom(16);
+
+        CameraPosition position = builder.build();
+        CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
+        mMap.moveCamera(update);
+    }
+
+    private void addMarker(POI poi) {
+        MarkerOptions options  = new MarkerOptions();
+        /*
+         * 어떤 값으로 위도 경도 넘길지는 고민
+         */
+//        options.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
+        options.position(new LatLng(poi.noorLat, poi.noorLon));
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        options.anchor(0.5f, 1.0f);
+        options.title(poi.name);
+        options.draggable(false);
+
+        Marker m = mMap.addMarker(options);
+
+        mMarkerResolver.put(poi, m);
+        mPOIResolver.put(m, poi);
+    }
+
+    private String getDefineAddress(POI poi) {
+        String defineAddress = null;
+
+        if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
+
+            Log.d("safebike", "defineAddress 1");
+        } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+            Log.d("safebike", "defineAddress 2");
+        } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress();
+
+            Log.d("safebike", "defineAddress 3");
+        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
+
+            Log.d("safebike", "defineAddress 4");
+        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+            Log.d("safebike", "defineAddress 5");
+        } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
+
+            Log.d("safebike", "defineAddress 6");
+        } else {
+            defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
+
+            Log.d("safebike", "defineAddress 7");
+        }
+
+        return defineAddress;
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        mMap.getProjection();
     }
 }
 
