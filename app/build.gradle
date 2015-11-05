@@ -25,6 +25,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':MPChartLib')
     compile project(':asyncHttpLib')
+    compile project(':ImageLoader')
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
     compile 'com.google.android.gms:play-services:8.1.0'
@@ -33,5 +34,4 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:8.1.0'
     compile 'com.google.android.gms:play-services-identity:8.1.0'
     compile 'com.google.android.gms:play-services-gcm:8.1.0'
-    compile project(':ImageLoader')
 }
