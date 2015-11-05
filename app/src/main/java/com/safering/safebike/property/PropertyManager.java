@@ -9,10 +9,10 @@ import android.preference.PreferenceManager;
 public class PropertyManager {
     public static final String USER_IMAGE_PATH = "@IMAGE_PATH";
 
-    public static final String USER_ID = "@ID";
-    public static final String USER_EMAIL = "@EMAIL";
-    public static final String USER_JOIN = "@JOIN";
-    public static final String USER_PASSWORD = "@PASS";
+    public static final String USER_ID = "";
+    public static final String USER_EMAIL = "";
+    public static final String USER_JOIN = "";
+    public static final String USER_PASSWORD = "";
 
     public static final String STARTING_LATITUDE = "startingLatitude";
     public static final String STARTING_LONGITUDE = "startingPointLongitude";

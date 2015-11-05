@@ -12,7 +12,10 @@ import android.widget.Button;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
+
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,19 +38,36 @@ public class ConfirmSignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle signBundle = getArguments();
-                Log.i("singId",signBundle.getString(SignUpFragment.SIGN_UP_ID));
-                Log.i("singPass",signBundle.getString(SignUpFragment.SIGN_UP_EMAIL));
-                Log.i("singEmail", signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD));
+
+                String email = signBundle.getString(SignUpFragment.SIGN_UP_EMAIL);
+                String id = signBundle.getString(SignUpFragment.SIGN_UP_ID);
+                String password = signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD);
+                String join = "2015/11/23";
 
                 PropertyManager.getInstance().setUserEmail(signBundle.getString(SignUpFragment.SIGN_UP_EMAIL));
                 PropertyManager.getInstance().setUserId(signBundle.getString(SignUpFragment.SIGN_UP_ID));
                 PropertyManager.getInstance().setUserPassword(signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD));
                 PropertyManager.getInstance().setUserJoin("2015/11/23");
+                Date date = new Date(join);
 
-                Log.i("Userid", PropertyManager.getInstance().getUserId());
-                Log.i("UserPass", PropertyManager.getInstance().getUserPassword());
-                Log.i("UserEmail", PropertyManager.getInstance().getUserEmail());
-                Log.i("UserJoin", PropertyManager.getInstance().getUserJoin());
+         /*       NetworkManager.getInstance().saveUserInform(getContext(), id, email, date, password, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object success) {
+
+
+                        //프로퍼티 매니저에 저장
+                        //메인 페이지로 이동
+                        Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
+                        startActivity(intent);
+                        ((LoginActivity) getActivity()).finish();
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
+         */
                 //프로퍼티 매니저에 저장
                 //메인 페이지로 이동
                 Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);

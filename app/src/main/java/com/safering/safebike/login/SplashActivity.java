@@ -29,12 +29,12 @@ public class SplashActivity extends AppCompatActivity {
                 public void run() {goLogin();}
             },1000);
         }
-        else if(TextUtils.equals(userEmail,"@EMAIL")){
+        /*else if(TextUtils.equals(userEmail,"@EMAIL")){
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {goLogin();}
             },1000);
-        }
+        }*/
         else{
             goMain();
         }
