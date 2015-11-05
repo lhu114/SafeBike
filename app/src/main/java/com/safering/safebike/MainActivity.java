@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,10 @@ import com.safering.safebike.exercisereport.ExerciseReportFragment;
 import com.safering.safebike.friend.FriendFragment;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.SettingFragment;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity
 //        emptyBackStack();
 //        Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
 //        getSupportFragmentManager().popBackStack(TAG_MAIN, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        Toast.makeText(MainActivity.this, "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
 //        intent = getIntent();
 

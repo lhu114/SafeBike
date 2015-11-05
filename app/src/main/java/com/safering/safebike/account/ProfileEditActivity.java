@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,15 +20,24 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedVignetteBitmapDisplayer;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
+
+import java.io.File;
 
 public class ProfileEditActivity extends AppCompatActivity {
     TextView userId;
     TextView userEmail;
     TextView userJoin;
+
+    EditText changeId;
+    EditText changePassword;
+    EditText changePasswordConfirm;
+
     ImageView userProfileImage;
     DisplayImageOptions options;
+    Uri uri;
     public static final int GET_USER_IMAGE = 11;
 
     @Override
@@ -39,6 +49,10 @@ public class ProfileEditActivity extends AppCompatActivity {
         userId = (TextView) findViewById(R.id.text_change_id);
         userEmail = (TextView) findViewById(R.id.text_change_email);
         userJoin = (TextView) findViewById(R.id.text_change_join);
+
+        changeId = (EditText)findViewById(R.id.edit_change_id);
+        changePassword = (EditText)findViewById(R.id.edit_change_password);
+        changePasswordConfirm = (EditText)findViewById(R.id.edit_change_password_confirm);
 
         userId.setText(PropertyManager.getInstance().getUserId());
         userEmail.setText(PropertyManager.getInstance().getUserEmail());
@@ -60,6 +74,24 @@ public class ProfileEditActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+/*
+                String email = PropertyManager.getInstance().getUserEmail();
+                String id = changeId.getText().toString();
+                String password = changePassword.getText().toString();
+                String passwordConfirm = changePasswordConfirm.getText().toString();
+
+                File file = new File(uri.getPath());
+                NetworkManager.getInstance().saveUserProfile(ProfileEditActivity.this, email, id, password, file, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object success) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });*/
                 Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("edit", "e");
@@ -88,10 +120,13 @@ public class ProfileEditActivity extends AppCompatActivity {
                 options = new DisplayImageOptions.Builder()
                         .cacheInMemory(true)
                         .cacheOnDisc(true)
+                        /*.showImageForEmptyUri(R.drawable.ic)
+                        .showImageOnFail(R.drawable.ic_error)
+                        */
                         .considerExifParams(true)
                         .displayer(new RoundedBitmapDisplayer(50))
                         .build();
-                Uri uri = data.getData();
+                uri = data.getData();
 
                 Log.i("W", "uri: " + uri.toString());
                 Log.i("W", "path: " + uri.getPath());

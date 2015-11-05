@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
+import com.safering.safebike.property.PropertyManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,8 +30,13 @@ public class AccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         btn = (Button)view.findViewById(R.id.btn_logout);
         btn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                PropertyManager.getInstance().setUserId("");
+                PropertyManager.getInstance().setUserPassword("");
+                PropertyManager.getInstance().setUserEmail("");
+                PropertyManager.getInstance().setUserJoin("");
                 Intent intent = new Intent(((MainActivity)getActivity()), LoginActivity.class);
                 startActivity(intent);
                 ((MainActivity)getActivity()).finish();

@@ -26,17 +26,22 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.listener.OnDrawListener;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
+import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.PropertyManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CalorieFragment extends Fragment {
     protected BarChart calorieChart;
-    protected String[] mMonths = new String[]{
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
-    };
+    private static final int TYPE_CALORIE = 1;
+    private static final int REQUEST_NUMBER = 14;
+
 
     public CalorieFragment() {
         // Required empty public constructor
@@ -49,12 +54,19 @@ public class CalorieFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calorie, container, false);
         calorieChart = (BarChart) view.findViewById(R.id.chart_calorie);
+        setData();
 
         calorieChart.setVerticalScrollBarEnabled(true);
-
         calorieChart.setDrawBarShadow(false);
         calorieChart.setDrawGridBackground(false);
         calorieChart.setScaleMinima(2f, 1f);
+        calorieChart.setDrawHighlightArrow(false);
+        calorieChart.getXAxis().setLabelsToSkip(10);
+        calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        calorieChart.getXAxis().setDrawGridLines(false);
+        calorieChart.getXAxis().setSpaceBetweenLabels(2);
+        calorieChart.setScaleMinima(2f, 1f);
+        calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -97,42 +109,81 @@ public class CalorieFragment extends Fragment {
 
             }
         });
-        calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+      /*  calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                Log.i("CharValueClick","index : " + e.getXIndex());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cal = Calendar.getInstance();
+                String date = dateFormat.format(cal.getTime());
+                String email = PropertyManager.getInstance().getUserEmail();
+
+                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, TYPE_CALORIE, date, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object success) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
             }
 
             @Override
             public void onNothingSelected() {
 
             }
-        });
-        calorieChart.getXAxis().setLabelsToSkip(10);
-        calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        calorieChart.getXAxis().setDrawGridLines(false);
-        calorieChart.getXAxis().setSpaceBetweenLabels(2);
+        });*/
 
-       /* XAxis xAxis = calorieChart.getXAxis().setLabelsToSkip(10);
-
-        xAxis.setLabelsToSkip(10);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setSpaceBetweenLabels(2);
-        */
-
-        setData(20, 50);
-        calorieChart.setScaleMinima(2f, 1f);
-        calorieChart.moveViewToX(calorieChart.getData().getXVals().size()-1);
         return view;
     }
 
-    private void setData(int count, float range) {
+    private void setData() {
+        int count = 0;
+        int range = 0;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        String date = dateFormat.format(cal.getTime());
+        String email = PropertyManager.getInstance().getUserEmail();
+
+
+
+       /* NetworkManager.getInstance().getExerciseCalorieRecord(getContext(), email, date, REQUEST_NUMBER, new NetworkManager.OnResultListener<CalorieResult>() {
+            @Override
+            public void onSuccess(CalorieResult result) {
+                ArrayList<CalorieItem> calories = result.calories;
+                ArrayList<String> xVals = new ArrayList<String>();
+                ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
+                BarDataSet set = new BarDataSet(yVals, "DataSet");
+                ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+                BarData data;
+                int count = result.calories.size();
+
+                if (count > 0) {
+                    for (int i = 0; i < count; i++) {
+                        xVals.add(calories.get(i).date);
+                        yVals.add(new BarEntry(Integer.valueOf(calories.get(i).calorie), i));
+                    }
+                }
+                set.setBarSpacePercent(35f);
+                dataSets.add(set);
+                data = new BarData(xVals, dataSets);
+                data.setValueTextSize(10f);
+                calorieChart.setData(data);
+            }
+
+            @Override
+            public void onFail(int code) {
+                //실패시 다이얼로그
+            }
+        });
+*/
+
 
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
-            //xVals.add(mMonths[i % 12]);
-            xVals.add("x/" + (i+1));
+            xVals.add("x/" + (i + 1));
         }
 
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
@@ -151,6 +202,7 @@ public class CalorieFragment extends Fragment {
 
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
+
         calorieChart.setData(data);
 
 

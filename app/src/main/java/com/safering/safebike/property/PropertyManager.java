@@ -9,16 +9,18 @@ import android.preference.PreferenceManager;
 public class PropertyManager {
     public static final String USER_IMAGE_PATH = "@IMAGE_PATH";
 
-    public static final String USER_ID = "";
-    public static final String USER_EMAIL = "";
-    public static final String USER_JOIN = "";
-    public static final String USER_PASSWORD = "";
+    public static final String USER_ID = "userid";
+    public static final String USER_EMAIL = "useremail";
+    public static final String USER_JOIN = "userjoin";
+    public static final String USER_PASSWORD = "userpassword";
+
 
     public static final String STARTING_LATITUDE = "startingLatitude";
     public static final String STARTING_LONGITUDE = "startingPointLongitude";
     public static final String DESTINATION_LATITUDE = "destinationLatitude";
     public static final String DESTINATION_LONGITUDE = "destinationLongitude";
     public static final String SERVICE_CONDITION = "SERVICE_CONDITION";
+
 
     private static PropertyManager instance;
     SharedPreferences mPrefs;
@@ -73,6 +75,7 @@ public class PropertyManager {
         return mPrefs.getString(USER_JOIN, "");
     }
 
+
     public void setStartingLatitude(String startingLatitude) {
         mEditor.putString(STARTING_LATITUDE, startingLatitude);
         mEditor.commit();
@@ -117,6 +120,7 @@ public class PropertyManager {
     public String getServiceCondition() {
         return  mPrefs.getString(SERVICE_CONDITION, "");
     }
+
 
 
 }

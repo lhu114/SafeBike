@@ -1,7 +1,6 @@
 package com.safering.safebike.manager;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -9,6 +8,10 @@ import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.safering.safebike.exercisereport.CalorieResult;
+import com.safering.safebike.exercisereport.DistanceResult;
+import com.safering.safebike.exercisereport.SpeedResult;
+import com.safering.safebike.login.LoginResult;
 import com.safering.safebike.navigation.SearchPOIInfo;
 import com.safering.safebike.navigation.SearchPOIInfoResult;
 import com.safering.safebike.property.MyApplication;
@@ -149,11 +152,17 @@ public class NetworkManager {
     /**
      * 계정
      */
-    public void saveUserProfile(Context context, String email, String id, String password, final OnResultListener listener) {
+    public void saveUserProfile(Context context, String email, String id, String password, File file, final OnResultListener listener) {
         RequestParams params = new RequestParams();
-        params.put(USER_EAMIL, email);
-        params.put(USER_ID, id);
-        params.put(USER_PASSWORD, password);
+
+        try {
+            params.put(USER_EAMIL, email);
+            params.put(USER_ID, id);
+            params.put(USER_PASSWORD, password);
+            params.put(USER_IMAGE, file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         /*
         Header[] headers = new Header[2];
@@ -163,15 +172,16 @@ public class NetworkManager {
         client.get(context, ACCOUNT_PROFILE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(ON_FAIL);
+                listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                listener.onSuccess(statusCode);
             }
         });
     }
+/*
 
     public void saveUserImage(Context context, String email, File file, final OnResultListener listener) {
         //PARAMETER : 유저 이메일,사진파일,
@@ -196,39 +206,87 @@ public class NetworkManager {
             }
         });
     }
+*/
 
     /**
      * 운동
      */
 
-    public void getExerciseRecord(Context context, String email, int type, Date date, int num, final OnResultListener listener) {
+    public void getExerciseCalorieRecord(Context context, String email, String date, int num, final OnResultListener<CalorieResult> listener) {
         RequestParams params = new RequestParams();
         //PARAMETER : 유저 이메일,종류,시작날짜,개수
         //결과값 : JSON(종류에 대한 값들)
         params.put(USER_EAMIL, email);
-        params.put(EXERCISE_TYPE, type);
         params.put(EXCERCISE_REQUEST_DATE, date);
         params.put(EXCERCISE_REQUEST_NUMBER, num);
 
         client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(ON_FAIL);
+                listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+
+                CalorieResult result = gson.fromJson(responseString, CalorieResult.class);
+                listener.onSuccess(result);
+
+            }
+        });
+    }
+    public void getExerciseDistanceRecord(Context context, String email, String date, int num, final OnResultListener<DistanceResult> listener) {
+        RequestParams params = new RequestParams();
+        //PARAMETER : 유저 이메일,종류,시작날짜,개수
+        //결과값 : JSON(종류에 대한 값들)
+        params.put(USER_EAMIL, email);
+        params.put(EXCERCISE_REQUEST_DATE, date);
+        params.put(EXCERCISE_REQUEST_NUMBER, num);
+
+        client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                listener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                DistanceResult result = gson.fromJson(responseString, DistanceResult.class);
+                listener.onSuccess(result);
+
+            }
+        });
+    }
+    public void getExerciseSpeedRecord(Context context, String email, String date, int num, final OnResultListener<SpeedResult> listener) {
+        RequestParams params = new RequestParams();
+        //PARAMETER : 유저 이메일,종류,시작날짜,개수
+        //결과값 : JSON(종류에 대한 값들)
+        params.put(USER_EAMIL, email);
+        params.put(EXCERCISE_REQUEST_DATE, date);
+        params.put(EXCERCISE_REQUEST_NUMBER, num);
+
+        client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                listener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+                SpeedResult result = gson.fromJson(responseString, SpeedResult.class);
+                listener.onSuccess(result);
+
             }
         });
     }
 
-    public void getDayExerciseRecord(Context context, String email, int type, Date date, final OnResultListener listener) {
+    public void getDayExerciseRecord(Context context, String email, String date, final OnResultListener listener) {
         //PARAMETER : 유저 이메일,종류,날짜
         //결과값 : JSON(칼로리,속력,거리)
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
-        params.put(EXERCISE_TYPE, type);
         params.put(EXCERCISE_REQUEST_DATE, date);
 
         client.get(context, EXCERCISE_DAY_URL, params, new TextHttpResponseHandler() {
@@ -385,7 +443,7 @@ public class NetworkManager {
     /**
      * 로그인
      */
-    public void saveUserInform(Context context, String id, String email, Date date, String password, final OnResultListener listener) {
+    public void saveUserInform(Context context, String id, String email, String date, String password, String phone, final OnResultListener listener) {
         //PARAMETER : 유저 이름,이메일,가입일,비밀번호 ->사진은 회원가입땐 안함
         //결과값 : INT
 
@@ -408,7 +466,7 @@ public class NetworkManager {
         });
     }
 
-    public void userAuthorization(Context context, String email, String password, final OnResultListener listener) {
+    public void userAuthorization(Context context, String email, String password, final OnResultListener<LoginResult> listener) {
         //PARAMETER : 이메일,비밀번호
         //결과값 : 이메일,비밀번호,패스워드,가입일
 
@@ -420,12 +478,14 @@ public class NetworkManager {
         client.get(context, LOGIN_AUTHOR_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(ON_FAIL);
+                listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                LoginResult result = gson.fromJson(responseString, LoginResult.class);
+
+                listener.onSuccess(result);
             }
         });
     }

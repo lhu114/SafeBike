@@ -3,6 +3,7 @@ package com.safering.safebike.account;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
         userId.setText(PropertyManager.getInstance().getUserId());
         userEmail.setText(PropertyManager.getInstance().getUserEmail());
         userJoin.setText(PropertyManager.getInstance().getUserJoin());
+
 
         Button btn = (Button)findViewById(R.id.btn_edit_profile);
         btn.setOnClickListener(new View.OnClickListener() {

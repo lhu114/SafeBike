@@ -14,6 +14,8 @@ import android.widget.ListView;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
 import com.safering.safebike.adapter.FriendItem;
+import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.PropertyManager;
 
 import java.util.ArrayList;
 
@@ -42,10 +44,20 @@ public class FriendAddressFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                arContactList = getContactList();
+                /*String email = PropertyManager.getInstance().getUserEmail();
+                ArrayList phoneList = new ArrayList();
+                NetworkManager.getInstance().getUserFriendAddress(getContext(), email, phoneList, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object success) {
 
-                //내 주소록에 있는 전화번호부 서버로 보내기
-                //서버와 전화번호를 비교해서 있는 친구데이터를 json으로 받음
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });*/
+                arContactList = getContactList();
                 for(int i = 0; i < arContactList.size(); i++){
                     FriendItem friend = new FriendItem();
                     friend.friendId = "friend / " + arContactList.get(i).getPhonenum();
@@ -63,6 +75,7 @@ public class FriendAddressFragment extends Fragment {
                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+
         String[] selectionArgs = null;
         String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
         Cursor contactCursor = getActivity().getContentResolver().query(uri, projection, null, selectionArgs, sortOrder);

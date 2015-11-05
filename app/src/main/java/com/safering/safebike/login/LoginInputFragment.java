@@ -41,21 +41,27 @@ public class LoginInputFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = userEmail.getText().toString();
-                String password = userPassword.getText().toString();
+                final String email = userEmail.getText().toString();
+                final String password = userPassword.getText().toString();
                 if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
 
                 } else {
-             /*       NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener() {
+                  NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<LoginResult>() {
                         @Override
-                        public void onSuccess(Object success) {
+                        public void onSuccess(LoginResult logResult) {
+                            LoginItem userInform = logResult.result;
+
+                            PropertyManager.getInstance().setUserJoin(userInform.join);
+                            PropertyManager.getInstance().setUserId(userInform.id);
+                            PropertyManager.getInstance().setUserPassword(password);
+                            PropertyManager.getInstance().setUserEmail(email);
+
                             Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
+
                             startActivity(intent);
                             ((LoginActivity) getActivity()).finish();
-                            PropertyManager.getInstance().setUserEmail();
-                            PropertyManager.getInstance().setUserPassword();
-                            PropertyManager.getInstance().setUserId();
-                            PropertyManager.getInstance().setUserJoin();
+
+
 
 
                         }
@@ -64,7 +70,7 @@ public class LoginInputFragment extends Fragment {
                         public void onFail(int code) {
 
                         }
-                    });*/
+                    });
                     //더미데이터로 테스트
                     if (logdummy == 1) {
                         Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);

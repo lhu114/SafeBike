@@ -17,8 +17,6 @@ public class FriendAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_add);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().set
-
         tabHost = (FragmentTabHost)findViewById(R.id.friend_tabHost);
         tabHost.setup(this,getSupportFragmentManager(), R.id.friend_realtabcontent);
         tabHost.addTab(tabHost.newTabSpec("adress").setIndicator("연락처"), FriendAddressFragment.class, null);

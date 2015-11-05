@@ -17,6 +17,9 @@ import android.widget.Toast;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
 import com.safering.safebike.adapter.FriendItem;
+import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.navigation.NavigationFragment;
+import com.safering.safebike.property.PropertyManager;
 
 import java.util.ArrayList;
 
@@ -26,7 +29,8 @@ import java.util.ArrayList;
 public class FriendDirectFragment extends Fragment {
     ListView listView;
     FriendAdapter fAdapter;
-
+    EditText inputEmail = null;
+    Button searchDirect;
     public FriendDirectFragment() {
         // Required empty public constructor
     }
@@ -37,13 +41,29 @@ public class FriendDirectFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend_direct, container, false);
-        Button btn = (Button) view.findViewById(R.id.btn_search_friend_direct);
+        inputEmail = (EditText)view.findViewById(R.id.edit_search_friend_direct);
+
+        searchDirect = (Button) view.findViewById(R.id.btn_search_friend_direct);
+
         listView = (ListView) view.findViewById(R.id.listview_direct_friend);
         fAdapter = new FriendAdapter(1);
         listView.setAdapter(fAdapter);
-        btn.setOnClickListener(new View.OnClickListener() {
+        searchDirect.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                /*String email = PropertyManager.getInstance().getUserEmail();
+                NetworkManager.getInstance().getUserFriendDirect(getContext(), email, inputEmail.getText().toString(), new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object success) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });*/
                 for (int i = 0; i < 20; i++) {
                     //서버랑 비교해서 가져오기
                     FriendItem item = new FriendItem();

@@ -41,9 +41,10 @@
             android:text="adkalfkfwk@google.com" />
 
         <TextView
+            android:id="@+id/text_friendjoin_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/text_friendid_profile"
+            android:layout_alignLeft="@id/text_friendemail_profile"
             android:layout_below="@id/text_friendemail_profile"
             android:text="2015/5/35 가입" />
     </RelativeLayout>
@@ -55,9 +56,10 @@
         android:orientation="vertical">
 
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="하루활동량" />
+            android:text="활동량" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,6 +71,7 @@
                 android:text="주행거리" />
 
             <TextView
+                android:id="@+id/text_friend_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1500km" />
@@ -80,11 +83,14 @@
             android:layout_height="wrap_content">
 
             <TextView
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="평균속력" />
 
             <TextView
+                android:id="@+id/text_friend_speed"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="60km/h" />
@@ -101,6 +107,7 @@
                 android:text="소모칼로리" />
 
             <TextView
+                android:id="@+id/text_friend_calorie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2700cal" />

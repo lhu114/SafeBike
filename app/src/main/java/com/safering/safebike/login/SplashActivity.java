@@ -22,6 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         String userPassword = PropertyManager.getInstance().getUserPassword();
         Log.i("Userid", PropertyManager.getInstance().getUserId());
         Log.i("UserPass",PropertyManager.getInstance().getUserPassword());
+
         if(TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)){
 
             mHandler.postDelayed(new Runnable() {
@@ -29,12 +30,6 @@ public class SplashActivity extends AppCompatActivity {
                 public void run() {goLogin();}
             },1000);
         }
-        /*else if(TextUtils.equals(userEmail,"@EMAIL")){
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {goLogin();}
-            },1000);
-        }*/
         else{
             goMain();
         }

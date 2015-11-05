@@ -17,7 +17,7 @@
         >
 
         <ImageView
-            android:id="@+id/image_friend_profile"
+            android:id="@+id/image_user_profile"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
@@ -28,9 +28,9 @@
             android:id="@+id/text_id_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/image_friend_profile"
-            android:layout_below="@id/image_friend_profile"
-            android:layout_toRightOf="@id/image_friend_profile"
+            android:layout_alignTop="@id/image_user_profile"
+            android:layout_below="@id/image_user_profile"
+            android:layout_toRightOf="@id/image_user_profile"
             android:text="이름" />
 
         <TextView

@@ -16,7 +16,7 @@
         android:layout_weight="1">
 
         <ImageView
-            android:id="@+id/image_friend_profile"
+            android:id="@+id/image_safebike_logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
@@ -24,27 +24,29 @@
             android:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/text_friendid_profile"
+            android:id="@+id/text_safebike_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/image_friend_profile"
-            android:layout_below="@id/image_friend_profile"
-            android:layout_toRightOf="@id/image_friend_profile"
+            android:layout_alignTop="@id/image_safebike_logo"
+            android:layout_below="@id/image_safebike_logo"
+            android:layout_toRightOf="@id/image_safebike_logo"
             android:text="SafeBike" />
 
         <TextView
-            android:id="@+id/text_friendemail_profile"
+            android:id="@+id/text_safebike_copyright"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/text_friendid_profile"
-            android:layout_below="@id/text_friendid_profile"
+            android:layout_alignLeft="@id/text_safebike_title"
+            android:layout_below="@id/text_safebike_title"
             android:text="copyright 2015 SAFE BIKE" />
 
         <TextView
+            android:id="@+id/text_safebike_right"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/text_friendid_profile"
-            android:layout_below="@id/text_friendemail_profile"
+            android:layout_alignLeft="@id/text_safebike_copyright"
+            android:layout_below="@id/text_safebike_copyright"
             android:text="ALL RIGHT RESERVED" />
     </RelativeLayout>
 

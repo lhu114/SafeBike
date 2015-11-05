@@ -17,6 +17,8 @@ import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
 import com.safering.safebike.adapter.FriendItem;
+import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.PropertyManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +60,23 @@ public class FriendFragment extends Fragment {
                             return true;
                         }
                         else{
+                            /*String uEmail = PropertyManager.getInstance().getUserEmail();
+                            String fEmail = PropertyManager.getInstance().getUserEmail();
+
+                            NetworkManager.getInstance().removeUserFriend(getContext(), uEmail, fEmail, new NetworkManager.OnResultListener() {
+                                @Override
+                                public void onSuccess(Object success) {
+
+                                    fAdapter.remove(position);
+
+                                }
+
+                                @Override
+                                public void onFail(int code) {
+
+                                }
+                            });*/
+
                             //친구삭제 -- 서버에 전송
                             fAdapter.remove(position);
                             return true;
@@ -90,6 +109,20 @@ public class FriendFragment extends Fragment {
     }
 
     public void setFriendList(){
+        String email = PropertyManager.getInstance().getUserEmail();
+
+        /*NetworkManager.getInstance().getUserFriends(getContext(), email, new NetworkManager.OnResultListener() {
+            @Override
+            public void onSuccess(Object success) {
+
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });*/
+
         //네트워크로 받아서 처리
         for (int i = 0; i < 20; i++) {
             FriendItem friendItem = new FriendItem();
