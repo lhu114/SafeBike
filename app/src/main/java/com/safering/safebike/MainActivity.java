@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     public static final int MESSAGE_BACK_KEY = 1;
     public static final int TIME_BACK_TIMEOUT = 2000;
     private boolean isBackPressed = false;
-
+/////
     private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
