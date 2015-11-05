@@ -19,8 +19,10 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.listener.OnDrawListener;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
@@ -46,18 +48,6 @@ public class CalorieFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calorie, container, false);
-/*
-        Button btn = (Button)getActivity().findViewById(R.id.tmp_zoom);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("zoombtn", "zoom");
-
-            }
-        });
-*/
-
-
         calorieChart = (BarChart) view.findViewById(R.id.chart_calorie);
 
         calorieChart.setVerticalScrollBarEnabled(true);
@@ -65,8 +55,6 @@ public class CalorieFragment extends Fragment {
         calorieChart.setDrawBarShadow(false);
         calorieChart.setDrawGridBackground(false);
         calorieChart.setScaleMinima(2f, 1f);
-
-        //calorieChart.invalidate();
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -76,10 +64,6 @@ public class CalorieFragment extends Fragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                // if (me.getAction() == M) {
-                Log.i("GestureEnd", "Low Index" + calorieChart.getLowestVisibleXIndex() + "");
-                Log.i("GestureEnd", "Max Index" + calorieChart.getHighestVisibleXIndex() + "");
-                // }
 
             }
 
@@ -113,6 +97,17 @@ public class CalorieFragment extends Fragment {
 
             }
         });
+        calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                Log.i("CharValueClick","index : " + e.getXIndex());
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
         calorieChart.getXAxis().setLabelsToSkip(10);
         calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         calorieChart.getXAxis().setDrawGridLines(false);
@@ -123,12 +118,12 @@ public class CalorieFragment extends Fragment {
         xAxis.setLabelsToSkip(10);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-        xAxis.setSpaceBetweenLabels(2);*/
+        xAxis.setSpaceBetweenLabels(2);
+        */
 
         setData(20, 50);
-        // mChart.moveViewToX(13);
         calorieChart.setScaleMinima(2f, 1f);
-
+        calorieChart.moveViewToX(calorieChart.getData().getXVals().size()-1);
         return view;
     }
 
@@ -144,8 +139,7 @@ public class CalorieFragment extends Fragment {
 
         for (int i = 0; i < count; i++) {
             float mult = (range + 1);
-            // float val = (float) (Math.random() * mult);
-            float val = i % 2;
+            float val = (float) (Math.random() * mult);
             yVals1.add(new BarEntry(val, i));
         }
 
@@ -157,11 +151,7 @@ public class CalorieFragment extends Fragment {
 
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
-
-        // data.setValueTypeface(mTf);
-
         calorieChart.setData(data);
-        //calorieChart.setDa
 
 
     }

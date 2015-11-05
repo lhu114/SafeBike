@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;

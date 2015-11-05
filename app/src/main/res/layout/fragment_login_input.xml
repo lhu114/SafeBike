@@ -18,13 +18,13 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/edit_user_mail"
+            android:id="@+id/edit_user_mail_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/edit_user_email" />
 
         <EditText
-            android:id="@+id/edit_user_password"
+            android:id="@+id/edit_user_password_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/edit_user_password" />
