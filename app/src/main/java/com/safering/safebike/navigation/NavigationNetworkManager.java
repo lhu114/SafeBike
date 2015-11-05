@@ -94,15 +94,18 @@ public class NavigationNetworkManager {
     public static final String SEARCH_POI_URL = "https://apis.skplanetx.com/tmap/pois";
 
     private static final String KEY_POI_VERSION = "version";
+    private static final String KEY_POI_COUNT = "count";
     private static final String KEY_POI_SEARCH_KEYWORD = "searchKeyword";
     private static final String KEY_POI_RESCOORDTYPE = "resCoordType";
 
     private static final int VALUE_POI_VERSION = 1;
+    private static final String VALUE_POI_COUNT = "10";
     private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
 
     public void searchPOI(Context context, String keyword, final OnResultListener<SearchPOIInfo> listener) {
         RequestParams params = new RequestParams();
         params.put(KEY_POI_VERSION, VALUE_POI_VERSION);
+        params.put(KEY_POI_COUNT, VALUE_POI_COUNT);
         params.put(KEY_POI_SEARCH_KEYWORD, keyword);
         params.put(KEY_POI_RESCOORDTYPE, VALUE_POI_RESCOORDTYPE);
 

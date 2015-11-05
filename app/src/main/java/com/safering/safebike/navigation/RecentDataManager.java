@@ -142,7 +142,7 @@ public class RecentDataManager extends SQLiteOpenHelper {
             args = new String[] {"%" + keyword + "%"};
         }
 
-        String orderBy = RecentDB.RecentTable.COLUMN_POI_NAME + " COLLATE LOCALIZED ASC";
+        String orderBy = RecentDB.RecentTable._ID + " DESC";
         Cursor c = db.query(RecentDB.RecentTable.TABLE_NAME, columns, selection, args, null, null, orderBy);
 
         return c;

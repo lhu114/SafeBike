@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.safering.safebike.R;
 
@@ -62,26 +63,6 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                 if(poi != null) {
                 //    Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
-                    String defineAddress = null;
-
-                    Log.d("safebike", "poi.secondNo : " + poi.secondNo);
-
-                    /*
-                     * 주소 조합 다시!!!
-                     */
-                    if (!poi.secondNo.equals("")) {
-                        defineAddress = poi.getAddress() + poi.getDetailAddress();
-
-                        Log.d("safebike", "defineAddress 1" );
-                    } else if (!poi.firstNo.equals("") && poi.secondNo.equals("")) {
-                        defineAddress = poi.getAddress() + " " + poi.firstNo;
-
-                        Log.d("safebike", "defineAddress 2");
-                    } else {
-                        defineAddress = poi.getAddress();
-
-                        Log.d("safebike", "defineAddress 3");
-                    }
 
                     /*
                      *  검색어 RecentDb 에 저장 처리 필요
@@ -90,6 +71,43 @@ public class ParentRctFvActivity extends AppCompatActivity {
                     item.rctPOIName = poi.name;
 
                     RecentDataManager.getInstance().insertRecent(item);
+
+                    String defineAddress = null;
+
+                    Log.d("safebike", "poi.secondNo : " + poi.secondNo);
+
+                    /*
+                     * 주소 조합 다시!!!
+                     */
+                    if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+                        defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
+
+                        Log.d("safebike", "defineAddress 1");
+                    } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                        defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+                        Log.d("safebike", "defineAddress 2");
+                    } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                        defineAddress = poi.getAddress();
+
+                        Log.d("safebike", "defineAddress 3");
+                    } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+                        defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
+
+                        Log.d("safebike", "defineAddress 4");
+                    } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                        defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+                        Log.d("safebike", "defineAddress 5");
+                    } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                        defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
+
+                        Log.d("safebike", "defineAddress 6");
+                    } else {
+                        defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
+
+                        Log.d("safebike", "defineAddress 7");
+                    }
 
                     Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
                     intent.putExtra(KEY_POI_LATITUDE, poi.getLatitude());
@@ -137,7 +155,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
                 String searchKeyword = keywordView.getText().toString();
 
                 if (!TextUtils.isEmpty(searchKeyword)) {
-                  /*
+                /*
                  *  검색어 RecentDb 에 저장 처리 필요
                  */
                     RecentItem item = new RecentItem();
@@ -145,16 +163,72 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                     RecentDataManager.getInstance().insertRecent(item);
 
-                /*
-                 * 검색 버튼으로 찾을 때 처리
-                 */
-//                searchPOIFromKeywordView(searchKeyword);
 
-                    String poiName = searchKeyword;
-                    Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
-                    intent.putExtra(KEY_POI_NAME, poiName);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
+                /*
+                 * ParentRctFvActivity 에 있는 setResult 처리
+                 */
+
+                    Toast.makeText(ParentRctFvActivity.this, "rctPoiName : " + searchKeyword, Toast.LENGTH_SHORT).show();
+
+                    NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
+                        @Override
+                        public void onSuccess(SearchPOIInfo result) {
+                            POI poi = result.pois.poiList.get(0);
+
+                            if (poi != null) {
+                                String defineAddress = null;
+
+                                Log.d("safebike", "poi.secondNo : " + poi.secondNo);
+
+                    /*
+                     * 주소 조합 다시!!!
+                     */
+                                if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+                                    defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
+
+                                    Log.d("safebike", "defineAddress 1");
+                                } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                    defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+                                    Log.d("safebike", "defineAddress 2");
+                                } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                    defineAddress = poi.getAddress();
+
+                                    Log.d("safebike", "defineAddress 3");
+                                } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+                                    defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
+
+                                    Log.d("safebike", "defineAddress 4");
+                                } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                    defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+                                    Log.d("safebike", "defineAddress 5");
+                                } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                    defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
+
+                                    Log.d("safebike", "defineAddress 6");
+                                } else {
+                                    defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
+
+                                    Log.d("safebike", "defineAddress 7");
+                                }
+
+                                Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
+                                intent.putExtra(KEY_POI_LATITUDE, poi.getLatitude());
+                                intent.putExtra(KEY_POI_LONGITUDE, poi.getLongitude());
+                                intent.putExtra(KEY_POI_NAME, poi.name);
+                                intent.putExtra(KEY_POI_ADDRESS, defineAddress);
+                                setResult(Activity.RESULT_OK, intent);
+
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+
+                        }
+                    });
                 }
             }
         });

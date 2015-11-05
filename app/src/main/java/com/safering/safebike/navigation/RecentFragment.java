@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.safering.safebike.R;
 
@@ -24,6 +26,9 @@ import com.safering.safebike.R;
  */
 public class RecentFragment extends Fragment {
     private static final String KEY_POI_NAME = "poiName";
+    private static final String KEY_POI_LATITUDE = "poiLatitude";
+    private static final String KEY_POI_LONGITUDE = "poiLongitude";
+    private static final String KEY_POI_ADDRESS = "poiAddress";
 
     ListView listView;
     SimpleCursorAdapter mAdapter;
@@ -63,6 +68,8 @@ public class RecentFragment extends Fragment {
                     /*
                      *  View 에 글 넣어주기
                      */
+                    TextView tvRctPoiName = (TextView) view.findViewById(R.id.text_rct_poi_name);
+                    tvRctPoiName.setText(cursor.getString(columnIndex));
 
                     return true;
                 }
@@ -76,16 +83,72 @@ public class RecentFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(getContext(), "clicked", Toast.LENGTH_SHORT).show();
-
+                Cursor c = (Cursor) listView.getItemAtPosition(position);
+                final String rctPoiName = c.getString(c.getColumnIndex(RecentDB.RecentTable.COLUMN_POI_NAME));
                 /*
                  * ParentRctFvActivity 에 있는 setResult 처리
                  */
 
-                String poiName = "hello";
-                Intent intent = new Intent(getContext(), NavigationFragment.class);
-                intent.putExtra(KEY_POI_NAME, poiName);
-                getActivity().setResult(Activity.RESULT_OK, intent);
-                getActivity().finish();
+                Toast.makeText(getContext(), "rctPoiName : " + rctPoiName, Toast.LENGTH_SHORT).show();
+
+                NavigationNetworkManager.getInstance().searchPOI(getContext(), rctPoiName, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
+                    @Override
+                    public void onSuccess(SearchPOIInfo result) {
+                        POI poi = result.pois.poiList.get(0);
+
+                        if (poi != null) {
+                            String defineAddress = null;
+
+                            Log.d("safebike", "poi.secondNo : " + poi.secondNo);
+
+                    /*
+                     * 주소 조합 다시!!!
+                     */
+                            if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+                                defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
+
+                                Log.d("safebike", "defineAddress 1");
+                            } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+                                Log.d("safebike", "defineAddress 2");
+                            } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                defineAddress = poi.getAddress();
+
+                                Log.d("safebike", "defineAddress 3");
+                            } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+                                defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
+
+                                Log.d("safebike", "defineAddress 4");
+                            } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+                                Log.d("safebike", "defineAddress 5");
+                            } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+                                defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
+
+                                Log.d("safebike", "defineAddress 6");
+                            } else {
+                                defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
+
+                                Log.d("safebike", "defineAddress 7");
+                            }
+
+                            Intent intent = new Intent(getContext(), NavigationFragment.class);
+                            intent.putExtra(KEY_POI_LATITUDE, poi.getLatitude());
+                            intent.putExtra(KEY_POI_LONGITUDE, poi.getLongitude());
+                            intent.putExtra(KEY_POI_NAME, poi.getName());
+                            intent.putExtra(KEY_POI_ADDRESS, defineAddress);
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().finish();
+                        }
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
             }
         });
 
@@ -160,4 +223,5 @@ public class RecentFragment extends Fragment {
 //        Toast.makeText(getContext(), "RecentFragment.onDestroy", Toast.LENGTH_SHORT).show();
         mAdapter.changeCursor(null);
     }
+
 }

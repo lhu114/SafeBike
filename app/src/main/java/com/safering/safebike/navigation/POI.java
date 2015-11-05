@@ -39,7 +39,7 @@ public class POI {
     }
 
     public String getDetailAddress() {
-        return " " + firstNo + " - " + secondNo;
+        return firstNo + "-" + secondNo;
     }
 
 
