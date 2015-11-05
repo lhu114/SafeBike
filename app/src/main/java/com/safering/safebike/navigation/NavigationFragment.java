@@ -2,6 +2,7 @@ package com.safering.safebike.navigation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,7 +32,7 @@ import com.safering.safebike.R;
 
 
 public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final String DEBUG_TAG = "safebike";
 
     private static final int REQUEST_SEARCH_POI = 1002;
@@ -40,6 +43,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
+    Location mLocation;
+    LocationRequest mLocationRequest;
 
     View view;
     LinearLayout addressLayout;
@@ -65,6 +70,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();
+
+        createLocationRequest();
     }
 
     @Override
@@ -104,11 +111,17 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         return view;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        setUpMapIfNeeded();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopLocationUpdates();
+    }
 
     /*
          * 프래그먼트가 화면에서 사라질 때 프래그먼트의 뷰를 컨테이너 뷰에서 제거
@@ -234,6 +247,39 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setNumUpdates(1);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected  void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+    @Override
+    public void onConnected(Bundle bundle) {
+        startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
     @Override
     public void onMapClick(LatLng latLng) {
 
@@ -243,7 +289,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onMapLongClick(LatLng latLng) {
 //        activateDestination();
 
-        Toast.makeText(getContext(), "onMapLongClick", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "onMapLongClick", Toast.LENGTH_SHORT).show();
 
         /*
          *  클릭 좌표 가져와서 네트워크 요청하고 주소 받아와서 View 에 던지기
@@ -258,22 +304,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 startActivity(intent);
             }
         });
-    }
-
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
     }
 }
 
