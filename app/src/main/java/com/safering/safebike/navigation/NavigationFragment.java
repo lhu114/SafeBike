@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,10 +28,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.safering.safebike.R;
 
 
-public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
+public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String DEBUG_TAG = "safebike";
 
-    private static final int REQUEST_SEARCH_POI = 1001;
+    private static final int REQUEST_SEARCH_POI = 1002;
     private static final String KEY_POI_NAME = "poiName";
     private static final String KEY_POI_LATITUDE = "poiLatitude";
     private static final String KEY_POI_LONGITUDE = "poiLongitude";
@@ -60,7 +62,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
 
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API).build();
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).build();
     }
 
     @Override
@@ -257,6 +261,19 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
 
+    @Override
+    public void onConnected(Bundle bundle) {
 
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
 }
 
