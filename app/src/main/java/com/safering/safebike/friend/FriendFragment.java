@@ -41,25 +41,24 @@ public class FriendFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
         fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
-        listView = (ListView)view.findViewById(R.id.listview_myfriend);
+        listView = (ListView) view.findViewById(R.id.listview_myfriend);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                friendItem = (FriendItem)fAdapter.getItem(position);
+                friendItem = (FriendItem) fAdapter.getItem(position);
 
-                PopupMenu popupMenu = new PopupMenu(getContext(),view);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_popup_friend,popupMenu.getMenu());
+                PopupMenu popupMenu = new PopupMenu(getContext(), view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_popup_friend, popupMenu.getMenu());
                 popupMenu.getMenu().getItem(0).setTitle(friendItem.friendId);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getTitle().equals(friendItem.friendId)) {
+                        if (item.getTitle().equals(friendItem.friendId)) {
                             Intent intent = new Intent(getContext(), FriendProfileActivity.class);
                             intent.putExtra(FRIEND_INFORM, friendItem);
                             startActivity(intent);
                             return true;
-                        }
-                        else{
+                        } else {
                             /*String uEmail = PropertyManager.getInstance().getUserEmail();
                             String fEmail = PropertyManager.getInstance().getUserEmail();
 
@@ -95,7 +94,7 @@ public class FriendFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent((MainActivity)getActivity(),FriendAddActivity.class);
+                Intent intent = new Intent((MainActivity) getActivity(), FriendAddActivity.class);
                 startActivity(intent);
             }
         });
@@ -108,12 +107,22 @@ public class FriendFragment extends Fragment {
         //setFriendList(); 네트워크에서 친구리스트 받아오기
     }
 
-    public void setFriendList(){
-        String email = PropertyManager.getInstance().getUserEmail();
+    public void setFriendList() {
 
-        /*NetworkManager.getInstance().getUserFriends(getContext(), email, new NetworkManager.OnResultListener() {
+    /*
+    String email = PropertyManager.getInstance().getUserEmail();
+
+    NetworkManager.getInstance().getUserFriends(getContext(), email, new NetworkManager.OnResultListener<FriendResult>() {
             @Override
-            public void onSuccess(Object success) {
+            public void onSuccess(FriendResult result) {
+                int count = Integer.valueOf(result.count);
+                for(int i = 0; i < count; i++){
+                    FriendItem friendItem = new FriendItem();
+                    friendItem.friendId = result.friendlist.get(i).friendId;
+                    friendItem.friendEmail = result.friendlist.get(i).friendEmail;
+                    friendItem.friendImage = result.friendlist.get(i).friendImage;
+                    fAdapter.add(friendItem);
+                }
 
             }
 
@@ -131,8 +140,6 @@ public class FriendFragment extends Fragment {
         }
 
     }
-
-
 
 
 }

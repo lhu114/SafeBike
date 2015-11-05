@@ -10,5 +10,5 @@ import java.io.Serializable;
 public class FriendItem implements Serializable{
     public String friendId;
     public String friendEmail;
-    public Drawable friendImage;
+    public String friendImage;
 }

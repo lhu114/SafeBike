@@ -11,6 +11,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import com.safering.safebike.exercisereport.CalorieResult;
 import com.safering.safebike.exercisereport.DistanceResult;
 import com.safering.safebike.exercisereport.SpeedResult;
+import com.safering.safebike.friend.FriendResult;
 import com.safering.safebike.login.LoginResult;
 import com.safering.safebike.navigation.SearchPOIInfo;
 import com.safering.safebike.navigation.SearchPOIInfoResult;
@@ -306,7 +307,7 @@ public class NetworkManager {
     /**
      * 친구
      */
-    public void getUserFriends(Context context, String email, final OnResultListener listener) {
+    public void getUserFriends(Context context, String email, final OnResultListener<FriendResult> listener) {
         //PARAMETER : 유저 이메일
         //결과값 : JSON(친구아이디,이메일,사진)
 
@@ -321,7 +322,8 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                FriendResult result = gson.fromJson(responseString, FriendResult.class);
+                listener.onSuccess(result);
             }
         });
 
