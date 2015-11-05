@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -28,13 +30,14 @@ import com.safering.safebike.R;
 public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
     private static final String DEBUG_TAG = "safebike";
 
-    private static final int REQUEST_SEARCH_POI = 1;
+    private static final int REQUEST_SEARCH_POI = 1001;
     private static final String KEY_POI_NAME = "poiName";
     private static final String KEY_POI_LATITUDE = "poiLatitude";
     private static final String KEY_POI_LONGITUDE = "poiLongitude";
     private static final String KEY_POI_ADDRESS = "poiAddress";
 
     private GoogleMap mMap;
+    GoogleApiClient mGoogleApiClient;
 
     View view;
     LinearLayout addressLayout;
@@ -54,6 +57,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate");
         Toast.makeText(getContext(), "NavigationFragment.onCreate", Toast.LENGTH_SHORT).show();
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(LocationServices.API).build();
     }
 
     @Override
@@ -148,35 +155,37 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_SEARCH_POI && resultCode == Activity.RESULT_OK) {
-            double poiLatitude = data.getDoubleExtra(KEY_POI_LATITUDE, 0);
-            double poiLongitude = data.getDoubleExtra(KEY_POI_LONGITUDE, 0);
-            String poiName = data.getStringExtra(KEY_POI_NAME);
-            String poiAddress = data.getStringExtra(KEY_POI_ADDRESS);
+        if (requestCode == REQUEST_SEARCH_POI) {
+            if (resultCode == Activity.RESULT_OK) {
+                double poiLatitude = data.getDoubleExtra(KEY_POI_LATITUDE, 0);
+                double poiLongitude = data.getDoubleExtra(KEY_POI_LONGITUDE, 0);
+                String poiName = data.getStringExtra(KEY_POI_NAME);
+                String poiAddress = data.getStringExtra(KEY_POI_ADDRESS);
 
-            Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poiName, Toast.LENGTH_SHORT).show();
-            Log.d("safebike", "poiLatitude : " + Double.toString(poiLatitude) + " poiLongitude : " + Double.toString(poiLongitude));
-            Log.d("safebike", "poiName : " + data.getStringExtra(KEY_POI_NAME) + " poiAddress : " + data.getStringExtra(KEY_POI_ADDRESS));
+                Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poiName, Toast.LENGTH_SHORT).show();
+                Log.d("safebike", "poiLatitude : " + Double.toString(poiLatitude) + " poiLongitude : " + Double.toString(poiLongitude));
+                Log.d("safebike", "poiName : " + data.getStringExtra(KEY_POI_NAME) + " poiAddress : " + data.getStringExtra(KEY_POI_ADDRESS));
 //            activateDestination();
-            
-            tvPoiAddress.setText(poiAddress);
+
+                tvPoiAddress.setText(poiAddress);
 
             /*
              * 맵 이동하면서 poi 마커 찍기
              */
-            addressLayout.setVisibility(View.VISIBLE);
-            fabFindRoute.setVisibility(View.VISIBLE);
+                addressLayout.setVisibility(View.VISIBLE);
+                fabFindRoute.setVisibility(View.VISIBLE);
 
-            fabFindRoute.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                fabFindRoute.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), SelectRouteActivity.class);
                     /*
                      * 위에서 받은 데이터 전달 출발지, 목적지 다 보내야함
                      */
-                    startActivity(intent);
-                }
-            });
+                        startActivity(intent);
+                    }
+                });
+            }
         }
     }
 
@@ -211,8 +220,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
 
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
+        mMap.getProjection();
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -244,5 +255,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             }
         });
     }
+
+
+
 }
 
