@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.safering.safebike.R;
 import com.safering.safebike.property.PropertyManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,23 +59,26 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private static String LOCATION_CHANGE_FLAG = "on";
     private static final String ON = "on";
     private static final String OFF = "off";
-    public static final String RECENT_LATITUDE = "recentlatitude";
-    public static final String RECENT_LONGITUDE = "recentlongitude";
 
     GoogleApiClient mGoogleApiClient;
     Location mLocation, mCacheLocation;
 
     LocationRequest mLocationRequest;
 
-    final Map<POI, Marker> mMarkerResolver = new HashMap<POI, Marker>();
-    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
-
+    final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
+//    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
+    final Map<LatLng, Marker> mLcMarkerResolver = new HashMap<LatLng, Marker>();
+//    final Map<Marker, >
     View view;
     LinearLayout addressLayout;
     FloatingActionButton fabFindRoute;
     TextView tvPoiAddress;
 
-    ArrayAdapter<POI> mListAdapter;
+//    ArrayAdapter<POI> mPOIMarkerList;
+//    ArrayAdapter<LatLng> mLcMarkerList;
+
+    ArrayList<POI> mPOIMarkerList;
+    ArrayList<LatLng> mLcMarkerList;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -97,6 +100,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
             createLocationRequest();
         }
+
+        mPOIMarkerList = new ArrayList<POI>();
+        mLcMarkerList = new ArrayList<LatLng>();
     }
 
     @Override
@@ -144,12 +150,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         /*
                          * 마커 찍기
                          */
+//                        addCurrentMarker(mLocation);
                     } else {
                         Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
                     }
-
-
-
                 }
             });
         } catch (InflateException e) {            /*
@@ -273,8 +277,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //                    stopLocationUpdates();
 
                     moveMap(poi.getLatitude(), poi.getLongitude(), ANIMATE_CAMERA);
-                    addPOIMarker(poi);
 
+                    clearALLMarker();
+
+                    addPOIMarker(poi);
+                    mPOIMarkerList.add(poi);
 
                     addressLayout.setVisibility(View.VISIBLE);
                     fabFindRoute.setVisibility(View.VISIBLE);
@@ -325,6 +332,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.mCacheLocation.moveMap");
             moveMap(mCacheLocation.getLatitude(), mCacheLocation.getLongitude(), MOVE_CAMERA);
+//            addCurrentMarker(mCacheLocation);
+
             mCacheLocation = null;
         } else {
             double recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
@@ -415,6 +424,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 if (location != null) {
                     if (LOCATION_CHANGE_FLAG.equals(ON)) {
                         moveMap(location.getLatitude(), location.getLongitude(), MOVE_CAMERA);
+//                        addCurrentMarker(location);
 
                         PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
                         PropertyManager.getInstance().setRecentLongitude(Double.toString(location.getLongitude()));
@@ -448,7 +458,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 public void onSuccess(AddressInfo result) {
                     tvPoiAddress.setText(result.fullAddress);
 
-                    addLongClickMarker(latLng, result);
+//                    addLongClickMarker(latLng, result);
+                    clearALLMarker();
+
+                    addLongClickMarker(latLng);
+                    mLcMarkerList.add(latLng);
                     Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
                 }
 
@@ -488,7 +502,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
+//    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
+    private void addLongClickMarker(LatLng latLng) {
         MarkerOptions options  = new MarkerOptions();
         /*
          * 어떤 값으로 위도 경도 넘길지는 고민
@@ -502,16 +517,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         Marker m = mMap.addMarker(options);
 
-//        mMarkerResolver.put(poi, m);
+        mLcMarkerResolver.put(latLng, m);
+//        mPOIMarkerResolver.put(poi, m);
 //        mPOIResolver.put(m, poi);
     }
 
     private void addPOIMarker(POI poi) {
         MarkerOptions options  = new MarkerOptions();
-        /*
-         * 어떤 값으로 위도 경도 넘길지는 고민
-         */
-//        options.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
         options.position(new LatLng(poi.noorLat, poi.noorLon));
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         options.anchor(0.5f, 1.0f);
@@ -520,12 +532,38 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         Marker m = mMap.addMarker(options);
 
-        mMarkerResolver.put(poi, m);
-        mPOIResolver.put(m, poi);
+        mPOIMarkerResolver.put(poi, m);
+//        mPOIResolver.put(m, poi);
     }
 
-    private void clearMarker() {
+//    private void addCurrentMarker(Location location) {
+//        MarkerOptions options = new MarkerOptions();
+//        options.position(new LatLng(location.getLatitude(), location.getLongitude()));
+//        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+//        options.anchor(0.5f, 1.0f);
+//        options.draggable(false);
+//
+//        Marker m = mMap.addMarker(options);
+//    }
 
+    private void clearALLMarker() {
+        for (int i = 0; i < mPOIMarkerList.size(); i++) {
+            POI poi = mPOIMarkerList.get(i);
+            Marker m = mPOIMarkerResolver.get(poi);
+            mPOIMarkerResolver.remove(m);
+            m.remove();
+        }
+
+        mPOIMarkerList.clear();
+
+        for (int i = 0; i < mLcMarkerList.size(); i++) {
+            LatLng latLng = mLcMarkerList.get(i);
+            Marker m = mLcMarkerResolver.get(latLng);
+            mLcMarkerResolver.remove(m);
+            m.remove();
+        }
+
+        mLcMarkerList.clear();
     }
 
     @Override
