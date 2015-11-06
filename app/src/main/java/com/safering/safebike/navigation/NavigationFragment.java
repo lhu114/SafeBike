@@ -443,7 +443,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         /*
          *  마커도 내리기
          */
-
+        clearALLMarker();
         addressLayout.setVisibility(View.INVISIBLE);
         fabFindRoute.setVisibility(View.GONE);
     }
