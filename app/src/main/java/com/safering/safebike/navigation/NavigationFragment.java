@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -147,7 +146,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onStart() {
         super.onStart();
-        Toast.makeText(getContext(), "NavigationFragment.onStart", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "NavigationFragment.onStart", Toast.LENGTH_SHORT).show();
         Log.d(DEBUG_TAG, "NavigationFragment.onStart");
         if (!mResolvingError) {  // more about this later
             if (mGoogleApiClient != null) {
@@ -160,20 +159,20 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onStop() {
         super.onStop();
-        Toast.makeText(getContext(), "NavigationFragment.onStop", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "NavigationFragment.onStop", Toast.LENGTH_SHORT).show();
         Log.d(DEBUG_TAG, "NavigationFragment.onStop");
 
         if (mGoogleApiClient != null) {
             stopLocationUpdates();
             mGoogleApiClient.disconnect();
-            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect -> mGoogleApiClient == null");
         }
     }
 
     /*
-         * 프래그먼트가 화면에서 사라질 때 프래그먼트의 뷰를 컨테이너 뷰에서 제거
-         */
+     * 프래그먼트가 화면에서 사라질 때 프래그먼트의 뷰를 컨테이너 뷰에서 제거
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -252,7 +251,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //                    stopLocationUpdates();
 
                     moveMap(poi.getLatitude(), poi.getLongitude(), ANIMATE_CAMERA);
-                    addMarker(poi);
+                    addPOIMarker(poi);
 
 
                     addressLayout.setVisibility(View.VISIBLE);
@@ -278,23 +277,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-        /*
-         * 실패 등 예외상황 처리
-         */
-
-
-//    public void activateDestination() {
-//        addressLayout.setVisibility(View.VISIBLE);
-//        fabFindRoute.setVisibility(View.VISIBLE);
-//
-//        fabFindRoute.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -306,7 +288,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
         Log.d(DEBUG_TAG, "NavigationFragment.onMapReady");
         mMap = googleMap;
 
@@ -316,16 +298,19 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap.setOnMapLongClickListener(this);
 
         if (mCacheLocation != null) {
-            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.mCacheLocation.moveMap");
             moveMap(mLocation.getLatitude(), mLocation.getLongitude(), MOVE_CAMERA);
             mCacheLocation = null;
+        } else {
+//            "noorLat":"4518445.8902031",
+//                    "noorLon":"14135042.0712748",
         }
 
 
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.addPOIMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
@@ -355,13 +340,18 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         startLocationUpdates();
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        Toast.makeText(getContext(), "NavigationFragment.onConnected.mLocation" + " : " + mLocation.getLatitude() + ", " + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+        if (mLocation != null) {
+            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
+        } else {
+            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
+        }
+//        Toast.makeText(getContext(), "NavigationFragment.onConnected.mLocation" + " : " + mLocation.getLatitude() + ", " + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Toast.makeText(getContext(), "NavigationFragment.onConnectionSuspended", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "NavigationFragment.onConnectionSuspended", Toast.LENGTH_SHORT).show();
         Log.d(DEBUG_TAG, "NavigationFragment.onConnectionSuspended");
     }
 
@@ -372,7 +362,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             return;
         }
 
-        Toast.makeText(getContext(), "NavigationFragment.onConnectionFailed", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "NavigationFragment.onConnectionFailed", Toast.LENGTH_SHORT).show();
         Log.d(DEBUG_TAG, "NavigationFragment.onConnectionFailed");
     }
 
@@ -385,7 +375,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     LocationListener mListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Toast.makeText(getContext(), "NavigationFragment.onLocationChanged", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "NavigationFragment.onLocationChanged", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged");
             Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.flag : " + LOCATION_CHANGE_FLAG);
             if (mMap != null) {
@@ -406,24 +396,36 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     @Override
-    public void onMapLongClick(LatLng latLng) {
+    public void onMapLongClick(final LatLng latLng) {
 //        activateDestination();
 
-//        Toast.makeText(getContext(), "onMapLongClick", Toast.LENGTH_SHORT).show();
+        if (latLng != null) {
+            NavigationNetworkManager.getInstance().searchReverseGeo(getContext(), latLng, new NavigationNetworkManager.OnResultListener<AddressInfo>() {
+                @Override
+                public void onSuccess(AddressInfo result) {
+                    tvPoiAddress.setText(result.fullAddress);
 
-        /*
-         *  클릭 좌표 가져와서 네트워크 요청하고 주소 받아와서 View 에 던지기
-         */
-        addressLayout.setVisibility(View.VISIBLE);
-        fabFindRoute.setVisibility(View.VISIBLE);
+                    addLongClickMarker(latLng, result);
+                    Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
+                }
 
-        fabFindRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-                startActivity(intent);
-            }
-        });
+                @Override
+                public void onFail(int code) {
+
+                }
+            });
+
+            addressLayout.setVisibility(View.VISIBLE);
+            fabFindRoute.setVisibility(View.VISIBLE);
+
+            fabFindRoute.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void moveMap(double latitude, double longitude, String moveAction) {
@@ -443,7 +445,25 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-    private void addMarker(POI poi) {
+    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
+        MarkerOptions options  = new MarkerOptions();
+        /*
+         * 어떤 값으로 위도 경도 넘길지는 고민
+         */
+//        options.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
+        options.position(new LatLng(latLng.latitude, latLng.longitude));
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        options.anchor(0.5f, 1.0f);
+//        options.title(addressInfo.);
+        options.draggable(false);
+
+        Marker m = mMap.addMarker(options);
+
+//        mMarkerResolver.put(poi, m);
+//        mPOIResolver.put(m, poi);
+    }
+
+    private void addPOIMarker(POI poi) {
         MarkerOptions options  = new MarkerOptions();
         /*
          * 어떤 값으로 위도 경도 넘길지는 고민
@@ -459,6 +479,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         mMarkerResolver.put(poi, m);
         mPOIResolver.put(m, poi);
+    }
+
+    private void clearMarker() {
+
     }
 
     @Override
