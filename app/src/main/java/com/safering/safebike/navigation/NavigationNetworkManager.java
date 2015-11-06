@@ -3,6 +3,7 @@ package com.safering.safebike.navigation;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.MySSLSocketFactory;
@@ -29,15 +30,14 @@ import java.security.cert.CertificateException;
 public class NavigationNetworkManager {
     private static NavigationNetworkManager instance;
 
-    private static final String KEY_HEADERS_ACCEPT = "Accept";
-    private static final String KEY_HEADERS_APPKEY = "appKey";
+    private static final String KEY_TMAP_HEADERS_ACCEPT = "Accept";
+    private static final String KEY_TMAP_HEADERS_APPKEY = "appKey";
 
-    private static final String VALUE_HEADERS_ACCEPT = "application/json";
-    private static final String VALUE_HEADERS_APPKEY = "fae4be30-90e4-3c96-b227-0086b07ae5e1";
+    private static final String VALUE_TMAP_HEADERS_ACCEPT = "application/json";
+    private static final String VALUE_TMAP_HEADERS_APPKEY = "fae4be30-90e4-3c96-b227-0086b07ae5e1";
 
     AsyncHttpClient client;
     Gson gson;
-    Header[] headers = null;
 
     private NavigationNetworkManager() {
         try {
@@ -63,11 +63,6 @@ public class NavigationNetworkManager {
         }
 
         gson = new Gson();
-        headers = new Header[2];
-
-        headers[0] = new BasicHeader(KEY_HEADERS_ACCEPT, VALUE_HEADERS_ACCEPT);
-        headers[1] = new BasicHeader(KEY_HEADERS_APPKEY, VALUE_HEADERS_APPKEY);
-
     }
 
     public static synchronized NavigationNetworkManager getInstance() {
@@ -103,6 +98,10 @@ public class NavigationNetworkManager {
     private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
 
     public void searchPOI(Context context, String keyword, final OnResultListener<SearchPOIInfo> listener) {
+        Header[] headers = new Header[2];
+        headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
+        headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
+
         RequestParams params = new RequestParams();
         params.put(KEY_POI_VERSION, VALUE_POI_VERSION);
         params.put(KEY_POI_COUNT, VALUE_POI_COUNT);
@@ -144,6 +143,72 @@ public class NavigationNetworkManager {
                 String code = Integer.toString(statusCode);
                 Log.d("safebike", "code : " + code + " / responseString : " + responseString);
                 Log.d("safebike", "headers : " + headers);
+            }
+        });
+    }
+
+    public static final String SEARCH_REVERSEGEOCODING_URL = "https://apis.skplanetx.com/tmap/geo/reversegeocoding";
+
+    private static final String KEY_REVERSEGEOCODING_VERSION = "version";
+    private static final String KEY_REVERSEGEOCODING_LATITUDE = "lat";
+    private static final String KEY_REVERSEGEOCODING_LONGITUDE = "lon";
+    private static final String KEY_REVERSEGEOCODING_COORDTYPE = "coordType";
+
+    private static final int VALUE_REVERSEGEOCODING_VERSION = 1;
+    private static final String VALUE_REVERSEGEOCODING_COORDTYPE = "WGS84GEO";
+
+    public void searchReverseGeo(Context context, LatLng latLng, final OnResultListener<AddressInfo> listener) {
+        Header[] headers = new Header[2];
+        headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
+        headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
+
+        final String latitude = Double.toString(latLng.latitude);
+        final String longitude = Double.toString(latLng.longitude);
+
+        RequestParams params = new RequestParams();
+        params.put(KEY_REVERSEGEOCODING_VERSION, VALUE_REVERSEGEOCODING_VERSION);
+        params.put(KEY_REVERSEGEOCODING_LATITUDE, latitude);
+        params.put(KEY_REVERSEGEOCODING_LONGITUDE, longitude);
+        params.put(KEY_REVERSEGEOCODING_COORDTYPE, VALUE_REVERSEGEOCODING_COORDTYPE);
+
+        Log.d("safebike", "lntLng : " + latitude + ", " + longitude);
+
+        int count = headers.length;
+        for(int i = 0; i < count; i++) {
+            Log.d("safebike", "headers : " + headers[i]);
+        }
+
+        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
+        client.get(context, SEARCH_REVERSEGEOCODING_URL, headers, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                /*
+                 * fail에 따른 statusCode 처리
+                 */
+                listener.onFail(statusCode);
+
+                String code = Integer.toString(statusCode);
+                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+
+                int count = headers.length;
+                for(int i = 0; i < count; i++) {
+                    Log.d("safebike", "headers : " + headers[i]);
+                }
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                /*
+                 * success에 따른 statusCode 처리
+                 */
+
+                String code = Integer.toString(statusCode);
+                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+                Log.d("safebike", "headers : " + headers);
+
+
+                AddressInfoResult result = gson.fromJson(responseString, AddressInfoResult.class);
+                listener.onSuccess(result.addressInfo);
             }
         });
     }

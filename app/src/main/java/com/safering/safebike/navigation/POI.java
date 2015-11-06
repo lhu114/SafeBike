@@ -1,9 +1,11 @@
 package com.safering.safebike.navigation;
 
+import java.io.Serializable;
+
 /**
  * Created by lhu on 2015-10-30.
  */
-public class POI {
+public class POI implements Serializable {
     String id = null;
     String name = null;
     String upperAddrName = null;

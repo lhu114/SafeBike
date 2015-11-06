@@ -60,8 +60,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(MainActivity.this, "MainActivity.onCreate", Toast.LENGTH_SHORT).show();
-
+        Log.d("safebike", "MainActivity.onCreate");
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,27 +112,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-//        emptyBackStack();
-//        Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_MAIN);
-//        getSupportFragmentManager().popBackStack(TAG_MAIN, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        //Toast.makeText(MainActivity.this, "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
-
-//        intent = getIntent();
+        Log.d("safebike", "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition());
 
         if (intent != null) {
             String popMsg = intent.getStringExtra(KEY_POP_NAVIGATION_FRAGMENT);
             String replaceMsg = intent.getStringExtra(KEY_REPLACE_MAIN_FRAGMENT);
-            Toast.makeText(MainActivity.this, "MainActivity.onNewIntent.replaceMsg : " + replaceMsg, Toast.LENGTH_SHORT).show();
+
+            Log.d("safebike", "MainActivity.onNewIntent.replaceMsg : " + replaceMsg);
             if (popMsg != null && popMsg.equals(VALUE_POP_NAVIGATION_FRAGMENT)) {
                 Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
                 if (old != null) {
-                    Toast.makeText(MainActivity.this, "MainActivity.onNewIntent.popBackStack", Toast.LENGTH_SHORT).show();
+                    Log.d("safebike", "MainActivity.onNewIntent.popBackStack");
                     getSupportFragmentManager().popBackStack();
                 }
 
                 if (replaceMsg != null && replaceMsg.equals(VALUE_REPLACE_MAIN_FRAGMENT)) {
-                    Toast.makeText(MainActivity.this, "MainActivity.onNewIntent.Replace.MainFragment", Toast.LENGTH_SHORT).show();
+                    Log.d("safebike", "MainActivity.onNewIntent.Replace.MainFragment");
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
                 }
             }
@@ -143,13 +138,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-//        Toast.makeText(MainActivity.this, "MainActivity.onPause", Toast.LENGTH_SHORT).show();
+        Log.d("safebike",  "MainActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        Toast.makeText(MainActivity.this, "MainActivity.onResume", Toast.LENGTH_SHORT).show();
+        Log.d("safebike",  "MainActivity.onResume");
     }
 
     Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -210,7 +205,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
-                Toast.makeText(MainActivity.this, "Replace.MainFragment", Toast.LENGTH_SHORT).show();
+
+                Log.d("safebike", "Replace.MainFragment");
                 /*
                  *   오늘 아침에 처리할 부분(UI 변경 위해 replace 맞는지 여쭤보기
                  */
