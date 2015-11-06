@@ -52,8 +52,16 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //    private static final String KEY_POI_ADDRESS = "poiAddress";
 
     private GoogleMap mMap;
+    private boolean mResolvingError = false;
+    private static final String STATE_RESOLVING_ERROR = "resolving_error";
+    private static final String MOVE_CAMERA = "movecamera";
+    private static final String ANIMATE_CAMERA = "animatecamera";
+    private static String LOCATION_CHANGE_FLAG = "on";
+    private static final String ON = "on";
+    private static final String OFF = "off";
+
     GoogleApiClient mGoogleApiClient;
-    Location mLocation, mLastLocation;
+    Location mLocation, mCacheLocation;
 
     LocationRequest mLocationRequest;
 
@@ -77,22 +85,23 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         super.onCreate(savedInstanceState);
 
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate");
-        Toast.makeText(getContext(), "NavigationFragment.onCreate", Toast.LENGTH_SHORT).show();
 
+        if (mGoogleApiClient == null) {
+            Log.d(DEBUG_TAG, "NavigationFragment.onCreate.new mGoogleApiClient");
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this).build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this).build();
-
-        createLocationRequest();
+            createLocationRequest();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(DEBUG_TAG, "NavigationFragment.onCreateView");
-        Toast.makeText(getContext(), "NavigationFragment.onCreateView", Toast.LENGTH_SHORT).show();
+
         // Inflate the layout for this fragment
         try {
             view = inflater.inflate(R.layout.fragment_navigation, container, false);
@@ -107,6 +116,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
             fabFindRoute = (FloatingActionButton) view.findViewById(R.id.btn_find_route);
             fabFindRoute.setVisibility(View.GONE);
+
+            if (View.GONE == fabFindRoute.getVisibility()) {
+                LOCATION_CHANGE_FLAG = ON;
+                Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.ON");
+            }
 
             FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.btn_crt_location);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -130,10 +144,31 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         super.onResume();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Toast.makeText(getContext(), "NavigationFragment.onStart", Toast.LENGTH_SHORT).show();
+        Log.d(DEBUG_TAG, "NavigationFragment.onStart");
+        if (!mResolvingError) {  // more about this later
+            if (mGoogleApiClient != null) {
+                Log.d(DEBUG_TAG, "NavigationFragment.onStart.mGoogleApiClient.connect -> mGoogleApiClient != null");
+                mGoogleApiClient.connect();
+            }
+        }
+    }
 
     @Override
     public void onStop() {
         super.onStop();
+        Toast.makeText(getContext(), "NavigationFragment.onStop", Toast.LENGTH_SHORT).show();
+        Log.d(DEBUG_TAG, "NavigationFragment.onStop");
+
+        if (mGoogleApiClient != null) {
+            stopLocationUpdates();
+            mGoogleApiClient.disconnect();
+            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
+            Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect -> mGoogleApiClient == null");
+        }
     }
 
     /*
@@ -142,7 +177,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Toast.makeText(getContext(), "NavigationFragment.onDestroyView", Toast.LENGTH_SHORT).show();
+
+        Log.d(DEBUG_TAG, "NavigationFragment.onDestroyView");
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
 
@@ -155,9 +191,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(getContext(), "NavigationFragment.onDestroy", Toast.LENGTH_SHORT).show();
 
-//        stopLocationUpdates();
+        Log.d(DEBUG_TAG, "NavigationFragment.onDestroy");
+
     }
 
     @Override
@@ -174,8 +210,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             /*
              * 최근이용, 즐겨찾기 탭 활성화
              */
+            Log.d(DEBUG_TAG, "NavigationFragment.onOptionsItemSelected.menu_fwd_search");
             Intent intent = new Intent(getContext(), ParentRctFvActivity.class);
             startActivityForResult(intent, REQUEST_SEARCH_POI);
+
+            LOCATION_CHANGE_FLAG = OFF;
+            Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
 
             return true;
         }
@@ -186,7 +226,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult");
         if (requestCode == REQUEST_SEARCH_POI) {
             if (resultCode == Activity.RESULT_OK) {
                 POI poi = (POI) data.getSerializableExtra(KEY_POI_OBJECT);
@@ -196,7 +236,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //                String poiName = data.getStringExtra(KEY_POI_NAME);
 //                String poiAddress = data.getStringExtra(KEY_POI_ADDRESS);
 
-                Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poi.name, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poi.name, Toast.LENGTH_SHORT).show();
                 Log.d("safebike", "poiLatitude : " + Double.toString(poi.getLatitude()) + " poiLongitude : " + Double.toString(poi.getLongitude()));
                 Log.d("safebike", "poiName : " + poi.name + " poiAddress : " + poi.getAddress());
 //            activateDestination();
@@ -207,11 +247,21 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     /*
                      * 맵 이동하면서 poi 마커 찍기
                      */
-                    moveMap(poi.getLatitude(), poi.getLongitude());
+                    Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.poi.moveMap");
+
+//                    stopLocationUpdates();
+
+                    moveMap(poi.getLatitude(), poi.getLongitude(), ANIMATE_CAMERA);
                     addMarker(poi);
+
 
                     addressLayout.setVisibility(View.VISIBLE);
                     fabFindRoute.setVisibility(View.VISIBLE);
+
+                    if (View.VISIBLE == fabFindRoute.getVisibility()) {
+                        LOCATION_CHANGE_FLAG = OFF;
+                        Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
+                    }
 
                     fabFindRoute.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -257,6 +307,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
+        Log.d(DEBUG_TAG, "NavigationFragment.onMapReady");
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -264,13 +315,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
 
-        if (mLocation != null) {
-            initialMoveMap(mLocation.getLatitude(), mLocation.getLongitude());
-            mLocation = null;
-        } else if (mLastLocation != null) {
-            initialMoveMap(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        if (mCacheLocation != null) {
+            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
+            Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.mCacheLocation.moveMap");
+            moveMap(mLocation.getLatitude(), mLocation.getLongitude(), MOVE_CAMERA);
+            mCacheLocation = null;
         }
-//        moveMap();
+
+
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
@@ -278,43 +330,72 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setNumUpdates(1);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
+
+        if (mLocationRequest == null) {
+            mLocationRequest = new LocationRequest();
+            mLocationRequest.setNumUpdates(1);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        }
     }
 
     protected  void startLocationUpdates() {
+        Log.d(DEBUG_TAG, "NavigationFragment.startLocationUpdates");
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mListener);
     }
 
     protected void stopLocationUpdates() {
+        Log.d(DEBUG_TAG, "NavigationFragment.stopLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mListener);
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        Log.d(DEBUG_TAG, "NavigationFragment.onConnected");
         startLocationUpdates();
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        Toast.makeText(getContext(), "NavigationFragment.onConnected.mLocation" + " : " + mLocation.getLatitude() + ", " + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Toast.makeText(getContext(), "NavigationFragment.onConnectionSuspended", Toast.LENGTH_SHORT).show();
+        Log.d(DEBUG_TAG, "NavigationFragment.onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (mResolvingError) {
+            // Already attempting to resolve an error.
+            return;
+        }
 
+        Toast.makeText(getContext(), "NavigationFragment.onConnectionFailed", Toast.LENGTH_SHORT).show();
+        Log.d(DEBUG_TAG, "NavigationFragment.onConnectionFailed");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
     }
 
     LocationListener mListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+            Toast.makeText(getContext(), "NavigationFragment.onLocationChanged", Toast.LENGTH_SHORT).show();
+            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged");
+            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.flag : " + LOCATION_CHANGE_FLAG);
             if (mMap != null) {
-                moveMap(location.getLatitude(), location.getLongitude());
+                Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap != null");
+                if (LOCATION_CHANGE_FLAG.equals(ON)) {
+                    moveMap(location.getLatitude(), location.getLongitude(), MOVE_CAMERA);
+                }
             } else {
-                mLocation = location;
+                Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap == null");
+                mCacheLocation = location;
             }
         }
     };
@@ -345,7 +426,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         });
     }
 
-    private void moveMap(double latitude, double longitude) {
+    private void moveMap(double latitude, double longitude, String moveAction) {
         if (mMap != null) {
             CameraPosition.Builder builder = new CameraPosition.Builder();
             builder.target(new LatLng(latitude, longitude));
@@ -353,18 +434,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
             CameraPosition position = builder.build();
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
-            mMap.animateCamera(update);
+
+            if (moveAction.equals(ANIMATE_CAMERA)) {
+                mMap.animateCamera(update);
+            } else if(moveAction.equals(MOVE_CAMERA)) {
+                mMap.moveCamera(update);
+            }
         }
-    }
-
-    private void initialMoveMap(double latitude, double longitude) {
-        CameraPosition.Builder builder = new CameraPosition.Builder();
-        builder.target(new LatLng(latitude, longitude));
-        builder.zoom(16);
-
-        CameraPosition position = builder.build();
-        CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
-        mMap.moveCamera(update);
     }
 
     private void addMarker(POI poi) {
@@ -383,6 +459,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         mMarkerResolver.put(poi, m);
         mPOIResolver.put(m, poi);
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        mMap.getProjection();
     }
 
     private String getDefineAddress(POI poi) {
@@ -419,11 +500,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
 
         return defineAddress;
-    }
-
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        mMap.getProjection();
     }
 }
 

@@ -129,8 +129,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
                  * ParentRctFvActivity 에 있는 setResult 처리
                  */
 
-                    Toast.makeText(ParentRctFvActivity.this, "rctPoiName : " + searchKeyword, Toast.LENGTH_SHORT).show();
-
+                    Log.d("safebike", "rctPoiName : " + searchKeyword);
                     NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
                         @Override
                         public void onSuccess(SearchPOIInfo result) {

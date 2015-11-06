@@ -66,6 +66,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onConnected(Bundle bundle) {
+        Log.d("safebike", "SplashActivity.onConnected");
         if(TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)){
 
             mHandler.postDelayed(new Runnable() {
@@ -86,11 +87,12 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.d("safebike", "SplashActivity.onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
+        Log.d("safebike", "SplashActivity.onConnectionFailed");
         if (mResolvingError) {
             // Already attempting to resolve an error.
             return;
