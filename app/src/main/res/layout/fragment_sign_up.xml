@@ -14,53 +14,144 @@
     </LinearLayout>
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="3"
         android:orientation="vertical">
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="계정정보"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/wallet_bright_foreground_holo_light"
+            android:textSize="20sp"
+            />
         <EditText
             android:id="@+id/edit_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
+            android:background="@drawable/edittext_selector"
+
+            android:lines="1"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:singleLine="true"
             android:hint="@string/edit_user_name" />
 
         <EditText
             android:id="@+id/edit_user_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
+            android:background="@drawable/edittext_selector"
+
+            android:lines="1"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:singleLine="true"
             android:hint="@string/edit_user_email" />
 
         <EditText
             android:id="@+id/edit_user_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/edittext_selector"
+            android:lines="1"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:singleLine="true"
             android:hint="@string/edit_user_password" />
 
         <EditText
             android:id="@+id/edit_user_password_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
+
+            android:background="@drawable/edittext_selector"
+            android:lines="1"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:singleLine="true"
             android:hint="@string/edit_user_password_confirm" />
+
+        <TextView
+            android:id="@+id/text_signup_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_fail_message"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/text_duple_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_duple_message"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/text_confirm_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_duple_message"
+            android:visibility="gone"
+            />
 
 
     </LinearLayout>
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
+
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="약관동의"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+
+
+            android:textSize="20sp"
+            />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <CheckBox
                 android:id="@+id/check_policy"
-                android:hint="@string/check_policy"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:hint="@string/check_policy" />
 
             <Button
                 android:id="@+id/btn_display_policy"
@@ -72,11 +163,11 @@
 
             <CheckBox
                 android:id="@+id/check_agree"
-                android:hint="@string/check_agree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/check_policy" />
+                android:layout_below="@id/check_policy"
+                android:hint="@string/check_agree" />
 
             <Button
                 android:id="@+id/btn_display_agree"
@@ -87,6 +178,16 @@
 
                 android:text="@string/btn_display_agree" />
 
+            <TextView
+                android:id="@+id/text_signup_policy_fail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signup_policy_fail_message"
+                android:layout_below="@id/check_agree"
+                android:layout_alignStart="@id/check_agree"
+                android:layout_alignLeft="@id/check_agree"
+                android:visibility="gone"
+                />
         </RelativeLayout>
 
         <Button

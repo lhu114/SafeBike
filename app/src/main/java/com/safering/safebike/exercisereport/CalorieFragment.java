@@ -65,6 +65,7 @@ public class CalorieFragment extends Fragment {
         calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         calorieChart.getXAxis().setDrawGridLines(false);
         calorieChart.getXAxis().setSpaceBetweenLabels(2);
+
         calorieChart.setScaleMinima(2f, 1f);
         calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
@@ -109,17 +110,17 @@ public class CalorieFragment extends Fragment {
 
             }
         });
-      /*  calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+       calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+             /*
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
                 String date = dateFormat.format(cal.getTime());
                 String email = PropertyManager.getInstance().getUserEmail();
-
-                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, TYPE_CALORIE, date, new NetworkManager.OnResultListener() {
+               NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
-                    public void onSuccess(Object success) {
+                    public void onSuccess(ExerciseDayResult result) {
 
                     }
 
@@ -127,14 +128,15 @@ public class CalorieFragment extends Fragment {
                     public void onFail(int code) {
 
                     }
-                });
+                });*/
+
             }
 
             @Override
             public void onNothingSelected() {
 
             }
-        });*/
+        });
 
         return view;
     }
@@ -146,24 +148,21 @@ public class CalorieFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
-
-
-
-       /* NetworkManager.getInstance().getExerciseCalorieRecord(getContext(), email, date, REQUEST_NUMBER, new NetworkManager.OnResultListener<CalorieResult>() {
+       /* NetworkManager.getInstance().getExerciseRecord(getContext(), email, TYPE_CALORIE, REQUEST_NUMBER, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
-            public void onSuccess(CalorieResult result) {
-                ArrayList<CalorieItem> calories = result.calories;
+            public void onSuccess(ExcerciseResult result) {
+                ArrayList<ExerciseItem> values = result.values;
                 ArrayList<String> xVals = new ArrayList<String>();
                 ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
                 BarDataSet set = new BarDataSet(yVals, "DataSet");
                 ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
                 BarData data;
-                int count = result.calories.size();
+                int count = result.values.size();
 
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(calories.get(i).date);
-                        yVals.add(new BarEntry(Integer.valueOf(calories.get(i).calorie), i));
+                        xVals.add(values.get(i).date);
+                        yVals.add(new BarEntry(values.get(i).value, i));
                     }
                 }
                 set.setBarSpacePercent(35f);
@@ -175,12 +174,13 @@ public class CalorieFragment extends Fragment {
 
             @Override
             public void onFail(int code) {
-                //실패시 다이얼로그
+
             }
         });
 */
-
-
+        BarData data = null;
+        //data.setValueTextSize(10f);
+        //data.setValueTypeface();
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
             xVals.add("x/" + (i + 1));
@@ -200,8 +200,6 @@ public class CalorieFragment extends Fragment {
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1);
 
-        BarData data = new BarData(xVals, dataSets);
-        data.setValueTextSize(10f);
 
         calorieChart.setData(data);
 

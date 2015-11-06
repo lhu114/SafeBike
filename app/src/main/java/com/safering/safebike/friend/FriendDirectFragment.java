@@ -52,8 +52,8 @@ public class FriendDirectFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                /*String email = PropertyManager.getInstance().getUserEmail();
-                NetworkManager.getInstance().getUserFriendDirect(getContext(), email, inputEmail.getText().toString(), new NetworkManager.OnResultListener() {
+                String email = PropertyManager.getInstance().getUserEmail();
+             /*   NetworkManager.getInstance().getUserFriendDirect(getContext(), email, inputEmail.getText().toString(), new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object success) {
 

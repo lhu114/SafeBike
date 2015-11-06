@@ -8,10 +8,10 @@ import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
-import com.safering.safebike.exercisereport.CalorieResult;
-import com.safering.safebike.exercisereport.DistanceResult;
-import com.safering.safebike.exercisereport.SpeedResult;
+import com.safering.safebike.exercisereport.ExcerciseResult;
+import com.safering.safebike.exercisereport.ExerciseDayResult;
 import com.safering.safebike.friend.FriendResult;
+import com.safering.safebike.friend.FriendSearchResult;
 import com.safering.safebike.login.LoginResult;
 import com.safering.safebike.navigation.SearchPOIInfo;
 import com.safering.safebike.navigation.SearchPOIInfoResult;
@@ -30,7 +30,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Tacademy on 2015-11-05.
@@ -55,7 +54,7 @@ public class NetworkManager {
      */
     private static final String EXCERCISE_URL = "http:...";//서버 URL
     private static final String EXCERCISE_DAY_URL = "http:...";//서버 URL
-    private static final String EXERCISE_TYPE = "EXERCISE_TYPE";
+    private static final String EXERCISE_REQUEST_TYPE = "EXERCISE_TYPE";
     private static final String EXCERCISE_REQUEST_DATE = "REQUEST_DATE";
     private static final String EXCERCISE_REQUEST_NUMBER = "REQUEST_NUMBER";
 
@@ -212,14 +211,15 @@ public class NetworkManager {
     /**
      * 운동
      */
-
-    public void getExerciseCalorieRecord(Context context, String email, String date, int num, final OnResultListener<CalorieResult> listener) {
+    public void getExerciseRecord(Context context, String email,int type, int num, String date , final OnResultListener<ExcerciseResult> listener) {
         RequestParams params = new RequestParams();
         //PARAMETER : 유저 이메일,종류,시작날짜,개수
         //결과값 : JSON(종류에 대한 값들)
         params.put(USER_EAMIL, email);
-        params.put(EXCERCISE_REQUEST_DATE, date);
+        params.put(EXERCISE_REQUEST_TYPE, num);
         params.put(EXCERCISE_REQUEST_NUMBER, num);
+        params.put(EXCERCISE_REQUEST_DATE, date);
+
 
         client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -230,60 +230,15 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                CalorieResult result = gson.fromJson(responseString, CalorieResult.class);
-                listener.onSuccess(result);
-
-            }
-        });
-    }
-    public void getExerciseDistanceRecord(Context context, String email, String date, int num, final OnResultListener<DistanceResult> listener) {
-        RequestParams params = new RequestParams();
-        //PARAMETER : 유저 이메일,종류,시작날짜,개수
-        //결과값 : JSON(종류에 대한 값들)
-        params.put(USER_EAMIL, email);
-        params.put(EXCERCISE_REQUEST_DATE, date);
-        params.put(EXCERCISE_REQUEST_NUMBER, num);
-
-        client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(statusCode);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
-                DistanceResult result = gson.fromJson(responseString, DistanceResult.class);
-                listener.onSuccess(result);
-
-            }
-        });
-    }
-    public void getExerciseSpeedRecord(Context context, String email, String date, int num, final OnResultListener<SpeedResult> listener) {
-        RequestParams params = new RequestParams();
-        //PARAMETER : 유저 이메일,종류,시작날짜,개수
-        //결과값 : JSON(종류에 대한 값들)
-        params.put(USER_EAMIL, email);
-        params.put(EXCERCISE_REQUEST_DATE, date);
-        params.put(EXCERCISE_REQUEST_NUMBER, num);
-
-        client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(statusCode);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
-                SpeedResult result = gson.fromJson(responseString, SpeedResult.class);
+                ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
                 listener.onSuccess(result);
 
             }
         });
     }
 
-    public void getDayExerciseRecord(Context context, String email, String date, final OnResultListener listener) {
+
+    public void getDayExerciseRecord(Context context, String email, String date, final OnResultListener<ExerciseDayResult> listener) {
         //PARAMETER : 유저 이메일,종류,날짜
         //결과값 : JSON(칼로리,속력,거리)
         RequestParams params = new RequestParams();
@@ -298,7 +253,9 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                ExerciseDayResult result = gson.fromJson(responseString, ExerciseDayResult.class);
+
+                listener.onSuccess(result);
             }
         });
 
@@ -374,7 +331,7 @@ public class NetworkManager {
 
     }
 
-    public void getUserFriendAddress(Context context, String email, ArrayList phoneList, final OnResultListener listener) {
+    public void getUserFriendAddress(Context context, String email, ArrayList phoneList, final OnResultListener<FriendSearchResult> listener) {
         //PARAMETER : 유저 이메일,전화번호리스트(Array)
         //결과값 : JSON(친구아이디,이메일,사진)
         RequestParams params = new RequestParams();
@@ -393,10 +350,8 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                int success = 1;
-                //json이나 array로 받아서 파싱할것
-                listener.onSuccess(ON_SUCCESS);
-                //리스너에 던져주고 구현하는 클래스가 데이터 사용하기
+                FriendSearchResult result = gson.fromJson(responseString, FriendSearchResult.class);
+                listener.onSuccess(result);
             }
         });
 
@@ -678,7 +633,7 @@ public class NetworkManager {
     }
 
     public interface OnResultListener<T> {
-        public void onSuccess(T success);
+        public void onSuccess(T result);
 
         public void onFail(int code);
     }

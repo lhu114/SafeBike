@@ -16,6 +16,17 @@ public class FriendItemView extends RelativeLayout{
     ImageView friendImage;
     TextView friendId;
     Button btn;
+    FriendItem fData;
+
+
+    public interface OnButtonClickListener {
+        public void onButtonClick(FriendItemView view, FriendItem data);
+    }
+    OnButtonClickListener mListener;
+    public void setOnButtonClickListener(OnButtonClickListener listener) {
+        mListener = listener;
+    }
+
     public FriendItemView(Context context) {
         super(context);
         init();
@@ -26,10 +37,18 @@ public class FriendItemView extends RelativeLayout{
         friendImage = (ImageView)findViewById(R.id.image_friend);
         friendId = (TextView)findViewById(R.id.text_friend_id);
         btn = (Button)findViewById(R.id.btn_add_friend);
+        btn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onButtonClick(FriendItemView.this,fData);
+            }
+        });
+
 
     }
 
     public void setFriendData(FriendItem data){
+        fData = data;
         if(data.friendImage != null){
            // friendImage.setImageDrawable(data.friendImage);
         }
@@ -40,6 +59,7 @@ public class FriendItemView extends RelativeLayout{
     public void setAddButtonVisible(boolean isVisible){
         if(isVisible){
             btn.setVisibility(View.VISIBLE);
+
         }
         else
             btn.setVisibility(View.INVISIBLE);

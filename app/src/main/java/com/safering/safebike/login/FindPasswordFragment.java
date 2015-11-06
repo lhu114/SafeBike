@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.safering.safebike.R;
 import com.safering.safebike.manager.NetworkManager;
@@ -19,7 +20,7 @@ import com.safering.safebike.manager.NetworkManager;
  */
 public class FindPasswordFragment extends Fragment {
     EditText tempEmail;
-
+    TextView emailFail;
     public FindPasswordFragment() {
         // Required empty public constructor
     }
@@ -31,13 +32,17 @@ public class FindPasswordFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_find_password, container, false);
         tempEmail = (EditText) view.findViewById(R.id.edit_temp_email);
+        emailFail = (TextView)view.findViewById(R.id.text_email_fail);
         Button btn = (Button) view.findViewById(R.id.btn_temp_pass);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = tempEmail.getText().toString();
-            /*    if(!TextUtils.isEmpty(email)) {
-
+                if(TextUtils.isEmpty(email)){
+                    emailFail.setVisibility(View.VISIBLE);
+                }
+               else {
+/*
                 NetworkManager.getInstance().sendTempPassword(getContext(), email, new NetworkManager.OnResultListener() {
 
                     @Override
@@ -50,11 +55,9 @@ public class FindPasswordFragment extends Fragment {
                     public void onFail(int code) {
 
                     }
-                });
+                });*/
                 }
-                else{
 
-                }*/
                 TempPasswordDialog tempPasswordDialog = new TempPasswordDialog();
                 tempPasswordDialog.show(getChildFragmentManager(), "tempPassDialog");
 

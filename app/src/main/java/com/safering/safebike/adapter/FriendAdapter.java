@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Tacademy on 2015-10-30.
  */
-public class FriendAdapter extends BaseAdapter{
+public class FriendAdapter extends BaseAdapter implements FriendItemView.OnButtonClickListener{
     List<FriendItem> items = new ArrayList<FriendItem>();
     int viewType = 0;
 
@@ -33,12 +33,15 @@ public class FriendAdapter extends BaseAdapter{
         return position;
     }
 
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //뷰 타입에 따라 추가버튼 visible 결정
         FriendItemView view;
         if(convertView == null){
             view = new FriendItemView(parent.getContext());
+            view.setOnButtonClickListener(this);
         }
         else{
             view = (FriendItemView)convertView;
@@ -62,6 +65,16 @@ public class FriendAdapter extends BaseAdapter{
     public void remove(int position){
         items.remove(position);
         notifyDataSetChanged();
+
+    }
+    FriendItemView.OnButtonClickListener bListener;
+    public void setOnButtonClickListener(FriendItemView.OnButtonClickListener listener){
+        bListener = listener;
+
+    }
+    @Override
+    public void onButtonClick(FriendItemView view, FriendItem data) {
+        bListener.onButtonClick(view,data);
 
     }
 }

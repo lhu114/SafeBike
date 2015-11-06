@@ -11,5 +11,5 @@ import java.util.ArrayList;
 public class FriendResult {
     String count;
     ArrayList<FriendItem> friendlist;
-    //asdfasf
+
 }

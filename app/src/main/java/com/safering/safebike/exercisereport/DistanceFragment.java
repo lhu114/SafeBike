@@ -32,7 +32,7 @@ import java.util.Calendar;
 public class DistanceFragment extends Fragment {
 
     protected BarChart distanceChart;
-    private static final int TYPE_DISTANCE = 2;
+    private static final int TYPE_DISTANCE = 3;
     private static final int REQUEST_NUMBER = 14;
 
     public DistanceFragment() {
@@ -104,14 +104,14 @@ public class DistanceFragment extends Fragment {
         distanceChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-          /*      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            /*
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
                 String date = dateFormat.format(cal.getTime());
                 String email = PropertyManager.getInstance().getUserEmail();
-
-                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email ,date, new NetworkManager.OnResultListener() {
+               NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
-                    public void onSuccess(Object success) {
+                    public void onSuccess(ExerciseDayResult result) {
 
                     }
 
@@ -137,22 +137,21 @@ public class DistanceFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
-
-        /*NetworkManager.getInstance().getExerciseDistanceRecord(getContext(), email, date, REQUEST_NUMBER, new NetworkManager.OnResultListener<DistanceResult>() {
+      /*     NetworkManager.getInstance().getExerciseRecord(getContext(), email, TYPE_DISTANCE, REQUEST_NUMBER, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
-            public void onSuccess(DistanceResult result) {
-                ArrayList<DistanceItem> distances = result.distances;
+            public void onSuccess(ExcerciseResult result) {
+                ArrayList<ExerciseItem> values = result.values;
                 ArrayList<String> xVals = new ArrayList<String>();
                 ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
                 BarDataSet set = new BarDataSet(yVals, "DataSet");
                 ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
                 BarData data;
-                int count = result.distances.size();
+                int count = result.values.size();
 
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(distances.get(i).date);
-                        yVals.add(new BarEntry(Integer.valueOf(distances.get(i).load), i));
+                        xVals.add(values.get(i).date);
+                        yVals.add(new BarEntry(values.get(i).value, i));
                     }
                 }
                 set.setBarSpacePercent(35f);
@@ -164,9 +163,10 @@ public class DistanceFragment extends Fragment {
 
             @Override
             public void onFail(int code) {
-                //실패시 다이얼로그
+
             }
-        });*/
+        });
+*/
 
 
         ArrayList<String> xVals = new ArrayList<String>();

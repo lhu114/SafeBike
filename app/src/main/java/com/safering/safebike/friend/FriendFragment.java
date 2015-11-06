@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
@@ -40,6 +41,8 @@ public class FriendFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
+        Toast.makeText(getContext(),"FriendFragmentOnCreateView",Toast.LENGTH_SHORT).show();
+
         fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
         listView = (ListView) view.findViewById(R.id.listview_myfriend);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,7 +91,6 @@ public class FriendFragment extends Fragment {
         });
         listView.setAdapter(fAdapter);
 
-        setFriendList();//네트워크로 친구리스트 받아서 뷰에 표시
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +106,9 @@ public class FriendFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setFriendList();//네트워크로 친구리스트 받아서 뷰에 표시
+
+        Toast.makeText(getContext(),"FriendFragmentOnResume",Toast.LENGTH_SHORT).show();
         //setFriendList(); 네트워크에서 친구리스트 받아오기
     }
 
@@ -137,6 +142,7 @@ public class FriendFragment extends Fragment {
             FriendItem friendItem = new FriendItem();
             friendItem.friendId = "friend" + i;
             fAdapter.add(friendItem);
+
         }
 
     }

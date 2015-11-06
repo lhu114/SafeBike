@@ -31,7 +31,7 @@ import java.util.Calendar;
  */
 public class SpeedFragment extends Fragment {
     protected BarChart speedChart;
-    private static final int TYPE_SPEED = 3;
+    private static final int TYPE_SPEED = 2;
     private static final int REQUEST_NUMBER = 14;
 
     public SpeedFragment() {
@@ -104,14 +104,14 @@ public class SpeedFragment extends Fragment {
         speedChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-          /*      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                     /*
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
                 String date = dateFormat.format(cal.getTime());
                 String email = PropertyManager.getInstance().getUserEmail();
-
-                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email ,date, new NetworkManager.OnResultListener() {
+               NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
-                    public void onSuccess(Object success) {
+                    public void onSuccess(ExerciseDayResult result) {
 
                     }
 
@@ -137,22 +137,21 @@ public class SpeedFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
-
-      /*  NetworkManager.getInstance().getExerciseSpeedRecord(getContext(), email, date, REQUEST_NUMBER, new NetworkManager.OnResultListener<SpeedResult>() {
+     /*NetworkManager.getInstance().getExerciseRecord(getContext(), email, TYPE_SPEED, REQUEST_NUMBER, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
-            public void onSuccess(SpeedResult result) {
-                ArrayList<SpeedItem> speeds = result.speeds;
+            public void onSuccess(ExcerciseResult result) {
+                ArrayList<ExerciseItem> values = result.values;
                 ArrayList<String> xVals = new ArrayList<String>();
                 ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
                 BarDataSet set = new BarDataSet(yVals, "DataSet");
                 ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
                 BarData data;
-                int count = result.speeds.size();
+                int count = result.values.size();
 
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(speeds.get(i).date);
-                        yVals.add(new BarEntry(Integer.valueOf(speeds.get(i).speed), i));
+                        xVals.add(values.get(i).date);
+                        yVals.add(new BarEntry(values.get(i).value, i));
                     }
                 }
                 set.setBarSpacePercent(35f);
@@ -164,10 +163,11 @@ public class SpeedFragment extends Fragment {
 
             @Override
             public void onFail(int code) {
-                //실패시 다이얼로그
-            }
-        });*/
 
+            }
+        });
+
+*/
 
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
