@@ -20,6 +20,9 @@ public class PropertyManager {
     public static final String DESTINATION_LONGITUDE = "destinationLongitude";
     public static final String SERVICE_CONDITION = "SERVICE_CONDITION";
 
+    public static final String RECENT_LATITUDE = "recentlatitude";
+    public static final String RECENT_LONGITUDE = "recentlongitude";
+
     private static PropertyManager instance;
     SharedPreferences mPrefs;
     SharedPreferences.Editor mEditor;
@@ -118,5 +121,21 @@ public class PropertyManager {
         return  mPrefs.getString(SERVICE_CONDITION, "");
     }
 
+    public void setRecentLatitude(String recentLatitude) {
+        mEditor.putString(RECENT_LATITUDE, recentLatitude);
+        mEditor.commit();
+    }
 
+    public String getRecentLatitude() {
+        return mPrefs.getString(RECENT_LATITUDE, "");
+    }
+
+    public void setRecentLongitude(String recentLongitude) {
+        mEditor.putString(RECENT_LONGITUDE, recentLongitude);
+        mEditor.commit();
+    }
+
+    public String getRecentLongitude() {
+        return mPrefs.getString(RECENT_LONGITUDE, "");
+    }
 }

@@ -47,6 +47,19 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();
+
+        if (PropertyManager.getInstance().getRecentLatitude().equals("") && PropertyManager.getInstance().getRecentLongitude().equals("")) {
+            /*
+             * default 위치 TMAP 기준 : POI 서울 검색 위도 경도 값
+             *
+             *      "noorLat":"37.5670652",
+                    "noorLon":"126.9772433"
+             */
+            PropertyManager.getInstance().setRecentLatitude("37.5670652");
+            PropertyManager.getInstance().setRecentLongitude("126.9772433");
+
+            Log.d("safebike", "SplashActivity.onCreate.setDefaultLocation");
+        }
     }
 
     public void goMain(){

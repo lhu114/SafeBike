@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.safering.safebike.R;
+import com.safering.safebike.property.PropertyManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private static String LOCATION_CHANGE_FLAG = "on";
     private static final String ON = "on";
     private static final String OFF = "off";
+    public static final String RECENT_LATITUDE = "recentlatitude";
+    public static final String RECENT_LONGITUDE = "recentlongitude";
 
     GoogleApiClient mGoogleApiClient;
     Location mLocation, mCacheLocation;
@@ -128,6 +131,25 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     /*
                      * 현재 위치
                      */
+                    mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+                    if (mLocation != null) {
+                        Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
+
+                        moveMap(mLocation.getLatitude(), mLocation.getLongitude(), ANIMATE_CAMERA);
+
+                        PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
+                        PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
+                        Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
+                        /*
+                         * 마커 찍기
+                         */
+                    } else {
+                        Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
+                    }
+
+
+
                 }
             });
         } catch (InflateException e) {            /*
@@ -296,15 +318,20 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         if (mCacheLocation != null) {
 //            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.mCacheLocation.moveMap");
-            moveMap(mLocation.getLatitude(), mLocation.getLongitude(), MOVE_CAMERA);
+            moveMap(mCacheLocation.getLatitude(), mCacheLocation.getLongitude(), MOVE_CAMERA);
             mCacheLocation = null;
         } else {
-//            "noorLat":"4518445.8902031",
-//                    "noorLon":"14135042.0712748",
+            double recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
+            double recentLongitude = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
+
+            Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.recent.moveMap");
+            moveMap(recentLatitude, recentLongitude, MOVE_CAMERA);
         }
 
 
@@ -342,6 +369,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (mLocation != null) {
             Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
+
+            PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
+            PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
+            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.setRecentLocation");
         } else {
             Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
         }
@@ -380,8 +411,15 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.flag : " + LOCATION_CHANGE_FLAG);
             if (mMap != null) {
                 Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap != null");
-                if (LOCATION_CHANGE_FLAG.equals(ON)) {
-                    moveMap(location.getLatitude(), location.getLongitude(), MOVE_CAMERA);
+
+                if (location != null) {
+                    if (LOCATION_CHANGE_FLAG.equals(ON)) {
+                        moveMap(location.getLatitude(), location.getLongitude(), MOVE_CAMERA);
+
+                        PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
+                        PropertyManager.getInstance().setRecentLongitude(Double.toString(location.getLongitude()));
+                        Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
+                    }
                 }
             } else {
                 Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap == null");
@@ -392,7 +430,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onMapClick(LatLng latLng) {
+        /*
+         *  마커도 내리기
+         */
 
+        addressLayout.setVisibility(View.INVISIBLE);
+        fabFindRoute.setVisibility(View.GONE);
     }
 
     @Override
