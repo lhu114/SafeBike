@@ -66,6 +66,9 @@ public class CalorieFragment extends Fragment {
         calorieChart.getXAxis().setDrawGridLines(false);
         calorieChart.getXAxis().setSpaceBetweenLabels(2);
 
+        calorieChart.setDrawValueAboveBar(true);
+        calorieChart.setHorizontalFadingEdgeEnabled(false);
+
         calorieChart.setScaleMinima(2f, 1f);
         calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
@@ -142,8 +145,8 @@ public class CalorieFragment extends Fragment {
     }
 
     private void setData() {
-        int count = 0;
-        int range = 0;
+        int count = 20;
+        int range = 50;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
@@ -178,27 +181,28 @@ public class CalorieFragment extends Fragment {
             }
         });
 */
-        BarData data = null;
-        //data.setValueTextSize(10f);
-        //data.setValueTypeface();
+
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
             xVals.add("x/" + (i + 1));
         }
 
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
 
         for (int i = 0; i < count; i++) {
             float mult = (range + 1);
             float val = (float) (Math.random() * mult);
-            yVals1.add(new BarEntry(val, i));
+            yVals.add(new BarEntry(val, i));
         }
 
-        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
+        BarDataSet set1 = new BarDataSet(yVals, "DataSet");
         set1.setBarSpacePercent(35f);
 
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+        data.setValueTextSize(10f);
 
 
         calorieChart.setData(data);
