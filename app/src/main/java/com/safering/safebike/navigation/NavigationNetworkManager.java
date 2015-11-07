@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.PersistentCookieStore;
@@ -37,8 +38,8 @@ public class NavigationNetworkManager {
     private static final String VALUE_TMAP_HEADERS_APPKEY = "fae4be30-90e4-3c96-b227-0086b07ae5e1";
 
     AsyncHttpClient client;
-    Gson gson;
-
+    Gson poiGson, rvsGeoGson, bicycleRouteGson;
+    Gson routeGson;
     private NavigationNetworkManager() {
         try {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -62,7 +63,8 @@ public class NavigationNetworkManager {
             e.printStackTrace();
         }
 
-        gson = new Gson();
+        poiGson = new Gson();
+        bicycleRouteGson = new GsonBuilder().registerTypeAdapter(Geometry.class, new GeometryDeserializer()).create();
     }
 
     public static synchronized NavigationNetworkManager getInstance() {
@@ -98,6 +100,7 @@ public class NavigationNetworkManager {
     private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
 
     public void searchPOI(Context context, String keyword, final OnResultListener<SearchPOIInfo> listener) {
+        Log.d("safebike", "NavigationNetworkManager.searchPOI");
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
         headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
@@ -137,7 +140,7 @@ public class NavigationNetworkManager {
                 /*
                  * success에 따른 statusCode 처리
                  */
-                SearchPOIInfoResult result = gson.fromJson(responseString, SearchPOIInfoResult.class);
+                SearchPOIInfoResult result = poiGson.fromJson(responseString, SearchPOIInfoResult.class);
                 listener.onSuccess(result.searchPoiInfo);
 
                 String code = Integer.toString(statusCode);
@@ -160,6 +163,7 @@ public class NavigationNetworkManager {
     private static final String VALUE_REVERSEGEOCODING_ADDRESSTYPE = "A01";
 
     public void searchReverseGeo(Context context, LatLng latLng, final OnResultListener<AddressInfo> listener) {
+        Log.d("safebike", "NavigationNetworkManager.searchReverseGeo");
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
         headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
@@ -210,12 +214,78 @@ public class NavigationNetworkManager {
                 Log.d("safebike", "headers : " + headers);
 
 
-                AddressInfoResult result = gson.fromJson(responseString, AddressInfoResult.class);
+                AddressInfoResult result = poiGson.fromJson(responseString, AddressInfoResult.class);
                 listener.onSuccess(result.addressInfo);
             }
         });
     }
 
+    public static final String BICYCLE_ROUTE_UTL = "https://apis.skplanetx.com/tmap/routes/bicycle?version=1";
+
+    private static final String KEY_BICYCLE_ROUTE_STARTX = "startX";
+    private static final String KEY_BICYCLE_ROUTE_STARTY = "startY";
+    private static final String KEY_BICYCLE_ROUTE_ENDX = "endX";
+    private static final String KEY_BICYCLE_ROUTE_ENDY = "endY";
+    private static final String KEY_BICYCLE_ROUTE_REQCOORDTYPE = "reqCoordType";
+    private static final String KEY_BICYCLE_ROUTE_SEARCHOPTION = "searchOption";
+    private static final String KEY_BICYCLE_ROUTE_RESCOORDTYPE = "resCoordType";
+
+    private static final String VALUE_BICYCLE_ROUTE_REQCOORDTYPE = "WGS84GEO";
+    private static final String VALUE_BICYCLE_ROUTE_RESCOORDTYPE = "WGS84GEO";
+
+    public void findRoute(Context context, double startX, double startY, double endX, double endY, int searchOption, final OnResultListener<BicycleRouteInfo> listener) {
+        Log.d("safebike", "NavigationNetworkManager.findRoute");
+        Header[] headers = new Header[2];
+        headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
+        headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
+
+        RequestParams params = new RequestParams();
+        params.put(KEY_BICYCLE_ROUTE_STARTX, startX);
+        params.put(KEY_BICYCLE_ROUTE_STARTY, startY);
+        params.put(KEY_BICYCLE_ROUTE_ENDX, endX);
+        params.put(KEY_BICYCLE_ROUTE_ENDY, endY);
+        params.put(KEY_BICYCLE_ROUTE_REQCOORDTYPE, VALUE_BICYCLE_ROUTE_REQCOORDTYPE);
+        params.put(KEY_BICYCLE_ROUTE_SEARCHOPTION, searchOption);
+        params.put(KEY_BICYCLE_ROUTE_RESCOORDTYPE, VALUE_BICYCLE_ROUTE_RESCOORDTYPE);
+
+        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
+
+        client.post(context, BICYCLE_ROUTE_UTL, headers, params, null, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                listener.onFail(statusCode);
+
+                Log.d("safebike", "onFailure");
+
+                String code = Integer.toString(statusCode);
+                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+
+                int count = headers.length;
+                for(int i = 0; i < count; i++) {
+                    Log.d("safebike", "headers : " + headers[i]);
+                }
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d("safebike", "onSuccess");
+
+                String code = Integer.toString(statusCode);
+                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+
+                int count = headers.length;
+                for(int i = 0; i < count; i++) {
+                    Log.d("safebike", "headers : " + headers[i]);
+                }
+
+                BicycleRouteInfo info = bicycleRouteGson.fromJson(responseString, BicycleRouteInfo.class);
+                listener.onSuccess(info);
+
+
+            }
+        });
+
+    }
     /*
     * saveFavorite(){
     * 즐겨찾기 추가 지점 저장

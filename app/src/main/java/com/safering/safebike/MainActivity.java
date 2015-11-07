@@ -28,10 +28,6 @@ import com.safering.safebike.friend.FriendFragment;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.SettingFragment;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String DEBUG_TAG = "safebike";
@@ -145,6 +141,18 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.d("safebike",  "MainActivity.onResume");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("safebike", "MainActivity.onDestroy");
+
+        /*
+         *  여기서 목적지 위도 경도 SharedPreferences 날리기
+         */
+//        PropertyManager.getInstance().setDestinationLatitude(null);
+//        PropertyManager.getInstance().setDestinationLongitude(null);
     }
 
     Handler mHandler = new Handler(Looper.getMainLooper()) {

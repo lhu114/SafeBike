@@ -41,7 +41,7 @@ import java.util.Map;
 
 
 public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
     private static final String DEBUG_TAG = "safebike";
 
     private static final int REQUEST_SEARCH_POI = 1002;
@@ -51,33 +51,38 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //    private static final String KEY_POI_LONGITUDE = "poiLongitude";
 //    private static final String KEY_POI_ADDRESS = "poiAddress";
 
-    private GoogleMap mMap;
     private boolean mResolvingError = false;
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
+
     private static final String MOVE_CAMERA = "movecamera";
     private static final String ANIMATE_CAMERA = "animatecamera";
     private static String LOCATION_CHANGE_FLAG = "on";
     private static final String ON = "on";
     private static final String OFF = "off";
 
+//    private static final String KEY_BICYCLE_ROUTE_STARTX = "startX";
+//    private static final String KEY_BICYCLE_ROUTE_STARTY = "startY";
+//    private static final String KEY_BICYCLE_ROUTE_ENDX = "endX";
+//    private static final String KEY_BICYCLE_ROUTE_ENDY = "endY";
+
+    private GoogleMap mMap;
+
     GoogleApiClient mGoogleApiClient;
     Location mLocation, mCacheLocation;
-
     LocationRequest mLocationRequest;
 
     final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
 //    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
     final Map<LatLng, Marker> mLcMarkerResolver = new HashMap<LatLng, Marker>();
 //    final Map<Marker, LatLng> mLcResolver = new HashMap<Marker, LatLng>();
+    ArrayList<POI> mPOIMarkerList;
+    ArrayList<LatLng> mLcMarkerList;
 
     View view;
     LinearLayout addressLayout;
     FloatingActionButton fabFindRoute;
     TextView tvPOIAddress;
     TextView tvPOIName;
-
-    ArrayList<POI> mPOIMarkerList;
-    ArrayList<LatLng> mLcMarkerList;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -284,6 +289,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     addPOIMarker(poi);
                     mPOIMarkerList.add(poi);
 
+                    PropertyManager.getInstance().setDestinationLatitude(Double.toString(poi.getLatitude()));
+                    PropertyManager.getInstance().setDestinationLongitude(Double.toString(poi.getLongitude()));
+
                     addressLayout.setVisibility(View.VISIBLE);
                     fabFindRoute.setVisibility(View.VISIBLE);
 
@@ -299,6 +307,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     /*
                      * 위에서 받은 데이터 전달 출발지, 목적지 다 보내야함
                      */
+//                            intent.putExtra(KEY_BICYCLE_ROUTE_STARTX, PropertyManager.getInstance().getRecentLatitude());
+//                            intent.putExtra(KEY_BICYCLE_ROUTE_STARTY, PropertyManager.getInstance().getRecentLongitude());
+//                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDX,  PropertyManager.getInstance().getDestinationLatitude());
+//                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDY, PropertyManager.getInstance().getDestinationLongitude());
+
                             startActivity(intent);
                         }
                     });
@@ -307,15 +320,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
 //        Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
@@ -323,12 +327,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(false);
 
         if (mCacheLocation != null) {
 //            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
@@ -446,6 +450,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
          *  마커도 내리기
          */
         clearALLMarker();
+
         addressLayout.setVisibility(View.INVISIBLE);
         fabFindRoute.setVisibility(View.GONE);
     }
@@ -471,6 +476,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                     addLongClickMarker(latLng);
                     mLcMarkerList.add(latLng);
+
+                    PropertyManager.getInstance().setDestinationLatitude(Double.toString(latLng.latitude));
+                    PropertyManager.getInstance().setDestinationLongitude(Double.toString(latLng.longitude));
+
                     Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
                 }
 
@@ -574,10 +583,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mLcMarkerList.clear();
     }
 
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-        mMap.getProjection();
-    }
+//    @Override
+//    public void onCameraChange(CameraPosition cameraPosition) {
+//        mMap.getProjection();
+//    }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
