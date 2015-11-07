@@ -37,7 +37,7 @@ public class POI implements Serializable {
     }
 
     public String getAddress() {
-        return middleAddrName + " " + lowerAddrName + " " + detailAddrName;
+        return upperAddrName + " " + middleAddrName + " " + lowerAddrName + " " + detailAddrName;
     }
 
     public String getDetailAddress() {

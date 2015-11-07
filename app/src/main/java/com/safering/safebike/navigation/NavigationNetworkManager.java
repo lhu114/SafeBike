@@ -153,9 +153,11 @@ public class NavigationNetworkManager {
     private static final String KEY_REVERSEGEOCODING_LATITUDE = "lat";
     private static final String KEY_REVERSEGEOCODING_LONGITUDE = "lon";
     private static final String KEY_REVERSEGEOCODING_COORDTYPE = "coordType";
+    private static final String KEY_REVERSEGEOCODING_ADDRESSTYPE = "addressType";
 
     private static final int VALUE_REVERSEGEOCODING_VERSION = 1;
     private static final String VALUE_REVERSEGEOCODING_COORDTYPE = "WGS84GEO";
+    private static final String VALUE_REVERSEGEOCODING_ADDRESSTYPE = "A01";
 
     public void searchReverseGeo(Context context, LatLng latLng, final OnResultListener<AddressInfo> listener) {
         Header[] headers = new Header[2];
@@ -170,6 +172,7 @@ public class NavigationNetworkManager {
         params.put(KEY_REVERSEGEOCODING_LATITUDE, latitude);
         params.put(KEY_REVERSEGEOCODING_LONGITUDE, longitude);
         params.put(KEY_REVERSEGEOCODING_COORDTYPE, VALUE_REVERSEGEOCODING_COORDTYPE);
+        params.put(KEY_REVERSEGEOCODING_ADDRESSTYPE, VALUE_REVERSEGEOCODING_ADDRESSTYPE);
 
         Log.d("safebike", "lntLng : " + latitude + ", " + longitude);
 

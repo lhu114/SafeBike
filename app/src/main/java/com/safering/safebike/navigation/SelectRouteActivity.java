@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -115,14 +114,13 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
+    protected void onStart() {
+        super.onStart();
+    }
 
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -149,7 +147,14 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void emptyBackStack() {
-        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -41,7 +41,7 @@ import java.util.Map;
 
 
 public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnCameraChangeListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnCameraChangeListener, GoogleMap.OnMarkerClickListener {
     private static final String DEBUG_TAG = "safebike";
 
     private static final int REQUEST_SEARCH_POI = 1002;
@@ -68,14 +68,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
 //    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
     final Map<LatLng, Marker> mLcMarkerResolver = new HashMap<LatLng, Marker>();
-//    final Map<Marker, >
+//    final Map<Marker, LatLng> mLcResolver = new HashMap<Marker, LatLng>();
+
     View view;
     LinearLayout addressLayout;
     FloatingActionButton fabFindRoute;
-    TextView tvPoiAddress;
-
-//    ArrayAdapter<POI> mPOIMarkerList;
-//    ArrayAdapter<LatLng> mLcMarkerList;
+    TextView tvPOIAddress;
+    TextView tvPOIName;
 
     ArrayList<POI> mPOIMarkerList;
     ArrayList<LatLng> mLcMarkerList;
@@ -120,7 +119,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
             addressLayout.setVisibility(View.INVISIBLE);
 
-            tvPoiAddress = (TextView) view.findViewById(R.id.text_poi_address);
+            tvPOIAddress = (TextView) view.findViewById(R.id.text_poi_address);
+            tvPOIName = (TextView) view.findViewById(R.id.text_poi_name);
 
             fabFindRoute = (FloatingActionButton) view.findViewById(R.id.btn_find_route);
             fabFindRoute.setVisibility(View.GONE);
@@ -267,7 +267,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //            activateDestination();
 
                 if (poi != null) {
-                    tvPoiAddress.setText(getDefineAddress(poi));
+                    tvPOIName.setText(poi.name);
+                    tvPOIAddress.setText(getDefinePOIAddress(poi));
 
                     /*
                      * 맵 이동하면서 poi 마커 찍기
@@ -326,6 +327,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setMyLocationEnabled(true);
+        mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         if (mCacheLocation != null) {
@@ -456,7 +458,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             NavigationNetworkManager.getInstance().searchReverseGeo(getContext(), latLng, new NavigationNetworkManager.OnResultListener<AddressInfo>() {
                 @Override
                 public void onSuccess(AddressInfo result) {
-                    tvPoiAddress.setText(result.fullAddress);
+                    if (!result.buildingName.equals("")) {
+                        tvPOIName.setText(result.buildingName);
+                        tvPOIAddress.setText(result.fullAddress);
+                    } else {
+                        tvPOIName.setText(result.fullAddress);
+                        tvPOIAddress.setText("");
+                    }
 
 //                    addLongClickMarker(latLng, result);
                     clearALLMarker();
@@ -514,8 +522,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         options.anchor(0.5f, 1.0f);
 //        options.title(addressInfo.);
         options.draggable(false);
-
         Marker m = mMap.addMarker(options);
+        m.hideInfoWindow();
 
         mLcMarkerResolver.put(latLng, m);
 //        mPOIMarkerResolver.put(poi, m);
@@ -571,38 +579,58 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap.getProjection();
     }
 
-    private String getDefineAddress(POI poi) {
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.hideInfoWindow();
+
+        return true;
+    }
+
+    private String getDefinePOIAddress(POI poi) {
         String defineAddress = null;
 
-        if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
-
-            Log.d("safebike", "defineAddress 1");
-        } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-            defineAddress = poi.getAddress() + " " + poi.firstNo;
-
-            Log.d("safebike", "defineAddress 2");
-        } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+        if (!poi.detailAddrName.equals("")) {
             defineAddress = poi.getAddress();
-
-            Log.d("safebike", "defineAddress 3");
-        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
-
-            Log.d("safebike", "defineAddress 4");
-        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-            defineAddress = poi.getAddress() + " " + poi.firstNo;
-
-            Log.d("safebike", "defineAddress 5");
-        } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
-            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
-
-            Log.d("safebike", "defineAddress 6");
-        } else {
-            defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
-
-            Log.d("safebike", "defineAddress 7");
+        } else if (poi.detailAddrName.equals("")){
+            defineAddress = poi.upperAddrName + " " + poi.middleAddrName + " " + poi.lowerAddrName;
         }
+//        if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+//            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
+//
+//            Log.d("safebike", "defineAddress 1");
+//        } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+//            defineAddress = poi.getAddress() + " " + poi.firstNo;
+//
+//            Log.d("safebike", "defineAddress 2");
+//        } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+//            defineAddress = poi.getAddress();
+//
+//            Log.d("safebike", "defineAddress 3");
+//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
+//
+//            Log.d("safebike", "defineAddress 4");
+//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+//            defineAddress = poi.getAddress() + " " + poi.firstNo;
+//
+//            Log.d("safebike", "defineAddress 5");
+//        } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
+//
+//            Log.d("safebike", "defineAddress 6");
+//        } else {
+//            defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
+//
+//            Log.d("safebike", "defineAddress 7");
+//        }
+
+        return defineAddress;
+    }
+
+    private String getDefineRvsGeoAddress(AddressInfo addressInfo) {
+        String defineAddress = null;
+
+        defineAddress = addressInfo.fullAddress;
 
         return defineAddress;
     }
