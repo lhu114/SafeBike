@@ -5,11 +5,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,6 +27,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.R;
 import com.safering.safebike.property.PropertyManager;
@@ -42,18 +48,47 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     private static final String MOVE_CAMERA = "movecamera";
     private static final String ANIMATE_CAMERA = "animatecamera";
 
-//    private static final String KEY_BICYCLE_ROUTE_STARTX = "startX";
+    //    private static final String KEY_BICYCLE_ROUTE_STARTX = "startX";
 //    private static final String KEY_BICYCLE_ROUTE_STARTY = "startY";
 //    private static final String KEY_BICYCLE_ROUTE_ENDX = "endX";
 //    private static final String KEY_BICYCLE_ROUTE_ENDY = "endY";
     private static final int BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION = 0;
     private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
+
+    private static final String BICYCLE_ROUTE_GEOMETRY_TYPE_POINT = "Point";
     private static final String BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING = "LineString";
+
+    private static final String START_MARKER_FLAG = "start";
+    private static final String END_MARKER_FLAG = "end";
 
     private GoogleMap mMap;
 
-    final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
-    ArrayList<POI> mPOIMarkerList;
+    Polyline polyline;
+    PolylineOptions laneOptions, minOptions;
+    ArrayList<Polyline> polylineList;
+
+    double recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
+    double recentLongitude = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
+    double destinationLatitude = Double.parseDouble(PropertyManager.getInstance().getDestinationLatitude());
+    double destinationLongitude = Double.parseDouble(PropertyManager.getInstance().getDestinationLongitude());
+    double centerLatitude = (recentLatitude + destinationLatitude) / 2;
+    double centerLongitude = (recentLongitude + destinationLongitude) / 2;
+
+    final double startX = recentLongitude;
+    final double startY = recentLatitude;
+    final double endX = destinationLongitude;
+    final double endY = destinationLatitude;
+
+//    final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
+    final Map<LatLng, Marker> mPointMarkerResolver = new HashMap<LatLng, Marker>();
+
+//    ArrayList<POI> mPOIMarkerList;
+    ArrayList<LatLng> mPointMarkerList;
+
+    Handler mHandler;
+
+    LinearLayout layoutLane, layoutMin;
+    TextView tvLane, tvLaneTotalTime, tvLaneArvTime, tvLaneTotalDistance, tvMin, tvMinTotalTime, tvMinArvTime, tvMinTotalDistance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,78 +102,213 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        Intent intent = getIntent();
+        layoutLane = (LinearLayout) findViewById(R.id.layout_bicyclelane);
+        layoutMin = (LinearLayout) findViewById(R.id.layout_minimuntime);
 
-//        if (intent != null) {
-//            final double startX = Double.parseDouble(intent.getStringExtra(KEY_BICYCLE_ROUTE_STARTX));
-//            final double startY = Double.parseDouble(intent.getStringExtra(KEY_BICYCLE_ROUTE_STARTY));
-//            final double endX = Double.parseDouble(intent.getStringExtra(KEY_BICYCLE_ROUTE_ENDX));
-//            final double endY = Double.parseDouble(intent.getStringExtra(KEY_BICYCLE_ROUTE_ENDY));
+        tvLane = (TextView) findViewById(R.id.text_bicyclelane);
+        tvLaneTotalTime = (TextView) findViewById(R.id.text_bicyclelane_totaltime);
+        tvLaneArvTime = (TextView) findViewById(R.id.text_bicyclelane_arrivetime);
+        tvLaneTotalDistance = (TextView) findViewById(R.id.text_bicyclelane_totaldistance);
 
-        final double startX = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
-        final double startY = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
-        final double endX = Double.parseDouble(PropertyManager.getInstance().getDestinationLongitude());
-        final double endY = Double.parseDouble(PropertyManager.getInstance().getDestinationLatitude());
+        tvMin = (TextView) findViewById(R.id.text_minimumtime);
+        tvMinTotalTime = (TextView) findViewById(R.id.text_minimumtime_totaltime);
+        tvMinArvTime = (TextView) findViewById(R.id.text_minimumtime_arrivetime);
+        tvMinTotalDistance = (TextView) findViewById(R.id.text_minimumtime_totaldistance);
+
+        polylineList = new ArrayList<Polyline>();
+        mPointMarkerList = new ArrayList<LatLng>();
+
+        mHandler = new Handler(Looper.getMainLooper());
 
         if (startX != 0 && startY != 0 && endX != 0 && endY != 0) {
-
             NavigationNetworkManager.getInstance().findRoute(SelectRouteActivity.this, startX, startY, endX, endY, BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION,
                     new NavigationNetworkManager.OnResultListener<BicycleRouteInfo>() {
-                @Override
-                public void onSuccess(BicycleRouteInfo result) {
-                    Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.onSuccess");
-                    if (result.features != null && result.features.size() > 0) {
-                        int totalDistance = result.features.get(0).properties.totalDistance;
-                        int totalTime = result.features.get(0).properties.totalTime;
+                        @Override
+                        public void onSuccess(BicycleRouteInfo result) {
+                            Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.onSuccess");
+                            if (result.features != null && result.features.size() > 0) {
+                                int totalTime = result.features.get(0).properties.totalTime;
+                                int totalDistance = result.features.get(0).properties.totalDistance;
 
-                        PolylineOptions options = new PolylineOptions();
+                                tvMinTotalTime.setText(getTotalTime(totalTime));
+                                tvMinTotalDistance.setText(Integer.toString(totalDistance) + "m");
 
-                        for (BicycleFeature feature : result.features) {
-                            if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
-                                double[] coord = feature.geometry.coordinates;
+                                minOptions = new PolylineOptions();
 
-                                for (int i = 0; i < coord.length; i += 2) {
-                                    options.add(new LatLng(coord[i + 1], coord[i]));
+                                for (BicycleFeature feature : result.features) {
+                                    if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
+                                        double[] coord = feature.geometry.coordinates;
+
+                                        for (int i = 0; i < coord.length; i += 2) {
+                                            minOptions.add(new LatLng(coord[i + 1], coord[i]));
+                                        }
+                                    }
                                 }
+
+                                for (BicycleFeature feature : result.features) {
+                                    if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT)) {
+                                        double[] coord = feature.geometry.coordinates;
+
+                                        for (int i = 0; i < coord.length; i += 2) {
+
+                                        }
+                                    }
+                                }
+
+                                minOptions.color(Color.GRAY);
+                                minOptions.width(10);
+                                polyline = mMap.addPolyline(minOptions);
+
+                                polylineList.add(polyline);
                             }
                         }
 
-                        options.color(Color.RED);
-                        options.width(10);
-                        mMap.addPolyline(options);
-                    }
-                }
+                        @Override
+                        public void onFail(int code) {
 
-                @Override
-                public void onFail(int code) {
+                        }
+                    });
 
-                }
-            });
+            NavigationNetworkManager.getInstance().findRoute(SelectRouteActivity.this, startX, startY, endX, endY, BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION,
+                    new NavigationNetworkManager.OnResultListener<BicycleRouteInfo>() {
+                        @Override
+                        public void onSuccess(BicycleRouteInfo result) {
+                            if (result.features != null && result.features.size() > 0) {
+                                int totalTime = result.features.get(0).properties.totalTime;
+                                int totalDistance = result.features.get(0).properties.totalDistance;
 
-//            NavigationNetworkManager.getInstance().findRoute(SelectRouteActivity.this, startX, startY, endX, endY, BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION,
-//                    new NavigationNetworkManager.OnResultListener<BicycleRouteInfo>() {
-//                @Override
-//                public void onSuccess(BicycleRouteInfo result) {
-//
-//                }
-//
-//                @Override
-//                public void onFail(int code) {
-//
-//                }
-//            });
+                                /*
+                                 * 추후 조정
+                                 */
+                                if (totalDistance >= 20000) {
+                                    moveMap(centerLatitude, centerLongitude, 11, ANIMATE_CAMERA);
+                                } else if (totalDistance >= 10000 && totalDistance < 20000) {
+                                    moveMap(centerLatitude, centerLongitude, 11, ANIMATE_CAMERA);
+                                } else if (totalDistance >= 5000 && totalDistance < 10000) {
+                                    moveMap(centerLatitude, centerLongitude, 13, ANIMATE_CAMERA);
+                                } else if (totalDistance >= 1000 && totalDistance < 5000) {
+                                    moveMap(centerLatitude, centerLongitude, 14, ANIMATE_CAMERA);
+                                } else if (totalDistance >= 0 && totalDistance < 1000) {
+                                    moveMap(centerLatitude, centerLongitude, 15, ANIMATE_CAMERA);
+                                }
+
+                                tvLaneTotalTime.setText(getTotalTime(totalTime));
+                                tvLaneTotalDistance.setText(Integer.toString(totalDistance) + "m");
+
+                                laneOptions = new PolylineOptions();
+
+                                for (BicycleFeature feature : result.features) {
+                                    if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
+                                        double[] coord = feature.geometry.coordinates;
+
+                                        for (int i = 0; i < coord.length; i += 2) {
+                                            laneOptions.add(new LatLng(coord[i + 1], coord[i]));
+                                        }
+                                    }
+                                }
+
+                                clearALLPointMarker();
+
+                                for (BicycleFeature feature : result.features) {
+                                    if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT)) {
+                                        double[] coord = feature.geometry.coordinates;
+
+                                        for (int i = 0; i < coord.length; i += 2) {
+                                            LatLng latLng = new LatLng(coord[i + 1], coord[i]);
+                                            addPointMarker(latLng, "");
+
+//                                            mPointMarkerList.add(latLng);
+                                            /*
+                                             * 다시 처리
+                                             */
+                                        }
+                                    }
+                                }
+                                /*
+                                 * 올바른 처리인가..
+                                 */
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        laneOptions.color(Color.RED);
+                                        laneOptions.width(10);
+                                        polyline = mMap.addPolyline(laneOptions);
+
+                                        polylineList.add(polyline);
+                                    }
+                                }, 100);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+
+                        }
+                    });
         }
 
-//        if (mGoogleApiClient == null) {
-//            Log.d(DEBUG_TAG, "NavigationFragment.onCreate.new mGoogleApiClient");
-//            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-//                    .addApi(LocationServices.API)
-//                    .addConnectionCallbacks(this)
-//                    .addOnConnectionFailedListener(this).build();
-//
-//            createLocationRequest();
-//        }
+        tvLane.setPaintFlags(tvLane.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+        tvLaneTotalTime.setPaintFlags(tvLaneTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+        tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+        tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 
+        layoutLane.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAllPolyline();
+                clearALLPointMarker();
+
+                /*
+                 * marker 다시 그리기
+                 */
+                minOptions.color(Color.GRAY);
+                polyline = mMap.addPolyline(minOptions);
+                polylineList.add(polyline);
+
+                laneOptions.color(Color.RED);
+                polyline = mMap.addPolyline(laneOptions);
+                polylineList.add(polyline);
+
+                tvLane.setPaintFlags(tvLane.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                tvLaneTotalTime.setPaintFlags(tvLaneTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+
+                tvMin.setPaintFlags(tvMin.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinTotalTime.setPaintFlags(tvMinTotalTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinArvTime.setPaintFlags(tvMinArvTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinTotalDistance.setPaintFlags(tvMinTotalDistance.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+            }
+        });
+
+        layoutMin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAllPolyline();
+                clearALLPointMarker();
+
+                /*
+                 * marker 다시 그리기
+                 */
+                laneOptions.color(Color.GRAY);
+                polyline = mMap.addPolyline(laneOptions);
+                polylineList.add(polyline);
+
+                minOptions.color(Color.RED);
+                polyline = mMap.addPolyline(minOptions);
+                polylineList.add(polyline);
+
+                tvMin.setPaintFlags(tvMin.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinTotalTime.setPaintFlags(tvMinTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinArvTime.setPaintFlags(tvMinArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinTotalDistance.setPaintFlags(tvMinTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+
+                tvLane.setPaintFlags(tvLane.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+                tvLaneTotalTime.setPaintFlags(tvLaneTotalTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+                tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+                tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+            }
+        });
 
     }
 
@@ -229,38 +399,52 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Toast.makeText(SelectRouteActivity.this, "onActivityResult", Toast.LENGTH_SHORT);
+
+        if (requestCode == REQUEST_START_NAVIGATION && resultCode == Activity.RESULT_OK) {
+            Toast.makeText(SelectRouteActivity.this, "Finish Navigation", Toast.LENGTH_SHORT);
+
+            finish();
+        } else {
+            Toast.makeText(SelectRouteActivity.this, "error Finish Navigation", Toast.LENGTH_SHORT);
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(DEBUG_TAG, "SelectRouteActivity.onMapReady");
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//        mMap.setMyLocationEnabled(true);
-//        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setCompassEnabled(false);
 
-        double centerLatitude = (Double.parseDouble(PropertyManager.getInstance().getRecentLatitude()) + Double.parseDouble(PropertyManager.getInstance().getDestinationLatitude())) / 2;
-        double centerLongitude = (Double.parseDouble(PropertyManager.getInstance().getRecentLongitude()) + Double.parseDouble(PropertyManager.getInstance().getDestinationLongitude())) / 2;
+//        double recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
+//        double recentLongitude = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
+//        double destinationLatitude = Double.parseDouble(PropertyManager.getInstance().getDestinationLatitude());
+//        double destinationLongitude = Double.parseDouble(PropertyManager.getInstance().getDestinationLongitude());
+//
+//        double centerLatitude = (recentLatitude + destinationLatitude) / 2;
+//        double centerLongitude = (recentLongitude + destinationLongitude) / 2;
 
         Log.d(DEBUG_TAG, "SelectRouteActivity.onMapReady.center.moveMap");
-        moveMap(centerLatitude, centerLongitude, MOVE_CAMERA);
+
+        /*
+         * 토탈 디스턴스에 따른 맵 레벨 다르게 보여주기기
+        */
+        moveMap(centerLatitude, centerLongitude, 11, MOVE_CAMERA);
+
+        addStartEndMarker(recentLatitude, recentLongitude, START_MARKER_FLAG);
+        addStartEndMarker(destinationLatitude, destinationLongitude, END_MARKER_FLAG);
     }
 
-//    protected void createLocationRequest() {
-//        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
-//
-//        if (mLocationRequest == null) {
-//            mLocationRequest = new LocationRequest();
-//            mLocationRequest.setNumUpdates(1);
-//            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        }
-//    }
-
-    private void moveMap(double latitude, double longitude, String moveAction) {
+    private void moveMap(double latitude, double longitude, int zoomLevel, String moveAction) {
         if (mMap != null) {
             CameraPosition.Builder builder = new CameraPosition.Builder();
             builder.target(new LatLng(latitude, longitude));
-            builder.zoom(15);
+            builder.zoom(zoomLevel);
 
             CameraPosition position = builder.build();
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
@@ -273,43 +457,126 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void addPOIMarker(POI poi) {
+    private void addStartEndMarker(double latitude, double longitude, String flag) {
         MarkerOptions options  = new MarkerOptions();
-        options.position(new LatLng(poi.noorLat, poi.noorLon));
-        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        options.position(new LatLng(latitude, longitude));
         options.anchor(0.5f, 1.0f);
-        options.title(poi.name);
         options.draggable(false);
+
+        if (flag.equals(START_MARKER_FLAG)) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        } else if(flag.equals(END_MARKER_FLAG)) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
 
         Marker m = mMap.addMarker(options);
 
-        mPOIMarkerResolver.put(poi, m);
+//        mPOIMarkerResolver.put(poi, m);
 //        mPOIResolver.put(m, poi);
     }
 
-    private void clearALLMarker() {
-        for (int i = 0; i < mPOIMarkerList.size(); i++) {
-            POI poi = mPOIMarkerList.get(i);
-            Marker m = mPOIMarkerResolver.get(poi);
-            mPOIMarkerResolver.remove(m);
+    private void addPointMarker(LatLng latLng, String flag) {
+        MarkerOptions options  = new MarkerOptions();
+        options.position(new LatLng(latLng.latitude, latLng.longitude));
+        options.anchor(0.5f, 1.0f);
+        options.draggable(false);
+
+        if (flag.equals(START_MARKER_FLAG)) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        } else if(flag.equals(END_MARKER_FLAG)) {
+            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
+
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+
+
+        Marker m = mMap.addMarker(options);
+
+//        mPOIMarkerResolver.put(poi, m);
+//        mPOIResolver.put(m, poi);
+    }
+
+//    private void clearALLMarker() {
+//        for (int i = 0; i < mPOIMarkerList.size(); i++) {
+//            POI poi = mPOIMarkerList.get(i);
+//            Marker m = mPOIMarkerResolver.get(poi);
+//            mPOIMarkerResolver.remove(m);
+//            m.remove();
+//        }
+//
+//        mPOIMarkerList.clear();
+//    }
+
+    private void clearALLPointMarker() {
+        for (int i = 0; i < mPointMarkerList.size(); i++) {
+            LatLng latLng = mPointMarkerList.get(i);
+            Marker m = mPointMarkerResolver.get(latLng);
+            mPointMarkerResolver.remove(m);
             m.remove();
         }
 
-        mPOIMarkerList.clear();
+        mPointMarkerList.clear();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Toast.makeText(SelectRouteActivity.this, "onActivityResult", Toast.LENGTH_SHORT);
+    private void clearAllPolyline() {
+//        for (int i = 0; i < polylineList.size(); i++) {
+//            Polyline tmpPolyline = polylineList.get(i);
+//            tmpPolyline.remove();
+//        }
+//
+//        polylineList.clear();
 
-        if (requestCode == REQUEST_START_NAVIGATION && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(SelectRouteActivity.this, "Finish Navigation", Toast.LENGTH_SHORT);
-
-            finish();
-        } else {
-            Toast.makeText(SelectRouteActivity.this, "error Finish Navigation", Toast.LENGTH_SHORT);
+        for (Polyline line : polylineList) {
+            line.remove();
         }
+
+        polylineList.clear();
+    }
+
+    private String getTotalTime(int time) {
+        String totalTime = null;
+        int hour, minute, second, remainTime;
+
+        if (time >= 3600) {
+            hour = time / 3600;
+            remainTime = time % 3600;
+
+            if (remainTime > 60) {
+                minute = remainTime / 60;
+                remainTime = remainTime % 60;
+
+                if (remainTime > 0) {
+                    second = remainTime;
+
+                    totalTime = Integer.toString(hour) + "시간 " + Integer.toString(minute) + "분 " + Integer.toString(second) + "초";
+                } else if (remainTime == 0) {
+                    totalTime = Integer.toString(hour) + "시간 " + Integer.toString(minute) + "분";
+                }
+            } else if (remainTime == 0) {
+                totalTime = Integer.toString(hour) + "시간";
+            } else if (remainTime < 60 && remainTime > 0) {
+                second = remainTime;
+
+                totalTime = Integer.toString(hour) + "시간 " + Integer.toString(second) + "초";
+            }
+        } else if (time < 3600) {
+            minute = time / 60;
+            remainTime = time % 60;
+
+            if (remainTime < 60 && remainTime > 0) {
+                second = remainTime;
+
+                totalTime = Integer.toString(minute) + "분 " + Integer.toString(second) + "초";
+            } else if (remainTime == 0) {
+                totalTime = Integer.toString(minute) + "분";
+            }
+        } else if (time < 60 && time > 0) {
+            totalTime = Integer.toString(time) + "초";
+        } else {
+            totalTime = "";
+        }
+
+        return totalTime;
     }
 
     @Override

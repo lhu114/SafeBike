@@ -25,26 +25,84 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff">
+            android:background="#ffffff"
+            android:id="@+id/layout_bicyclelane">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView3" />
+                android:text="@string/text_bicyclelane"
+                android:id="@+id/text_bicyclelane" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_bicyclelane_totaltime"
+                    android:id="@+id/text_bicyclelane_totaltime" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_bicyclelane_arrivetime"
+                    android:id="@+id/text_bicyclelane_arrivetime" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_bicyclelane_totaldistance"
+                android:id="@+id/text_bicyclelane_totaldistance"
+                android:layout_marginLeft="100dp" />
+
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff">
+            android:background="#ffffff"
+            android:id="@+id/layout_minimuntime">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView4" />
+                android:text="@string/text_minimumtime"
+                android:id="@+id/text_minimumtime" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_minimumtime_totaltime"
+                    android:id="@+id/text_minimumtime_totaltime" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_minimumtime_arrivetime"
+                    android:id="@+id/text_minimumtime_arrivetime" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_minimumtime_totaldistance"
+                android:id="@+id/text_minimumtime_totaldistance"
+                android:layout_marginLeft="100dp" />
+
         </LinearLayout>
 
         <LinearLayout

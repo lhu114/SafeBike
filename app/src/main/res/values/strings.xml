@@ -77,6 +77,14 @@
     <string name="text_rct_search_date">날짜</string>
     <string name="text_poi_address"></string>
     <string name="text_poi_name" />
+    <string name="text_bicyclelane">전용도로</string>
+    <string name="text_minimumtime">최소시간</string>
+    <string name="text_bicyclelane_totaltime">시간</string>
+    <string name="text_bicyclelane_totaldistance">거리</string>
+    <string name="text_minimumtime_totaltime">시간</string>
+    <string name="text_minimumtime_totaldistance">거리</string>
+    <string name="text_bicyclelane_arrivetime">도착시간</string>
+    <string name="text_minimumtime_arrivetime">도착시간</string>
 </resources>
 <!-- TODO: Remove or change this placeholder text -->
 
