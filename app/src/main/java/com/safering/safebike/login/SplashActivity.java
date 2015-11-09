@@ -31,6 +31,12 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
 
+    private static final String DEFAULT_LATITUDE = "37.5670652";
+    private static final String DEFAULT_LONGITUDE = "126.9772433";
+
+//    private static final String SERVICE_FINISH = "finish";
+//    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
+
     String userEmail = null;
     String userPassword = null;
 
@@ -41,7 +47,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         userEmail = PropertyManager.getInstance().getUserEmail();
         userPassword = PropertyManager.getInstance().getUserPassword();
         Log.i("Userid", PropertyManager.getInstance().getUserId());
-        Log.i("UserPass",PropertyManager.getInstance().getUserPassword());
+        Log.i("UserPass", PropertyManager.getInstance().getUserPassword());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -55,11 +61,16 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
              *      "noorLat":"37.5670652",
                     "noorLon":"126.9772433"
              */
-            PropertyManager.getInstance().setRecentLatitude("37.5670652");
-            PropertyManager.getInstance().setRecentLongitude("126.9772433");
+            PropertyManager.getInstance().setRecentLatitude(DEFAULT_LATITUDE);
+            PropertyManager.getInstance().setRecentLongitude(DEFAULT_LONGITUDE);
 
             Log.d("safebike", "SplashActivity.onCreate.setDefaultLocation");
         }
+
+        /*
+         * 비정상적으로 종료했을 때 시나리오 처리
+         */
+//
     }
 
     public void goMain(){

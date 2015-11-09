@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -87,7 +85,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 //    ArrayList<POI> mPOIMarkerList;
     ArrayList<LatLng> mPointMarkerList;
 
-    Handler mHandler;
+//    Handler mHandler;
 
     LinearLayout layoutLane, layoutMin;
     TextView tvLane, tvLaneTotalTime, tvLaneArvTime, tvLaneTotalDistance, tvMin, tvMinTotalTime, tvMinArvTime, tvMinTotalDistance;
@@ -123,7 +121,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         polylineList = new ArrayList<Polyline>();
         mPointMarkerList = new ArrayList<LatLng>();
 
-        mHandler = new Handler(Looper.getMainLooper());
+//        mHandler = new Handler(Looper.getMainLooper());
 
         PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
 
@@ -163,11 +161,21 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                     }
                                 }
 
-                                minOptions.color(Color.GRAY);
-                                minOptions.width(10);
-                                polyline = mMap.addPolyline(minOptions);
-
-                                polylineList.add(polyline);
+//                                if (minOptions != null && laneOptions != null) {
+//                                    Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION.onSuccess.addPolyline----------------------------------");
+//                                    minOptions.color(Color.GRAY);
+//                                    minOptions.width(10);
+//                                    polyline = mMap.addPolyline(minOptions);
+//
+//                                    polylineList.add(polyline);
+//
+//                                    laneOptions.color(Color.RED);
+//                                    laneOptions.width(10);
+//                                    polyline = mMap.addPolyline(laneOptions);
+//
+//                                    polylineList.add(polyline);
+//                                }
+                                addPolyline(minOptions, laneOptions);
                             }
                         }
 
@@ -193,7 +201,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                 } else if (totalDistance >= 10000 && totalDistance < 20000) {
                                     moveMap(centerLatitude, centerLongitude, 11, ANIMATE_CAMERA);
                                 } else if (totalDistance >= 5000 && totalDistance < 10000) {
-                                    moveMap(centerLatitude, centerLongitude, 13, ANIMATE_CAMERA);
+                                    moveMap(centerLatitude, centerLongitude, 12, ANIMATE_CAMERA);
                                 } else if (totalDistance >= 1000 && totalDistance < 5000) {
                                     moveMap(centerLatitude, centerLongitude, 14, ANIMATE_CAMERA);
                                 } else if (totalDistance >= 0 && totalDistance < 1000) {
@@ -235,16 +243,33 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                 /*
                                  * 올바른 처리인가..
                                  */
-                                mHandler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        laneOptions.color(Color.RED);
-                                        laneOptions.width(10);
-                                        polyline = mMap.addPolyline(laneOptions);
+//                                mHandler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        laneOptions.color(Color.RED);
+//                                        laneOptions.width(10);
+//                                        polyline = mMap.addPolyline(laneOptions);
+//
+//                                        polylineList.add(polyline);
+//                                    }
+//                                }, 100);
 
-                                        polylineList.add(polyline);
-                                    }
-                                }, 100);
+//                                if (minOptions != null && laneOptions != null) {
+//                                    Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.onSuccess.addPolyline----------------------------------");
+//                                    minOptions.color(Color.GRAY);
+//                                    minOptions.width(10);
+//                                    polyline = mMap.addPolyline(minOptions);
+//
+//                                    polylineList.add(polyline);
+//
+//                                    laneOptions.color(Color.RED);
+//                                    laneOptions.width(10);
+//                                    polyline = mMap.addPolyline(laneOptions);
+//
+//                                    polylineList.add(polyline);
+//                                }
+
+                                addPolyline(minOptions, laneOptions);
                             }
                         }
 
@@ -519,6 +544,22 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
 //        mPOIMarkerResolver.put(poi, m);
 //        mPOIResolver.put(m, poi);
+    }
+
+    private void addPolyline(PolylineOptions minOptions, PolylineOptions laneOptions) {
+        if (minOptions != null && laneOptions != null) {
+            minOptions.color(Color.GRAY);
+            minOptions.width(10);
+            polyline = mMap.addPolyline(minOptions);
+
+            polylineList.add(polyline);
+
+            laneOptions.color(Color.RED);
+            laneOptions.width(10);
+            polyline = mMap.addPolyline(laneOptions);
+
+            polylineList.add(polyline);
+        }
     }
 
 //    private void clearALLMarker() {

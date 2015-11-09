@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
     private static String ON = "on";
     private static String OFF = "off";
 
+    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,8 +155,10 @@ public class MainActivity extends AppCompatActivity
         /*
          *  여기서 목적지 위도 경도 SharedPreferences 날리기
          */
-//        PropertyManager.getInstance().setDestinationLatitude(null);
-//        PropertyManager.getInstance().setDestinationLongitude(null);
+        PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+        PropertyManager.getInstance().setDestinationLatitude(null);
+        PropertyManager.getInstance().setDestinationLongitude(null);
+        PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
     }
 
     Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -177,7 +181,7 @@ public class MainActivity extends AppCompatActivity
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_FINISH)) {
+        } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_FINISH) ) {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(OFF)) {
                 getSupportFragmentManager().popBackStack();
 

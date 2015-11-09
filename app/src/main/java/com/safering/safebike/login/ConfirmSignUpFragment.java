@@ -12,18 +12,16 @@ import android.widget.Button;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
-import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ConfirmSignUpFragment extends Fragment {
-
+    private static final String SERVICE_FINISH = "finish";
 
     public ConfirmSignUpFragment() {
         // Required empty public constructor
@@ -86,6 +84,10 @@ public class ConfirmSignUpFragment extends Fragment {
                     }
                 });
 */
+                /*
+                 * 최초 가입 시 서비스 컨디션 상태 Finish
+                 */
+                PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
 
                 //프로퍼티 매니저에 저장
                 //메인 페이지로 이동
