@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -138,6 +139,19 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             } else if (View.VISIBLE == fabFindRoute.getVisibility()) {
                 MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
             }
+
+            btnFullScreen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+
+                    if (actionBar.isShowing()) {
+                        actionBar.hide();
+                    } else {
+                        actionBar.show();
+                    }
+                }
+            });
 
             FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.btn_crt_location);
             fab.setOnClickListener(new View.OnClickListener() {

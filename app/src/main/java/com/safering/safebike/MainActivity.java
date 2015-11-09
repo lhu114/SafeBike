@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("safebike", "MainActivity.onDestroy");
+        Log.d("safebike", "MainActivity.onDestroy****************************************************************************************************");
 
         /*
          *  여기서 목적지 위도 경도 SharedPreferences 날리기

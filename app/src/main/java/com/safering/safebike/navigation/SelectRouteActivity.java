@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -124,6 +125,9 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
         mHandler = new Handler(Looper.getMainLooper());
 
+        PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
+
+        findViewById(R.id.title_bar);
         if (startX != 0 && startY != 0 && endX != 0 && endY != 0) {
             NavigationNetworkManager.getInstance().findRoute(SelectRouteActivity.this, startX, startY, endX, endY, BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION,
                     new NavigationNetworkManager.OnResultListener<BicycleRouteInfo>() {
@@ -282,6 +286,8 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 tvMinTotalTime.setPaintFlags(tvMinTotalTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
                 tvMinArvTime.setPaintFlags(tvMinArvTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
                 tvMinTotalDistance.setPaintFlags(tvMinTotalDistance.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+
+                PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
             }
         });
 
@@ -311,15 +317,21 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 tvLaneTotalTime.setPaintFlags(tvLaneTotalTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
                 tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
                 tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+
+                PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION);
             }
         });
 
         btnFullScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                ActionBar actionBar = getSupportActionBar();
 
-
+                if (actionBar.isShowing()) {
+                    actionBar.hide();
+                } else {
+                    actionBar.show();
+                }
             }
         });
 

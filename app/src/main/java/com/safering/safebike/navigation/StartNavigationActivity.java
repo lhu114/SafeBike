@@ -29,6 +29,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
     private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
 
+    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
+
     double DestinationLati;
     double DestinationLongi;
 
@@ -71,7 +73,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                 /*
+                 *  목적지 위도, 경도, searchoption 날리기
+                 */
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+                PropertyManager.getInstance().setDestinationLatitude(null);
+                PropertyManager.getInstance().setDestinationLongitude(null);
+                PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
 
 //                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
@@ -80,8 +88,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
                 startActivity(intent);
-
-//                finish();  -> Clear Top 때문에 의미 없음?
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

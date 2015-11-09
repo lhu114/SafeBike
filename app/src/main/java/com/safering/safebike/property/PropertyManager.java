@@ -24,6 +24,7 @@ public class PropertyManager {
     public static final String RECENT_LATITUDE = "recentlatitude";
     public static final String RECENT_LONGITUDE = "recentlongitude";
 
+    public static final String FIND_ROUTE_SEARCHOPTION = "findroutesearchoption";
 
     private static PropertyManager instance;
     SharedPreferences mPrefs;
@@ -140,5 +141,14 @@ public class PropertyManager {
 
     public String getRecentLongitude() {
         return mPrefs.getString(RECENT_LONGITUDE, "");
+    }
+
+    public void setFindRouteSearchOption(int searchOption) {
+        mEditor.putInt(FIND_ROUTE_SEARCHOPTION, searchOption);
+        mEditor.commit();
+    }
+
+    public int getFindRouteSearchOption() {
+        return mPrefs.getInt(FIND_ROUTE_SEARCHOPTION, 0);
     }
 }
