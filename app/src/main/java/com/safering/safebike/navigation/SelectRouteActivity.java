@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,6 +90,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     LinearLayout layoutLane, layoutMin;
     TextView tvLane, tvLaneTotalTime, tvLaneArvTime, tvLaneTotalDistance, tvMin, tvMinTotalTime, tvMinArvTime, tvMinTotalDistance;
+    Button btnFullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +116,8 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         tvMinTotalTime = (TextView) findViewById(R.id.text_minimumtime_totaltime);
         tvMinArvTime = (TextView) findViewById(R.id.text_minimumtime_arrivetime);
         tvMinTotalDistance = (TextView) findViewById(R.id.text_minimumtime_totaldistance);
+
+        btnFullScreen = (Button) findViewById(R.id.btn_full_screen);
 
         polylineList = new ArrayList<Polyline>();
         mPointMarkerList = new ArrayList<LatLng>();
@@ -181,7 +185,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                  * 추후 조정
                                  */
                                 if (totalDistance >= 20000) {
-                                    moveMap(centerLatitude, centerLongitude, 11, ANIMATE_CAMERA);
+                                    moveMap(centerLatitude, centerLongitude, 10, ANIMATE_CAMERA);
                                 } else if (totalDistance >= 10000 && totalDistance < 20000) {
                                     moveMap(centerLatitude, centerLongitude, 11, ANIMATE_CAMERA);
                                 } else if (totalDistance >= 5000 && totalDistance < 10000) {
@@ -215,7 +219,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                                         for (int i = 0; i < coord.length; i += 2) {
                                             LatLng latLng = new LatLng(coord[i + 1], coord[i]);
-                                            addPointMarker(latLng, "");
+//                                            addPointMarker(latLng, "");
 
 //                                            mPointMarkerList.add(latLng);
                                             /*
@@ -274,10 +278,10 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
                 tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 
-                tvMin.setPaintFlags(tvMin.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
-                tvMinTotalTime.setPaintFlags(tvMinTotalTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
-                tvMinArvTime.setPaintFlags(tvMinArvTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
-                tvMinTotalDistance.setPaintFlags(tvMinTotalDistance.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMin.setPaintFlags(tvMin.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinTotalTime.setPaintFlags(tvMinTotalTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinArvTime.setPaintFlags(tvMinArvTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+                tvMinTotalDistance.setPaintFlags(tvMinTotalDistance.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
             }
         });
 
@@ -307,6 +311,15 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 tvLaneTotalTime.setPaintFlags(tvLaneTotalTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
                 tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
                 tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() &~ Paint.FAKE_BOLD_TEXT_FLAG);
+            }
+        });
+
+        btnFullScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
             }
         });
 

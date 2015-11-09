@@ -18,15 +18,15 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
         android:id="@+id/btn_status_bluetooth"
-        android:layout_gravity="left|top" />
+        android:layout_gravity="left|top"
+        android:text="@string/btn_status_bluetooth" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="@string/btn_full_screen"
         android:id="@+id/btn_full_screen"
         android:layout_gravity="right|top" />
 </FrameLayout>

@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.property.PropertyManager;
 
@@ -60,11 +62,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private static final String ON = "on";
     private static final String OFF = "off";
 
-//    private static final String KEY_BICYCLE_ROUTE_STARTX = "startX";
-//    private static final String KEY_BICYCLE_ROUTE_STARTY = "startY";
-//    private static final String KEY_BICYCLE_ROUTE_ENDX = "endX";
-//    private static final String KEY_BICYCLE_ROUTE_ENDY = "endY";
-
     private GoogleMap mMap;
 
     GoogleApiClient mGoogleApiClient;
@@ -83,6 +80,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     FloatingActionButton fabFindRoute;
     TextView tvPOIAddress;
     TextView tvPOIName;
+    Button btnFullScreen;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -127,12 +125,18 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             tvPOIAddress = (TextView) view.findViewById(R.id.text_poi_address);
             tvPOIName = (TextView) view.findViewById(R.id.text_poi_name);
 
+            btnFullScreen = (Button) view.findViewById(R.id.btn_full_screen);
+
             fabFindRoute = (FloatingActionButton) view.findViewById(R.id.btn_find_route);
             fabFindRoute.setVisibility(View.GONE);
 
             if (View.GONE == fabFindRoute.getVisibility()) {
                 LOCATION_CHANGE_FLAG = ON;
                 Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.ON");
+
+                MainActivity.FABFINDROUTE_ONOFF_FLAG = OFF;
+            } else if (View.VISIBLE == fabFindRoute.getVisibility()) {
+                MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
             }
 
             FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.btn_crt_location);
@@ -298,6 +302,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     if (View.VISIBLE == fabFindRoute.getVisibility()) {
                         LOCATION_CHANGE_FLAG = OFF;
                         Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
+
+                        MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
                     }
 
                     fabFindRoute.setOnClickListener(new View.OnClickListener() {
@@ -492,6 +498,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             addressLayout.setVisibility(View.VISIBLE);
             fabFindRoute.setVisibility(View.VISIBLE);
 
+            MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
+
             fabFindRoute.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -643,5 +651,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         return defineAddress;
     }
+
+    public  void setFabFindRouteChange() {
+        clearALLMarker();
+
+        addressLayout.setVisibility(View.INVISIBLE);
+        fabFindRoute.setVisibility(View.GONE);
+    }
+
 }
 

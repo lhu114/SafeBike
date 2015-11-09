@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.safering.safebike.account.AccountFragment;
 import com.safering.safebike.exercisereport.ExerciseReportFragment;
 import com.safering.safebike.friend.FriendFragment;
+import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.SettingFragment;
 
@@ -44,14 +45,15 @@ public class MainActivity extends AppCompatActivity
     public static final int MESSAGE_BACK_KEY = 1;
     public static final int TIME_BACK_TIMEOUT = 2000;
     private boolean isBackPressed = false;
-/////
+
     private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
     private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
-//    String serviceCondition = "";
 
-//    Fragment mainFragment;
+    public static String FABFINDROUTE_ONOFF_FLAG = "off";
+    private static String ON = "on";
+    private static String OFF = "off";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -176,8 +178,18 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_FINISH)) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(OFF)) {
                 getSupportFragmentManager().popBackStack();
+
+                Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + FABFINDROUTE_ONOFF_FLAG);
+            } else if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(ON)) {
+//                NavigationFragment naviFragment = new NavigationFragment();
+//                naviFragment.setFabFindRouteChange();
+
+                FABFINDROUTE_ONOFF_FLAG = OFF;
+
+                NavigationFragment old = (NavigationFragment) getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
+                old.setFabFindRouteChange();
             } else {
                 if (isBackPressed) {
                     mHandler.removeMessages(MESSAGE_BACK_KEY);
@@ -202,6 +214,11 @@ public class MainActivity extends AppCompatActivity
          *
          *  SharedPreferences Service Condition 값이 finish 이면 두번 눌렀을 때 종료
          */
+    }
+
+    public void onFabFindRouteOnOffFlag(String flag) {
+        Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + flag);
+        FABFINDROUTE_ONOFF_FLAG = flag;
     }
 
     public void onMainFinishNavigationDialog() {

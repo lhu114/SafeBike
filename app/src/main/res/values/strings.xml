@@ -85,6 +85,9 @@
     <string name="text_minimumtime_totaldistance">거리</string>
     <string name="text_bicyclelane_arrivetime">도착시간</string>
     <string name="text_minimumtime_arrivetime">도착시간</string>
+    <string name="btn_favorite_onoff" />
+    <string name="btn_status_bluetooth" />
+    <string name="btn_full_screen" />
 </resources>
 <!-- TODO: Remove or change this placeholder text -->
 
