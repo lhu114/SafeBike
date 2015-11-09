@@ -1,6 +1,7 @@
 package com.safering.safebike.setting;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -82,9 +83,12 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
         listViewBacklight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("item","selected");
+                Log.i("item", "selected");
                 //view.setSelected(true);
+                view.setBackgroundColor(Color.parseColor("#00D8FF"));
                 view.setPressed(true);
+                view.setActivated(false);
+
 
                 //view.setEnabled(false);
                 //view.setActivated(true);
@@ -93,6 +97,8 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
     }

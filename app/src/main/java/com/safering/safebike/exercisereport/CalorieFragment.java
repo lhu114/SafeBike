@@ -55,20 +55,17 @@ public class CalorieFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calorie, container, false);
         calorieChart = (BarChart) view.findViewById(R.id.chart_calorie);
         setData();
-
         calorieChart.setVerticalScrollBarEnabled(true);
         calorieChart.setDrawBarShadow(false);
         calorieChart.setDrawGridBackground(false);
-        calorieChart.setScaleMinima(2f, 1f);
+
         calorieChart.setDrawHighlightArrow(false);
         calorieChart.getXAxis().setLabelsToSkip(10);
         calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         calorieChart.getXAxis().setDrawGridLines(false);
         calorieChart.getXAxis().setSpaceBetweenLabels(2);
-
-        calorieChart.setDrawValueAboveBar(true);
-        calorieChart.setHorizontalFadingEdgeEnabled(false);
-
+        calorieChart.getAxisLeft().setDrawGridLines(false);
+        calorieChart.getAxisRight().setDrawGridLines(false);
         calorieChart.setScaleMinima(2f, 1f);
         calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
