@@ -46,11 +46,11 @@ public class FriendAddressFragment extends Fragment {
         fAdapter.setOnButtonClickListener(new FriendItemView.OnButtonClickListener() {
             @Override
             public void onButtonClick(FriendItemView view, FriendItem data) {
-                Toast.makeText(getContext(),"addclick" + data.friendId,Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getContext(),"addclick" + data.friendId,Toast.LENGTH_SHORT).show();
                 //네트워크에 요청
                 String uEmail = PropertyManager.getInstance().getUserEmail();
-                String fEmail = data.friendEmail;
-                String fId = data.friendId;
+                String fEmail = data.pemail;
+                String fId = data.pname;
                /* NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object result) {
@@ -95,7 +95,7 @@ public class FriendAddressFragment extends Fragment {
                 arContactList = getContactList();
                 for(int i = 0; i < arContactList.size(); i++){
                     FriendItem friend = new FriendItem();
-                    friend.friendId = "friend / " + arContactList.get(i).getPhonenum();
+                    friend.pname = "friend / " + arContactList.get(i).getPhonenum();
                     fAdapter.add(friend);
                 }
             }

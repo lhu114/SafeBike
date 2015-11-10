@@ -52,11 +52,11 @@ public class FriendFragment extends Fragment {
 
                 PopupMenu popupMenu = new PopupMenu(getContext(), view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_popup_friend, popupMenu.getMenu());
-                popupMenu.getMenu().getItem(0).setTitle(friendItem.friendId);
+                popupMenu.getMenu().getItem(0).setTitle(friendItem.pname);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals(friendItem.friendId)) {
+                        if (item.getTitle().equals(friendItem.pname)) {
                             Intent intent = new Intent(getContext(), FriendProfileActivity.class);
                             intent.putExtra(FRIEND_INFORM, friendItem);
                             startActivity(intent);
@@ -113,19 +113,17 @@ public class FriendFragment extends Fragment {
     }
 
     public void setFriendList() {
-
-    /*
-    String email = PropertyManager.getInstance().getUserEmail();
-
-    NetworkManager.getInstance().getUserFriends(getContext(), email, new NetworkManager.OnResultListener<FriendResult>() {
+        fAdapter.clear();
+        String email = PropertyManager.getInstance().getUserEmail();
+        NetworkManager.getInstance().getUserFriends(getContext(), email, new NetworkManager.OnResultListener<FriendResult>() {
             @Override
             public void onSuccess(FriendResult result) {
-                int count = Integer.valueOf(result.count);
+                int count = result.count;
                 for(int i = 0; i < count; i++){
                     FriendItem friendItem = new FriendItem();
-                    friendItem.friendId = result.friendlist.get(i).friendId;
-                    friendItem.friendEmail = result.friendlist.get(i).friendEmail;
-                    friendItem.friendImage = result.friendlist.get(i).friendImage;
+                    friendItem.pname = result.friendlist.get(i).pname;
+                    friendItem.pemail = result.friendlist.get(i).pemail;
+                    friendItem.photo = result.friendlist.get(i).photo;
                     fAdapter.add(friendItem);
                 }
 
@@ -135,8 +133,9 @@ public class FriendFragment extends Fragment {
             public void onFail(int code) {
 
             }
-        });*/
+        });
 
+/*
         //네트워크로 받아서 처리
         for (int i = 0; i < 20; i++) {
             FriendItem friendItem = new FriendItem();
@@ -144,6 +143,7 @@ public class FriendFragment extends Fragment {
             fAdapter.add(friendItem);
 
         }
+*/
 
     }
 

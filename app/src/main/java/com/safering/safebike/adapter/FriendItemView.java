@@ -49,10 +49,10 @@ public class FriendItemView extends RelativeLayout{
 
     public void setFriendData(FriendItem data){
         fData = data;
-        if(data.friendImage != null){
+        if(data != null){
            // friendImage.setImageDrawable(data.friendImage);
         }
-        friendId.setText(data.friendId);
+        friendId.setText(data.pname);
 
     }
 

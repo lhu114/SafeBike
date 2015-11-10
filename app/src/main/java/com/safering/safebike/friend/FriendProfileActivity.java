@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.manager.NetworkManager;
@@ -33,7 +32,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         FriendItem friend = (FriendItem)intent.getSerializableExtra("friendInform");
         String uEmail = PropertyManager.getInstance().getUserEmail();
-        String fEmail = friend.friendEmail;
+        String fEmail = friend.pemail;
 
         /*NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this, uEmail, fEmail, new NetworkManager.OnResultListener() {
             @Override

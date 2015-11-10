@@ -1,6 +1,8 @@
 package com.safering.safebike.manager;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -44,7 +46,7 @@ public class NetworkManager {
     private static final String ACCOUNT_PROFILE_URL = "http:...";//서버 URL
     private static final String ACCOUNT_IMAGE_URL = "http:...";//서버 URL
     private static final String JOIN_DATE = "JOIN_DATE";
-    private static final String USER_EAMIL = "USER_EMAIL";
+    private static final String USER_EAMIL = "uemail";
     private static final String USER_ID = "USER_ID";
     private static final String USER_PASSWORD = "USER_PASSWORD";
     private static final String USER_IMAGE = "USER_IMAGE";
@@ -52,16 +54,16 @@ public class NetworkManager {
     /**
      * 운동
      */
-    private static final String EXCERCISE_URL = "http:...";//서버 URL
-    private static final String EXCERCISE_DAY_URL = "http:...";//서버 URL
+    private static final String EXCERCISE_URL = "http://52.69.133.212:3000/workout/list";//서버 URL
+    private static final String EXCERCISE_DAY_URL = "http://52.69.133.212:3000/workout/";//서버 URL
     private static final String EXERCISE_REQUEST_TYPE = "EXERCISE_TYPE";
-    private static final String EXCERCISE_REQUEST_DATE = "REQUEST_DATE";
+    private static final String EXCERCISE_REQUEST_DATE = "date";
     private static final String EXCERCISE_REQUEST_NUMBER = "REQUEST_NUMBER";
 
     /**
      * 친구
      */
-    private static final String FRIEND_URL = "http:...";//서버 URL
+    private static final String FRIEND_URL = "http://52.69.133.212:3000/user/friend";//서버 URL
     private static final String FRIEND_ADDRESS_URL = "http:...";//서버 URL
     private static final String FRIEND_ADD_URL = "http:...";//서버 URL
     private static final String FRIEND_REMOVE_URL = "http:...";//서버 URL
@@ -211,14 +213,49 @@ public class NetworkManager {
     /**
      * 운동
      */
-    public void getExerciseRecord(Context context, String email,int type, int num, String date , final OnResultListener<ExcerciseResult> listener) {
+
+   /* public void gettestExerciseRecord(Context context, String email, String date, final OnResultListener<ExcerciseResult> listener) {
         RequestParams params = new RequestParams();
         //PARAMETER : 유저 이메일,종류,시작날짜,개수
         //결과값 : JSON(종류에 대한 값들)
-        params.put(USER_EAMIL, email);
-        params.put(EXERCISE_REQUEST_TYPE, num);
-        params.put(EXCERCISE_REQUEST_NUMBER, num);
-        params.put(EXCERCISE_REQUEST_DATE, date);
+        *//*params.put(USER_EAMIL,email);
+        params.put(EXCERCISE_REQUEST_DATE,date);
+*//*
+        params.put(USER_EAMIL,"lowgiant@gmai.com");
+        params.put(EXCERCISE_REQUEST_DATE,"2015-11-03");
+
+
+
+        client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("caloriedata fail: ", statusCode + "");
+
+                //  listener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("from server : ", responseString + "");
+                ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
+                listener.onSuccess(result);
+
+            }
+        });
+    }
+*/
+
+
+
+    public void getExerciseRecord(Context context, String email,String date, final OnResultListener<ExcerciseResult> listener) {
+        RequestParams params = new RequestParams();
+        //PARAMETER : 유저 이메일,종류,시작날짜,개수
+        //결과값 : JSON(종류에 대한 값들)
+       /*params.put(USER_EAMIL,email);
+        params.put(EXCERCISE_REQUEST_DATE,date);
+        */
+        params.put(USER_EAMIL,"lowgiant@gmai.com");
+        params.put(EXCERCISE_REQUEST_DATE,"2015-11-03");
 
 
         client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
@@ -229,7 +266,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
+                Log.i("caloriedata : ",responseString);
                 ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
                 listener.onSuccess(result);
 
@@ -238,12 +275,22 @@ public class NetworkManager {
     }
 
 
+
+
+
+
     public void getDayExerciseRecord(Context context, String email, String date, final OnResultListener<ExerciseDayResult> listener) {
         //PARAMETER : 유저 이메일,종류,날짜
         //결과값 : JSON(칼로리,속력,거리)
         RequestParams params = new RequestParams();
-        params.put(USER_EAMIL, email);
+        /*params.put(USER_EAMIL, email);
         params.put(EXCERCISE_REQUEST_DATE, date);
+        */
+        params.put("uemail","lowgiant@gmai.com");
+        params.put("date","2015-11-03");
+
+
+
 
         client.get(context, EXCERCISE_DAY_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -253,8 +300,8 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("click result",responseString);
                 ExerciseDayResult result = gson.fromJson(responseString, ExerciseDayResult.class);
-
                 listener.onSuccess(result);
             }
         });
@@ -266,7 +313,7 @@ public class NetworkManager {
      */
     public void getUserFriends(Context context, String email, final OnResultListener<FriendResult> listener) {
         //PARAMETER : 유저 이메일
-        //결과값 : JSON(친구아이디,이메일,사진)
+        //결과값 : JSON(친구아이디,이메일,사진        )
 
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
@@ -279,6 +326,8 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                //Toast.makeText(MyApplication.getContext(),"data : " + responseString,Toast.LENGTH_SHORT).show();
+                Log.i("List ","data : " + responseString);
                 FriendResult result = gson.fromJson(responseString, FriendResult.class);
                 listener.onSuccess(result);
             }

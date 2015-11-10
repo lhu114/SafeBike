@@ -7,6 +7,6 @@ import java.util.ArrayList;
  */
 public class ExcerciseResult {
     int count;
-    ArrayList<ExerciseItem> values;
+    ArrayList<ExerciseItem> workoutlist;
 }
 

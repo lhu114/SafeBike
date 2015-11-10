@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +14,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -37,6 +41,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 //    private static final String SERVICE_FINISH = "finish";
 //    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
 
+    ImageView splashImage;
     String userEmail = null;
     String userPassword = null;
 
@@ -44,11 +49,16 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 2;
+        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.activity_splash,options);
+
+        splashImage = (ImageView)findViewById(R.id.image_splash);
+        splashImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        splashImage.setImageBitmap(bm);
+
         userEmail = PropertyManager.getInstance().getUserEmail();
         userPassword = PropertyManager.getInstance().getUserPassword();
-        Log.i("Userid", PropertyManager.getInstance().getUserId());
-        Log.i("UserPass", PropertyManager.getInstance().getUserPassword());
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)

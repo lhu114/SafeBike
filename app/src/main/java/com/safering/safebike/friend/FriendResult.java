@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by Tacademy on 2015-11-05.
  */
 public class FriendResult {
-    String count;
+    int count;
     ArrayList<FriendItem> friendlist;
 
 }

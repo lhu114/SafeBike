@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -32,9 +33,9 @@ import java.util.Calendar;
 public class DistanceFragment extends Fragment {
 
     protected BarChart distanceChart;
-    private static final int TYPE_DISTANCE = 3;
-    private static final int REQUEST_NUMBER = 14;
-
+    TextView parentCal;
+    TextView parentSpeed;
+    TextView parentDistance;
     public DistanceFragment() {
         // Required empty public constructor
     }
@@ -45,20 +46,26 @@ public class DistanceFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_distance, container, false);
+        parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
+        parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);
+        parentDistance = (TextView) getParentFragment().getView().findViewById(R.id.text_value_distance);
+
         distanceChart = (BarChart) view.findViewById(R.id.chart_distance);
         setData();
-
         distanceChart.setVerticalScrollBarEnabled(true);
         distanceChart.setDrawBarShadow(false);
         distanceChart.setDrawGridBackground(false);
-        distanceChart.setScaleMinima(2f, 1f);
         distanceChart.setDrawHighlightArrow(false);
-        distanceChart.getXAxis().setLabelsToSkip(10);
         distanceChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         distanceChart.getXAxis().setDrawGridLines(false);
-        distanceChart.getXAxis().setSpaceBetweenLabels(2);
+        distanceChart.getAxisLeft().setDrawGridLines(false);
+        distanceChart.getAxisRight().setDrawGridLines(false);
+        distanceChart.getAxisRight().setDrawLabels(false);
+        distanceChart.setScaleEnabled(false);
+
         distanceChart.setScaleMinima(2f, 1f);
-        distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
+
+
         distanceChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -104,22 +111,25 @@ public class DistanceFragment extends Fragment {
         distanceChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-            /*
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
-                String date = dateFormat.format(cal.getTime());
                 String email = PropertyManager.getInstance().getUserEmail();
-               NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
+                String date = dateFormat.format(cal.getTime());
+
+
+                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-
+                        parentCal.setText(String.valueOf(result.workout.get(0).calorie));
+                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed));
+                        parentDistance.setText(String.valueOf(result.workout.get(0).road));
                     }
 
                     @Override
                     public void onFail(int code) {
 
                     }
-                });*/
+                });
             }
 
             @Override
@@ -137,28 +147,34 @@ public class DistanceFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
-      /*     NetworkManager.getInstance().getExerciseRecord(getContext(), email, TYPE_DISTANCE, REQUEST_NUMBER, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
-                ArrayList<ExerciseItem> values = result.values;
+
+                ArrayList<ExerciseItem> values = result.workoutlist;
                 ArrayList<String> xVals = new ArrayList<String>();
                 ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-                BarDataSet set = new BarDataSet(yVals, "DataSet");
+                BarDataSet set = new BarDataSet(yVals, "Distance");
                 ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
                 BarData data;
-                int count = result.values.size();
+                int count = result.workoutlist.size();
 
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
                         xVals.add(values.get(i).date);
-                        yVals.add(new BarEntry(values.get(i).value, i));
+                        yVals.add(new BarEntry(values.get(i).road, i));
                     }
                 }
                 set.setBarSpacePercent(35f);
                 dataSets.add(set);
                 data = new BarData(xVals, dataSets);
                 data.setValueTextSize(10f);
+
                 distanceChart.setData(data);
+                distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
+
+
+
             }
 
             @Override
@@ -166,8 +182,7 @@ public class DistanceFragment extends Fragment {
 
             }
         });
-*/
-
+/*
 
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
@@ -192,7 +207,18 @@ public class DistanceFragment extends Fragment {
         data.setValueTextSize(10f);
 
         distanceChart.setData(data);
+*/
 
+
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        parentCal.setText("");
+        parentSpeed.setText("");
+        parentDistance.setText("");
 
     }
 

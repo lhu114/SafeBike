@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -29,6 +30,8 @@ import com.safering.safebike.login.LoginActivity;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,12 +42,18 @@ import java.util.Date;
  */
 public class CalorieFragment extends Fragment {
     protected BarChart calorieChart;
-    private static final int TYPE_CALORIE = 1;
-    private static final int REQUEST_NUMBER = 14;
-
+    TextView parentCal;
+    TextView parentSpeed;
+    TextView parentDistance;
+    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
+    ArrayList<BarDataSet> dataSets;
+    ArrayList<ExerciseItem> values = new ArrayList<ExerciseItem>();
+    BarDataSet set;
 
     public CalorieFragment() {
         // Required empty public constructor
+
     }
 
 
@@ -53,21 +62,33 @@ public class CalorieFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calorie, container, false);
+
+       // ArrayList<String> xVals = new ArrayList<String>();
+      //  ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
+       // BarDataSet set = new BarDataSet(yVals, "Distance");
+
+
+
+        parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
+        parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);
+        parentDistance = (TextView) getParentFragment().getView().findViewById(R.id.text_value_distance);
+
+
         calorieChart = (BarChart) view.findViewById(R.id.chart_calorie);
-        setData();
-        calorieChart.setVerticalScrollBarEnabled(true);
+        requestData();
+    /*    calorieChart.setVerticalScrollBarEnabled(true);
         calorieChart.setDrawBarShadow(false);
         calorieChart.setDrawGridBackground(false);
-
         calorieChart.setDrawHighlightArrow(false);
-        calorieChart.getXAxis().setLabelsToSkip(10);
         calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         calorieChart.getXAxis().setDrawGridLines(false);
-        calorieChart.getXAxis().setSpaceBetweenLabels(2);
         calorieChart.getAxisLeft().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawGridLines(false);
+        calorieChart.getAxisRight().setDrawLabels(false);
+        calorieChart.setScaleEnabled(false);
+
         calorieChart.setScaleMinima(2f, 1f);
-        calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
+*/
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -77,6 +98,11 @@ public class CalorieFragment extends Fragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                //Log.i("index : ", calorieChart.getLowestVisibleXIndex() + "");
+                if (calorieChart.getLowestVisibleXIndex() == 0) {
+                    requestData();
+                }
+
 
             }
 
@@ -108,27 +134,33 @@ public class CalorieFragment extends Fragment {
             @Override
             public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
+
             }
         });
-       calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+
+        calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-             /*
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
-                String date = dateFormat.format(cal.getTime());
                 String email = PropertyManager.getInstance().getUserEmail();
-               NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
+                String date = dateFormat.format(cal.getTime());
+
+
+                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-
+                        parentCal.setText(String.valueOf(result.workout.get(0).calorie));
+                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed));
+                        parentDistance.setText(String.valueOf(result.workout.get(0).road));
                     }
 
                     @Override
                     public void onFail(int code) {
 
                     }
-                });*/
+                });
 
             }
 
@@ -138,38 +170,72 @@ public class CalorieFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
-    private void setData() {
-        int count = 20;
-        int range = 50;
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
+    float bscale = 1f;
+
+
+    private void requestData() {
+        int count = 0;
+        int range = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
-       /* NetworkManager.getInstance().getExerciseRecord(getContext(), email, TYPE_CALORIE, REQUEST_NUMBER, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
-                ArrayList<ExerciseItem> values = result.values;
-                ArrayList<String> xVals = new ArrayList<String>();
-                ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-                BarDataSet set = new BarDataSet(yVals, "DataSet");
-                ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-                BarData data;
-                int count = result.values.size();
 
+                ArrayList<ExerciseItem> values = result.workoutlist;
+
+                BarData data;
+                int count = result.workoutlist.size();
+             //   BarEntry entry = new BarEntry();
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(values.get(i).date);
-                        yVals.add(new BarEntry(values.get(i).value, i));
+                        //xVals.clear();
+                        xVals.add(result.workoutlist.get(i).date);
+                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, i));
+
                     }
+                    calorieChart.setVerticalScrollBarEnabled(true);
+                    calorieChart.setDrawBarShadow(false);
+                    calorieChart.setDrawGridBackground(false);
+                    calorieChart.setDrawHighlightArrow(false);
+                    calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+                    calorieChart.getXAxis().setDrawGridLines(false);
+                    calorieChart.getAxisLeft().setDrawGridLines(false);
+                    calorieChart.getAxisRight().setDrawGridLines(false);
+                    calorieChart.getAxisRight().setDrawLabels(false);
+                    calorieChart.setScaleEnabled(false);
+                    calorieChart.setScaleMinima(2f, 1f);
+
+                    BarDataSet set = new BarDataSet(yVals, "Distance");
+                    dataSets = new ArrayList<BarDataSet>();
+                    dataSets.add(set);
+                    data = new BarData(xVals, dataSets);
+                    data.setValueTextSize(10f);
+                    calorieChart.clear();
+                    calorieChart.removeAllViews();
+                    calorieChart.setData(data);
+                    Log.i("-------x축사이즈------", calorieChart.getData().getXVals().size() + "");
+                    calorieChart.removeViewAt(0);
+                    calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
+                    //calorieChart.moveViewToX(0);
+
+
                 }
-                set.setBarSpacePercent(35f);
-                dataSets.add(set);
-                data = new BarData(xVals, dataSets);
-                data.setValueTextSize(10f);
-                calorieChart.setData(data);
+
+
+
             }
 
             @Override
@@ -177,33 +243,15 @@ public class CalorieFragment extends Fragment {
 
             }
         });
-*/
 
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add("x/" + (i + 1));
-        }
+    }
 
-        ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yVals.add(new BarEntry(val, i));
-        }
-
-        BarDataSet set1 = new BarDataSet(yVals, "DataSet");
-        set1.setBarSpacePercent(35f);
-
-        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-        data.setValueTextSize(10f);
-
-
-        calorieChart.setData(data);
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        parentCal.setText("");
+        parentSpeed.setText("");
+        parentDistance.setText("");
 
     }
 

@@ -67,7 +67,7 @@ public class FriendDirectFragment extends Fragment {
                 for (int i = 0; i < 20; i++) {
                     //서버랑 비교해서 가져오기
                     FriendItem item = new FriendItem();
-                    item.friendId = "friendNumber/" + i;
+                    item.pname = "friendNumber/" + i;
                     fAdapter.add(item);
                 }
 

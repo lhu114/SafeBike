@@ -3,10 +3,12 @@ package com.safering.safebike.exercisereport;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -31,8 +33,9 @@ import java.util.Calendar;
  */
 public class SpeedFragment extends Fragment {
     protected BarChart speedChart;
-    private static final int TYPE_SPEED = 2;
-    private static final int REQUEST_NUMBER = 14;
+    TextView parentCal;
+    TextView parentSpeed;
+    TextView parentDistance;
 
     public SpeedFragment() {
         // Required empty public constructor
@@ -44,30 +47,37 @@ public class SpeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_speed, container, false);
+        parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
+        parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);
+        parentDistance = (TextView) getParentFragment().getView().findViewById(R.id.text_value_distance);
+
+
 
         speedChart = (BarChart) view.findViewById(R.id.chart_speed);
         setData();
-
         speedChart.setVerticalScrollBarEnabled(true);
         speedChart.setDrawBarShadow(false);
         speedChart.setDrawGridBackground(false);
-        speedChart.setScaleMinima(2f, 1f);
         speedChart.setDrawHighlightArrow(false);
-        speedChart.getXAxis().setLabelsToSkip(10);
         speedChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         speedChart.getXAxis().setDrawGridLines(false);
-        speedChart.getXAxis().setSpaceBetweenLabels(2);
+        speedChart.getAxisLeft().setDrawGridLines(false);
+        speedChart.getAxisRight().setDrawGridLines(false);
+        speedChart.getAxisRight().setDrawLabels(false);
+        speedChart.setScaleEnabled(false);
         speedChart.setScaleMinima(2f, 1f);
-        speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
+
+
         speedChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
 
             }
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                Log.i("index : " ,me.getActionIndex() + "");
+                //me.
 
             }
 
@@ -99,27 +109,31 @@ public class SpeedFragment extends Fragment {
             @Override
             public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
+
             }
         });
         speedChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                     /*
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
-                String date = dateFormat.format(cal.getTime());
                 String email = PropertyManager.getInstance().getUserEmail();
-               NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
+                String date = dateFormat.format(cal.getTime());
+
+
+                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-
+                        parentCal.setText(String.valueOf(result.workout.get(0).calorie));
+                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed));
+                        parentDistance.setText(String.valueOf(result.workout.get(0).road));
                     }
 
                     @Override
                     public void onFail(int code) {
 
                     }
-                });*/
+                });
             }
 
             @Override
@@ -137,28 +151,33 @@ public class SpeedFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
-     /*NetworkManager.getInstance().getExerciseRecord(getContext(), email, TYPE_SPEED, REQUEST_NUMBER, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
-                ArrayList<ExerciseItem> values = result.values;
+
+                ArrayList<ExerciseItem> values = result.workoutlist;
                 ArrayList<String> xVals = new ArrayList<String>();
                 ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-                BarDataSet set = new BarDataSet(yVals, "DataSet");
+                BarDataSet set = new BarDataSet(yVals, "Speed");
                 ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
                 BarData data;
-                int count = result.values.size();
+                int count = result.workoutlist.size();
 
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
                         xVals.add(values.get(i).date);
-                        yVals.add(new BarEntry(values.get(i).value, i));
+                        yVals.add(new BarEntry(values.get(i).speed, i));
                     }
                 }
                 set.setBarSpacePercent(35f);
                 dataSets.add(set);
                 data = new BarData(xVals, dataSets);
                 data.setValueTextSize(10f);
+
                 speedChart.setData(data);
+                speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
+
+
             }
 
             @Override
@@ -167,13 +186,10 @@ public class SpeedFragment extends Fragment {
             }
         });
 
-*/
-
-        ArrayList<String> xVals = new ArrayList<String>();
+       /* ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
             xVals.add("x/" + (i + 1));
         }
-
         ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
         for (int i = 0; i < count; i++) {
@@ -191,8 +207,18 @@ public class SpeedFragment extends Fragment {
         BarData data = new BarData(xVals, dataSets);
         data.setValueTextSize(10f);
 
-        speedChart.setData(data);
+        speedChart.setData(data);*/
 
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        parentCal.setText("");
+        parentSpeed.setText("");
+        parentDistance.setText("");
+
+    }
+
 }

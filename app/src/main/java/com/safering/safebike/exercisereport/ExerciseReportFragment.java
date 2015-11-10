@@ -34,5 +34,9 @@ public class ExerciseReportFragment extends Fragment {
         return view;
     }
 
+    public void viewData(int calorie,int speed,int distance){
+
+    }
+
 
 }

@@ -77,4 +77,12 @@ public class FriendAdapter extends BaseAdapter implements FriendItemView.OnButto
         bListener.onButtonClick(view,data);
 
     }
+
+    public void clear(){
+        if(items.size() > 0) {
+            items.clear();
+            notifyDataSetChanged();
+        }
+
+    }
 }
