@@ -22,11 +22,20 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="vertical">
-
+        <TextView
+            android:id="@+id/text_select_bibrator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_select_bibrator"
+            android:layout_marginLeft="15dp"
+            />
         <ListView
             android:id="@+id/listview_band"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:divider="#ffffff"
+
+            >
 
         </ListView>
     </LinearLayout>
@@ -34,12 +43,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
-
+        android:layout_weight="2"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/text_select_backlight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_select_backlight"
+            android:layout_marginLeft="15dp"
+            />
         <ListView
             android:id="@+id/listview_backlight"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:divider="#ffffff"
+
+            >
 
         </ListView>
     </LinearLayout>
@@ -49,6 +69,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_complete" />
+    <Button
+        android:id="@+id/btn_search_direct_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_search_direct_device" />
+
+
+
     <!-- TODO: Update blank fragment layout -->
 
 

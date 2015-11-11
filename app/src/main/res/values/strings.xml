@@ -36,7 +36,7 @@
     <string name="btn_qna_email">이메일 문의</string>
     <string name="btn_policy_profile">개인정보 정책</string>
     <string name="btn_license">라이센스</string>
-
+    <string name="btn_search_direct_device">직접검색</string>
     <string name="login_fail_message">이메일 또는 비밀번호를확인해주세요</string>
     <string name="signup_fail_message">아이디 또는 이메일을 확인해주세요</string>
     <string name="signup_confirm_message">비밀번호를 확인해주세요</string>
@@ -44,7 +44,9 @@
     <string name="signup_duple_message">이미 존재하는 이메일입니다.</string>
 
     <string name="signup_policy_fail_message">정책을 모두 동의해주세요</string>
-
+    <string name="text_select_bibrator">진동밴드 선택</string>
+    <string name="text_select_backlight">후미등 선택</string>
+    <string name="text_bluetooth_device_paired">페어링 완료</string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="btn_fwd_navigation">네이게이션</string>

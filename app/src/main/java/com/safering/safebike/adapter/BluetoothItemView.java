@@ -22,7 +22,7 @@ public class BluetoothItemView extends RelativeLayout{
         inflate(getContext(), R.layout.bluetooth_item_view, this);
         deviceName = (TextView)findViewById(R.id.bluetooth_device_name);
         deviceAddress = (TextView)findViewById(R.id.bluetooth_device_address);
-        deviceOnOff = (TextView)findViewById(R.id.bluetooth_device_onoff);
+        deviceOnOff = (TextView)findViewById(R.id.text_bluetooth_device_paired);
 
 
     }

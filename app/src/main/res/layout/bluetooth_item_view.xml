@@ -13,11 +13,14 @@
         android:text="디바이스명" />
 
     <TextView
-        android:id="@+id/bluetooth_device_onoff"
+        android:id="@+id/text_bluetooth_device_paired"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="꺼짐" />
+        android:text="@string/text_bluetooth_device_paired"
+        android:padding="10dp"
+
+        />
     <TextView
         android:id="@+id/bluetooth_device_address"
         android:layout_width="wrap_content"
@@ -25,9 +28,15 @@
         android:text="device address"
         android:padding="10dp"
 
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/bluetooth_device_name"
-        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+
 
         />
+    <!--android:layout_alignParentTop="true"
+    android:layout_toRightOf="@id/bluetooth_device_name"
+
+    android:layout_marginLeft="10dp"
+-->
+
 </RelativeLayout>
