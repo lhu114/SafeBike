@@ -74,9 +74,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     LocationRequest mLocationRequest;
 
     final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
-    //    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
+//    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
     final Map<LatLng, Marker> mLcMarkerResolver = new HashMap<LatLng, Marker>();
-    //    final Map<Marker, LatLng> mLcResolver = new HashMap<Marker, LatLng>();
+//    final Map<Marker, LatLng> mLcResolver = new HashMap<Marker, LatLng>();
     ArrayList<POI> mPOIMarkerList;
     ArrayList<LatLng> mLcMarkerList;
 
@@ -162,7 +162,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onClick(View view) {
                     /*
-                     * ÇöÀç À§Ä¡
+                     * í˜„ì¬ ìœ„ì¹˜
                      */
                     mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
@@ -175,7 +175,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
                         Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
                         /*
-                         * ¸¶Ä¿ Âï±â
+                         * ë§ˆì»¤ ì°ê¸°
                          */
 //                        addCurrentMarker(mLocation);
                     } else {
@@ -184,7 +184,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 }
             });
         } catch (InflateException e) {            /*
-             * ±¸±Û¸Ê View°¡ ÀÌ¹Ì inflateµÇ¾î ÀÖ´Â »óÅÂÀÌ¹Ç·Î, ¿¡·¯¸¦ ¹«½ÃÇÕ´Ï´Ù.
+             * êµ¬ê¸€ë§µ Viewê°€ ì´ë¯¸ inflateë˜ì–´ ìˆëŠ” ìƒíƒœì´ë¯€ë¡œ, ì—ëŸ¬ë¥¼ ë¬´ì‹œí•©ë‹ˆë‹¤.
              */
         }
 
@@ -210,7 +210,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     /*
-     * exception Ã³¸®
+     * exception ì²˜ë¦¬
      */
     @Override
     public void onStop() {
@@ -228,7 +228,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     /*
-     * ÇÁ·¡±×¸ÕÆ®°¡ È­¸é¿¡¼­ »ç¶óÁú ¶§ ÇÁ·¡±×¸ÕÆ®ÀÇ ºä¸¦ ÄÁÅ×ÀÌ³Ê ºä¿¡¼­ Á¦°Å
+     * í”„ë˜ê·¸ë¨¼íŠ¸ê°€ í™”ë©´ì—ì„œ ì‚¬ë¼ì§ˆ ë•Œ í”„ë˜ê·¸ë¨¼íŠ¸ì˜ ë·°ë¥¼ ì»¨í…Œì´ë„ˆ ë·°ì—ì„œ ì œê±°
      */
     @Override
     public void onDestroyView() {
@@ -264,7 +264,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (id == R.id.menu_fwd_search) {
             /*
-             * ÃÖ±ÙÀÌ¿ë, Áñ°ÜÃ£±â ÅÇ È°¼ºÈ­
+             * ìµœê·¼ì´ìš©, ì¦ê²¨ì°¾ê¸° íƒ­ í™œì„±í™”
              */
             Log.d(DEBUG_TAG, "NavigationFragment.onOptionsItemSelected.menu_fwd_search");
             Intent intent = new Intent(getContext(), ParentRctFvActivity.class);
@@ -302,7 +302,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     tvPOIAddress.setText(getDefinePOIAddress(poi));
 
                     /*
-                     * ¸Ê ÀÌµ¿ÇÏ¸é¼­ poi ¸¶Ä¿ Âï±â
+                     * ë§µ ì´ë™í•˜ë©´ì„œ poi ë§ˆì»¤ ì°ê¸°
                      */
                     Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.poi.moveMap");
 
@@ -332,7 +332,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         @Override
                         public void onClick(View v) {
                     /*
-                     * À§¿¡¼­ ¹ŞÀº µ¥ÀÌÅÍ Àü´Ş Ãâ¹ßÁö, ¸ñÀûÁö ´Ù º¸³»¾ßÇÔ
+                     * ìœ„ì—ì„œ ë°›ì€ ë°ì´í„° ì „ë‹¬ ì¶œë°œì§€, ëª©ì ì§€ ë‹¤ ë³´ë‚´ì•¼í•¨
                      */
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_STARTX, PropertyManager.getInstance().getRecentLatitude());
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_STARTY, PropertyManager.getInstance().getRecentLongitude());
@@ -403,7 +403,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     /*
-     * exception Ã³¸®
+     * exception ì²˜ë¦¬
      */
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mListener);
@@ -486,7 +486,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapClick(LatLng latLng) {
         /*
-         *  ¸¶Ä¿µµ ³»¸®±â
+         *  ë§ˆì»¤ë„ ë‚´ë¦¬ê¸°
          */
         clearALLMarker();
 
@@ -573,11 +573,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-    //    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
+//    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
     private void addLongClickMarker(LatLng latLng) {
         MarkerOptions options  = new MarkerOptions();
         /*
-         * ¾î¶² °ªÀ¸·Î À§µµ °æµµ ³Ñ±æÁö´Â °í¹Î
+         * ì–´ë–¤ ê°’ìœ¼ë¡œ ìœ„ë„ ê²½ë„ ë„˜ê¸¸ì§€ëŠ” ê³ ë¯¼
          */
 //        options.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
         options.position(new LatLng(latLng.latitude, latLng.longitude));

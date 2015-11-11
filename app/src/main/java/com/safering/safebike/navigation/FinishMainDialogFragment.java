@@ -17,8 +17,8 @@ public class FinishMainDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("³×ºñ°ÔÀÌ¼Ç ¾È³»Á¾·á");
-        builder.setMessage("Á¤¸»·Î Á¾·áÇÏ½Ã°Ú½À´Ï±î");
+        builder.setTitle("ë„¤ë¹„ê²Œì´ì…˜ ì•ˆë‚´ì¢…ë£Œ");
+        builder.setMessage("ì •ë§ë¡œ ì¢…ë£Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

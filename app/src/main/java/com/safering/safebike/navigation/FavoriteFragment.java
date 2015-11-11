@@ -48,7 +48,7 @@ public class FavoriteFragment extends Fragment {
         mAdapter = new FavoriteAdapter();
 
         /*
-         *  ³×Æ®¿öÅ© ¿äÃ» ÀÌ¸ŞÀÏ ¼­¹ö¿¡ º¸³»¼­ Áñ°ÜÃ£±â Ç×¸ñ °¡Á®¿À±â
+         *  ë„¤íŠ¸ì›Œí¬ ìš”ì²­ ì´ë©”ì¼ ì„œë²„ì— ë³´ë‚´ì„œ ì¦ê²¨ì°¾ê¸° í•­ëª© ê°€ì ¸ì˜¤ê¸°
          */
 
         listView.setAdapter(mAdapter);
@@ -59,7 +59,7 @@ public class FavoriteFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 /*
-                 *  ÇØ´ç ¾ÆÀÌÅÛ¿¡ ¸ñÀûÁö ¾È³»½ÃÀÛ È­¸éÀ¸·Î ³Ñ±è
+                 *  í•´ë‹¹ ì•„ì´í…œì— ëª©ì ì§€ ì•ˆë‚´ì‹œì‘ í™”ë©´ìœ¼ë¡œ ë„˜ê¹€
                  */
                 Intent intent = new Intent(getContext(), SelectRouteActivity.class);
                 startActivity(intent);
@@ -72,23 +72,23 @@ public class FavoriteFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setIcon(android.R.drawable.ic_dialog_info);
-//        builder.setTitle("ÀüÃ¼ Ç×¸ñ »èÁ¦");
-                builder.setMessage("ÀüÃ¼ Ç×¸ñÀ» »èÁ¦ÇÏ½Ã°Ú½À´Ï±î");
-                builder.setPositiveButton("È®ÀÎ", new DialogInterface.OnClickListener() {
+//        builder.setTitle("ì „ì²´ í•­ëª© ì‚­ì œ");
+                builder.setMessage("ì „ì²´ í•­ëª©ì„ ì‚­ì œí•˜ì‹œê² ìŠµë‹ˆê¹Œ");
+                builder.setPositiveButton("í™•ì¸", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         /*
-                         * ¼­¹ö·Î ÀÌ¸ŞÀÏ delete all ¸í·É¾î º¸³»¼­ Áñ°ÜÃ£±â ¸ñ·Ï ´Ù Áö¿ò
-                         * adapter °»½Å (adpater clear)
+                         * ì„œë²„ë¡œ ì´ë©”ì¼ delete all ëª…ë ¹ì–´ ë³´ë‚´ì„œ ì¦ê²¨ì°¾ê¸° ëª©ë¡ ë‹¤ ì§€ì›€
+                         * adapter ê°±ì‹  (adpater clear)
                          *
-                         * Visibility Gone Ã³¸®
+                         * Visibility Gone ì²˜ë¦¬
                          */
 
                         mAdapter.notifyDataSetChanged();
                         mAdapter.notifyDataSetInvalidated();
                     }
                 });
-                builder.setNegativeButton("Ãë¼Ò", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("ì·¨ì†Œ", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -113,12 +113,12 @@ public class FavoriteFragment extends Fragment {
 
     private void initData() {
         /*
-         * ³×Æ®¿öÅ© ¿äÃ»ÇØ¼­ Áñ°ÜÃ£±â µ¥ÀÌÅÍ °¡Á®¿À±â
+         * ë„¤íŠ¸ì›Œí¬ ìš”ì²­í•´ì„œ ì¦ê²¨ì°¾ê¸° ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
          */
 
         for (int i = 0; i < 10; i++) {
             FavoriteItem itemData = new FavoriteItem();
-            itemData.fvPOIName = "Áñ°ÜÃ£±â ¸ñÀûÁö";
+            itemData.fvPOIName = "ì¦ê²¨ì°¾ê¸° ëª©ì ì§€";
             mAdapter.add(itemData);
         }
     }

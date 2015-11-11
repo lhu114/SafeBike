@@ -125,7 +125,7 @@ public class NavigationNetworkManager {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 /*
-                 * fail¿¡ µû¸¥ statusCode Ã³¸®
+                 * failì— ë”°ë¥¸ statusCode ì²˜ë¦¬
                  */
                 listener.onFail(statusCode);
 
@@ -144,7 +144,7 @@ public class NavigationNetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 /*
-                 * success¿¡ µû¸¥ statusCode Ã³¸®
+                 * successì— ë”°ë¥¸ statusCode ì²˜ë¦¬
                  */
                 SearchPOIInfoResult result = poiGson.fromJson(responseString, SearchPOIInfoResult.class);
                 listener.onSuccess(result.searchPoiInfo);
@@ -196,7 +196,7 @@ public class NavigationNetworkManager {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 /*
-                 * fail¿¡ µû¸¥ statusCode Ã³¸®
+                 * failì— ë”°ë¥¸ statusCode ì²˜ë¦¬
                  */
                 listener.onFail(statusCode);
 
@@ -215,7 +215,7 @@ public class NavigationNetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 /*
-                 * success¿¡ µû¸¥ statusCode Ã³¸®
+                 * successì— ë”°ë¥¸ statusCode ì²˜ë¦¬
                  */
 
                 String code = Integer.toString(statusCode);
@@ -303,27 +303,27 @@ public class NavigationNetworkManager {
     }
     /*
     * saveFavorite(){
-    * Áñ°ÜÃ£±â Ãß°¡ ÁöÁ¡ ÀúÀå
-    * //PARAMETER : À¯Àú ÀÌ¸ŞÀÏ,¸ñÀûÁö
-    * //°á°ú°ª : INT
+    * ì¦ê²¨ì°¾ê¸° ì¶”ê°€ ì§€ì  ì €ì¥
+    * //PARAMETER : ìœ ì € ì´ë©”ì¼,ëª©ì ì§€
+    * //ê²°ê³¼ê°’ : INT
     * }
     *
     * */
 
     /*
     * saveExercise(){
-    * ¿îµ¿±â·Ïµé ÀúÀå
-    * //PARAMETER : À¯Àú ÀÌ¸ŞÀÏ,Ä®·Î¸®,°Å¸®,¼Ó·Â
-    * //°á°ú°ª : INT
+    * ìš´ë™ê¸°ë¡ë“¤ ì €ì¥
+    * //PARAMETER : ìœ ì € ì´ë©”ì¼,ì¹¼ë¡œë¦¬,ê±°ë¦¬,ì†ë ¥
+    * //ê²°ê³¼ê°’ : INT
     * }
     *
     * */
 
     /*
     * getFavorite(){
-    * Áñ°ÜÃ£±â Ãß°¡ ÁöÁ¡ °¡Á®¿À±â
-    * //PARAMETER : À¯Àú ÀÌ¸ŞÀÏ,±¸ºĞ°ª
-    * //°á°ú°ª : JSON(Áñ°ÜÃ£±â ÁöÁ¡µé)
+    * ì¦ê²¨ì°¾ê¸° ì¶”ê°€ ì§€ì  ê°€ì ¸ì˜¤ê¸°
+    * //PARAMETER : ìœ ì € ì´ë©”ì¼,êµ¬ë¶„ê°’
+    * //ê²°ê³¼ê°’ : JSON(ì¦ê²¨ì°¾ê¸° ì§€ì ë“¤)
     * }
     *
     * */

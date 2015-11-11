@@ -132,28 +132,28 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 //            @Override
 //            public void onClick(View v) {
 //                /*
-//                 * ¿îµ¿ ±â·Ï Ã³¸®, ÀÚµ¿À¸·Î ¾È³»¸¦ Á¾·áÇÒÁö¿¡ ´ëÇÑ ½Ã³ª¸®¿À, »ç¿ëÀÚ Á÷Á¢ Á¾·á ¶Ç´Â ÀÚµ¿ Á¾·á¿¡ µû¸¥ ¿îµ¿ ±â·Ï °ª Àü´Ş
+//                 * ìš´ë™ ê¸°ë¡ ì²˜ë¦¬, ìë™ìœ¼ë¡œ ì•ˆë‚´ë¥¼ ì¢…ë£Œí• ì§€ì— ëŒ€í•œ ì‹œë‚˜ë¦¬ì˜¤, ì‚¬ìš©ì ì§ì ‘ ì¢…ë£Œ ë˜ëŠ” ìë™ ì¢…ë£Œì— ë”°ë¥¸ ìš´ë™ ê¸°ë¡ ê°’ ì „ë‹¬
 //                 */
 //
 //                /*
-//                 * ´ÙÀÌ¾ó·Î±×·Î Á¾·á½Ã Ã³¸®
+//                 * ë‹¤ì´ì–¼ë¡œê·¸ë¡œ ì¢…ë£Œì‹œ ì²˜ë¦¬
 //                 */
 //            }
 //        });
     }
     /*
-     * ¾È³»Á¾·á ¹öÆ° Ã³¸®
+     * ì•ˆë‚´ì¢…ë£Œ ë²„íŠ¼ ì²˜ë¦¬
      */
     public void onFinishNavigationBtn(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("³»ºñ°ÔÀÌ¼Ç ¾È³»Á¾·á");
-        builder.setMessage("ÇöÀç ³»ºñ°ÔÀÌ¼Ç ¾È³» ÁßÀÔ´Ï´Ù. Á¤¸»·Î Á¾·áÇÏ½Ã°Ú½À´Ï±î");
+        builder.setTitle("ë‚´ë¹„ê²Œì´ì…˜ ì•ˆë‚´ì¢…ë£Œ");
+        builder.setMessage("í˜„ì¬ ë‚´ë¹„ê²Œì´ì…˜ ì•ˆë‚´ ì¤‘ì…ë‹ˆë‹¤. ì •ë§ë¡œ ì¢…ë£Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                  /*
-                 *  ¸ñÀûÁö À§µµ, °æµµ, searchoption ³¯¸®±â
+                 *  ëª©ì ì§€ ìœ„ë„, ê²½ë„, searchoption ë‚ ë¦¬ê¸°
                  */
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                 PropertyManager.getInstance().setDestinationLatitude(null);
@@ -204,7 +204,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     }
 
     /*
-     * exception Ã³¸®
+     * exception ì²˜ë¦¬
      */
     @Override
     protected void onStop() {
@@ -254,7 +254,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                 finish();
                 /*
-                 * ¿Ö finish ¾ÈÇß¾ú´Âµ¥ Á¾·áµÉ±î...
+                 * ì™œ finish ì•ˆí–ˆì—ˆëŠ”ë° ì¢…ë£Œë ê¹Œ...
                  */
 
                 return true;
@@ -273,7 +273,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         finish();
         /*
-         * ÇÃ·¡±×¿Í finish °ü°è ¿©Âåº¸±â
+         * í”Œë˜ê·¸ì™€ finish ê´€ê³„ ì—¬ì­¤ë³´ê¸°
          */
     }
 
@@ -341,13 +341,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         Log.d(DEBUG_TAG, "StartNavigationActivity.starIterativeLocationUpdates");
     }
 
-    //    protected void starIterativeLocationUpdates() {
+//    protected void starIterativeLocationUpdates() {
 //        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mIterativeLocReq, mIterativeListener);
 //
 //        Log.d(DEBUG_TAG, "StartNavigationActivity.starIterativeLocationUpdates");
 //    }
     /*
-     * exception Ã³¸®
+     * exception ì²˜ë¦¬
      */
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mInitialListener);
@@ -430,7 +430,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     final double endY = destinationLatitude;
                     final int searchOption = PropertyManager.getInstance().getFindRouteSearchOption();
 
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.Ãâ¹ßÁö, ¸ñÀûÁö À§µµ °æµµ : " + recentLatitude + ", " + recentLongitude + " | " + destinationLatitude + ", " + destinationLongitude);
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.ì¶œë°œì§€, ëª©ì ì§€ ìœ„ë„ ê²½ë„ : " + recentLatitude + ", " + recentLongitude + " | " + destinationLatitude + ", " + destinationLongitude);
 
                     if (startX != 0 && startY != 0 && endX != 0 && endY != 0) {
                         NavigationNetworkManager.getInstance().findRoute(StartNavigationActivity.this, startX, startY, endX, endY, searchOption,
@@ -593,7 +593,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             gpIndex++;
 
             /*
-             * index ¼ø¼­´ë·Î ÀÌ¹ÌÁö ´Ù¸£°Ô Àû¿ë
+             * index ìˆœì„œëŒ€ë¡œ ì´ë¯¸ì§€ ë‹¤ë¥´ê²Œ ì ìš©
              */
 
             Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(gpIndex));

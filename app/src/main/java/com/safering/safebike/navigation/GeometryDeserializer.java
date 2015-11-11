@@ -13,7 +13,7 @@ public class GeometryDeserializer implements JsonDeserializer<Geometry> {
 
 	@Override
 	public Geometry deserialize(JsonElement element, Type type,
-								JsonDeserializationContext context) throws JsonParseException {
+			JsonDeserializationContext context) throws JsonParseException {
 		JsonObject obj = element.getAsJsonObject();
 		Geometry geometry = new Geometry();
 		geometry.type = obj.get("type").getAsString();
@@ -31,7 +31,7 @@ public class GeometryDeserializer implements JsonDeserializer<Geometry> {
 				geometry.coordinates[i] = array.get(i).getAsDouble();
 			}
 		}
-
+		
 		return geometry;
 	}
 

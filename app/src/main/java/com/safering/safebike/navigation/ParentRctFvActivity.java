@@ -34,11 +34,11 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
     private static final String TAG_TAB_RECENT = "RECENT";
     private static final String TAG_TAB_FAVORITE = "FAVORITE";
-    private static final String TAG_TAB_RECENT_NAME = "ÃÖ±ÙÀÌ¿ë";
-    private static final String TAG_TAB_FAVORITE_NAME = "Áñ°ÜÃ£±â";
+    private static final String TAG_TAB_RECENT_NAME = "ìµœê·¼ì´ìš©";
+    private static final String TAG_TAB_FAVORITE_NAME = "ì¦ê²¨ì°¾ê¸°";
 
     private static final String KEY_POI_OBJECT = "poiobject";
-    //    private static final String KEY_POI_NAME = "poiName";
+//    private static final String KEY_POI_NAME = "poiName";
 //    private static final String KEY_POI_LATITUDE = "poiLatitude";
 //    private static final String KEY_POI_LONGITUDE = "poiLongitude";
 //    private static final String KEY_POI_ADDRESS = "poiAddress";
@@ -62,10 +62,10 @@ public class ParentRctFvActivity extends AppCompatActivity {
                 poi = (POI) listView.getItemAtPosition(position);
 
                 if(poi != null) {
-                    //    Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
+                //    Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
 
                     /*
-                     *  °Ë»ö¾î RecentDb ¿¡ ÀúÀå Ã³¸® ÇÊ¿ä
+                     *  ê²€ìƒ‰ì–´ RecentDb ì— ì €ì¥ ì²˜ë¦¬ í•„ìš”
                      */
                     RecentItem item = new RecentItem();
                     item.rctPOIName = poi.name;
@@ -116,7 +116,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(searchKeyword)) {
                 /*
-                 *  °Ë»ö¾î RecentDb ¿¡ ÀúÀå Ã³¸® ÇÊ¿ä
+                 *  ê²€ìƒ‰ì–´ RecentDb ì— ì €ì¥ ì²˜ë¦¬ í•„ìš”
                  */
                     RecentItem item = new RecentItem();
                     item.rctPOIName = searchKeyword;
@@ -125,7 +125,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
 
                 /*
-                 * ParentRctFvActivity ¿¡ ÀÖ´Â setResult Ã³¸®
+                 * ParentRctFvActivity ì— ìˆëŠ” setResult ì²˜ë¦¬
                  */
 
                     Log.d("safebike", "rctPoiName : " + searchKeyword);

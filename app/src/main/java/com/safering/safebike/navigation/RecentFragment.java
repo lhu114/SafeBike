@@ -24,7 +24,7 @@ import com.safering.safebike.R;
  */
 public class RecentFragment extends Fragment {
     private static final String KEY_POI_OBJECT = "poiobject";
-    //    private static final String KEY_POI_NAME = "poiName";
+//    private static final String KEY_POI_NAME = "poiName";
 //    private static final String KEY_POI_LATITUDE = "poiLatitude";
 //    private static final String KEY_POI_LONGITUDE = "poiLongitude";
 //    private static final String KEY_POI_ADDRESS = "poiAddress";
@@ -68,7 +68,7 @@ public class RecentFragment extends Fragment {
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (columnIndex == nameColumnIndex) {
                     /*
-                     *  View ¿¡ ±Û ³Ö¾îÁÖ±â
+                     *  View ì— ê¸€ ë„£ì–´ì£¼ê¸°
                      */
                     TextView tvRctPoiName = (TextView) view.findViewById(R.id.text_rct_poi_name);
                     tvRctPoiName.setText(cursor.getString(columnIndex));
@@ -88,7 +88,7 @@ public class RecentFragment extends Fragment {
                 Cursor c = (Cursor) listView.getItemAtPosition(position);
                 final String rctPoiName = c.getString(c.getColumnIndex(RecentDB.RecentTable.COLUMN_POI_NAME));
                 /*
-                 * ParentRctFvActivity ¿¡ ÀÖ´Â setResult Ã³¸®
+                 * ParentRctFvActivity ì— ìˆëŠ” setResult ì²˜ë¦¬
                  */
 
                 Log.d("safebike", "rctPoiName : " + rctPoiName);
@@ -125,9 +125,9 @@ public class RecentFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setIcon(android.R.drawable.ic_dialog_info);
-//        builder.setTitle("ÀüÃ¼ Ç×¸ñ »èÁ¦");
-                builder.setMessage("ÀüÃ¼ Ç×¸ñÀ» »èÁ¦ÇÏ½Ã°Ú½À´Ï±î");
-                builder.setPositiveButton("È®ÀÎ", new DialogInterface.OnClickListener() {
+//        builder.setTitle("ì „ì²´ í•­ëª© ì‚­ì œ");
+                builder.setMessage("ì „ì²´ í•­ëª©ì„ ì‚­ì œí•˜ì‹œê² ìŠµë‹ˆê¹Œ");
+                builder.setPositiveButton("í™•ì¸", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RecentDataManager.getInstance().deleteRecentAll();
@@ -143,7 +143,7 @@ public class RecentFragment extends Fragment {
 
                     }
                 });
-                builder.setNegativeButton("Ãë¼Ò", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("ì·¨ì†Œ", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -156,7 +156,7 @@ public class RecentFragment extends Fragment {
         });
 
         /*
-         *  DB ÀÖÀ» ‹š ¾øÀ» ¶§ ºä Ã³¸®
+         *  DB ìˆì„ ë–„ ì—†ì„ ë•Œ ë·° ì²˜ë¦¬
          */
 
         Cursor c = RecentDataManager.getInstance().getRecentCursor(null);

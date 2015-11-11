@@ -146,7 +146,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         }
 
         /*
-         *  ¿Ã∏ﬁ¿œ destination ¿ßµµ, ∞Êµµ ∞™ º≠πˆø° ∫∏≥ªº≠ º≠πˆø° ¿÷¿∏∏È ¡Ò∞‹√£±‚ πˆ∆∞ On ªÛ≈¬ «•Ω√, flag µµ On¿∏∑Œ ∫Ø∞Ê
+         *  Ïù¥Î©îÏùº destination ÏúÑÎèÑ, Í≤ΩÎèÑ Í∞í ÏÑúÎ≤ÑÏóê Î≥¥ÎÇ¥ÏÑú ÏÑúÎ≤ÑÏóê ÏûàÏúºÎ©¥ Ï¶êÍ≤®Ï∞æÍ∏∞ Î≤ÑÌäº On ÏÉÅÌÉú ÌëúÏãú, flag ÎèÑ OnÏúºÎ°ú Î≥ÄÍ≤Ω
          */
 
         recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
@@ -162,7 +162,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         final double endX = destinationLongitude;
         final double endY = destinationLatitude;
 
-        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.√‚πﬂ¡ˆ, ∏Ò¿˚¡ˆ ¿ßµµ ∞Êµµ : " + recentLatitude + ", " + recentLongitude + " | " + destinationLatitude + ", " + destinationLongitude);
+        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.Ï∂úÎ∞úÏßÄ, Î™©Ï†ÅÏßÄ ÏúÑÎèÑ Í≤ΩÎèÑ : " + recentLatitude + ", " + recentLongitude + " | " + destinationLatitude + ", " + destinationLongitude);
 
         if (startX != 0 && startY != 0 && endX != 0 && endY != 0) {
             NavigationNetworkManager.getInstance().findRoute(SelectRouteActivity.this, startX, startY, endX, endY, BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION,
@@ -176,7 +176,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                 int totalDistance = result.features.get(0).properties.totalDistance;
 
                                 /*
-                                 * √ﬂ»ƒ ¡∂¡§
+                                 * Ï∂îÌõÑ Ï°∞Ï†ï
                                  */
                                 if (totalDistance >= 20000) {
                                     moveMap(centerLatitude, centerLongitude, 10, ANIMATE_CAMERA);
@@ -236,7 +236,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                     }
                                 }
                                 /*
-                                 * ø√πŸ∏• √≥∏Æ¿Œ∞°..
+                                 * Ïò¨Î∞îÎ•∏ Ï≤òÎ¶¨Ïù∏Í∞Ä..
                                  */
 //                                mHandler.postDelayed(new Runnable() {
 //                                    @Override
@@ -375,7 +375,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 clearAllLaneMarker();
                 clearAllMinMarker();
                 /*
-                 * marker ¥ŸΩ√ ±◊∏Æ±‚
+                 * marker Îã§Ïãú Í∑∏Î¶¨Í∏∞
                  */
                 for (int i = 0; i < mMinLatLngList.size(); i++) {
                     String bitmapFlag = null;
@@ -409,8 +409,8 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 /*
-                 *    ¿Ã∏ﬁ¿œ, favoritePOIName, destination latitude, longitude º≠πˆ∑Œ ∫∏≥ø
-                 *    flag πŸ≈¡¿∏∑Œ «—π¯ ¥©∏£∏È update ¥ŸΩ√ «—π¯ ¥©∏£∏È delete
+                 *    Ïù¥Î©îÏùº, favoritePOIName, destination latitude, longitude ÏÑúÎ≤ÑÎ°ú Î≥¥ÎÉÑ
+                 *    flag Î∞îÌÉïÏúºÎ°ú ÌïúÎ≤à ÎàÑÎ•¥Î©¥ update Îã§Ïãú ÌïúÎ≤à ÎàÑÎ•¥Î©¥ delete
                  */
             }
         });
@@ -421,11 +421,11 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 //            @Override
 //            public void onClick(View v) {
 //                /*
-//                 * øÓ«‡ «œ±‚ ¡˜¿¸ ∏ﬁ¿Œ ≥◊∫Ò∞‘¿Ãº« »≠∏È pop
+//                 * Ïö¥Ìñâ ÌïòÍ∏∞ ÏßÅÏ†Ñ Î©îÏù∏ ÎÑ§ÎπÑÍ≤åÏù¥ÏÖò ÌôîÎ©¥ pop
 //                 */
 
 //                /*
-//                 * √‚πﬂ¡ˆ ∏Ò¿˚¡ˆ ¡¬«• ¿˙¿Â
+//                 * Ï∂úÎ∞úÏßÄ Î™©Ï†ÅÏßÄ Ï¢åÌëú Ï†ÄÏû•
 //                 */
 //
 //                PropertyManager.getInstance().setStartingLatitude("");
@@ -438,7 +438,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 //
 //
 //                /*
-//                 * ¿⁄¿¸∞≈ «—∞Ë π◊ √•¿” ¥Ÿ¿ÃæÛ∑Œ±◊ ∂ÁøÏ∞Ì »Æ¿Œ«œ∏È startActivity æ∆¥œ∏È ±◊¥Î∑Œ
+//                 * ÏûêÏ†ÑÍ±∞ ÌïúÍ≥Ñ Î∞è Ï±ÖÏûÑ Îã§Ïù¥ÏñºÎ°úÍ∑∏ ÎùÑÏö∞Í≥† ÌôïÏù∏ÌïòÎ©¥ startActivity ÏïÑÎãàÎ©¥ Í∑∏ÎåÄÎ°ú
 //                 */
 //                Intent intent = new Intent(SelectRouteActivity.this, StartNavigationActivity.class);
 //                startActivity(intent);
@@ -448,18 +448,18 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 //    }
 
     /*
-     * æ»≥ªΩ√¿€ πˆ∆∞ √≥∏Æ
+     * ÏïàÎÇ¥ÏãúÏûë Î≤ÑÌäº Ï≤òÎ¶¨
      */
     public void onStartNavigationBtn(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("¿⁄¿¸∞≈ ±Êæ»≥ªø° ¥Î«— «—∞Ë π◊ √•¿”");
-        builder.setMessage("≥ªøÎ");
-        builder.setPositiveButton("µø¿«", new DialogInterface.OnClickListener() {
+        builder.setTitle("ÏûêÏ†ÑÍ±∞ Í∏∏ÏïàÎÇ¥Ïóê ÎåÄÌïú ÌïúÍ≥Ñ Î∞è Ï±ÖÏûÑ");
+        builder.setMessage("ÎÇ¥Ïö©");
+        builder.setPositiveButton("ÎèôÏùò", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 /*
-                 * √‚πﬂ¡ˆ ∏Ò¿˚¡ˆ ¡¬«• ¿˙¿Â
+                 * Ï∂úÎ∞úÏßÄ Î™©Ï†ÅÏßÄ Ï¢åÌëú Ï†ÄÏû•
                  */
 
 //                PropertyManager.getInstance().setStartingLatitude("");
@@ -472,14 +472,14 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
 
                 /*
-                 * ¿⁄¿¸∞≈ «—∞Ë π◊ √•¿” ¥Ÿ¿ÃæÛ∑Œ±◊ ∂ÁøÏ∞Ì »Æ¿Œ«œ∏È startActivity æ∆¥œ∏È ±◊¥Î∑Œ
+                 * ÏûêÏ†ÑÍ±∞ ÌïúÍ≥Ñ Î∞è Ï±ÖÏûÑ Îã§Ïù¥ÏñºÎ°úÍ∑∏ ÎùÑÏö∞Í≥† ÌôïÏù∏ÌïòÎ©¥ startActivity ÏïÑÎãàÎ©¥ Í∑∏ÎåÄÎ°ú
                  */
                 Intent intent = new Intent(SelectRouteActivity.this, StartNavigationActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-        builder.setNegativeButton("√Îº“", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Ï∑®ÏÜå", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -576,7 +576,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             laneGPIndex++;
 
             /*
-             * index º¯º≠¥Î∑Œ ¿ÃπÃ¡ˆ ¥Ÿ∏£∞‘ ¿˚øÎ
+             * index ÏàúÏÑúÎåÄÎ°ú Ïù¥ÎØ∏ÏßÄ Îã§Î•¥Í≤å Ï†ÅÏö©
              */
 
             Log.d(DEBUG_TAG, "SelectRouteActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(laneGPIndex));
@@ -586,7 +586,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             minGPIndex++;
 
             /*
-             * index º¯º≠¥Î∑Œ ¿ÃπÃ¡ˆ ¥Ÿ∏£∞‘ ¿˚øÎ
+             * index ÏàúÏÑúÎåÄÎ°ú Ïù¥ÎØ∏ÏßÄ Îã§Î•¥Í≤å Ï†ÅÏö©
              */
 
             Log.d(DEBUG_TAG, "SelectRouteActivity.addPointMarker.BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(minGPIndex));
@@ -724,16 +724,16 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 if (remainTime > 0) {
                     second = remainTime;
 
-                    totalTime = Integer.toString(hour) + "Ω√∞£ " + Integer.toString(minute) + "∫– " + Integer.toString(second) + "√ ";
+                    totalTime = Integer.toString(hour) + "ÏãúÍ∞Ñ " + Integer.toString(minute) + "Î∂Ñ " + Integer.toString(second) + "Ï¥à";
                 } else if (remainTime == 0) {
-                    totalTime = Integer.toString(hour) + "Ω√∞£ " + Integer.toString(minute) + "∫–";
+                    totalTime = Integer.toString(hour) + "ÏãúÍ∞Ñ " + Integer.toString(minute) + "Î∂Ñ";
                 }
             } else if (remainTime == 0) {
-                totalTime = Integer.toString(hour) + "Ω√∞£";
+                totalTime = Integer.toString(hour) + "ÏãúÍ∞Ñ";
             } else if (remainTime < 60 && remainTime > 0) {
                 second = remainTime;
 
-                totalTime = Integer.toString(hour) + "Ω√∞£ " + Integer.toString(second) + "√ ";
+                totalTime = Integer.toString(hour) + "ÏãúÍ∞Ñ " + Integer.toString(second) + "Ï¥à";
             }
         } else if (time < 3600) {
             minute = time / 60;
@@ -742,12 +742,12 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             if (remainTime < 60 && remainTime > 0) {
                 second = remainTime;
 
-                totalTime = Integer.toString(minute) + "∫– " + Integer.toString(second) + "√ ";
+                totalTime = Integer.toString(minute) + "Î∂Ñ " + Integer.toString(second) + "Ï¥à";
             } else if (remainTime == 0) {
-                totalTime = Integer.toString(minute) + "∫–";
+                totalTime = Integer.toString(minute) + "Î∂Ñ";
             }
         } else if (time < 60 && time > 0) {
-            totalTime = Integer.toString(time) + "√ ";
+            totalTime = Integer.toString(time) + "Ï¥à";
         } else {
             totalTime = "";
         }
