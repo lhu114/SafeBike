@@ -10,25 +10,37 @@
         android:text="@string/btn_fwd_navigation"
         android:id="@+id/btn_fwd_navigation"
         android:layout_gravity="center_horizontal|bottom"
+
+        android:background="@drawable/findway"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="84dp" />
+        android:layout_marginBottom="75dp"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_onoff_band"
+
         android:id="@+id/btn_onoff_band"
         android:layout_above="@+id/temp"
-        android:layout_toStartOf="@+id/temp" />
+        android:layout_toStartOf="@+id/temp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+
+        android:background="@drawable/band_selector"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_onoff_backlight"
+
         android:id="@+id/btn_onoff_backlight"
         android:layout_above="@+id/temp"
-        android:layout_toEndOf="@+id/temp" />
+        android:layout_toEndOf="@+id/temp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+
+        android:background="@drawable/backlight_selector"
+        />
 
     <Button
         style="?android:attr/buttonStyleSmall"

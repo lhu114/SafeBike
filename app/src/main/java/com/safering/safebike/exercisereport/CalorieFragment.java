@@ -50,6 +50,8 @@ public class CalorieFragment extends Fragment {
     ArrayList<BarDataSet> dataSets;
     ArrayList<ExerciseItem> values = new ArrayList<ExerciseItem>();
     BarDataSet set;
+    Button moveRecent;
+    int total = 0;
 
     public CalorieFragment() {
         // Required empty public constructor
@@ -62,21 +64,12 @@ public class CalorieFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calorie, container, false);
-
-       // ArrayList<String> xVals = new ArrayList<String>();
-      //  ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-       // BarDataSet set = new BarDataSet(yVals, "Distance");
-
-
-
         parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
         parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);
         parentDistance = (TextView) getParentFragment().getView().findViewById(R.id.text_value_distance);
 
-
         calorieChart = (BarChart) view.findViewById(R.id.chart_calorie);
-        requestData();
-    /*    calorieChart.setVerticalScrollBarEnabled(true);
+        calorieChart.setVerticalScrollBarEnabled(true);
         calorieChart.setDrawBarShadow(false);
         calorieChart.setDrawGridBackground(false);
         calorieChart.setDrawHighlightArrow(false);
@@ -86,9 +79,9 @@ public class CalorieFragment extends Fragment {
         calorieChart.getAxisRight().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawLabels(false);
         calorieChart.setScaleEnabled(false);
-
         calorieChart.setScaleMinima(2f, 1f);
-*/
+        requestData();
+
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -98,12 +91,9 @@ public class CalorieFragment extends Fragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                //Log.i("index : ", calorieChart.getLowestVisibleXIndex() + "");
                 if (calorieChart.getLowestVisibleXIndex() == 0) {
                     requestData();
                 }
-
-
             }
 
             @Override
@@ -170,6 +160,14 @@ public class CalorieFragment extends Fragment {
             }
         });
 
+        moveRecent = (Button)view.findViewById(R.id.btn_move_calorie);
+        moveRecent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
+            }
+        });
+
 
         return view;
     }
@@ -186,8 +184,9 @@ public class CalorieFragment extends Fragment {
     private void requestData() {
         int count = 0;
         int range = 0;
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
         NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
@@ -198,40 +197,21 @@ public class CalorieFragment extends Fragment {
 
                 BarData data;
                 int count = result.workoutlist.size();
-             //   BarEntry entry = new BarEntry();
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        //xVals.clear();
                         xVals.add(result.workoutlist.get(i).date);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, i));
-
+                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, total+i));
                     }
-                    calorieChart.setVerticalScrollBarEnabled(true);
-                    calorieChart.setDrawBarShadow(false);
-                    calorieChart.setDrawGridBackground(false);
-                    calorieChart.setDrawHighlightArrow(false);
-                    calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-                    calorieChart.getXAxis().setDrawGridLines(false);
-                    calorieChart.getAxisLeft().setDrawGridLines(false);
-                    calorieChart.getAxisRight().setDrawGridLines(false);
-                    calorieChart.getAxisRight().setDrawLabels(false);
-                    calorieChart.setScaleEnabled(false);
-                    calorieChart.setScaleMinima(2f, 1f);
-
+                    total += count;
                     BarDataSet set = new BarDataSet(yVals, "Distance");
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
                     data = new BarData(xVals, dataSets);
                     data.setValueTextSize(10f);
-                    calorieChart.clear();
-                    calorieChart.removeAllViews();
                     calorieChart.setData(data);
-                    Log.i("-------x축사이즈------", calorieChart.getData().getXVals().size() + "");
-                    calorieChart.removeViewAt(0);
+                    calorieChart.notifyDataSetChanged();
                     calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
-                    //calorieChart.moveViewToX(0);
-
-
+                    calorieChart.invalidate();
                 }
 
 

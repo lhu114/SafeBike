@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -36,6 +37,15 @@ public class DistanceFragment extends Fragment {
     TextView parentCal;
     TextView parentSpeed;
     TextView parentDistance;
+
+    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
+    ArrayList<BarDataSet> dataSets;
+    ArrayList<ExerciseItem> values = new ArrayList<ExerciseItem>();
+    BarDataSet set;
+    Button moveRecent;
+    int total = 0;
+
     public DistanceFragment() {
         // Required empty public constructor
     }
@@ -51,7 +61,6 @@ public class DistanceFragment extends Fragment {
         parentDistance = (TextView) getParentFragment().getView().findViewById(R.id.text_value_distance);
 
         distanceChart = (BarChart) view.findViewById(R.id.chart_distance);
-        setData();
         distanceChart.setVerticalScrollBarEnabled(true);
         distanceChart.setDrawBarShadow(false);
         distanceChart.setDrawGridBackground(false);
@@ -62,8 +71,8 @@ public class DistanceFragment extends Fragment {
         distanceChart.getAxisRight().setDrawGridLines(false);
         distanceChart.getAxisRight().setDrawLabels(false);
         distanceChart.setScaleEnabled(false);
-
         distanceChart.setScaleMinima(2f, 1f);
+        requestData();
 
 
         distanceChart.setOnChartGestureListener(new OnChartGestureListener() {
@@ -75,7 +84,9 @@ public class DistanceFragment extends Fragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
+                if (distanceChart.getLowestVisibleXIndex() == 0) {
+                    requestData();
+                }
             }
 
             @Override
@@ -137,10 +148,19 @@ public class DistanceFragment extends Fragment {
 
             }
         });
+
+        moveRecent = (Button)view.findViewById(R.id.btn_move_distance);
+        moveRecent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
+            }
+        });
+
         return view;
     }
 
-    private void setData() {
+    private void requestData() {
         int count = 0;
         int range = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -152,26 +172,25 @@ public class DistanceFragment extends Fragment {
             public void onSuccess(ExcerciseResult result) {
 
                 ArrayList<ExerciseItem> values = result.workoutlist;
-                ArrayList<String> xVals = new ArrayList<String>();
-                ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-                BarDataSet set = new BarDataSet(yVals, "Distance");
-                ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+
                 BarData data;
                 int count = result.workoutlist.size();
-
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(values.get(i).date);
-                        yVals.add(new BarEntry(values.get(i).road, i));
+                        xVals.add(result.workoutlist.get(i).date);
+                        yVals.add(new BarEntry(result.workoutlist.get(i).road, total+i));
                     }
+                    total += count;
+                    BarDataSet set = new BarDataSet(yVals, "Distance");
+                    dataSets = new ArrayList<BarDataSet>();
+                    dataSets.add(set);
+                    data = new BarData(xVals, dataSets);
+                    data.setValueTextSize(10f);
+                    distanceChart.setData(data);
+                    distanceChart.notifyDataSetChanged();
+                    distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
+                    distanceChart.invalidate();
                 }
-                set.setBarSpacePercent(35f);
-                dataSets.add(set);
-                data = new BarData(xVals, dataSets);
-                data.setValueTextSize(10f);
-
-                distanceChart.setData(data);
-                distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
 
 
 
@@ -182,32 +201,7 @@ public class DistanceFragment extends Fragment {
 
             }
         });
-/*
 
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add("x/" + (i + 1));
-        }
-
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yVals1.add(new BarEntry(val, i));
-        }
-
-        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
-        set1.setBarSpacePercent(35f);
-
-        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-        data.setValueTextSize(10f);
-
-        distanceChart.setData(data);
-*/
 
 
 

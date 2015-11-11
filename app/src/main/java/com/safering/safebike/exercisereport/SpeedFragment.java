@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -37,6 +38,15 @@ public class SpeedFragment extends Fragment {
     TextView parentSpeed;
     TextView parentDistance;
 
+
+    ArrayList<String> xVals = new ArrayList<String>();
+    ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
+    ArrayList<BarDataSet> dataSets;
+    ArrayList<ExerciseItem> values = new ArrayList<ExerciseItem>();
+    BarDataSet set;
+    Button moveRecent;
+    int total = 0;
+
     public SpeedFragment() {
         // Required empty public constructor
     }
@@ -54,7 +64,7 @@ public class SpeedFragment extends Fragment {
 
 
         speedChart = (BarChart) view.findViewById(R.id.chart_speed);
-        setData();
+        requestData();
         speedChart.setVerticalScrollBarEnabled(true);
         speedChart.setDrawBarShadow(false);
         speedChart.setDrawGridBackground(false);
@@ -76,7 +86,7 @@ public class SpeedFragment extends Fragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                Log.i("index : " ,me.getActionIndex() + "");
+                Log.i("index : ", me.getActionIndex() + "");
                 //me.
 
             }
@@ -141,10 +151,18 @@ public class SpeedFragment extends Fragment {
 
             }
         });
+
+        moveRecent = (Button)view.findViewById(R.id.btn_move_speed);
+        moveRecent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
+            }
+        });
         return view;
     }
 
-    private void setData() {
+    private void requestData() {
         int count = 0;
         int range = 0;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -156,26 +174,25 @@ public class SpeedFragment extends Fragment {
             public void onSuccess(ExcerciseResult result) {
 
                 ArrayList<ExerciseItem> values = result.workoutlist;
-                ArrayList<String> xVals = new ArrayList<String>();
-                ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
-                BarDataSet set = new BarDataSet(yVals, "Speed");
-                ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+
                 BarData data;
                 int count = result.workoutlist.size();
-
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(values.get(i).date);
-                        yVals.add(new BarEntry(values.get(i).speed, i));
+                        xVals.add(result.workoutlist.get(i).date);
+                        yVals.add(new BarEntry(result.workoutlist.get(i).road, total+i));
                     }
+                    total += count;
+                    BarDataSet set = new BarDataSet(yVals, "Speed");
+                    dataSets = new ArrayList<BarDataSet>();
+                    dataSets.add(set);
+                    data = new BarData(xVals, dataSets);
+                    data.setValueTextSize(10f);
+                    speedChart.setData(data);
+                    speedChart.notifyDataSetChanged();
+                    speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
+                    speedChart.invalidate();
                 }
-                set.setBarSpacePercent(35f);
-                dataSets.add(set);
-                data = new BarData(xVals, dataSets);
-                data.setValueTextSize(10f);
-
-                speedChart.setData(data);
-                speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
 
 
             }
@@ -186,28 +203,7 @@ public class SpeedFragment extends Fragment {
             }
         });
 
-       /* ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add("x/" + (i + 1));
-        }
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yVals1.add(new BarEntry(val, i));
-        }
-
-        BarDataSet set1 = new BarDataSet(yVals1, "DataSet");
-        set1.setBarSpacePercent(35f);
-
-        ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-        data.setValueTextSize(10f);
-
-        speedChart.setData(data);*/
 
 
     }
