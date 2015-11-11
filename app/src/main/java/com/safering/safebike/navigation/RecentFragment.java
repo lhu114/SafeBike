@@ -1,13 +1,12 @@
 package com.safering.safebike.navigation;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,10 +24,13 @@ import com.safering.safebike.R;
  */
 public class RecentFragment extends Fragment {
     private static final String KEY_POI_OBJECT = "poiobject";
-//    private static final String KEY_POI_NAME = "poiName";
+    //    private static final String KEY_POI_NAME = "poiName";
 //    private static final String KEY_POI_LATITUDE = "poiLatitude";
 //    private static final String KEY_POI_LONGITUDE = "poiLongitude";
 //    private static final String KEY_POI_ADDRESS = "poiAddress";
+    private static final String TAG_TAB_RECENT = "RECENT";
+
+    FragmentTabHost tabHost;
 
     ListView listView;
     SimpleCursorAdapter mAdapter;
@@ -66,7 +68,7 @@ public class RecentFragment extends Fragment {
             public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
                 if (columnIndex == nameColumnIndex) {
                     /*
-                     *  View Ïóê Í∏Ä ÎÑ£Ïñ¥Ï£ºÍ∏∞
+                     *  View ø° ±€ ≥÷æÓ¡÷±‚
                      */
                     TextView tvRctPoiName = (TextView) view.findViewById(R.id.text_rct_poi_name);
                     tvRctPoiName.setText(cursor.getString(columnIndex));
@@ -86,7 +88,7 @@ public class RecentFragment extends Fragment {
                 Cursor c = (Cursor) listView.getItemAtPosition(position);
                 final String rctPoiName = c.getString(c.getColumnIndex(RecentDB.RecentTable.COLUMN_POI_NAME));
                 /*
-                 * ParentRctFvActivity Ïóê ÏûàÎäî setResult Ï≤òÎ¶¨
+                 * ParentRctFvActivity ø° ¿÷¥¬ setResult √≥∏Æ
                  */
 
                 Log.d("safebike", "rctPoiName : " + rctPoiName);
@@ -99,7 +101,13 @@ public class RecentFragment extends Fragment {
                         if (poi != null) {
                             Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
-                            sendPOI(poi);
+                            if (getActivity() != null) {
+                                ((ParentRctFvActivity) getActivity()).sendPOI(poi);
+
+                                Log.d("safebike", "RecentFragment.onCreateView.onSuccess.sendPOI.getActivity != null | ((ParentRctFvActivity) getActivity()).sendPOI(poi)");
+
+                            }
+//                            sendPOI(poi);
                         }
                     }
 
@@ -117,9 +125,9 @@ public class RecentFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setIcon(android.R.drawable.ic_dialog_info);
-//        builder.setTitle("Ï†ÑÏ≤¥ Ìï≠Î™© ÏÇ≠Ï†ú");
-                builder.setMessage("Ï†ÑÏ≤¥ Ìï≠Î™©ÏùÑ ÏÇ≠Ï†úÌïòÏãúÍ≤†ÏäµÎãàÍπå");
-                builder.setPositiveButton("ÌôïÏù∏", new DialogInterface.OnClickListener() {
+//        builder.setTitle("¿¸√º «◊∏Ò ªË¡¶");
+                builder.setMessage("¿¸√º «◊∏Ò¿ª ªË¡¶«œΩ√∞⁄Ω¿¥œ±Ó");
+                builder.setPositiveButton("»Æ¿Œ", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         RecentDataManager.getInstance().deleteRecentAll();
@@ -135,7 +143,7 @@ public class RecentFragment extends Fragment {
 
                     }
                 });
-                builder.setNegativeButton("Ï∑®ÏÜå", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("√Îº“", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -148,7 +156,7 @@ public class RecentFragment extends Fragment {
         });
 
         /*
-         *  DB ÏûàÏùÑ ÎñÑ ÏóÜÏùÑ Îïå Î∑∞ Ï≤òÎ¶¨
+         *  DB ¿÷¿ª ãö æ¯¿ª ∂ß ∫‰ √≥∏Æ
          */
 
         Cursor c = RecentDataManager.getInstance().getRecentCursor(null);
@@ -216,15 +224,16 @@ public class RecentFragment extends Fragment {
 //            Log.d("safebike", "defineAddress 7");
 //        }
 
-        Intent intent = new Intent(getContext(), NavigationFragment.class);
-        intent.putExtra(KEY_POI_OBJECT, poi);
-//        intent.putExtra(KEY_POI_LATITUDE, poi.getLatitude());
-//        intent.putExtra(KEY_POI_LONGITUDE, poi.getLongitude());
-//        intent.putExtra(KEY_POI_NAME, poi.getName());
-//        intent.putExtra(KEY_POI_ADDRESS, defineAddress);
-//        intent.putExtra("poi", poi);
-        getActivity().setResult(Activity.RESULT_OK, intent);
-        getActivity().finish();
+
+//        if (getActivity() != null) {
+//            Log.d("safebike", "RecentFragment.onCreateView.onSuccess.sendPOI.recentFragment != null");
+//
+//            Intent intent = new Intent();
+//            intent.putExtra(KEY_POI_OBJECT, poi);
+//            getActivity().setResult(Activity.RESULT_OK, intent);
+//
+//            getActivity().finish();
+//        }
     }
 
 }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -60,8 +61,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private static final String MOVE_CAMERA = "movecamera";
     private static final String ANIMATE_CAMERA = "animatecamera";
     private static String LOCATION_CHANGE_FLAG = "on";
+
     private static final String ON = "on";
     private static final String OFF = "off";
+
+    private static final String KEY_FAVORITE_POI_NAME = "favoritepoiname";
 
     private GoogleMap mMap;
 
@@ -70,9 +74,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     LocationRequest mLocationRequest;
 
     final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
-//    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
+    //    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
     final Map<LatLng, Marker> mLcMarkerResolver = new HashMap<LatLng, Marker>();
-//    final Map<Marker, LatLng> mLcResolver = new HashMap<Marker, LatLng>();
+    //    final Map<Marker, LatLng> mLcResolver = new HashMap<Marker, LatLng>();
     ArrayList<POI> mPOIMarkerList;
     ArrayList<LatLng> mLcMarkerList;
 
@@ -158,7 +162,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onClick(View view) {
                     /*
-                     * ÌòÑÏû¨ ÏúÑÏπò
+                     * «ˆ¿Á ¿ßƒ°
                      */
                     mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
@@ -171,7 +175,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
                         Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
                         /*
-                         * ÎßàÏª§ Ï∞çÍ∏∞
+                         * ∏∂ƒø ¬Ô±‚
                          */
 //                        addCurrentMarker(mLocation);
                     } else {
@@ -180,7 +184,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 }
             });
         } catch (InflateException e) {            /*
-             * Íµ¨Í∏ÄÎßµ ViewÍ∞Ä Ïù¥ÎØ∏ inflateÎêòÏñ¥ ÏûàÎäî ÏÉÅÌÉúÏù¥ÎØÄÎ°ú, ÏóêÎü¨Î•º Î¨¥ÏãúÌï©ÎãàÎã§.
+             * ±∏±€∏  View∞° ¿ÃπÃ inflateµ«æÓ ¿÷¥¬ ªÛ≈¬¿Ãπ«∑Œ, ø°∑Ø∏¶ π´Ω√«’¥œ¥Ÿ.
              */
         }
 
@@ -198,29 +202,33 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //        Toast.makeText(getContext(), "NavigationFragment.onStart", Toast.LENGTH_SHORT).show();
         Log.d(DEBUG_TAG, "NavigationFragment.onStart");
         if (!mResolvingError) {  // more about this later
-            if (mGoogleApiClient != null) {
-                Log.d(DEBUG_TAG, "NavigationFragment.onStart.mGoogleApiClient.connect -> mGoogleApiClient != null");
+            if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
+                Log.d(DEBUG_TAG, "NavigationFragment.onStart.mGoogleApiClient.connect");
                 mGoogleApiClient.connect();
             }
         }
     }
 
+    /*
+     * exception √≥∏Æ
+     */
     @Override
     public void onStop() {
         super.onStop();
 //        Toast.makeText(getContext(), "NavigationFragment.onStop", Toast.LENGTH_SHORT).show();
         Log.d(DEBUG_TAG, "NavigationFragment.onStop");
 
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
+
             mGoogleApiClient.disconnect();
 //            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
-            Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect -> mGoogleApiClient == null");
+            Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect");
         }
     }
 
     /*
-     * ÌîÑÎûòÍ∑∏Î®ºÌä∏Í∞Ä ÌôîÎ©¥ÏóêÏÑú ÏÇ¨ÎùºÏßà Îïå ÌîÑÎûòÍ∑∏Î®ºÌä∏Ïùò Î∑∞Î•º Ïª®ÌÖåÏù¥ÎÑà Î∑∞ÏóêÏÑú Ï†úÍ±∞
+     * «¡∑°±◊∏’∆Æ∞° »≠∏Èø°º≠ ªÁ∂Û¡˙ ∂ß «¡∑°±◊∏’∆Æ¿« ∫‰∏¶ ƒ¡≈◊¿Ã≥  ∫‰ø°º≠ ¡¶∞≈
      */
     @Override
     public void onDestroyView() {
@@ -256,7 +264,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (id == R.id.menu_fwd_search) {
             /*
-             * ÏµúÍ∑ºÏù¥Ïö©, Ï¶êÍ≤®Ï∞æÍ∏∞ ÌÉ≠ ÌôúÏÑ±Ìôî
+             * √÷±Ÿ¿ÃøÎ, ¡Ò∞‹√£±‚ ≈« »∞º∫»≠
              */
             Log.d(DEBUG_TAG, "NavigationFragment.onOptionsItemSelected.menu_fwd_search");
             Intent intent = new Intent(getContext(), ParentRctFvActivity.class);
@@ -294,7 +302,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     tvPOIAddress.setText(getDefinePOIAddress(poi));
 
                     /*
-                     * Îßµ Ïù¥ÎèôÌïòÎ©¥ÏÑú poi ÎßàÏª§ Ï∞çÍ∏∞
+                     * ∏  ¿Ãµø«œ∏Èº≠ poi ∏∂ƒø ¬Ô±‚
                      */
                     Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.poi.moveMap");
 
@@ -323,15 +331,15 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     fabFindRoute.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getContext(), SelectRouteActivity.class);
                     /*
-                     * ÏúÑÏóêÏÑú Î∞õÏùÄ Îç∞Ïù¥ÌÑ∞ Ï†ÑÎã¨ Ï∂úÎ∞úÏßÄ, Î™©Ï†ÅÏßÄ Îã§ Î≥¥ÎÇ¥ÏïºÌï®
+                     * ¿ßø°º≠ πﬁ¿∫ µ•¿Ã≈Õ ¿¸¥ﬁ √‚πﬂ¡ˆ, ∏Ò¿˚¡ˆ ¥Ÿ ∫∏≥ªæﬂ«‘
                      */
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_STARTX, PropertyManager.getInstance().getRecentLatitude());
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_STARTY, PropertyManager.getInstance().getRecentLongitude());
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDX,  PropertyManager.getInstance().getDestinationLatitude());
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDY, PropertyManager.getInstance().getDestinationLongitude());
-
+                            Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                            intent.putExtra(KEY_FAVORITE_POI_NAME, tvPOIName.getText().toString());
                             startActivity(intent);
                         }
                     });
@@ -382,18 +390,25 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         if (mLocationRequest == null) {
             mLocationRequest = new LocationRequest();
             mLocationRequest.setNumUpdates(1);
+            mLocationRequest.setInterval(5000);
+            mLocationRequest.setMaxWaitTime(10000);
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         }
     }
 
     protected  void startLocationUpdates() {
-        Log.d(DEBUG_TAG, "NavigationFragment.startLocationUpdates");
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mListener);
+
+        Log.d(DEBUG_TAG, "NavigationFragment.startLocationUpdates");
     }
 
+    /*
+     * exception √≥∏Æ
+     */
     protected void stopLocationUpdates() {
-        Log.d(DEBUG_TAG, "NavigationFragment.stopLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mListener);
+
+        Log.d(DEBUG_TAG, "NavigationFragment.stopLocationUpdates");
     }
 
     @Override
@@ -404,6 +419,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (mLocation != null) {
             Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
+            Toast.makeText(getContext(), "NavigationFragment.onConnected : " +Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()),
+                    Toast.LENGTH_SHORT).show();
 
             PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
             PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
@@ -455,6 +472,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
                         PropertyManager.getInstance().setRecentLongitude(Double.toString(location.getLongitude()));
                         Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
+                        Toast.makeText(getContext(), "NavigationFragment.onLocationChanged : " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()),
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             } else {
@@ -467,7 +486,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapClick(LatLng latLng) {
         /*
-         *  ÎßàÏª§ÎèÑ ÎÇ¥Î¶¨Í∏∞
+         *  ∏∂ƒøµµ ≥ª∏Æ±‚
          */
         clearALLMarker();
 
@@ -483,24 +502,36 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             NavigationNetworkManager.getInstance().searchReverseGeo(getContext(), latLng, new NavigationNetworkManager.OnResultListener<AddressInfo>() {
                 @Override
                 public void onSuccess(AddressInfo result) {
-                    if (!result.buildingName.equals("")) {
-                        tvPOIName.setText(result.buildingName);
-                        tvPOIAddress.setText(result.fullAddress);
-                    } else {
-                        tvPOIName.setText(result.fullAddress);
-                        tvPOIAddress.setText("");
-                    }
+                    if (result != null) {
+                        String defineAddress = getDefineRvsGeoAddress(result);
+
+                        if (!result.buildingName.equals("")) {
+                            tvPOIName.setText(result.buildingName);
+                            tvPOIAddress.setText(defineAddress);
+                        } else {
+                            tvPOIName.setText(defineAddress);
+                            tvPOIAddress.setText("");
+                        }
+
+//                        if (!result.buildingName.equals("")) {
+//                            tvPOIName.setText(result.buildingName);
+//                            tvPOIAddress.setText(result.fullAddress);
+//                        } else {
+//                            tvPOIName.setText(result.fullAddress);
+//                            tvPOIAddress.setText("");
+//                        }
 
 //                    addLongClickMarker(latLng, result);
-                    clearALLMarker();
+                        clearALLMarker();
 
-                    addLongClickMarker(latLng);
-                    mLcMarkerList.add(latLng);
+                        addLongClickMarker(latLng);
+                        mLcMarkerList.add(latLng);
 
-                    PropertyManager.getInstance().setDestinationLatitude(Double.toString(latLng.latitude));
-                    PropertyManager.getInstance().setDestinationLongitude(Double.toString(latLng.longitude));
+                        PropertyManager.getInstance().setDestinationLatitude(Double.toString(latLng.latitude));
+                        PropertyManager.getInstance().setDestinationLongitude(Double.toString(latLng.longitude));
 
-                    Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
+                        Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
+                    }
                 }
 
                 @Override
@@ -518,6 +549,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), SelectRouteActivity.class);
+                    intent.putExtra(KEY_FAVORITE_POI_NAME, tvPOIName.getText().toString());
                     startActivity(intent);
                 }
             });
@@ -541,11 +573,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-//    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
+    //    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
     private void addLongClickMarker(LatLng latLng) {
         MarkerOptions options  = new MarkerOptions();
         /*
-         * Ïñ¥Îñ§ Í∞íÏúºÎ°ú ÏúÑÎèÑ Í≤ΩÎèÑ ÎÑòÍ∏∏ÏßÄÎäî Í≥†ÎØº
+         * æÓ∂≤ ∞™¿∏∑Œ ¿ßµµ ∞Êµµ ≥—±Ê¡ˆ¥¬ ∞ÌπŒ
          */
 //        options.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
         options.position(new LatLng(latLng.latitude, latLng.longitude));
@@ -661,7 +693,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private String getDefineRvsGeoAddress(AddressInfo addressInfo) {
         String defineAddress = null;
 
-        defineAddress = addressInfo.fullAddress;
+        defineAddress = addressInfo.city_do + " " + addressInfo.gu_gun + " " + addressInfo.legalDong;
 
         return defineAddress;
     }

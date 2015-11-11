@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,7 +39,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
 //    private static final String SERVICE_FINISH = "finish";
 //    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
-
     ImageView splashImage;
     String userEmail = null;
     String userPassword = null;
@@ -49,6 +47,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
         Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.activity_splash,options);
@@ -59,6 +58,9 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         userEmail = PropertyManager.getInstance().getUserEmail();
         userPassword = PropertyManager.getInstance().getUserPassword();
+        Log.i("Userid", PropertyManager.getInstance().getUserId());
+        Log.i("UserPass", PropertyManager.getInstance().getUserPassword());
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)

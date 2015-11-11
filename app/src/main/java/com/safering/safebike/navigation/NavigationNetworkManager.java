@@ -112,9 +112,12 @@ public class NavigationNetworkManager {
         params.put(KEY_POI_RESCOORDTYPE, VALUE_POI_RESCOORDTYPE);
 
         Log.d("safebike", "keyword : " + keyword);
-        int count = headers.length;
-        for(int i = 0; i < count; i++) {
-            Log.d("safebike", "headers : " + headers[i]);
+        if (headers != null) {
+            int count = headers.length;
+
+            for(int i = 0; i < count; i++) {
+                Log.d("safebike", "headers : " + headers[i]);
+            }
         }
 
         Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
@@ -122,23 +125,26 @@ public class NavigationNetworkManager {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 /*
-                 * failÏóê Îî∞Î•∏ statusCode Ï≤òÎ¶¨
+                 * failø° µ˚∏• statusCode √≥∏Æ
                  */
                 listener.onFail(statusCode);
 
                 String code = Integer.toString(statusCode);
                 Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
-                int count = headers.length;
-                for(int i = 0; i < count; i++) {
-                    Log.d("safebike", "headers : " + headers[i]);
+                if (headers != null) {
+                    int count = headers.length;
+
+                    for(int i = 0; i < count; i++) {
+                        Log.d("safebike", "headers : " + headers[i]);
+                    }
                 }
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 /*
-                 * successÏóê Îî∞Î•∏ statusCode Ï≤òÎ¶¨
+                 * successø° µ˚∏• statusCode √≥∏Æ
                  */
                 SearchPOIInfoResult result = poiGson.fromJson(responseString, SearchPOIInfoResult.class);
                 listener.onSuccess(result.searchPoiInfo);
@@ -160,7 +166,7 @@ public class NavigationNetworkManager {
 
     private static final int VALUE_REVERSEGEOCODING_VERSION = 1;
     private static final String VALUE_REVERSEGEOCODING_COORDTYPE = "WGS84GEO";
-    private static final String VALUE_REVERSEGEOCODING_ADDRESSTYPE = "A01";
+    private static final String VALUE_REVERSEGEOCODING_ADDRESSTYPE = "A02";
 
     public void searchReverseGeo(Context context, LatLng latLng, final OnResultListener<AddressInfo> listener) {
         Log.d("safebike", "NavigationNetworkManager.searchReverseGeo");
@@ -190,23 +196,26 @@ public class NavigationNetworkManager {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 /*
-                 * failÏóê Îî∞Î•∏ statusCode Ï≤òÎ¶¨
+                 * failø° µ˚∏• statusCode √≥∏Æ
                  */
                 listener.onFail(statusCode);
 
                 String code = Integer.toString(statusCode);
                 Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
-                int count = headers.length;
-                for(int i = 0; i < count; i++) {
-                    Log.d("safebike", "headers : " + headers[i]);
+                if (headers != null) {
+                    int count = headers.length;
+
+                    for(int i = 0; i < count; i++) {
+                        Log.d("safebike", "headers : " + headers[i]);
+                    }
                 }
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 /*
-                 * successÏóê Îî∞Î•∏ statusCode Ï≤òÎ¶¨
+                 * successø° µ˚∏• statusCode √≥∏Æ
                  */
 
                 String code = Integer.toString(statusCode);
@@ -260,9 +269,12 @@ public class NavigationNetworkManager {
                 String code = Integer.toString(statusCode);
                 Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
-                int count = headers.length;
-                for(int i = 0; i < count; i++) {
-                    Log.d("safebike", "headers : " + headers[i]);
+                if (headers != null) {
+                    int count = headers.length;
+
+                    for(int i = 0; i < count; i++) {
+                        Log.d("safebike", "headers : " + headers[i]);
+                    }
                 }
             }
 
@@ -273,9 +285,12 @@ public class NavigationNetworkManager {
                 String code = Integer.toString(statusCode);
                 Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
-                int count = headers.length;
-                for(int i = 0; i < count; i++) {
-                    Log.d("safebike", "headers : " + headers[i]);
+                if (headers != null) {
+                    int count = headers.length;
+
+                    for(int i = 0; i < count; i++) {
+                        Log.d("safebike", "headers : " + headers[i]);
+                    }
                 }
 
                 BicycleRouteInfo info = bicycleRouteGson.fromJson(responseString, BicycleRouteInfo.class);
@@ -288,27 +303,27 @@ public class NavigationNetworkManager {
     }
     /*
     * saveFavorite(){
-    * Ï¶êÍ≤®Ï∞æÍ∏∞ Ï∂îÍ∞Ä ÏßÄÏ†ê Ï†ÄÏû•
-    * //PARAMETER : Ïú†Ï†Ä Ïù¥Î©îÏùº,Î™©Ï†ÅÏßÄ
-    * //Í≤∞Í≥ºÍ∞í : INT
+    * ¡Ò∞‹√£±‚ √ﬂ∞° ¡ˆ¡° ¿˙¿Â
+    * //PARAMETER : ¿Ø¿˙ ¿Ã∏ﬁ¿œ,∏Ò¿˚¡ˆ
+    * //∞·∞˙∞™ : INT
     * }
     *
     * */
 
     /*
     * saveExercise(){
-    * Ïö¥ÎèôÍ∏∞Î°ùÎì§ Ï†ÄÏû•
-    * //PARAMETER : Ïú†Ï†Ä Ïù¥Î©îÏùº,ÏπºÎ°úÎ¶¨,Í±∞Î¶¨,ÏÜçÎ†•
-    * //Í≤∞Í≥ºÍ∞í : INT
+    * øÓµø±‚∑œµÈ ¿˙¿Â
+    * //PARAMETER : ¿Ø¿˙ ¿Ã∏ﬁ¿œ,ƒÆ∑Œ∏Æ,∞≈∏Æ,º”∑¬
+    * //∞·∞˙∞™ : INT
     * }
     *
     * */
 
     /*
     * getFavorite(){
-    * Ï¶êÍ≤®Ï∞æÍ∏∞ Ï∂îÍ∞Ä ÏßÄÏ†ê Í∞ÄÏ†∏Ïò§Í∏∞
-    * //PARAMETER : Ïú†Ï†Ä Ïù¥Î©îÏùº,Íµ¨Î∂ÑÍ∞í
-    * //Í≤∞Í≥ºÍ∞í : JSON(Ï¶êÍ≤®Ï∞æÍ∏∞ ÏßÄÏ†êÎì§)
+    * ¡Ò∞‹√£±‚ √ﬂ∞° ¡ˆ¡° ∞°¡Æø¿±‚
+    * //PARAMETER : ¿Ø¿˙ ¿Ã∏ﬁ¿œ,±∏∫–∞™
+    * //∞·∞˙∞™ : JSON(¡Ò∞‹√£±‚ ¡ˆ¡°µÈ)
     * }
     *
     * */

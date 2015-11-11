@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.safering.safebike.R;
 
@@ -35,11 +34,11 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
     private static final String TAG_TAB_RECENT = "RECENT";
     private static final String TAG_TAB_FAVORITE = "FAVORITE";
-    private static final String TAG_TAB_RECENT_NAME = "ÏµúÍ∑ºÏù¥Ïö©";
-    private static final String TAG_TAB_FAVORITE_NAME = "Ï¶êÍ≤®Ï∞æÍ∏∞";
+    private static final String TAG_TAB_RECENT_NAME = "√÷±Ÿ¿ÃøÎ";
+    private static final String TAG_TAB_FAVORITE_NAME = "¡Ò∞‹√£±‚";
 
     private static final String KEY_POI_OBJECT = "poiobject";
-//    private static final String KEY_POI_NAME = "poiName";
+    //    private static final String KEY_POI_NAME = "poiName";
 //    private static final String KEY_POI_LATITUDE = "poiLatitude";
 //    private static final String KEY_POI_LONGITUDE = "poiLongitude";
 //    private static final String KEY_POI_ADDRESS = "poiAddress";
@@ -63,10 +62,10 @@ public class ParentRctFvActivity extends AppCompatActivity {
                 poi = (POI) listView.getItemAtPosition(position);
 
                 if(poi != null) {
-                //    Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
+                    //    Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
 
                     /*
-                     *  Í≤ÄÏÉâÏñ¥ RecentDb Ïóê Ï†ÄÏû• Ï≤òÎ¶¨ ÌïÑÏöî
+                     *  ∞ÀªˆæÓ RecentDb ø° ¿˙¿Â √≥∏Æ « ø‰
                      */
                     RecentItem item = new RecentItem();
                     item.rctPOIName = poi.name;
@@ -117,7 +116,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(searchKeyword)) {
                 /*
-                 *  Í≤ÄÏÉâÏñ¥ RecentDb Ïóê Ï†ÄÏû• Ï≤òÎ¶¨ ÌïÑÏöî
+                 *  ∞ÀªˆæÓ RecentDb ø° ¿˙¿Â √≥∏Æ « ø‰
                  */
                     RecentItem item = new RecentItem();
                     item.rctPOIName = searchKeyword;
@@ -126,7 +125,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
 
                 /*
-                 * ParentRctFvActivity Ïóê ÏûàÎäî setResult Ï≤òÎ¶¨
+                 * ParentRctFvActivity ø° ¿÷¥¬ setResult √≥∏Æ
                  */
 
                     Log.d("safebike", "rctPoiName : " + searchKeyword);
@@ -197,7 +196,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
         }
     }
 
-    private void sendPOI(POI poi) {
+    public void sendPOI(POI poi) {
 //        String defineAddress = null;
 //
 //        if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
@@ -230,7 +229,9 @@ public class ParentRctFvActivity extends AppCompatActivity {
 //            Log.d("safebike", "defineAddress 7");
 //        }
 
-        Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
+//        Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
+
+        Intent intent = new Intent();
         intent.putExtra(KEY_POI_OBJECT, poi);
 //        intent.putExtra(KEY_POI_LATITUDE, poi.getLatitude());
 //        intent.putExtra(KEY_POI_LONGITUDE, poi.getLongitude());
