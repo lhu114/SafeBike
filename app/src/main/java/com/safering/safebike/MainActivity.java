@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.safering.safebike.account.AccountFragment;
@@ -94,8 +95,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
         View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
-        Button btn = (Button)header.findViewById(R.id.btn_account_setting);
-        btn.setOnClickListener(new View.OnClickListener() {
+        ImageView settingImage = (ImageView)header.findViewById(R.id.btn_account_setting);
+        settingImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
