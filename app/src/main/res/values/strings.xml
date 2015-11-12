@@ -11,9 +11,9 @@
     <string name="btn_login_sign">회원가입</string>
     <string name="btn_go_login">로그인</string>
     <string name="btn_login">로그인</string>
-    <string name="btn_find_pass">비밀번호찾기</string>
-    <string name="btn_temp_pass">임시비밀번호보내기</string>
-    <string name="btn_go_next">다음페이지로</string>
+    <string name="text_find_pass">비밀번호를 잊으셨나요?</string>
+    <string name="btn_temp_pass">재설정 이메일 보내기</string>
+    <string name="btn_go_next">계정 만들기</string>
     <string name="btn_display_policy">정책보기</string>
     <string name="btn_display_agree">약관보기</string>
     <string name="btn_complete">완료</string>
@@ -37,12 +37,21 @@
     <string name="btn_policy_profile">개인정보 정책</string>
     <string name="btn_license">라이센스</string>
     <string name="btn_search_direct_device">직접검색</string>
-    <string name="login_fail_message">이메일 또는 비밀번호를확인해주세요</string>
-    <string name="signup_fail_message">아이디 또는 이메일을 확인해주세요</string>
+    <string name="login_fail_message">이메일 또는 비밀번호를 확인해주세요</string>
+    <string name="signup_fail_message">가입양식을 확인해주세요</string>
+    <string name="signup_policy_message">약관정책을 확인해주세요</string>
+
+    <string name="find_fail_message">이메일을 확인해주세요</string>
+    <string name="text_user_manner"><u>사용약관</u></string>
+    <string name="text_private_policy"><u>개인보호정책</u></string>
+
+
+
     <string name="signup_confirm_message">비밀번호를 확인해주세요</string>
+    <string name="text_login_main_title">시작</string>
 
     <string name="signup_duple_message">이미 존재하는 이메일입니다.</string>
-
+    <string name="text_find_pass_title">비밀번호를 잊으셨나요?</string>
     <string name="signup_policy_fail_message">정책을 모두 동의해주세요</string>
     <string name="text_select_bibrator">진동밴드 선택</string>
     <string name="text_select_backlight">후미등 선택</string>
@@ -65,6 +74,9 @@
     <string name="remove_friend">친구삭제</string>
     <string name="search_friend_address">검색</string>
     <string name="search_friend_direct">아이디/이메일 입력</string>
+    <string name="text_login_main">Safe Bike</string>
+    <string name="text_login_warning">안전하게 주행하세요</string>
+
 
 
     <string name="btn_delete_recent">검색 기록 삭제</string>

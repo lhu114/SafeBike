@@ -3,20 +3,28 @@ package com.safering.safebike.setting;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.UUID;
 
 /**
  * Created by Tacademy on 2015-11-11.
  */
 public class BluetoothConnection {
+    private Handler mHandler;
+    public static final int COMPLETE_PARIED = 1;
 
-   public synchronized void connected(BluetoothSocket socket, BluetoothDevice
+    public BluetoothConnection(Handler handler){
+        mHandler = handler;
+
+    }
+    public synchronized void connected(BluetoothSocket socket, BluetoothDevice
             device) {
        // if (D) Log.d(TAG, "connected, Socket Type:" + socketType);
 
@@ -129,7 +137,12 @@ public class BluetoothConnection {
                 return;
             }
             //여기 까지 페어링
-           connected(mmSocket, mmDevice);
+            Message msg = mHandler.obtainMessage();
+            msg.obj = mmDevice.getName();
+            msg.arg1 = COMPLETE_PARIED;
+            mHandler.sendMessage(msg);
+
+            connected(mmSocket, mmDevice);//인풋스트림 생성
         }
 
         public void cancel() {

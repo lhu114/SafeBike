@@ -45,4 +45,11 @@ public class BluetoothDeviceAdapter extends BaseAdapter{
         notifyDataSetChanged();
 
     }
+
+    public void removeAll(){
+        if(items.size() > 0){
+            items.clear();
+        }
+    }
+
 }

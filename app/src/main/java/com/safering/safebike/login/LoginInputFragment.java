@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,19 +47,23 @@ public class LoginInputFragment extends Fragment {
             public void onClick(View v) {
                 final String email = userEmail.getText().toString();
                 final String password = userPassword.getText().toString();
+
                 if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
                     loginFail.setVisibility(View.VISIBLE);
 
                 } else {
-                /*  NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<LoginResult>() {
+                  NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<LoginResult>() {
                         @Override
                         public void onSuccess(LoginResult logResult) {
                             LoginItem userInform = logResult.result;
+
 
                             PropertyManager.getInstance().setUserJoin(userInform.join);
                             PropertyManager.getInstance().setUserId(userInform.id);
                             PropertyManager.getInstance().setUserPassword(password);
                             PropertyManager.getInstance().setUserEmail(email);
+
+                          //  Log.i()
 
                             Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
 
@@ -74,7 +79,7 @@ public class LoginInputFragment extends Fragment {
                         public void onFail(int code) {
 
                         }
-                    });*/
+                    });
                     //더미데이터로 테스트
                     if (logdummy == 1) {
                         Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
@@ -88,8 +93,8 @@ public class LoginInputFragment extends Fragment {
             }
         });
 
-        btn = (Button) view.findViewById(R.id.btn_find_pass);
-        btn.setOnClickListener(new View.OnClickListener() {
+        TextView text = (TextView) view.findViewById(R.id.text_find_pass);
+        text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //비밀번호 찾기 페이지로 이동

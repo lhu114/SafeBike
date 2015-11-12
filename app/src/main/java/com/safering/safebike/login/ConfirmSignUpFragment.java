@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
 import java.text.SimpleDateFormat;
@@ -46,7 +48,16 @@ public class ConfirmSignUpFragment extends Fragment {
                 final String email = signBundle.getString(SignUpFragment.SIGN_UP_EMAIL);
                 final String id = signBundle.getString(SignUpFragment.SIGN_UP_ID);
                 final String password = signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD);
-                String phone = "010...";
+                String phone = "010-9933-2323";
+
+
+
+
+
+
+
+
+
 
                 PropertyManager.getInstance().setUserEmail(signBundle.getString(SignUpFragment.SIGN_UP_EMAIL));
                 PropertyManager.getInstance().setUserId(signBundle.getString(SignUpFragment.SIGN_UP_ID));
@@ -54,14 +65,15 @@ public class ConfirmSignUpFragment extends Fragment {
                 PropertyManager.getInstance().setUserJoin(date);
 
 
+
                 Log.i("id", PropertyManager.getInstance().getUserId());
                 Log.i("email", PropertyManager.getInstance().getUserEmail());
                 Log.i("join", PropertyManager.getInstance().getUserJoin());
 
 
-/*
 
-                NetworkManager.getInstance().saveUserInform(getContext(), id, email, date, password,phone, new NetworkManager.OnResultListener() {
+
+               NetworkManager.getInstance().saveUserInform(getContext(), id, email, date, password,phone, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object success) {
 
@@ -69,7 +81,7 @@ public class ConfirmSignUpFragment extends Fragment {
                         PropertyManager.getInstance().setUserId(id);
                         PropertyManager.getInstance().setUserPassword(password);
                         PropertyManager.getInstance().setUserJoin(date);
-
+                        Log.i("signup",success.toString());
 
                         //프로퍼티 매니저에 저장
                         //메인 페이지로 이동
@@ -80,10 +92,12 @@ public class ConfirmSignUpFragment extends Fragment {
 
                     @Override
                     public void onFail(int code) {
+                        Log.i("signup",code+"");
+
 
                     }
                 });
-*/
+
                 /*
                  * 최초 가입 시 서비스 컨디션 상태 Finish
                  */

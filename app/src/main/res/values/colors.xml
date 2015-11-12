@@ -3,7 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorNavHeader">#FFFFFF</color>
+    <color name="colorWhite">#FFFFFF</color>
     <color name="colorToolbar">#3498DB</color>
+    <color name="colorRegister">#94D4FF</color>
+    <color name="colorUserImform">#3498DB</color>
+    <color name="colorNaviHeader">#FAFAFA</color>
+
+
 
 </resources>

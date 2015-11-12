@@ -62,7 +62,7 @@ public class FriendFragment extends Fragment {
                             startActivity(intent);
                             return true;
                         } else {
-                            /*String uEmail = PropertyManager.getInstance().getUserEmail();
+                            String uEmail = PropertyManager.getInstance().getUserEmail();
                             String fEmail = PropertyManager.getInstance().getUserEmail();
 
                             NetworkManager.getInstance().removeUserFriend(getContext(), uEmail, fEmail, new NetworkManager.OnResultListener() {
@@ -77,7 +77,7 @@ public class FriendFragment extends Fragment {
                                 public void onFail(int code) {
 
                                 }
-                            });*/
+                            });
 
                             //친구삭제 -- 서버에 전송
                             fAdapter.remove(position);

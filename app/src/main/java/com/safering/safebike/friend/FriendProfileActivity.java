@@ -34,7 +34,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         String uEmail = PropertyManager.getInstance().getUserEmail();
         String fEmail = friend.pemail;
 
-        /*NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this, uEmail, fEmail, new NetworkManager.OnResultListener() {
+        NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this, uEmail, fEmail, new NetworkManager.OnResultListener() {
             @Override
             public void onSuccess(Object success) {
 
@@ -46,7 +46,7 @@ public class FriendProfileActivity extends AppCompatActivity {
 
             }
         });
-        */
+
     }
 
     @Override

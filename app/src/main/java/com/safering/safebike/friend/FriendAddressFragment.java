@@ -51,7 +51,7 @@ public class FriendAddressFragment extends Fragment {
                 String uEmail = PropertyManager.getInstance().getUserEmail();
                 String fEmail = data.pemail;
                 String fId = data.pname;
-               /* NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, new NetworkManager.OnResultListener() {
+                NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object result) {
                     //서버에만 추가 요청하고 FriendFragment에서 OnResume에서 친구리스트 요청
@@ -61,7 +61,7 @@ public class FriendAddressFragment extends Fragment {
                     public void onFail(int code) {
 
                     }
-                });*/
+                });
             }
         });
         listView = (ListView)view.findViewById(R.id.listview_address_friend);

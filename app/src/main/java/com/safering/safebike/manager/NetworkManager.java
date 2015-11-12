@@ -1,6 +1,7 @@
 package com.safering.safebike.manager;
 
 import android.content.Context;
+import android.preference.PreferenceActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -45,11 +46,18 @@ public class NetworkManager {
      */
     private static final String ACCOUNT_PROFILE_URL = "http:...";//서버 URL
     private static final String ACCOUNT_IMAGE_URL = "http:...";//서버 URL
-    private static final String JOIN_DATE = "JOIN_DATE";
+    private static final String JOIN_DATE = "date";
     private static final String USER_EAMIL = "uemail";
-    private static final String USER_ID = "USER_ID";
-    private static final String USER_PASSWORD = "USER_PASSWORD";
-    private static final String USER_IMAGE = "USER_IMAGE";
+    private static final String USER_ID = "name";
+    private static final String USER_PASSWORD = "pwd";
+    private static final String USER_IMAGE = "";
+    private static final String USER_PHONE = "phone";
+
+/*
+    params.put(USER_ID, id);
+    params.put(USER_EAMIL, email);
+    params.put(JOIN_DATE, date);
+    params.put(USER_PASSWORD, password);*/
 
     /**
      * 운동
@@ -65,20 +73,20 @@ public class NetworkManager {
      */
     private static final String FRIEND_URL = "http://52.69.133.212:3000/user/friend";//서버 URL
     private static final String FRIEND_ADDRESS_URL = "http:...";//서버 URL
-    private static final String FRIEND_ADD_URL = "http:...";//서버 URL
-    private static final String FRIEND_REMOVE_URL = "http:...";//서버 URL
+    private static final String FRIEND_ADD_URL = "http://52.69.133.212:3000/user/friend/add";//서버 URL
+    private static final String FRIEND_REMOVE_URL = "http://52.69.133.212:3000/user/friend/delete";//서버 URL
     private static final String FRIEND_DIRECT_URL = "http:...";//서버 URL
-    private static final String FRIEND_PROFILE_URL = "http:...";//서버 URL
-    private static final String FRIEND_EMAIL = "FRIEND_EMAIL";
+    private static final String FRIEND_PROFILE_URL = "http://52.69.133.212:3000/user/friend/profile";//서버 URL
+    private static final String FRIEND_EMAIL = "pemail";
     private static final String FRIEND_PHONE_LIST = "FRIEND_PHONE_LIST";
-    private static final String FRIEND_ID = "FRIEND_ID";
+    private static final String FRIEND_ID = "name";
 
     /*
     * 로그인
     * */
-    private static final String LOGIN_JOIN_URL = "http:...";//서버 URL
+    private static final String LOGIN_JOIN_URL = "http://52.69.133.212:3000/user/add";//서버 URL
     private static final String LOGIN_SEND_TEMP_URL = "http:...";//서버 URL
-    private static final String LOGIN_AUTHOR_URL = "http:...";//서버 URL
+    private static final String LOGIN_AUTHOR_URL = "http://52.69.133.212:3000/user/login";//서버 URL
     private static final String LOGIN_EXAM_URL = "http:...";//서버 URL
 
 
@@ -266,7 +274,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.i("caloriedata : ",responseString);
+                Log.i("caloriedata : ", responseString);
                 ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
                 listener.onSuccess(result);
 
@@ -340,21 +348,34 @@ public class NetworkManager {
         //결과값 : INT
 
         RequestParams params = new RequestParams();
+        /*
+        params.put(USER_EAMIL, uEmail);
+        params.put(FRIEND_EMAIL, fEamil);
+        params.put(FRIEND_ID, fid);
+        */
         params.put(USER_EAMIL, uEmail);
         params.put(FRIEND_EMAIL, fEamil);
         params.put(FRIEND_ID, fid);
 
-        client.get(context, FRIEND_ADD_URL, params, new TextHttpResponseHandler() {
+
+
+        client.post(context, FRIEND_ADD_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+        Log.i("friendaddfail",statusCode + "");
+
+
                 listener.onFail(ON_FAIL);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("friendaddsuccess",responseString);
+
                 listener.onSuccess(ON_SUCCESS);
             }
         });
+
 
     }
 
@@ -363,18 +384,35 @@ public class NetworkManager {
         //결과값 : INT
 
         RequestParams params = new RequestParams();
-        params.put(USER_EAMIL, uEmail);
+        /*params.put(USER_EAMIL, uEmail);
         params.put(FRIEND_EMAIL, fEamil);
+*/
+        params.put(USER_EAMIL, "lowgiant@gmail.com");
+        params.put(FRIEND_EMAIL, "345463@gmail.com");
 
+/*
         client.get(context, FRIEND_REMOVE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(ON_FAIL);
+                listener.onFail(ON_FAIL);l
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 listener.onSuccess(ON_SUCCESS);
+            }
+        });*/
+        Header[]heaer = new Header[2];
+        client.delete(context, FRIEND_REMOVE_URL, heaer,params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("removefirndfail",statusCode + "");
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("removefirnd",responseString);
             }
         });
 
@@ -430,16 +468,25 @@ public class NetworkManager {
         //PARAMETER : 유저 이메일,친구이메일,구분값(친구추가삭제 메소드랑 구분)
         //결과값 : JSON(친구아이디,이메일,가입일,활동량(칼로리,속력,거리))
         RequestParams params = new RequestParams();
+/*
         params.put(USER_EAMIL, uEmail);
         params.put(FRIEND_EMAIL, fEmail);
+
+*/
+        params.put(FRIEND_EMAIL, "yhms4432");
+
+
+
         client.get(context, FRIEND_PROFILE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("priflefail",statusCode + "");
                 listener.onFail(ON_FAIL);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("friendprofile",responseString);
                 listener.onSuccess(ON_SUCCESS);
             }
         });
@@ -454,20 +501,26 @@ public class NetworkManager {
         //결과값 : INT
 
         RequestParams params = new RequestParams();
-        params.put(USER_ID, id);
-        params.put(USER_EAMIL, email);
-        params.put(JOIN_DATE, date);
-        params.put(USER_PASSWORD, password);
 
-        client.get(context, LOGIN_JOIN_URL, params, new TextHttpResponseHandler() {
+        params.put(JOIN_DATE, date);
+        params.put(USER_EAMIL, email);
+        params.put(USER_ID, id);
+        params.put(USER_PASSWORD, password);
+        params.put(USER_PHONE, phone);
+
+
+
+        client.post(context, LOGIN_JOIN_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(ON_FAIL);
+                listener.onFail(statusCode);
+
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                listener.onSuccess(responseString);
+
             }
         });
     }
@@ -477,18 +530,25 @@ public class NetworkManager {
         //결과값 : 이메일,비밀번호,패스워드,가입일
 
         RequestParams params = new RequestParams();
-        params.put(USER_EAMIL, email);
+        /*params.put(USER_EAMIL, email);
         params.put(USER_PASSWORD, password);
+        */
+        params.put(USER_EAMIL, "lowgiant@gmail.com");
+        params.put(USER_PASSWORD, "1234");
+
+
 
 
         client.get(context, LOGIN_AUTHOR_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("---author--","fail");
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("ahtor",responseString);
                 LoginResult result = gson.fromJson(responseString, LoginResult.class);
 
                 listener.onSuccess(result);

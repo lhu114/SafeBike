@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,6 +33,7 @@ import com.safering.safebike.adapter.BluetoothItemView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.UUID;
 
 public class ConnectionDeviceActivity extends AppCompatActivity {
@@ -40,7 +43,8 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
     BluetoothAdapter bluetoothAdapter;
     BluetoothDeviceAdapter bandAdapter;
     BluetoothDeviceAdapter backligthAdapter;
-    BluetoothConnection bConnection;
+    BluetoothConnection bluetoothConnection;
+    boolean isRegister = false;
     private ArrayList<UUID> mUuids;
 
 
@@ -65,7 +69,7 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
         mUuids.add(UUID.fromString("5e14d4df-9c8a-4db7-81e4-c937564c86e0"));
         */
 
-        bConnection = new BluetoothConnection();
+        bluetoothConnection = new BluetoothConnection(mHandler);
         bandAdapter = new BluetoothDeviceAdapter();
         backligthAdapter = new BluetoothDeviceAdapter();
 
@@ -108,7 +112,7 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
-
+        isRegister = true;
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
         }
@@ -143,7 +147,7 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
                 BluetoothSocket tmp = null;
 
                 BluetoothItemView itemView = (BluetoothItemView) view;
-                Toast.makeText(ConnectionDeviceActivity.this, "selectitem : " + itemView.deviceName.getText().toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(ConnectionDeviceActivity.this, "selectitem : " + itemView.deviceName.getText().toString(), Toast.LENGTH_SHORT).show();
 
                 /*Intent intent = new Intent();
                 intent.putExtra(EXTRA_DEVICE_ADDRESS, itemView.deviceAddress.getText().toString());
@@ -152,11 +156,33 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
                 setResult(Activity.RESULT_OK, intent);
                 */
                 BluetoothDevice device = bluetoothAdapter.getRemoteDevice(itemView.deviceAddress.getText().toString());
-                bConnection.connect(device, MY_UUID_SECURE);
+                bluetoothConnection.connect(device, MY_UUID_SECURE);
 
             }
         });
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+        bandAdapter.removeAll();
+        // If there are paired devices, add each one to the ArrayAdapter
+        if (pairedDevices.size() > 0) {
+
+           // findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+            for (BluetoothDevice device : pairedDevices) {
+                BluetoothDeviceItem data = new BluetoothDeviceItem();
+                data.deviceName = device.getName();
+                data.deviceAddress = device.getAddress();
+                bandAdapter.add(data);
+            }
+        } else {
+            String noDevices = "페이렁된 장비가 없습니다";
+            //mPairedDevicesArrayAdapter.add(noDevices);
+        }
 
     }
 
@@ -169,8 +195,10 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
                 bluetoothAdapter.cancelDiscovery();
             }
         }
-        //this.unregisterReceiver(mReceiver);
-
+        if(isRegister) {
+            this.unregisterReceiver(mReceiver);
+            isRegister = false;
+        }
 
     }
 
@@ -178,19 +206,32 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (bluetoothAdapter != null) {
-            bluetoothAdapter.cancelDiscovery();
+            if (bluetoothAdapter.isDiscovering()) {
+                bluetoothAdapter.cancelDiscovery();
+            }
         }
-        this.unregisterReceiver(mReceiver);
+        if(isRegister) {
+            this.unregisterReceiver(mReceiver);
+        }
 
     }
+
+    public Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+
+            }
+        }
+    };
 
     public final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-
-            // When discovery finds a device
+            bandAdapter.removeAll();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     BluetoothDeviceItem data = new BluetoothDeviceItem();
