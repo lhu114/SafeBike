@@ -320,8 +320,6 @@ public class NetworkManager {
      * 친구
      */
     public void getUserFriends(Context context, String email, final OnResultListener<FriendResult> listener) {
-        //PARAMETER : 유저 이메일
-        //결과값 : JSON(친구아이디,이메일,사진        )
 
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
@@ -331,11 +329,8 @@ public class NetworkManager {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 listener.onFail(ON_FAIL);
             }
-
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                //Toast.makeText(MyApplication.getContext(),"data : " + responseString,Toast.LENGTH_SHORT).show();
-                Log.i("List ","data : " + responseString);
                 FriendResult result = gson.fromJson(responseString, FriendResult.class);
                 listener.onSuccess(result);
             }
@@ -513,12 +508,15 @@ public class NetworkManager {
         client.post(context, LOGIN_JOIN_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("ConfirmSignFail",statusCode + "");
+
                 listener.onFail(statusCode);
 
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("ConfirmSignSuccess",responseString);
                 listener.onSuccess(responseString);
 
             }
@@ -535,22 +533,17 @@ public class NetworkManager {
         */
         params.put(USER_EAMIL, "lowgiant@gmail.com");
         params.put(USER_PASSWORD, "1234");
-
-
-
-
         client.get(context, LOGIN_AUTHOR_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i("---author--","fail");
+                Log.i("LoginInputFragmentFail","fail");
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.i("ahtor",responseString);
+                Log.i("LoginInputFragmentSucc",responseString);
                 LoginResult result = gson.fromJson(responseString, LoginResult.class);
-
                 listener.onSuccess(result);
             }
         });

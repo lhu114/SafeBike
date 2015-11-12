@@ -11,16 +11,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
 
     >
-    <!--
-    android:background="?android:attr/background"
 
-    android:background="@drawable/side_nav_bar"
-    -->
-
-    <!--
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:gravity="bottom"
-    -->
 
     <ImageView
         android:id="@+id/btn_account_setting"
@@ -33,7 +24,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <ImageView
 
@@ -41,35 +32,35 @@
             android:layout_width="wrap_content"
 
             android:layout_height="wrap_content"
-            android:src="@mipmap/profile_img" />
+            android:src="@mipmap/profile_img"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:id="@+id/text_user_imform_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
 
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/image_join_user"
             android:text="Android Studio"
             android:textColor="@color/colorUserImform"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_toRightOf="@id/image_join_user"
+            android:layout_centerVertical="true"
+
+
+            />
 
         <TextView
             android:id="@+id/text_user_imform_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_user_imform_id"
-
-
             android:layout_marginLeft="10dp"
             android:text="yhms4432@naver.com"
             android:textColor="@color/colorUserImform"
-
-
             android:textSize="12sp"
-
-
+            android:layout_below="@id/text_user_imform_id"
+            android:layout_toRightOf="@id/image_join_user"
             />
 
 

@@ -48,32 +48,14 @@ public class ConfirmSignUpFragment extends Fragment {
                 final String email = signBundle.getString(SignUpFragment.SIGN_UP_EMAIL);
                 final String id = signBundle.getString(SignUpFragment.SIGN_UP_ID);
                 final String password = signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD);
-                String phone = "010-9933-2323";
-
-
-
-
-
-
-
-
-
+                String phone = PropertyManager.getInstance().getUserPhoneNumber();
 
                 PropertyManager.getInstance().setUserEmail(signBundle.getString(SignUpFragment.SIGN_UP_EMAIL));
                 PropertyManager.getInstance().setUserId(signBundle.getString(SignUpFragment.SIGN_UP_ID));
                 PropertyManager.getInstance().setUserPassword(signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD));
                 PropertyManager.getInstance().setUserJoin(date);
 
-
-
-                Log.i("id", PropertyManager.getInstance().getUserId());
-                Log.i("email", PropertyManager.getInstance().getUserEmail());
-                Log.i("join", PropertyManager.getInstance().getUserJoin());
-
-
-
-
-               NetworkManager.getInstance().saveUserInform(getContext(), id, email, date, password,phone, new NetworkManager.OnResultListener() {
+                NetworkManager.getInstance().saveUserInform(getContext(), id, email, date, password,phone, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object success) {
 
@@ -81,10 +63,7 @@ public class ConfirmSignUpFragment extends Fragment {
                         PropertyManager.getInstance().setUserId(id);
                         PropertyManager.getInstance().setUserPassword(password);
                         PropertyManager.getInstance().setUserJoin(date);
-                        Log.i("signup",success.toString());
 
-                        //프로퍼티 매니저에 저장
-                        //메인 페이지로 이동
                         Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
                         startActivity(intent);
                         ((LoginActivity) getActivity()).finish();
@@ -92,8 +71,6 @@ public class ConfirmSignUpFragment extends Fragment {
 
                     @Override
                     public void onFail(int code) {
-                        Log.i("signup",code+"");
-
 
                     }
                 });
@@ -102,7 +79,6 @@ public class ConfirmSignUpFragment extends Fragment {
                  * 최초 가입 시 서비스 컨디션 상태 Finish
                  */
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
-
                 //프로퍼티 매니저에 저장
                 //메인 페이지로 이동
                 Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);

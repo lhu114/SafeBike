@@ -23,12 +23,11 @@ import com.safering.safebike.property.PropertyManager;
  * A simple {@link Fragment} subclass.
  */
 public class LoginInputFragment extends Fragment {
-    int logdummy = 1;
+    int dummy = 1;
     EditText userEmail;
     EditText userPassword;
     TextView loginFail;
     public LoginInputFragment() {
-        // Required empty public constructor
 
     }
 
@@ -36,7 +35,6 @@ public class LoginInputFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login_input, container, false);
         userEmail = (EditText) view.findViewById(R.id.edit_user_mail_login);
         userPassword = (EditText) view.findViewById(R.id.edit_user_password_login);
@@ -57,22 +55,14 @@ public class LoginInputFragment extends Fragment {
                         public void onSuccess(LoginResult logResult) {
                             LoginItem userInform = logResult.result;
 
-
-                            PropertyManager.getInstance().setUserJoin(userInform.join);
-                            PropertyManager.getInstance().setUserId(userInform.id);
-                            PropertyManager.getInstance().setUserPassword(password);
                             PropertyManager.getInstance().setUserEmail(email);
-
-                          //  Log.i()
+                            PropertyManager.getInstance().setUserPassword(password);
+                            PropertyManager.getInstance().setUserId(userInform.id);
+                            PropertyManager.getInstance().setUserJoin(userInform.join);
 
                             Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
-
                             startActivity(intent);
                             ((LoginActivity) getActivity()).finish();
-
-
-
-
                         }
 
                         @Override
@@ -81,11 +71,11 @@ public class LoginInputFragment extends Fragment {
                         }
                     });
                     //더미데이터로 테스트
-                    if (logdummy == 1) {
+                    if (dummy == 1) {
                         Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
                         startActivity(intent);
                         ((LoginActivity) getActivity()).finish();
-                    } else if (logdummy == 0) {
+                    } else if (dummy == 0) {
                         LoginFailDialogFragment loginFailDialogFragment = new LoginFailDialogFragment();
                         loginFailDialogFragment.show(getChildFragmentManager(), "loginFail");
                     }
@@ -97,7 +87,6 @@ public class LoginInputFragment extends Fragment {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //비밀번호 찾기 페이지로 이동
                 FindPasswordFragment findPasswordFragment = new FindPasswordFragment();
                 FragmentTransaction ft = ((LoginActivity) getActivity()).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.login_container, findPasswordFragment);

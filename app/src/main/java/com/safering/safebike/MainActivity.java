@@ -77,24 +77,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        serviceCondition = PropertyManager.getInstance().getServiceCondition();
-
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction().add(R.id.container, MainFragment.newInstance(serviceCondition), TAG_MAIN).commit();
-//        }
-
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
-
-//        if (savedInstanceState == null) {
-//            mainFragment = new MainFragment();
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.add(R.id.container, mainFragment, TAG_MAIN);
-//            ft.commit();
-//        }
-
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
         View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         ImageView settingImage = (ImageView)header.findViewById(R.id.btn_account_setting);
@@ -153,11 +138,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("safebike", "MainActivity.onDestroy****************************************************************************************************");
 
-        /*
-         *  여기서 목적지 위도 경도 SharedPreferences 날리기
-         */
         PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
         PropertyManager.getInstance().setDestinationLatitude(null);
         PropertyManager.getInstance().setDestinationLongitude(null);

@@ -55,7 +55,9 @@ public class FindPasswordFragment extends Fragment {
                     public void onFail(int code) {
 
                     }
-                });*/
+                });
+                    */
+
                 }
 
                 TempPasswordDialog tempPasswordDialog = new TempPasswordDialog();

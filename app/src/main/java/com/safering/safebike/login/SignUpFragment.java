@@ -131,13 +131,9 @@ public class SignUpFragment extends Fragment {
         String email = inputEmail.getText().toString();
         String id = inputId.getText().toString();
         String password = inputPassword.getText().toString();
-       // String passwordConfirm = inputPasswordConfirm.getText().toString();
-
-
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(id) || TextUtils.isEmpty(password)) {
             signUpMessage = EMPTY_FORM;
             return signUpMessage;
-            //return result;
         }
 
 

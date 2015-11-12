@@ -1,18 +1,21 @@
 package com.safering.safebike.property;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 
 /**
  * Created by Tacademy on 2015-10-29.
  */
 public class PropertyManager {
-    public static final String USER_IMAGE_PATH = "@IMAGE_PATH";
 
     public static final String USER_ID = "userid";
     public static final String USER_EMAIL = "useremail";
     public static final String USER_JOIN = "userjoin";
     public static final String USER_PASSWORD = "userpassword";
+    public static final String USER_IMAGE_PATH = "userimagepath";
+
 
 
     public static final String STARTING_LATITUDE = "startingLatitude";
@@ -79,6 +82,14 @@ public class PropertyManager {
         return mPrefs.getString(USER_JOIN, "");
     }
 
+    public void setUserImagePath(String path){
+        mEditor.putString(USER_IMAGE_PATH,path);
+        mEditor.commit();
+    }
+
+    public String getUserImagePath(){
+        return mPrefs.getString(USER_IMAGE_PATH,"");
+    }
     public void setStartingLatitude(String startingLatitude) {
         mEditor.putString(STARTING_LATITUDE, startingLatitude);
         mEditor.commit();
@@ -150,5 +161,11 @@ public class PropertyManager {
 
     public int getFindRouteSearchOption() {
         return mPrefs.getInt(FIND_ROUTE_SEARCHOPTION, 0);
+    }
+
+    public String getUserPhoneNumber(){
+        TelephonyManager telManager = (TelephonyManager)MyApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String phoneNum = telManager.getLine1Number();
+        return phoneNum;
     }
 }

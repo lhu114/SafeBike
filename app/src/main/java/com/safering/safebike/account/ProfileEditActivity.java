@@ -5,6 +5,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,11 +35,15 @@ public class ProfileEditActivity extends AppCompatActivity {
     EditText changeId;
     EditText changePassword;
     EditText changePasswordConfirm;
-
+    File file;
     ImageView userProfileImage;
     DisplayImageOptions options;
-    Uri uri;
+    Uri uri = null;
     public static final int GET_USER_IMAGE = 11;
+    public static final int EDIT_SUCCESS = 1;
+    public static final int EDIT_FAIL = -1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         userId = (TextView) findViewById(R.id.text_change_id);
         userEmail = (TextView) findViewById(R.id.text_change_email);
         userJoin = (TextView) findViewById(R.id.text_change_join);
+
+
 
         changeId = (EditText)findViewById(R.id.edit_change_id);
         changePassword = (EditText)findViewById(R.id.edit_change_password);
@@ -74,24 +81,33 @@ public class ProfileEditActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
+
                 String email = PropertyManager.getInstance().getUserEmail();
                 String id = changeId.getText().toString();
                 String password = changePassword.getText().toString();
                 String passwordConfirm = changePasswordConfirm.getText().toString();
+                /*if(checkEditForm() == EDIT_FAIL){
+                    //에디트 텍스트 밑에 텍스트 띄우기
+                    return;
+                }
+                if(uri != null) {
+                    if (PropertyManager.getInstance().getUserImagePath() != uri.getPath()) {
+                        file = new File(uri.getPath());
 
-                File file = new File(uri.getPath());
+                    }
+                }
                 NetworkManager.getInstance().saveUserProfile(ProfileEditActivity.this, email, id, password, file, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object success) {
-
+                        //내 프로퍼티 수정
                     }
 
                     @Override
                     public void onFail(int code) {
 
                     }
-                });*/
+                });
+*/
                 Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("edit", "e");
@@ -142,5 +158,19 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    public int checkEditForm(){
+        String id = changeId.getText().toString();
+        String password = changePassword.getText().toString();
+        String passwordConfirm = changePasswordConfirm.getText().toString();
+
+        if(TextUtils.isEmpty(id) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfirm)){
+            return EDIT_FAIL;
+        }
+        if(!password.equals(passwordConfirm)){
+            return EDIT_FAIL;
+        }
+
+        return EDIT_SUCCESS;
     }
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import com.safering.safebike.property.PropertyManager;
 
 import org.w3c.dom.Text;
 
+import java.lang.annotation.Annotation;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,8 +80,13 @@ public class CalorieFragment extends Fragment {
         calorieChart.getAxisLeft().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawLabels(false);
-        calorieChart.setScaleEnabled(false);
         calorieChart.setScaleMinima(2f, 1f);
+
+        calorieChart.setVerticalScrollBarEnabled(false);
+
+
+        //calorieChart.set
+
         requestData();
 
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
@@ -92,6 +99,8 @@ public class CalorieFragment extends Fragment {
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
                 if (calorieChart.getLowestVisibleXIndex() == 0) {
+                    calorieChart.animateX(2000);
+
                     requestData();
                 }
             }
@@ -209,6 +218,8 @@ public class CalorieFragment extends Fragment {
                     data = new BarData(xVals, dataSets);
                     data.setValueTextSize(10f);
                     calorieChart.setData(data);
+
+
                     calorieChart.notifyDataSetChanged();
                     calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
                     calorieChart.invalidate();
