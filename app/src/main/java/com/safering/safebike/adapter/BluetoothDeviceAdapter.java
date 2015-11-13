@@ -49,7 +49,20 @@ public class BluetoothDeviceAdapter extends BaseAdapter{
     public void removeAll(){
         if(items.size() > 0){
             items.clear();
+            notifyDataSetChanged();
         }
+    }
+
+    public void remove(String deviceAddress){
+        for(int i = 0; i < items.size(); i++){
+            BluetoothDeviceItem item = items.get(i);
+            if(item.deviceAddress.equals(deviceAddress)){
+                items.remove(i);
+                notifyDataSetChanged();
+                break;
+            }
+        }
+
     }
 
 }

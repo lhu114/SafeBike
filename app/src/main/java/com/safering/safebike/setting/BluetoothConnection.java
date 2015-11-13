@@ -20,74 +20,49 @@ public class BluetoothConnection {
     private Handler mHandler;
     public static final int COMPLETE_PARIED = 1;
 
-    public BluetoothConnection(Handler handler){
+    public BluetoothConnection(Handler handler) {
         mHandler = handler;
 
     }
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice
-            device) {
-       // if (D) Log.d(TAG, "connected, Socket Type:" + socketType);
 
-    /*    // Cancel the thread that completed the connection
-        if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
+    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
+        BluetoothSocket mmSocket;
+        InputStream mmInStream;
+        OutputStream mmOutStream;
 
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
+        mmSocket = socket;
+        InputStream tmpIn = null;
+        OutputStream tmpOut = null;
 
-        // Cancel the accept thread because we only want to connect to one device
-        if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel();
-            mSecureAcceptThread = null;
+        // Get the BluetoothSocket input and output streams
+        try {
+            Log.i("socket true", "temp sockets not created");
+
+            tmpIn = socket.getInputStream();
+            tmpOut = socket.getOutputStream();
+        } catch (IOException e) {
+            Log.e("socket fail", "temp sockets not created", e);
         }
-        if (mInsecureAcceptThread != null) {
-            mInsecureAcceptThread.cancel();
-            mInsecureAcceptThread = null;
-        }*/
 
-        // Start the thread to manage the connection and perform transmissions
-/*
-        mConnectedThread = new ConnectedThread(socket, socketType);
-        mConnectedThread.start();
-*/
-    BluetoothSocket mmSocket;
-       InputStream mmInStream;
-       OutputStream mmOutStream;
+        mmInStream = tmpIn;
+        mmOutStream = tmpOut;
+        String message = "1234";
+        byte[] send = message.getBytes();
 
-       mmSocket = socket;
-       InputStream tmpIn = null;
-       OutputStream tmpOut = null;
+        try {
+            Log.i("send ok", "send true");
 
-       // Get the BluetoothSocket input and output streams
-       try {
-           tmpIn = socket.getInputStream();
-           tmpOut = socket.getOutputStream();
-       } catch (IOException e) {
-           Log.e("socket fail", "temp sockets not created", e);
-       }
+            mmOutStream.write(send);
+        } catch (IOException e) {
+            Log.i("send fail", "send true");
 
-       mmInStream = tmpIn;
-       mmOutStream = tmpOut;
-       String message = "1234";
-       byte[] send = message.getBytes();
-
-       try {
-           mmOutStream.write(send);
-       } catch (IOException e) {
-           e.printStackTrace();
-       }
-
-
-     /*   // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(MainActivity.MESSAGE_DEVICE_NAME);
-        Bundle bundle = new Bundle();
-        bundle.putString(MainActivity.DEVICE_NAME, device.getName());
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
-
-        setState(STATE_CONNECTED);*/
+            e.printStackTrace();
+        }
     }
-    public void connect(BluetoothDevice device,UUID uuid){
-        new ConnectThread(device,uuid).start();
+
+    public void connect(BluetoothDevice device, UUID uuid) {
+        new ConnectThread(device, uuid).start();
+
     }
 
     private class ConnectThread extends Thread {
@@ -95,23 +70,23 @@ public class BluetoothConnection {
         private final BluetoothDevice mmDevice;
         private String mSocketType;
 
-        public ConnectThread(BluetoothDevice device,UUID uuid) {
+        public ConnectThread(BluetoothDevice device, UUID uuid) {
             Log.i("con thread", "------con-----");
             mmDevice = device;
             BluetoothSocket tmp = null;
-           // mSocketType = secure ? "Secure" : "Insecure";
+            // mSocketType = secure ? "Secure" : "Insecure";
 
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
             try {
-              //  if (secure) {
-                    tmp = device.createRfcommSocketToServiceRecord(
-                            uuid);
-               // } else {
+                //  if (secure) {
+                tmp = device.createRfcommSocketToServiceRecord(
+                        uuid);
+                // } else {
 
-               // }
+                // }
             } catch (IOException e) {
-            //    Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
+                //    Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
             }
             mmSocket = tmp;
         }
@@ -127,7 +102,7 @@ public class BluetoothConnection {
                 mmSocket.connect();
             } catch (IOException e) {
                 // Close the socket
-                Log.i("connect","------fail------");
+                Log.i("connect", "------fail------");
                 try {
                     mmSocket.close();
                     //다이얼로그 취소 눌렀을시 리던
@@ -138,7 +113,7 @@ public class BluetoothConnection {
             }
             //여기 까지 페어링
             Message msg = mHandler.obtainMessage();
-            msg.obj = mmDevice.getName();
+            msg.obj = mmDevice;
             msg.arg1 = COMPLETE_PARIED;
             mHandler.sendMessage(msg);
 
@@ -149,7 +124,7 @@ public class BluetoothConnection {
             try {
                 mmSocket.close();
             } catch (IOException e) {
-              //s  Log.e(TAG, "close() of connect " + mSocketType + " socket failed", e);
+                //s  Log.e(TAG, "close() of connect " + mSocketType + " socket failed", e);
             }
         }
     }

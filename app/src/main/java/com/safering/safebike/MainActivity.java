@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
+       // DrawerLayout draw =
        // nav.getList
         View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         ImageView settingImage = (ImageView)header.findViewById(R.id.btn_account_setting);

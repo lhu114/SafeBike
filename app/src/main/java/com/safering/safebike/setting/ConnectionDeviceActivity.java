@@ -33,6 +33,7 @@ import com.safering.safebike.adapter.BluetoothItemView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
     BluetoothDeviceAdapter bandAdapter;
     BluetoothDeviceAdapter backligthAdapter;
     BluetoothConnection bluetoothConnection;
+    HashMap deviceMap = new HashMap();
     boolean isRegister = false;
     private ArrayList<UUID> mUuids;
 
@@ -70,10 +72,11 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
         */
 
         bluetoothConnection = new BluetoothConnection(mHandler);
+
         bandAdapter = new BluetoothDeviceAdapter();
         backligthAdapter = new BluetoothDeviceAdapter();
-
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         listViewBand = (ListView) findViewById(R.id.listview_band);
         listViewBand.setFooterDividersEnabled(false);
 
@@ -121,40 +124,11 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
     }
 
     public void resultDevices() {
-        //블루투스 디바이스들 감지해서 화면에 뿌려줌
-        //BluetoothDeviceAdapter bandAdapter = new BluetoothDeviceAdapter();
-        // BluetoothDeviceAdapter backligthAdapter = new BluetoothDeviceAdapter();
-        /*for (int i = 0; i < 4; i++) {
-            BluetoothDeviceItem data = new BluetoothDeviceItem();
-            data.deviceName = "bluetoothBand " + i;
-            data.deviceAddress = "A:B:C:D:E:F " + "/" + i;
-            bandAdapter.add(data);
-        }
-        for (int i = 0; i < 4; i++) {
-            BluetoothDeviceItem data = new BluetoothDeviceItem();
-            data.deviceName = "bluetoothBackligth " + i;
-            data.deviceAddress = "F:E:D:C:B:A " + "/" + i;
-            backligthAdapter.add(data);
 
-        }*/
-
-       /* listViewBacklight.setAdapter(backligthAdapter);
-*/
         listViewBacklight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                BluetoothSocket tmp = null;
-
                 BluetoothItemView itemView = (BluetoothItemView) view;
-               // Toast.makeText(ConnectionDeviceActivity.this, "selectitem : " + itemView.deviceName.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                /*Intent intent = new Intent();
-                intent.putExtra(EXTRA_DEVICE_ADDRESS, itemView.deviceAddress.getText().toString());
-
-                // Set result and finish this Activity
-                setResult(Activity.RESULT_OK, intent);
-                */
                 BluetoothDevice device = bluetoothAdapter.getRemoteDevice(itemView.deviceAddress.getText().toString());
                 bluetoothConnection.connect(device, MY_UUID_SECURE);
 
@@ -167,12 +141,17 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setPariedList();
+
+    }
+
+    public void setPariedList(){
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
         bandAdapter.removeAll();
         // If there are paired devices, add each one to the ArrayAdapter
         if (pairedDevices.size() > 0) {
 
-           // findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+            // findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
                 BluetoothDeviceItem data = new BluetoothDeviceItem();
                 data.deviceName = device.getName();
@@ -180,7 +159,8 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
                 bandAdapter.add(data);
             }
         } else {
-            String noDevices = "페이렁된 장비가 없습니다";
+           String noDevices = "페이렁된 장비가 없습니다";
+            Log.i("nopairng","nononoparing");
             //mPairedDevicesArrayAdapter.add(noDevices);
         }
 
@@ -219,7 +199,23 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
     public Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            Log.i("paird msg","device paired");
+            switch (msg.arg1){
+                case BluetoothConnection.COMPLETE_PARIED:
+                    BluetoothDevice device = (BluetoothDevice)msg.obj;
+
+                   // Log.i("paird msg","device addr" + deviceAddress);
+
+                    backligthAdapter.remove(device.getAddress());
+                    BluetoothDeviceItem data = new BluetoothDeviceItem();
+                    data.deviceName = device.getName();
+                    data.deviceAddress = device.getAddress();
+                    bandAdapter.add(data);
+                    //bandAdapter.add();
+
+                    /// /setPariedList();
+
+                    break;
 
             }
         }
@@ -229,7 +225,7 @@ public class ConnectionDeviceActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            bandAdapter.removeAll();
+            //bandAdapter.removeAll();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);

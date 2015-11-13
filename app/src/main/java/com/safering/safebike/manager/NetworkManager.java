@@ -383,7 +383,7 @@ public class NetworkManager {
         params.put(FRIEND_EMAIL, fEamil);
 */
         params.put(USER_EAMIL, "lowgiant@gmail.com");
-        params.put(FRIEND_EMAIL, "345463@gmail.com");
+        params.put(FRIEND_EMAIL, "newreview@naver.com");
 
 /*
         client.get(context, FRIEND_REMOVE_URL, params, new TextHttpResponseHandler() {
@@ -410,6 +410,7 @@ public class NetworkManager {
                 Log.i("removefirnd",responseString);
             }
         });
+
 
     }
 

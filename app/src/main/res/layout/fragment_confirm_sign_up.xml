@@ -31,8 +31,9 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
-            android:layout_marginBottom="5dp"
+
             android:visibility="gone"
+
             android:text="축하합니다!" />
         <TextView
             android:id="@+id/text_complete_sign_s"
@@ -43,6 +44,7 @@
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:visibility="gone"
+
             android:text="가입이 완료되었습니다." />
 
 

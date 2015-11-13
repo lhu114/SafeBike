@@ -76,6 +76,7 @@ public class LoginInputFragment extends Fragment {
                         @Override
                         public void onFail(int code) {
 
+
                         }
                     });
                     //더미데이터로 테스트
