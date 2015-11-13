@@ -119,6 +119,8 @@ public class FriendAddressFragment extends Fragment {
 
         if (contactCursor.moveToFirst()) {
             do {
+                String phonenumber = contactCursor.getString(1);
+                /*
                 String phonenumber = contactCursor.getString(1).replaceAll("-",
                         "");
                 if (phonenumber.length() == 10) {
@@ -129,7 +131,7 @@ public class FriendAddressFragment extends Fragment {
                     phonenumber = phonenumber.substring(0, 3) + "-"
                             + phonenumber.substring(3, 7) + "-"
                             + phonenumber.substring(7);
-                }
+                }*/
                 Contact acontact = new Contact();
                 acontact.setPhotoid(contactCursor.getLong(0));
                 acontact.setPhonenum(phonenumber);

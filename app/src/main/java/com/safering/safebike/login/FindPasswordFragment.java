@@ -14,13 +14,19 @@ import android.widget.TextView;
 
 import com.safering.safebike.R;
 import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.FontManager;
+
+import java.nio.channels.GatheringByteChannel;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FindPasswordFragment extends Fragment {
-    EditText tempEmail;
-    TextView emailFail;
+    EditText editTempEmail;
+    Button btnSendTemp;
+    TextView textFindPassword;
+    TextView textEmailFail;
+
     public FindPasswordFragment() {
         // Required empty public constructor
     }
@@ -31,17 +37,18 @@ public class FindPasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_find_password, container, false);
-        tempEmail = (EditText) view.findViewById(R.id.edit_temp_email);
-        emailFail = (TextView)view.findViewById(R.id.text_email_fail);
-        Button btn = (Button) view.findViewById(R.id.btn_temp_pass);
-        btn.setOnClickListener(new View.OnClickListener() {
+        editTempEmail = (EditText) view.findViewById(R.id.edit_temp_email);
+        btnSendTemp = (Button) view.findViewById(R.id.btn_temp_pass);
+        textEmailFail = (TextView)view.findViewById(R.id.text_email_fail);
+        textFindPassword = (TextView)view.findViewById(R.id.text_find_pass_main);
+        setFont();
+        btnSendTemp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = tempEmail.getText().toString();
-                if(TextUtils.isEmpty(email)){
-                    emailFail.setVisibility(View.VISIBLE);
-                }
-               else {
+                String email = editTempEmail.getText().toString();
+                if (TextUtils.isEmpty(email)) {
+                    textEmailFail.setVisibility(View.VISIBLE);
+                } else {
 /*
                 NetworkManager.getInstance().sendTempPassword(getContext(), email, new NetworkManager.OnResultListener() {
 
@@ -66,6 +73,13 @@ public class FindPasswordFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public void setFont(){
+        editTempEmail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textFindPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        btnSendTemp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+
     }
 
 

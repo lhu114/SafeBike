@@ -14,7 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3">
+        <TextView
+            android:id="@+id/text_progress_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="가입처리중입니다..."
+            android:textColor="@color/colorWhite"
 
+            android:textSize="20sp"
+            />
         <TextView
             android:id="@+id/text_complete_sign"
             android:layout_centerInParent="true"
@@ -23,14 +32,17 @@
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:layout_marginBottom="5dp"
+            android:visibility="gone"
             android:text="축하합니다!" />
         <TextView
+            android:id="@+id/text_complete_sign_s"
             android:layout_below="@id/text_complete_sign"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
+            android:visibility="gone"
             android:text="가입이 완료되었습니다." />
 
 

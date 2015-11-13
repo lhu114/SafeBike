@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
 /**
@@ -24,9 +25,12 @@ import com.safering.safebike.property.PropertyManager;
  */
 public class LoginInputFragment extends Fragment {
     int dummy = 1;
-    EditText userEmail;
-    EditText userPassword;
-    TextView loginFail;
+    EditText editUserEmail;
+    EditText editUserPassword;
+    TextView textLoginFail;
+    TextView textLoginMain;
+    TextView textFindPassword;
+    Button btnLogin;
     public LoginInputFragment() {
 
     }
@@ -36,21 +40,25 @@ public class LoginInputFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login_input, container, false);
-        userEmail = (EditText) view.findViewById(R.id.edit_user_mail_login);
-        userPassword = (EditText) view.findViewById(R.id.edit_user_password_login);
-        loginFail = (TextView)view.findViewById(R.id.text_login_fail);
-        Button btn = (Button) view.findViewById(R.id.btn_login);
-        btn.setOnClickListener(new View.OnClickListener() {
+        editUserEmail = (EditText) view.findViewById(R.id.edit_user_mail_login);
+        editUserPassword = (EditText) view.findViewById(R.id.edit_user_password_login);
+        textLoginFail = (TextView)view.findViewById(R.id.text_login_fail);
+        textLoginMain = (TextView)view.findViewById(R.id.text_login_input_main);
+        textFindPassword = (TextView)view.findViewById(R.id.text_find_pass);
+        btnLogin = (Button) view.findViewById(R.id.btn_login_input);
+        setFont();
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String email = userEmail.getText().toString();
-                final String password = userPassword.getText().toString();
+                final String email = editUserEmail.getText().toString();
+                final String password = editUserPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-                    loginFail.setVisibility(View.VISIBLE);
+                    textLoginFail.setVisibility(View.VISIBLE);
 
                 } else {
-                  NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<LoginResult>() {
+                    NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<LoginResult>() {
                         @Override
                         public void onSuccess(LoginResult logResult) {
                             LoginItem userInform = logResult.result;
@@ -83,8 +91,8 @@ public class LoginInputFragment extends Fragment {
             }
         });
 
-        TextView text = (TextView) view.findViewById(R.id.text_find_pass);
-        text.setOnClickListener(new View.OnClickListener() {
+        textFindPassword = (TextView) view.findViewById(R.id.text_find_pass);
+        textFindPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FindPasswordFragment findPasswordFragment = new FindPasswordFragment();
@@ -97,6 +105,16 @@ public class LoginInputFragment extends Fragment {
         });
         return view;
 
+
+    }
+    public void setFont(){
+        editUserEmail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        editUserPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+
+        textLoginMain.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textFindPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        btnLogin.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        textLoginFail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
 
     }
 

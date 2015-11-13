@@ -47,14 +47,21 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+/*
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
         Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.activity_splash,options);
+*/
+
+        /*splashImage = (ImageView)findViewById(R.id.image_splash);
+        splashImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        splashImage.setImageBitmap(bm);
+        */
 
         splashImage = (ImageView)findViewById(R.id.image_splash);
         splashImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        splashImage.setImageBitmap(bm);
+
 
         userEmail = PropertyManager.getInstance().getUserEmail();
         userPassword = PropertyManager.getInstance().getUserPassword();

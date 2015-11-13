@@ -166,6 +166,9 @@ public class PropertyManager {
     public String getUserPhoneNumber(){
         TelephonyManager telManager = (TelephonyManager)MyApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNum = telManager.getLine1Number();
+        if(phoneNum.startsWith("+82")){
+            phoneNum = phoneNum.replace("+82", "0");
+        }
         return phoneNum;
     }
 }

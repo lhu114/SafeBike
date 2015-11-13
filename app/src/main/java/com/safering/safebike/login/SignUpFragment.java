@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.safering.safebike.R;
 import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.FontManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,24 +34,35 @@ public class SignUpFragment extends Fragment {
     EditText inputId;
     EditText inputEmail;
     EditText inputPassword;
-    EditText inputPasswordConfirm;
+ //   EditText inputPasswordConfirm;
     TextView signupFail;
     TextView signupDuple;
     TextView signupPolicy;
-  //  TextView signupConfirm;
     TextView userManner;
     TextView privatePolicy;
+    TextView textSignupMain;
     CheckBox checkPolicy;
-    CheckBox checkAgree;
-
+    Button btnMakeAccount;
     int signUpMessage = SIGN_UP_OK;
-  //  int PolicyMessage = SIGN_UP_OK;
+
+    TextView textTempLine1;
+    TextView textTempLine2;
+    TextView textTempLine3;
+    TextView textTempLine4;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        textTempLine1 = (TextView)view.findViewById(R.id.text_temp_line1);
+        textTempLine2 = (TextView)view.findViewById(R.id.text_temp_line2);
+        textTempLine3 = (TextView)view.findViewById(R.id.text_temp_line3);
+        textTempLine4 = (TextView)view.findViewById(R.id.text_temp_line4);
+
+        textSignupMain = (TextView)view.findViewById(R.id.text_signup_main);
 
         inputId = (EditText) view.findViewById(R.id.edit_user_name);
         inputEmail = (EditText) view.findViewById(R.id.edit_user_email);
@@ -64,8 +76,10 @@ public class SignUpFragment extends Fragment {
         userManner = (TextView)view.findViewById(R.id.text_user_mannger);
         privatePolicy = (TextView)view.findViewById(R.id.text_private_policy);
 
-        final Button btn = (Button) view.findViewById(R.id.btn_go_next);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btnMakeAccount = (Button) view.findViewById(R.id.btn_go_next);
+
+        setFont();
+        btnMakeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean nextPage = true;
@@ -88,7 +102,6 @@ public class SignUpFragment extends Fragment {
                         signupPolicy.setVisibility(View.VISIBLE);
                         break;
                 }
-
 
 
                 if (nextPage) {
@@ -162,6 +175,24 @@ public class SignUpFragment extends Fragment {
 
         return signUpMessage;
     }
+
+    public void setFont(){
+        inputId.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        inputEmail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        inputPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+
+        textSignupMain.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        btnMakeAccount.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        signupPolicy.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        signupDuple.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        signupFail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textTempLine1.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textTempLine2.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textTempLine3.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textTempLine4.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+
+    }
+
 
 
 

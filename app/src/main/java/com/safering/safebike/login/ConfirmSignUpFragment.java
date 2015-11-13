@@ -4,16 +4,22 @@ package com.safering.safebike.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.utils.L;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
 import java.text.SimpleDateFormat;
@@ -23,7 +29,13 @@ import java.util.Calendar;
  * A simple {@link Fragment} subclass.
  */
 public class ConfirmSignUpFragment extends Fragment {
+
     private static final String SERVICE_FINISH = "finish";
+    Button btnCompleteSign;
+    TextView textCompleteSign;
+    TextView textCompleteSign1;
+    TextView textProgressSignup;
+    boolean isSignup = false;
 
     public ConfirmSignUpFragment() {
         // Required empty public constructor
@@ -35,59 +47,85 @@ public class ConfirmSignUpFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_confirm_sign_up, container, false);
-        Button btn = (Button) view.findViewById(R.id.btn_go_main);
-        btn.setOnClickListener(new View.OnClickListener() {
+
+        textProgressSignup = (TextView) view.findViewById(R.id.text_progress_signup);
+        textCompleteSign = (TextView) view.findViewById(R.id.text_complete_sign);
+        textCompleteSign1 = (TextView) view.findViewById(R.id.text_complete_sign_s);
+        btnCompleteSign = (Button) view.findViewById(R.id.btn_go_main);
+        setFont();
+        sendUserInform();
+
+
+        btnCompleteSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle signBundle = getArguments();
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cal = Calendar.getInstance();
-
-                final String date = dateFormat.format(cal.getTime());
-                final String email = signBundle.getString(SignUpFragment.SIGN_UP_EMAIL);
-                final String id = signBundle.getString(SignUpFragment.SIGN_UP_ID);
-                final String password = signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD);
-                String phone = PropertyManager.getInstance().getUserPhoneNumber();
-
-                PropertyManager.getInstance().setUserEmail(signBundle.getString(SignUpFragment.SIGN_UP_EMAIL));
-                PropertyManager.getInstance().setUserId(signBundle.getString(SignUpFragment.SIGN_UP_ID));
-                PropertyManager.getInstance().setUserPassword(signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD));
-                PropertyManager.getInstance().setUserJoin(date);
-
-                NetworkManager.getInstance().saveUserInform(getContext(), id, email, date, password,phone, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object success) {
-
-                        PropertyManager.getInstance().setUserEmail(email);
-                        PropertyManager.getInstance().setUserId(id);
-                        PropertyManager.getInstance().setUserPassword(password);
-                        PropertyManager.getInstance().setUserJoin(date);
-
-                        Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
-                        startActivity(intent);
-                        ((LoginActivity) getActivity()).finish();
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });
 
                 /*
                  * 최초 가입 시 서비스 컨디션 상태 Finish
                  */
-                PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
-                //프로퍼티 매니저에 저장
-                //메인 페이지로 이동
-                Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
-                startActivity(intent);
-                ((LoginActivity) getActivity()).finish();
+                if (isSignup) {
+                    PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+                    Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
+                    startActivity(intent);
+                    ((LoginActivity) getActivity()).finish();
+                }
+
             }
         });
         return view;
     }
 
+
+    public void setFont() {
+        textCompleteSign.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        textCompleteSign1.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        btnCompleteSign.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        textProgressSignup.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+
+    }
+
+    public void sendUserInform() {
+        Bundle signBundle = getArguments();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+
+        final String date = dateFormat.format(cal.getTime());
+        final String email = signBundle.getString(SignUpFragment.SIGN_UP_EMAIL);
+        final String id = signBundle.getString(SignUpFragment.SIGN_UP_ID);
+        final String password = signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD);
+        final String phone = PropertyManager.getInstance().getUserPhoneNumber();
+
+/*
+        PropertyManager.getInstance().setUserEmail(signBundle.getString(SignUpFragment.SIGN_UP_EMAIL));
+        PropertyManager.getInstance().setUserId(signBundle.getString(SignUpFragment.SIGN_UP_ID));
+        PropertyManager.getInstance().setUserPassword(signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD));
+        PropertyManager.getInstance().setUserJoin(date);
+*/
+
+
+        NetworkManager.getInstance().saveUserInform(getContext(), id, email, date, password, phone, new NetworkManager.OnResultListener() {
+            @Override
+            public void onSuccess(Object success) {
+
+                PropertyManager.getInstance().setUserEmail(email);
+                PropertyManager.getInstance().setUserId(id);
+                PropertyManager.getInstance().setUserPassword(password);
+                PropertyManager.getInstance().setUserJoin(date);
+                textProgressSignup.setVisibility(View.GONE);
+                textCompleteSign.setVisibility(View.VISIBLE);
+                textCompleteSign1.setVisibility(View.VISIBLE);
+                isSignup = true;
+
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
+
+    }
 
 }

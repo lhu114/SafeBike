@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -62,8 +63,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_FINISH)) {
             if (isBackPressed) {
                 mHandler.removeMessages(MESSAGE_BACK_KEY);
@@ -75,5 +77,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    /*public interface onBackPressedListener{
+        public void onBackPressed();
+    }
+
+    onBackPressedListener mOnBackPressedListener;
+
+    public void setmOnBackPressedListener(onBackPressedListener mListener){
+        mOnBackPressedListener = mListener;
+    }
+
+    */
 
 }

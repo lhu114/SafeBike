@@ -75,12 +75,14 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
+       // nav.getList
         View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         ImageView settingImage = (ImageView)header.findViewById(R.id.btn_account_setting);
         settingImage.setOnClickListener(new View.OnClickListener() {
