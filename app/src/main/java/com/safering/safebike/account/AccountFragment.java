@@ -10,10 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
 /**
@@ -23,8 +26,16 @@ public class AccountFragment extends Fragment {
     private static final String SERVICE_FINISH = "finish";
     private static final String SERVICE_RUNNING = "running";
     private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
+    TextView textHelp;
+    TextView textLogout;
 
-    Button btn;
+    TextView textProfileName;
+    TextView textProfileJoin;
+    TextView textProfileEmail;
+
+    RelativeLayout userProfile;
+    Button btnLogout;
+
 
     public AccountFragment() {
         // Required empty public constructor
@@ -36,8 +47,22 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
-        btn = (Button)view.findViewById(R.id.btn_logout);
-        btn.setOnClickListener(new View.OnClickListener() {
+        userProfile = (RelativeLayout)view.findViewById(R.id.layout_user_profile);
+        textHelp = (TextView)view.findViewById(R.id.text_btn_help);
+        textLogout = (TextView)view.findViewById(R.id.text_btn_logout);
+        textProfileName = (TextView)view.findViewById(R.id.text_id_profile);
+        textProfileJoin = (TextView)view.findViewById(R.id.text_join_profile);
+        textProfileEmail = (TextView)view.findViewById(R.id.text_email_profile);
+
+
+        textProfileName.setText(PropertyManager.getInstance().getUserId());
+        textProfileEmail.setText(PropertyManager.getInstance().getUserEmail());
+        textProfileJoin.setText(PropertyManager.getInstance().getUserJoin());
+
+        setFont();
+
+
+        textLogout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -62,9 +87,9 @@ public class AccountFragment extends Fragment {
                             PropertyManager.getInstance().setDestinationLongitude(null);
                             PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
 
-                            Intent intent = new Intent(((MainActivity)getActivity()), LoginActivity.class);
+                            Intent intent = new Intent(((MainActivity) getActivity()), LoginActivity.class);
                             startActivity(intent);
-                            ((MainActivity)getActivity()).finish();
+                            ((MainActivity) getActivity()).finish();
                         }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -73,19 +98,17 @@ public class AccountFragment extends Fragment {
 
                         }
                     });
-//        builder.setCancelable(false);
 
                     builder.create().show();
                 } else {
-                    Intent intent = new Intent(((MainActivity)getActivity()), LoginActivity.class);
+                    Intent intent = new Intent(((MainActivity) getActivity()), LoginActivity.class);
                     startActivity(intent);
-                    ((MainActivity)getActivity()).finish();
+                    ((MainActivity) getActivity()).finish();
                 }
             }
         });
 
-        btn = (Button)view.findViewById(R.id.btn_user_profile);
-        btn.setOnClickListener(new View.OnClickListener() {
+        userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(((MainActivity)getActivity()),ProfileActivity.class);
@@ -93,15 +116,22 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        btn = (Button)view.findViewById(R.id.btn_help);
-        btn.setOnClickListener(new View.OnClickListener() {
+        textHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(((MainActivity)getActivity()),AccountHelpActivity.class);
+                Intent intent = new Intent(((MainActivity) getActivity()), AccountHelpActivity.class);
                 startActivity(intent);
             }
         });
         return view;
+    }
+
+    public void setFont(){
+        textHelp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
+        textLogout.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
+        textProfileName.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
+        textProfileJoin.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textProfileEmail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
     }
 
 

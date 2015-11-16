@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.NetworkManager;
-import com.safering.safebike.property.FontManager;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
 /**

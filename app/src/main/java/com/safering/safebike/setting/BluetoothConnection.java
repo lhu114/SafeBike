@@ -121,6 +121,7 @@ public class BluetoothConnection {
         }
 
         public void cancel() {
+
             try {
                 mmSocket.close();
             } catch (IOException e) {

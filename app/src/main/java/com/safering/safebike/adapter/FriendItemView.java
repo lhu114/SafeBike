@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 
 /**
  * Created by Tacademy on 2015-10-30.
@@ -15,6 +16,7 @@ import com.safering.safebike.R;
 public class FriendItemView extends RelativeLayout{
     ImageView friendImage;
     TextView friendId;
+    TextView friendRank;
     Button btn;
     FriendItem fData;
 
@@ -34,13 +36,17 @@ public class FriendItemView extends RelativeLayout{
 
     public void init(){
         inflate(getContext(), R.layout.friend_item_view, this);
+        friendRank = (TextView)findViewById(R.id.text_friend_rank);
         friendImage = (ImageView)findViewById(R.id.image_friend);
         friendId = (TextView)findViewById(R.id.text_friend_id);
         btn = (Button)findViewById(R.id.btn_add_friend);
+
+        setFont();
+
         btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onButtonClick(FriendItemView.this,fData);
+                mListener.onButtonClick(FriendItemView.this, fData);
             }
         });
 
@@ -63,6 +69,11 @@ public class FriendItemView extends RelativeLayout{
         }
         else
             btn.setVisibility(View.INVISIBLE);
+
+    }
+    public void setFont(){
+        friendRank.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        friendId.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
 
     }
 }

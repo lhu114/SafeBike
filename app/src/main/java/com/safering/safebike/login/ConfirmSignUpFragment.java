@@ -4,22 +4,16 @@ package com.safering.safebike.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nostra13.universalimageloader.utils.L;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.NetworkManager;
-import com.safering.safebike.property.FontManager;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
 import java.text.SimpleDateFormat;

@@ -40,10 +40,12 @@
     <string name="login_fail_message">이메일 또는 비밀번호를 확인해주세요</string>
     <string name="signup_fail_message">가입양식을 확인해주세요</string>
     <string name="signup_policy_message">약관정책을 확인해주세요</string>
-
+    <string name="friend_invite">친구들을 초대해 보세요!</string>
     <string name="find_fail_message">이메일을 확인해주세요</string>
     <string name="text_user_manner"><u>사용약관</u></string>
     <string name="text_private_policy"><u>개인보호정책</u></string>
+    <string name="edit_profile_title">프로필 편집</string>
+    <string name="account_help">도움말</string>
 
 
 
@@ -56,6 +58,7 @@
     <string name="text_select_bibrator">진동밴드 선택</string>
     <string name="text_select_backlight">후미등 선택</string>
     <string name="text_bluetooth_device_paired">페어링 완료</string>
+    <string name="text_add_friend">친구 추가</string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="btn_fwd_navigation">네이게이션</string>

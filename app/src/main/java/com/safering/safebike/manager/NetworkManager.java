@@ -331,6 +331,7 @@ public class NetworkManager {
             }
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("friendlist",responseString);
                 FriendResult result = gson.fromJson(responseString, FriendResult.class);
                 listener.onSuccess(result);
             }
@@ -397,8 +398,9 @@ public class NetworkManager {
                 listener.onSuccess(ON_SUCCESS);
             }
         });*/
-        Header[]heaer = new Header[2];
-        client.delete(context, FRIEND_REMOVE_URL, heaer,params, new TextHttpResponseHandler() {
+        Header[]header = null;
+
+        client.delete(context, FRIEND_REMOVE_URL, header,params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.i("removefirndfail",statusCode + "");
@@ -413,6 +415,7 @@ public class NetworkManager {
 
 
     }
+
 
     public void getUserFriendAddress(Context context, String email, ArrayList phoneList, final OnResultListener<FriendSearchResult> listener) {
         //PARAMETER : 유저 이메일,전화번호리스트(Array)

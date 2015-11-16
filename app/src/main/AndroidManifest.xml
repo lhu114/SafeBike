@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.safering.safebike" >
+    package="com.safering.safebike">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -15,32 +15,32 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".property.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".login.SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginActivity" >
-        </activity>
+        <activity android:name=".login.LoginActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -58,24 +58,33 @@
 
         <activity
             android:name=".navigation.ParentRctFvActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".friend.FriendAddActivity"
+            android:theme="@style/CustomAppTheme"></activity>
+        <activity
+            android:name=".friend.FriendProfileActivity"
+            android:theme="@style/CustomAppTheme">
+
         </activity>
-        <activity android:name=".friend.FriendAddActivity" >
-        </activity>
-        <activity android:name=".friend.FriendProfileActivity" >
-        </activity>
-        <activity android:name=".account.ProfileActivity" >
-        </activity>
-        <activity android:name=".account.ProfileEditActivity" >
-        </activity>
-        <activity android:name=".account.AccountHelpActivity" >
-        </activity>
-        <activity android:name=".setting.ConnectionDeviceActivity" >
-        </activity>
-        <activity android:name=".navigation.SelectRouteActivity" >
-        </activity>
-        <activity android:name=".navigation.StartNavigationActivity" >
-        </activity>
+        <activity
+            android:name=".account.ProfileActivity"
+            android:theme="@style/CustomAppTheme"
+
+            ></activity>
+        <activity
+            android:name=".account.ProfileEditActivity"
+            android:theme="@style/CustomAppTheme"
+
+            ></activity>
+        <activity
+            android:name=".account.AccountHelpActivity"
+            android:theme="@style/CustomAppTheme"
+
+            ></activity>
+        <activity android:name=".setting.ConnectionDeviceActivity"></activity>
+        <activity android:name=".navigation.SelectRouteActivity"></activity>
+        <activity android:name=".navigation.StartNavigationActivity"></activity>
     </application>
 
 </manifest>

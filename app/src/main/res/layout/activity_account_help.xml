@@ -4,32 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+
+
     tools:context="com.safering.safebike.account.AccountHelpActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_weight="3">
 
         <ImageView
             android:id="@+id/image_safebike_logo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/safebike_big" />
 
         <TextView
             android:id="@+id/text_safebike_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="13dp"
+
             android:layout_alignTop="@id/image_safebike_logo"
             android:layout_below="@id/image_safebike_logo"
             android:layout_toRightOf="@id/image_safebike_logo"
+            android:textColor="@color/colorBlack"
+
             android:text="SafeBike" />
 
         <TextView
@@ -53,34 +56,50 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="9"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_show_use"
+        <TextView
+            android:id="@+id/text_show_use"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/colorBlack"
+
             android:text="@string/btn_show_use"
             />
 
-        <Button
-            android:id="@+id/btn_qna_email"
+        <TextView
+            android:id="@+id/text_qna_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/colorBlack"
+
+
             android:text="@string/btn_qna_email"
             />
 
-        <Button
-            android:id="@+id/btn_policy_profile"
+        <TextView
+            android:id="@+id/text_policy_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/colorBlack"
+
+
             android:text="@string/btn_policy_profile"
             />
 
-        <Button
-            android:id="@+id/btn_license"
+        <TextView
+            android:id="@+id/text_license"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/colorBlack"
+
             android:text="@string/btn_license"
             />
     </LinearLayout>

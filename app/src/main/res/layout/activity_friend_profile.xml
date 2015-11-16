@@ -4,29 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+
     tools:context="com.safering.safebike.friend.FriendProfileActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:layout_weight="1">
 
         <ImageView
             android:id="@+id/image_friend_profile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/profile_img" />
 
         <TextView
             android:id="@+id/text_friendid_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+
             android:layout_alignTop="@id/image_friend_profile"
             android:layout_below="@id/image_friend_profile"
             android:layout_toRightOf="@id/image_friend_profile"
@@ -38,12 +40,16 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text_friendid_profile"
             android:layout_below="@id/text_friendid_profile"
+            android:textSize="12sp"
+            android:textColor="@color/colorUserImform"
             android:text="adkalfkfwk@google.com" />
 
         <TextView
             android:id="@+id/text_friendjoin_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
+
             android:layout_alignLeft="@id/text_friendemail_profile"
             android:layout_below="@id/text_friendemail_profile"
             android:text="2015/5/35 가입" />
@@ -53,12 +59,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
+        android:layout_marginLeft="30dp"
+
         android:orientation="vertical">
 
         <TextView
-
+            android:id="@+id/text_friend_total_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorUserImform"
+
+
             android:text="활동량" />
 
         <LinearLayout
@@ -66,14 +78,21 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/text_friend_distance_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+
                 android:text="주행거리" />
 
             <TextView
                 android:id="@+id/text_friend_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+
                 android:text="1500km" />
 
         </LinearLayout>
@@ -83,13 +102,18 @@
             android:layout_height="wrap_content">
 
             <TextView
-
+                android:id="@+id/text_friend_speed_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+
                 android:text="평균속력" />
 
             <TextView
                 android:id="@+id/text_friend_speed"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -102,14 +126,21 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/text_friend_calorie_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+
                 android:text="소모칼로리" />
 
             <TextView
                 android:id="@+id/text_friend_calorie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+
                 android:text="2700cal" />
 
         </LinearLayout>

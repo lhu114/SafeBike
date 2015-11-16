@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.safering.safebike.R;
-import com.safering.safebike.property.FontManager;
+import com.safering.safebike.manager.FontManager;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
@@ -25,7 +27,7 @@ public class MainFragment extends Fragment {
 
 //    String serviceCondition;
     Button fwdNavigation, startNavigation;
-
+    TextView textMainTitle;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -62,14 +64,16 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.d("safebike","MainFragment.onCreateView");
+        Log.d("safebike", "MainFragment.onCreateView");
         // Inflate the layout for this fragment
 
 //        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
 
         Button btn = (Button) view.findViewById(R.id.btn_onoff_band);
+        setFont();
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,5 +124,14 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("safebike",  "MainFragment.onResume");
+        //setFont();
+
+    }
+
+    public void setFont(){
+        textMainTitle.setText("SafeBike");
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
+
+
     }
 }

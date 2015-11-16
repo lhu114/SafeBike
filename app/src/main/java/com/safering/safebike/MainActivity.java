@@ -21,11 +21,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.safering.safebike.account.AccountFragment;
 import com.safering.safebike.exercisereport.ExerciseReportFragment;
 import com.safering.safebike.friend.FriendFragment;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.SettingFragment;
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private static String OFF = "off";
 
     private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
-
+    TextView textMainTitle;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,8 +68,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
+        textMainTitle = (TextView)findViewById(R.id.text_main_title);
+        setFont();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -83,8 +88,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
-       // DrawerLayout draw =
-       // nav.getList
+
         View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         ImageView settingImage = (ImageView)header.findViewById(R.id.btn_account_setting);
         settingImage.setOnClickListener(new View.OnClickListener() {
@@ -287,6 +291,13 @@ public class MainActivity extends AppCompatActivity
 
     private void emptyBackStack() {
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    public void setFont(){
+        textMainTitle.setText("SafeBike");
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.BMJUA));
+
+
     }
 
 

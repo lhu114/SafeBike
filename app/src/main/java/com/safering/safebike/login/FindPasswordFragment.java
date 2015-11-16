@@ -3,7 +3,6 @@ package com.safering.safebike.login;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.safering.safebike.R;
-import com.safering.safebike.manager.NetworkManager;
-import com.safering.safebike.property.FontManager;
-
-import java.nio.channels.GatheringByteChannel;
+import com.safering.safebike.manager.FontManager;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
 import com.safering.safebike.adapter.FriendItem;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
@@ -29,7 +31,10 @@ public class FriendFragment extends Fragment {
     public static final String FRIEND_INFORM = "friendInform";
     FriendAdapter fAdapter;
     ListView listView;
+    TextView textInvite;
+    TextView textMainTitle;
     FriendItem friendItem;
+
 
     public FriendFragment() {
         // Required empty public constructor
@@ -43,7 +48,11 @@ public class FriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
 
         fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
+        textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
+        textInvite = (TextView)view.findViewById(R.id.text_invite_friend);
+
         listView = (ListView) view.findViewById(R.id.listview_myfriend);
+        setFont();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -88,10 +97,12 @@ public class FriendFragment extends Fragment {
                 popupMenu.show();
             }
         });
+
         listView.setAdapter(fAdapter);
 
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,6 +117,8 @@ public class FriendFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setFriendList();
+        setTitleFont();
+
     }
 
     public void setFriendList() {
@@ -115,9 +128,10 @@ public class FriendFragment extends Fragment {
             @Override
             public void onSuccess(FriendResult result) {
                 int count = result.count;
-                for(int i = 0; i < count; i++){
+                for (int i = 0; i < count; i++) {
                     FriendItem friendItem = new FriendItem();
-                    friendItem.pname = result.friendlist.get(i).pname;
+                    //friendItem.pname = result.friendlist.get(i).pname;
+                    friendItem.pname = "friend " + i;
                     friendItem.pemail = result.friendlist.get(i).pemail;
                     friendItem.photo = result.friendlist.get(i).photo;
                     fAdapter.add(friendItem);
@@ -130,6 +144,17 @@ public class FriendFragment extends Fragment {
 
             }
         });
+    }
+
+    public void setFont(){
+        textInvite.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
+
+    }
+
+    public void setTitleFont(){
+        textMainTitle.setText("친구");
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
+
     }
 
 

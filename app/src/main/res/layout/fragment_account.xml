@@ -5,23 +5,81 @@
     tools:context="com.safering.safebike.account.AccountFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <Button
-        android:id="@+id/btn_user_profile"
+    <RelativeLayout
+        android:id="@+id/layout_user_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="내 계정"
-        />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        >
 
-    <Button
-        android:id="@+id/btn_help"
-        android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/image_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            android:src="@mipmap/profile_img"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/text_id_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/image_user_profile"
+            android:layout_below="@id/image_user_profile"
+            android:layout_toRightOf="@id/image_user_profile"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="이름" />
+
+        <TextView
+            android:id="@+id/text_email_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/text_id_profile"
+            android:layout_below="@id/text_id_profile"
+            android:textColor="@color/colorRegister"
+            android:textSize="12sp"
+            android:text="adkalfkfwk@google.com" />
+
+        <TextView
+            android:id="@+id/text_join_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/text_id_profile"
+            android:layout_below="@id/text_email_profile"
+            android:textColor="@color/colorBase"
+            android:textSize="12sp"
+            android:text="2015/5/35 가입" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/text_btn_help"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_help"
+        android:layout_marginLeft="30dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp"
+
         />
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/text_btn_logout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_logout"
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp"
+        android:layout_marginLeft="30dp"
         />
+
+
 </LinearLayout>
