@@ -25,7 +25,7 @@
     <string name="check_policy">약관동의</string>
     <string name="hello_blank_fragment">Blank</string>
     <string name="edit_user_name">이름</string>
-    <string name="btn_connect_device">기기연결</string>
+    <string name="btn_connect_device">기기검색</string>
     <string name="switch_vibrator">진동</string>
     <string name="switch_backlight">후미등</string>
     <string name="btn_logout">로그아웃</string>

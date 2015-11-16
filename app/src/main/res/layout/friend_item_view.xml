@@ -2,9 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="5dp"
     android:orientation="horizontal">
 
-    <TextView
+    <!--<TextView
         android:id="@+id/text_friend_rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,11 +14,12 @@
         android:text="1"
         android:textSize="15sp"
         android:textColor="@color/colorBlack" />
+    -->
 
     <ImageView
         android:id="@+id/image_friend"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
 
         android:layout_marginLeft="30dp"
         android:src="@mipmap/profile_img" />
@@ -27,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_toEndOf="@+id/image_friend"
         android:text="friend"
         android:textSize="15sp"

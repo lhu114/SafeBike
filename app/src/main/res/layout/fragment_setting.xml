@@ -6,15 +6,22 @@
     tools:context="com.safering.safebike.setting.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <Button
+    <TextView
         android:id="@+id/btn_connect_device"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="30dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="16sp"
         android:layout_marginBottom="30dp"
         android:text="@string/btn_connect_device" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
+    </ListView>
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -54,6 +61,7 @@
             android:layout_alignParentRight="true"
             />
     </RelativeLayout>
+    -->
 
 
 </LinearLayout>
