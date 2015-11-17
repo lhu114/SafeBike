@@ -15,11 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.adapter.BluetoothDeviceAdapter;
 import com.safering.safebike.adapter.BluetoothDeviceHeaderItem;
 import com.safering.safebike.adapter.BluetoothDeviceItem;
 import com.safering.safebike.manager.FontManager;
@@ -31,8 +33,10 @@ public class SettingFragment extends Fragment {
     boolean isEnableBluetooth = false;
     boolean isDiscovery = false;
     private static final int REQUEST_ENABLE_BT = 3;
-
+    ListView deviceList;
     BluetoothAdapter mBluetoothAdapter = null;
+    BluetoothDeviceAdapter deviceAdapter;
+
     TextView textConnectDevice;
 
     public SettingFragment() {
@@ -47,6 +51,11 @@ public class SettingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
         textConnectDevice = (TextView) view.findViewById(R.id.btn_connect_device);
+        deviceList = (ListView)view.findViewById(R.id.connective_device_list);
+        deviceAdapter = new BluetoothDeviceAdapter();
+        deviceList.setAdapter(deviceAdapter);
+
+
         setFont();
         textConnectDevice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +81,8 @@ public class SettingFragment extends Fragment {
                     // Register for broadcasts when discovery has finished
                     filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
                     ((MainActivity)getActivity()).registerReceiver(mReceiver, filter);
+                    Log.i("bluetooth","search");
+
                     if (mBluetoothAdapter.isDiscovering()) {
                         mBluetoothAdapter.cancelDiscovery();
                     }
@@ -114,10 +125,12 @@ public class SettingFragment extends Fragment {
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    BluetoothDeviceItem data = new BluetoothDeviceItem();
-                    data.deviceName = device.getName();
-                    data.deviceAddress = device.getAddress();
-                   // backligthAdapter.add(data);
+                    Log.i("bluetooth result","search result");
+
+                    BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
+                    deviceItem.deviceName = device.getName();
+                    deviceItem.deviceAddress = device.getAddress();
+                    deviceAdapter.add(deviceItem);
                 }
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {

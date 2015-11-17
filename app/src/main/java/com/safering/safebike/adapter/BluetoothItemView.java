@@ -5,6 +5,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 
 /**
  * Created by Tacademy on 2015-10-30.
@@ -23,7 +24,7 @@ public class BluetoothItemView extends RelativeLayout{
         deviceName = (TextView)findViewById(R.id.bluetooth_device_name);
         deviceAddress = (TextView)findViewById(R.id.bluetooth_device_address);
         deviceOnOff = (TextView)findViewById(R.id.text_bluetooth_device_paired);
-
+        setFont();
 
     }
 
@@ -32,5 +33,10 @@ public class BluetoothItemView extends RelativeLayout{
         deviceAddress.setText(data.deviceAddress);
         deviceOnOff.setText(data.isSelect);
 
+    }
+
+    public void setFont(){
+        deviceName.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_R));
+        deviceAddress.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_R));
     }
 }

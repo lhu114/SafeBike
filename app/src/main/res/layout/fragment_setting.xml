@@ -17,7 +17,9 @@
         android:layout_marginBottom="30dp"
         android:text="@string/btn_connect_device" />
     <ListView
+        android:id="@+id/connective_device_list"
         android:layout_width="match_parent"
+        android:divider="@color/colorWhite"
         android:layout_height="wrap_content">
 
     </ListView>

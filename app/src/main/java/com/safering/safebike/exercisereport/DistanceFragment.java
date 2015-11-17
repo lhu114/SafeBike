@@ -21,6 +21,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
@@ -72,6 +73,7 @@ public class DistanceFragment extends Fragment {
         distanceChart.getAxisRight().setDrawLabels(false);
         distanceChart.setScaleEnabled(false);
         distanceChart.setScaleMinima(2f, 1f);
+        setFont();
         requestData();
 
 
@@ -85,6 +87,8 @@ public class DistanceFragment extends Fragment {
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
                 if (distanceChart.getLowestVisibleXIndex() == 0) {
+                    distanceChart.animateX(2000);
+
                     requestData();
                 }
             }
@@ -131,9 +135,9 @@ public class DistanceFragment extends Fragment {
                 NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-                        parentCal.setText(String.valueOf(result.workout.get(0).calorie));
-                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed));
-                        parentDistance.setText(String.valueOf(result.workout.get(0).road));
+                        parentCal.setText(String.valueOf(result.workout.get(0).calorie) + " kcal");
+                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed) + " km/h");
+                        parentDistance.setText(String.valueOf(result.workout.get(0).road) + " km");
                     }
 
                     @Override
@@ -148,14 +152,14 @@ public class DistanceFragment extends Fragment {
 
             }
         });
-
+/*
         moveRecent = (Button)view.findViewById(R.id.btn_move_distance);
         moveRecent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
             }
-        });
+        });*/
 
         return view;
     }
@@ -163,8 +167,9 @@ public class DistanceFragment extends Fragment {
     private void requestData() {
         int count = 0;
         int range = 0;
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
         NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
@@ -178,7 +183,7 @@ public class DistanceFragment extends Fragment {
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
                         xVals.add(result.workoutlist.get(i).date);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).road, total+i));
+                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, total+i));
                     }
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "Distance");
@@ -187,6 +192,8 @@ public class DistanceFragment extends Fragment {
                     data = new BarData(xVals, dataSets);
                     data.setValueTextSize(10f);
                     distanceChart.setData(data);
+
+
                     distanceChart.notifyDataSetChanged();
                     distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
                     distanceChart.invalidate();
@@ -204,7 +211,6 @@ public class DistanceFragment extends Fragment {
 
 
 
-
     }
 
     @Override
@@ -214,6 +220,12 @@ public class DistanceFragment extends Fragment {
         parentSpeed.setText("");
         parentDistance.setText("");
 
+    }
+
+    public void setFont() {
+        parentCal.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        parentSpeed.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        parentDistance.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
     }
 
 }

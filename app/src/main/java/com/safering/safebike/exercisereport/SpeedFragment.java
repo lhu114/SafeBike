@@ -22,6 +22,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
@@ -64,7 +65,7 @@ public class SpeedFragment extends Fragment {
 
 
         speedChart = (BarChart) view.findViewById(R.id.chart_speed);
-        requestData();
+
         speedChart.setVerticalScrollBarEnabled(true);
         speedChart.setDrawBarShadow(false);
         speedChart.setDrawGridBackground(false);
@@ -77,7 +78,8 @@ public class SpeedFragment extends Fragment {
         speedChart.setScaleEnabled(false);
         speedChart.setScaleMinima(2f, 1f);
 
-
+        setFont();
+        requestData();
         speedChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -86,8 +88,11 @@ public class SpeedFragment extends Fragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                Log.i("index : ", me.getActionIndex() + "");
-                //me.
+                if (speedChart.getLowestVisibleXIndex() == 0) {
+                    speedChart.animateX(2000);
+
+                    requestData();
+                }
 
             }
 
@@ -134,9 +139,9 @@ public class SpeedFragment extends Fragment {
                 NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-                        parentCal.setText(String.valueOf(result.workout.get(0).calorie));
-                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed));
-                        parentDistance.setText(String.valueOf(result.workout.get(0).road));
+                        parentCal.setText(String.valueOf(result.workout.get(0).calorie) + "kcal");
+                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed) + "km/h");
+                        parentDistance.setText(String.valueOf(result.workout.get(0).road) + "km");
                     }
 
                     @Override
@@ -152,21 +157,23 @@ public class SpeedFragment extends Fragment {
             }
         });
 
-        moveRecent = (Button)view.findViewById(R.id.btn_move_speed);
+        /*moveRecent = (Button)view.findViewById(R.id.btn_move_speed);
         moveRecent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
             }
         });
+        */
         return view;
     }
 
     private void requestData() {
         int count = 0;
         int range = 0;
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         String date = dateFormat.format(cal.getTime());
         String email = PropertyManager.getInstance().getUserEmail();
         NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
@@ -180,19 +187,22 @@ public class SpeedFragment extends Fragment {
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
                         xVals.add(result.workoutlist.get(i).date);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).road, total+i));
+                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, total+i));
                     }
                     total += count;
-                    BarDataSet set = new BarDataSet(yVals, "Speed");
+                    BarDataSet set = new BarDataSet(yVals, "Distance");
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
                     data = new BarData(xVals, dataSets);
                     data.setValueTextSize(10f);
                     speedChart.setData(data);
+
+
                     speedChart.notifyDataSetChanged();
                     speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
                     speedChart.invalidate();
                 }
+
 
 
             }
@@ -204,8 +214,6 @@ public class SpeedFragment extends Fragment {
         });
 
 
-
-
     }
 
     @Override
@@ -215,6 +223,12 @@ public class SpeedFragment extends Fragment {
         parentSpeed.setText("");
         parentDistance.setText("");
 
+    }
+
+    public void setFont(){
+        parentCal.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        parentSpeed.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        parentDistance.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
     }
 
 }

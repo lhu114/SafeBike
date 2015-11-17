@@ -28,6 +28,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.listener.OnDrawListener;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
@@ -44,6 +45,8 @@ import java.util.Date;
  */
 public class CalorieFragment extends Fragment {
     protected BarChart calorieChart;
+
+
     TextView parentCal;
     TextView parentSpeed;
     TextView parentDistance;
@@ -66,6 +69,8 @@ public class CalorieFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_calorie, container, false);
+
+
         parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
         parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);
         parentDistance = (TextView) getParentFragment().getView().findViewById(R.id.text_value_distance);
@@ -86,7 +91,7 @@ public class CalorieFragment extends Fragment {
 
 
         //calorieChart.set
-
+        setFont();
         requestData();
 
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
@@ -150,9 +155,9 @@ public class CalorieFragment extends Fragment {
                 NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-                        parentCal.setText(String.valueOf(result.workout.get(0).calorie));
-                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed));
-                        parentDistance.setText(String.valueOf(result.workout.get(0).road));
+                        parentCal.setText(String.valueOf(result.workout.get(0).calorie) + " kcal");
+                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed) + " km/h");
+                        parentDistance.setText(String.valueOf(result.workout.get(0).road) + " km");
                     }
 
                     @Override
@@ -168,14 +173,14 @@ public class CalorieFragment extends Fragment {
 
             }
         });
-
+/*
         moveRecent = (Button)view.findViewById(R.id.btn_move_calorie);
         moveRecent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
             }
-        });
+        })*/;
 
 
         return view;
@@ -243,6 +248,13 @@ public class CalorieFragment extends Fragment {
         parentCal.setText("");
         parentSpeed.setText("");
         parentDistance.setText("");
+
+    }
+
+    public void setFont(){
+        parentCal.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        parentSpeed.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        parentDistance.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
 
     }
 
