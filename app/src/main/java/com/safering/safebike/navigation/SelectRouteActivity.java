@@ -202,11 +202,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                         for (int i = 0; i < coord.length; i += 2) {
                                             laneOptions.add(new LatLng(coord[i + 1], coord[i]));
                                         }
-                                    }
-                                }
-
-                                for (BicycleFeature feature : result.features) {
-                                    if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_SP)) {
+                                    } else if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_SP)) {
                                         double[] coord = feature.geometry.coordinates;
 
                                         for (int i = 0; i < coord.length; i += 2) {
@@ -235,6 +231,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                         }
                                     }
                                 }
+
                                 /*
                                  * 올바른 처리인가..
                                  */
@@ -283,11 +280,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                     for (int i = 0; i < coord.length; i += 2) {
                                         minOptions.add(new LatLng(coord[i + 1], coord[i]));
                                     }
-                                }
-                            }
-
-                            for (BicycleFeature feature : result.features) {
-                                if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_SP)) {
+                                } else if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_SP)) {
                                     double[] coord = feature.geometry.coordinates;
 
                                     for (int i = 0; i < coord.length; i += 2) {
@@ -316,6 +309,37 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                                     }
                                 }
                             }
+
+//                            for (BicycleFeature feature : result.features) {
+//                                if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_SP)) {
+//                                    double[] coord = feature.geometry.coordinates;
+//
+//                                    for (int i = 0; i < coord.length; i += 2) {
+//                                        LatLng latLng = new LatLng(coord[i + 1], coord[i]);
+//                                        addPointMarker(latLng, POINTTYPE_SP, BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION, INITIAL_FLAG);
+//
+//                                        mMinLatLngList.add(latLng);
+//                                    }
+//                                } else if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_EP)) {
+//                                    double[] coord = feature.geometry.coordinates;
+//
+//                                    for (int i = 0; i < coord.length; i += 2) {
+//                                        LatLng latLng = new LatLng(coord[i + 1], coord[i]);
+//                                        addPointMarker(latLng, POINTTYPE_EP, BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION, INITIAL_FLAG);
+//
+//                                        mMinLatLngList.add(latLng);
+//                                    }
+//                                } else if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_GP)) {
+//                                    double[] coord = feature.geometry.coordinates;
+//
+//                                    for (int i = 0; i < coord.length; i += 2) {
+//                                        LatLng latLng = new LatLng(coord[i + 1], coord[i]);
+//                                        addPointMarker(latLng, POINTTYPE_GP, BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION, INITIAL_FLAG);
+//
+//                                        mMinLatLngList.add(latLng);
+//                                    }
+//                                }
+//                            }
 
 //                                if (minOptions != null && laneOptions != null) {
 //                                    Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION.onSuccess.addPolyline----------------------------------");
@@ -629,12 +653,16 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         if (minOptions != null && laneOptions != null) {
             minOptions.color(Color.GRAY);
             minOptions.width(10);
+            minOptions.geodesic(true);
+
             polyline = mMap.addPolyline(minOptions);
 
             polylineList.add(polyline);
 
             laneOptions.color(Color.RED);
             laneOptions.width(10);
+            minOptions.geodesic(true);
+
             polyline = mMap.addPolyline(laneOptions);
 
             polylineList.add(polyline);
@@ -690,13 +718,15 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     private void setPolylineColorAndBoldText(PolylineOptions firstOptions, PolylineOptions secondOptions, TextView boldText, TextView boldTotalTime, TextView boldArvTime,
                                              TextView boldTotalDistance, TextView text, TextView totalTime, TextView arvTime, TextView totalDistance) {
-        firstOptions.color(Color.GRAY);
-        polyline = mMap.addPolyline(firstOptions);
-        polylineList.add(polyline);
+        if (firstOptions != null && firstOptions.getPoints().size() > 0 && secondOptions != null && secondOptions.getPoints().size() > 0) {
+            firstOptions.color(Color.GRAY);
+            polyline = mMap.addPolyline(firstOptions);
+            polylineList.add(polyline);
 
-        secondOptions.color(Color.RED);
-        polyline = mMap.addPolyline(secondOptions);
-        polylineList.add(polyline);
+            secondOptions.color(Color.RED);
+            polyline = mMap.addPolyline(secondOptions);
+            polylineList.add(polyline);
+        }
 
         boldText.setPaintFlags(boldText.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
         boldTotalTime.setPaintFlags(boldTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);

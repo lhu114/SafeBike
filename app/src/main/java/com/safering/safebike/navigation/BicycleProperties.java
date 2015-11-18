@@ -1,6 +1,8 @@
 package com.safering.safebike.navigation;
 
-public class BicycleProperties {
+import java.io.Serializable;
+
+public class BicycleProperties implements Serializable {
 	public int searchOptions;
 	public int totalDistance;
 	public int totalTime;

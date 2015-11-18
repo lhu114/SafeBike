@@ -105,6 +105,8 @@
     <string name="btn_favorite_onoff" />
     <string name="btn_status_bluetooth" />
     <string name="btn_full_screen" />
+    <string name="text_navi_description">길안내</string>
+
 </resources>
 <!-- TODO: Remove or change this placeholder text -->
 
