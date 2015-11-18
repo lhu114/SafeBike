@@ -20,6 +20,8 @@ import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
+import java.util.StringTokenizer;
+
 public class ProfileActivity extends AppCompatActivity {
     TextView userId;
     TextView userEmail;
@@ -48,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         userId.setText(PropertyManager.getInstance().getUserId());
         userEmail.setText(PropertyManager.getInstance().getUserEmail());
-        userJoin.setText(PropertyManager.getInstance().getUserJoin());
+        userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
         textEditProfile = (TextView)findViewById(R.id.text_edit_profile);
 
         setFont();
@@ -85,8 +87,16 @@ public class ProfileActivity extends AppCompatActivity {
     public void setFont(){
         userJoin.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS));
         userEmail.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS));
-        userId.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS_M));
+        userId.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS));
         textEditProfile.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this,FontManager.NOTOSANS_M));
 
+    }
+    public String getDateFormat(String date){
+        String resultDate = "";
+        StringTokenizer tokenizer = new StringTokenizer(date,"-");
+        resultDate += tokenizer.nextToken() + "년 ";
+        resultDate += tokenizer.nextToken() + "월 ";
+        resultDate += tokenizer.nextToken() + "일 가입";
+        return resultDate;
     }
 }

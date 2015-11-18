@@ -6,6 +6,7 @@
     tools:context="com.safering.safebike.setting.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:id="@+id/btn_connect_device"
         android:layout_width="match_parent"

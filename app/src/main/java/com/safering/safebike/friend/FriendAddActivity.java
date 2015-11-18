@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,7 +19,11 @@ import com.safering.safebike.manager.FontManager;
 public class FriendAddActivity extends AppCompatActivity {
     FragmentTabHost tabHost;
     TextView textTitle;
+    ImageView imageSearch;
     ImageView imageBack;
+    View friendAddress;
+    View friendDirect;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,23 +31,34 @@ public class FriendAddActivity extends AppCompatActivity {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.custom_actionbar);
+        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend);
 
 
+        friendAddress = getLayoutInflater().inflate(R.layout.friend_address_view, null);
+        friendDirect = getLayoutInflater().inflate(R.layout.friend_direct_view, null);
 
-        textTitle = (TextView)findViewById(R.id.text_custom_title);
-        imageBack = (ImageView)findViewById(R.id.image_backkey);
+        textTitle = (TextView)findViewById(R.id.text_custom_title_friend);
+        imageBack = (ImageView)findViewById(R.id.image_backkey_friend);
+        imageSearch = (ImageView)findViewById(R.id.image_search_friend);
         tabHost = (FragmentTabHost)findViewById(R.id.friend_tabHost);
 
         setFont();
         tabHost.setup(this, getSupportFragmentManager(), R.id.friend_realtabcontent);
-        tabHost.addTab(tabHost.newTabSpec("adress").setIndicator("연락처"), FriendAddressFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec("direct").setIndicator("직접찾기"), FriendDirectFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("adress").setIndicator(friendAddress), FriendAddressFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("direct").setIndicator(friendDirect), FriendDirectFragment.class, null);
+        tabHost.getTabWidget().setDividerDrawable(null);
 
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        imageSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("search","click");
             }
         });
 

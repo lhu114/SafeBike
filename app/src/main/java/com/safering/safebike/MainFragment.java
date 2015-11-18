@@ -12,9 +12,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 /**
@@ -69,7 +73,110 @@ public class MainFragment extends Fragment {
 
 //        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
+        final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        Button favorite = (Button)view.findViewById(R.id.btn_favorite_list);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NetworkManager.getInstance().getFavorite(getContext(), uEmail, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
+
+            }
+        });
+
+        favorite = (Button)view.findViewById(R.id.btn_favorite_add);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NetworkManager.getInstance().saveFavorite(getContext(), uEmail, "청담", 123.1, 121.2, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
+
+            }
+        });
+
+        favorite = (Button)view.findViewById(R.id.btn_favorite_remove);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NetworkManager.getInstance().removeFavorite(getContext(), uEmail, "청담", new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
+
+            }
+        });
+
+        favorite = (Button)view.findViewById(R.id.btn_favorite_removeall);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NetworkManager.getInstance().removeAllFavorite(getContext(), uEmail, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
+
+            }
+        });
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+
+        final String date = dateFormat.format(cal.getTime());
+
+        favorite = (Button)view.findViewById(R.id.btn_save_exercise);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NetworkManager.getInstance().saveExcercise(getContext(), uEmail, date, 120, 60, 100, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
+            }
+        });
+
+
+
         textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
 
         Button btn = (Button) view.findViewById(R.id.btn_onoff_band);

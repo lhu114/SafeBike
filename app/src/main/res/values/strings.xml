@@ -32,7 +32,7 @@
     <string name="btn_help">도움말</string>
     <string name="btn_edit_profile">프로필 편집</string>
     <string name="btn_edit_compelete">변경완료</string>
-    <string name="btn_show_use">사용법보기</string>
+    <string name="btn_show_use">사용법 보기</string>
     <string name="btn_qna_email">이메일 문의</string>
     <string name="btn_policy_profile">개인정보 정책</string>
     <string name="btn_license">라이센스</string>

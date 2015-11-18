@@ -25,14 +25,14 @@
             android:id="@+id/text_safebike_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="13dp"
-
+            android:textSize="16sp"
+            android:layout_marginBottom="5dp"
             android:layout_alignTop="@id/image_safebike_logo"
             android:layout_below="@id/image_safebike_logo"
             android:layout_toRightOf="@id/image_safebike_logo"
             android:textColor="@color/colorBlack"
-
             android:text="SafeBike" />
 
         <TextView
@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/text_safebike_title"
             android:layout_below="@id/text_safebike_title"
+            android:textSize="12sp"
             android:text="copyright 2015 SAFE BIKE" />
 
         <TextView
@@ -48,6 +49,7 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="12sp"
             android:layout_alignLeft="@id/text_safebike_copyright"
             android:layout_below="@id/text_safebike_copyright"
             android:text="ALL RIGHT RESERVED" />

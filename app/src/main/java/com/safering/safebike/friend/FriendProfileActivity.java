@@ -83,13 +83,13 @@ public class FriendProfileActivity extends AppCompatActivity {
     public void setFont(){
         textTitle.setText(R.string.text_add_friend);
         textTitle.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS_M));
-        textFriendDistanceResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS_M));
-        textFriendDistance.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS_M));
-        textFriendSpeedResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS_M));
-        textFriendSpeed.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS_M));
-        textFriendCalorieResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS_M));
-        textFriendCalorie.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS_M));
-        textFriendTotalResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS_M));
+        textFriendDistanceResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendDistance.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendSpeedResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendSpeed.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendCalorieResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendCalorie.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendTotalResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
         friendId.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
         friendEmail.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
         friendJoin.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));

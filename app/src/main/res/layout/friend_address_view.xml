@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabitem_speed_view"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:background="@drawable/tabmenu_selector"
+
+    >
+
+    <TextView
+        android:id="@+id/text_tab_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        android:text="연락처"
+        />
+
+
+</RelativeLayout>

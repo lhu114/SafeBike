@@ -2,6 +2,49 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
 
     android:layout_height="match_parent" tools:context="com.safering.safebike.MainFragment">
+    <Button
+        android:id="@+id/btn_favorite_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="즐겨찾기 리스트"
+        />
+    <Button
+        android:id="@+id/btn_favorite_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="즐겨찾기 추가"
+        android:layout_toRightOf="@id/btn_favorite_list"
+
+        />
+    <Button
+        android:id="@+id/btn_favorite_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="즐겨찾기 삭제"
+        android:layout_toRightOf="@id/btn_favorite_add"
+
+        />
+    <Button
+        android:id="@+id/btn_favorite_removeall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/btn_favorite_remove"
+
+        android:text="즐겨찾기 전체삭제"
+        />
+
+    <Button
+        android:id="@+id/btn_save_exercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_favorite_removeall"
+
+        android:text="운동정보저장"
+        />
+
+
+
+
 
 
 

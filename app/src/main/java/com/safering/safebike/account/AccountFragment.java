@@ -19,6 +19,8 @@ import com.safering.safebike.login.LoginActivity;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
+import java.util.StringTokenizer;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -57,7 +59,7 @@ public class AccountFragment extends Fragment {
 
         textProfileName.setText(PropertyManager.getInstance().getUserId());
         textProfileEmail.setText(PropertyManager.getInstance().getUserEmail());
-        textProfileJoin.setText(PropertyManager.getInstance().getUserJoin());
+        textProfileJoin.setText(getDateFormat((PropertyManager.getInstance().getUserJoin())));
 
         setFont();
 
@@ -70,6 +72,7 @@ public class AccountFragment extends Fragment {
                 PropertyManager.getInstance().setUserPassword("");
                 PropertyManager.getInstance().setUserEmail("");
                 PropertyManager.getInstance().setUserJoin("");
+                PropertyManager.getInstance().setUserImagePath("");
 
                 if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -129,10 +132,21 @@ public class AccountFragment extends Fragment {
     public void setFont(){
         textHelp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
         textLogout.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
-        textProfileName.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
+        textProfileName.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         textProfileJoin.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         textProfileEmail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
     }
+
+
+    public String getDateFormat(String date){
+        String resultDate = "";
+        StringTokenizer tokenizer = new StringTokenizer(date,"-");
+        resultDate += tokenizer.nextToken() + "년 ";
+        resultDate += tokenizer.nextToken() + "월 ";
+        resultDate += tokenizer.nextToken() + "일 가입";
+        return resultDate;
+    }
+
 
 
 }
