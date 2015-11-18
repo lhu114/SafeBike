@@ -242,6 +242,10 @@ public class NavigationNetworkManager {
     private static final String VALUE_BICYCLE_ROUTE_REQCOORDTYPE = "WGS84GEO";
     private static final String VALUE_BICYCLE_ROUTE_RESCOORDTYPE = "WGS84GEO";
 
+    private static final String BICYCLE_ROUTE_GEOMETRY_TYPE_POINT = "Point";
+
+    private static final String POINTTYPE_ST = "ST";
+
     public void findRoute(Context context, double startX, double startY, double endX, double endY, int searchOption, final OnResultListener<BicycleRouteInfo> listener) {
         Log.d("safebike", "NavigationNetworkManager.findRoute");
         Header[] headers = new Header[2];
@@ -294,6 +298,15 @@ public class NavigationNetworkManager {
                 }
 
                 BicycleRouteInfo info = bicycleRouteGson.fromJson(responseString, BicycleRouteInfo.class);
+
+                for (int i = 0; i < info.features.size(); i++) {
+                    BicycleFeature feature = info.features.get(i);
+
+                    if ((feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_ST))) {
+                        info.features.remove(i);
+                    }
+                }
+
                 listener.onSuccess(info);
 
 
