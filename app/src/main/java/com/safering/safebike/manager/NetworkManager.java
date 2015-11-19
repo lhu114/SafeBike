@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.utils.L;
 import com.safering.safebike.R;
 import com.safering.safebike.exercisereport.ExcerciseResult;
 import com.safering.safebike.exercisereport.ExerciseDayResult;
+import com.safering.safebike.friend.FriendProfileResult;
 import com.safering.safebike.friend.FriendResult;
 import com.safering.safebike.friend.FriendSearchResult;
 import com.safering.safebike.login.LoginResult;
@@ -53,8 +54,8 @@ public class NetworkManager {
     /**
      * 계정
      */
-    private static final String ACCOUNT_PROFILE_URL = "http://52.69.133.212:3000/user/edit";//서버 URL
-    private static final String ACCOUNT_PROFILE_NOFILE_URL = "http://52.69.133.212:3000/user/editnofile";//서버 URL
+    private static final String ACCOUNT_PROFILE_URL = "http://52.69.133.212:3000/user/photoedit";//서버 URL
+    private static final String ACCOUNT_PROFILE_NOFILE_URL = "http://52.69.133.212:3000/user/edit";//서버 URL
 
     private static final String ACCOUNT_IMAGE_URL = "http:...";//서버 URL
     private static final String JOIN_DATE = "date";
@@ -84,7 +85,7 @@ public class NetworkManager {
      * 친구
      */
     private static final String FRIEND_URL = "http://52.69.133.212:3000/user/friend";//서버 URL
-    private static final String FRIEND_ADDRESS_URL = "http:...";//서버 URL
+    private static final String FRIEND_ADDRESS_URL = "http://52.69.133.212:3000/user/psearch";//서버 URL
     private static final String FRIEND_ADD_URL = "http://52.69.133.212:3000/user/friend/add";//서버 URL
     private static final String FRIEND_REMOVE_URL = "http://52.69.133.212:3000/user/friend/delete";//서버 URL
     private static final String FRIEND_DIRECT_URL = "http:...";//서버 URL
@@ -186,28 +187,31 @@ public class NetworkManager {
         RequestParams params = new RequestParams();
 
         try {
+
             params.put(USER_IMAGE, file);
         } catch (FileNotFoundException e) {
             hasFile = false;
 
         } finally {
             if(hasFile){
-
                 params.put(USER_EAMIL, "lowgiant@gmail.com");
                 params.put(USER_ID, id);
                 params.put(USER_PASSWORD, password);
 
+
+
                 client.post(context, ACCOUNT_PROFILE_URL, params, new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        Log.i("failcode", statusCode + "");
-
+                        Log.i("ProfileEditFail", statusCode + "");
+                        //다이얼로그 띄우기
 
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        Log.i("onSuccesscode", statusCode + "");
+                        Log.i("ProfileEditSuccess", statusCode + "");
+                        //listener.onSuccess(1);
 
                     }
                 });
@@ -220,11 +224,14 @@ public class NetworkManager {
                 client.post(context, ACCOUNT_PROFILE_NOFILE_URL, params, new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.i("ProfileEditNoFileFail", statusCode + "");
 
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        Log.i("ProfileEditNoFileSucc", responseString + "");
+                        //201
 
                     }
                 });
@@ -345,7 +352,7 @@ public class NetworkManager {
        /*params.put(USER_EAMIL,email);
         params.put(EXCERCISE_REQUEST_DATE,date);
         */
-        params.put(USER_EAMIL, "lowgiant@gmai.com");
+        params.put(USER_EAMIL, "lowgiant@gmail.com");
         params.put(EXCERCISE_REQUEST_DATE, "2015-11-03");
 
 
@@ -357,8 +364,8 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.i("caloriedata : ", responseString);
                 ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
+
                 listener.onSuccess(result);
 
             }
@@ -387,6 +394,7 @@ public class NetworkManager {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.i("click result", responseString);
                 ExerciseDayResult result = gson.fromJson(responseString, ExerciseDayResult.class);
+                Log.i("click size : ",result.workout.size() + "");
                 listener.onSuccess(result);
             }
         });
@@ -498,23 +506,32 @@ public class NetworkManager {
         //PARAMETER : 유저 이메일,전화번호리스트(Array)
         //결과값 : JSON(친구아이디,이메일,사진)
         RequestParams params = new RequestParams();
-        try {
-            params.put(USER_EAMIL, email);
-            params.put(FRIEND_PHONE_LIST, phoneList);//array보내기 질문하기
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        params.put(USER_EAMIL, email);
+            params.add("phone",phoneList.get(0).toString());
+            params.add("phone",phoneList.get(1).toString());
+        params.add("phone",phoneList.get(2).toString());
+        params.add("phone",phoneList.get(3).toString());
+
+        //params.put(USER_PHONE,phoneList);
+
+           // params.put(FRIEND_PHONE_LIST, phoneList);//array보내기 질문하기
+
         client.get(context, FRIEND_ADDRESS_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("getUserFrendFail",statusCode + "");
 
-                listener.onFail(ON_FAIL);
+                //listener.onFail(ON_FAIL);
+
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                FriendSearchResult result = gson.fromJson(responseString, FriendSearchResult.class);
-                listener.onSuccess(result);
+                Log.i("getUserFrendSuccess",statusCode + "");
+
+                //FriendSearchResult result = gson.fromJson(responseString, FriendSearchResult.class);
+                //listener.onSuccess(result);
             }
         });
 
@@ -540,7 +557,7 @@ public class NetworkManager {
 
     }
 
-    public void getFriendProfile(Context context, String uEmail, String fEmail, final OnResultListener listener) {
+    public void getFriendProfile(Context context, String uEmail, String fEmail, final OnResultListener<FriendProfileResult> listener) {
         //PARAMETER : 유저 이메일,친구이메일,구분값(친구추가삭제 메소드랑 구분)
         //결과값 : JSON(친구아이디,이메일,가입일,활동량(칼로리,속력,거리))
         RequestParams params = new RequestParams();
@@ -562,7 +579,16 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.i("friendprofile", responseString);
-                listener.onSuccess(ON_SUCCESS);
+                FriendProfileResult result = gson.fromJson(responseString, FriendProfileResult.class);
+                listener.onSuccess(result);
+                Log.i("friend name", result.friendprofile.name);
+                Log.i("friend email",result.friendprofile.email);
+                Log.i("friend join",result.friendprofile.join);
+                Log.i("friend calorie",result.friendprofile.calorie + "");
+                Log.i("friend speed",result.friendprofile.speed + "");
+                Log.i("friend road",result.friendprofile.road + "");
+
+
             }
         });
 
@@ -811,6 +837,9 @@ public class NetworkManager {
     }
 
 
+    /**
+     * 운동정보 서버에 저장
+     * */
     public void saveExcercise(Context context, String email, String date, double calorie, double speed, double distance, final OnResultListener listener) {
         //PARAMETER : 유저 이메일,칼로리,속력,거리
         //결과값 : INT

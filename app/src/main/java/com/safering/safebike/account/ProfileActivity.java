@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.ColorRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +18,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
 
+import java.io.File;
 import java.util.StringTokenizer;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -27,6 +35,8 @@ public class ProfileActivity extends AppCompatActivity {
     TextView userEmail;
     TextView userJoin;
     TextView textEditProfile;
+    ImageView imageProfileUser;
+
     TextView textTitle;
     ImageView imageBack;
 
@@ -47,12 +57,14 @@ public class ProfileActivity extends AppCompatActivity {
         userId = (TextView) findViewById(R.id.text_id_profile);
         userEmail = (TextView)findViewById(R.id.text_email_profile);
         userJoin = (TextView)findViewById(R.id.text_join_profile);
-
-        userId.setText(PropertyManager.getInstance().getUserId());
-        userEmail.setText(PropertyManager.getInstance().getUserEmail());
-        userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
+        imageProfileUser = (ImageView)findViewById(R.id.image_user_profile);
         textEditProfile = (TextView)findViewById(R.id.text_edit_profile);
 
+
+
+
+
+        setProfile();
         setFont();
 
         textEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +95,27 @@ public class ProfileActivity extends AppCompatActivity {
     }*/
 
 
+    public void setProfile(){
+        userId.setText(PropertyManager.getInstance().getUserId());
+        userEmail.setText(PropertyManager.getInstance().getUserEmail());
+        userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
+        if(!PropertyManager.getInstance().getUserImagePath().equals("")){
+            DisplayImageOptions options;
+            options = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .showImageOnLoading(R.mipmap.profile_img)
+                    .showImageForEmptyUri(R.mipmap.profile_img)
+
+
+                    .considerExifParams(true)
+                    .displayer(new RoundedBitmapDisplayer(50))
+                    .build();
+
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
+            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),imageProfileUser, options);
+        }
+    }
 
     public void setFont(){
         userJoin.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS));

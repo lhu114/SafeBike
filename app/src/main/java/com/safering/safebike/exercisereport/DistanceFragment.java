@@ -71,7 +71,7 @@ public class DistanceFragment extends Fragment {
         distanceChart.getAxisLeft().setDrawGridLines(false);
         distanceChart.getAxisRight().setDrawGridLines(false);
         distanceChart.getAxisRight().setDrawLabels(false);
-        distanceChart.setScaleEnabled(false);
+        //distanceChart.setScaleEnabled(false);
         distanceChart.setScaleMinima(2f, 1f);
         setFont();
         requestData();

@@ -6,7 +6,7 @@
 
     >
     <ImageView
-        android:id="@+id/image_backkey_friend"
+        android:id="@+id/image_backkey_friend_direct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/back_selector"
@@ -14,30 +14,21 @@
 
 
         />
-    <TextView
-        android:id="@+id/text_custom_title_friend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/colorWhite"
 
-        android:text="프로필"
-        android:textSize="20sp" />
     <EditText
-        android:id="@+id/edit_friend_direct_search"
+        android:id="@+id/edit_friend_search_direct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="20dp"
         android:singleLine="true"
         android:lines="1"
         android:hint="검색"
-        android:text="친구검색"
-        android:visibility="gone"
+
         />
     <ImageView
-        android:id="@+id/image_search_friend"
+        android:id="@+id/image_search_friend_direct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

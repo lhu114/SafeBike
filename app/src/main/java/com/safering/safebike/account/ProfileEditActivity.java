@@ -49,6 +49,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     EditText changePassword;
     EditText changePasswordConfirm;
     TextView textCompelte;
+    ImageView imageProfileUser;
     File file;
     ImageView userProfileImage;
     DisplayImageOptions options;
@@ -61,7 +62,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
 
@@ -78,12 +79,12 @@ public class ProfileEditActivity extends AppCompatActivity {
 
 
         textEditPhoto = (TextView) findViewById(R.id.text_editphoto_profile);
-        userProfileImage = (ImageView) findViewById(R.id.image_edit_user_profile);
 
+        userProfileImage = (ImageView) findViewById(R.id.image_edit_user_profile);
         userId = (TextView) findViewById(R.id.text_id_profile);
         userEmail = (TextView) findViewById(R.id.text_email_profile);
         userJoin = (TextView) findViewById(R.id.text_join_profile);
-
+        //imageProfileUser = (ImageView)findViewById(R.id.image_edit_user_profile);
 
         changeId = (EditText) findViewById(R.id.edit_change_id);
         changePassword = (EditText) findViewById(R.id.edit_change_password);
@@ -91,10 +92,14 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         textCompelete = (TextView) findViewById(R.id.btn_edit_compelete);
 
-        userId.setText(PropertyManager.getInstance().getUserId());
-        userEmail.setText(PropertyManager.getInstance().getUserEmail());
-        userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
 
+
+
+
+        textTitle.setText(R.string.edit_profile_title);
+
+        setProfile();
+        setFont();
         textEditPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,19 +111,9 @@ public class ProfileEditActivity extends AppCompatActivity {
                 photoPickerIntent.putExtra(MediaStore.EXTRA_OUTPUT, getTempUri());
                 photoPickerIntent.putExtra("outputFormat",
                         Bitmap.CompressFormat.JPEG.toString());
-
-
-                /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image*//*");
-                */
                 startActivityForResult(photoPickerIntent, GET_USER_IMAGE);
             }
         });
-
-
-        textTitle.setText(R.string.edit_profile_title);
-
-        setFont();
         textCompelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,29 +126,21 @@ public class ProfileEditActivity extends AppCompatActivity {
                     //에디트 텍스트 밑에 텍스트 띄우기
                     return;
                 }
-               /*if(file == null){
-                    *//*Uri.parse("android.resource://com.androidbook.samplevideo/" + R.raw.myvideo);
-                    *//*
-                    Toast.makeText(ProfileEditActivity.this,"file is null",Toast.LENGTH_SHORT).show();
-                    Uri otherPath = Uri.parse("android.resource://com.safering.safebike/" + R.mipmap.profile_img);
-                    Toast.makeText(ProfileEditActivity.this,otherPath.getPath(),Toast.LENGTH_SHORT).show();
-
-                    //file = new File();
-
-                    return;
-                }*/
-
                 NetworkManager.getInstance().saveUserProfile(ProfileEditActivity.this, email, id, password, file, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object success) {
 
                         PropertyManager.getInstance().setUserId(id);
                         PropertyManager.getInstance().setUserPassword(password);
+                        if(Integer.valueOf(success.toString()) == 200){
+                            PropertyManager.getInstance().setUserImagePath(file.getAbsolutePath());
+                        }
+                        if(Integer.valueOf(success.toString()) == 201){
+                            PropertyManager.getInstance().setUserImagePath("");
+                        }
                         PropertyManager.getInstance().setUserImagePath(file.getAbsolutePath());
-
                         Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.putExtra("edit", "e");
                         startActivityForResult(intent, GET_USER_IMAGE);
                     }
 
@@ -196,21 +183,13 @@ public class ProfileEditActivity extends AppCompatActivity {
                         .cacheOnDisc(true)
                         .showImageOnLoading(R.mipmap.profile_img)
                         .showImageForEmptyUri(R.mipmap.profile_img)
-
-
                         .considerExifParams(true)
                         .displayer(new RoundedBitmapDisplayer(50))
                         .build();
-                /*uri = data.getData();
-
-                Log.i("W", "uri: " + uri.toString());
-                Log.i("W", "path: " + uri.getPath());
-                */
-
                 ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
 
                 ImageLoader.getInstance().displayImage(Uri.fromFile(new File(file.getAbsolutePath())).toString(), userProfileImage, options);
-
+                Toast.makeText(ProfileEditActivity.this,"file path : " + file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -233,6 +212,29 @@ public class ProfileEditActivity extends AppCompatActivity {
         return EDIT_SUCCESS;
     }
 
+    public void setProfile(){
+        userId.setText(PropertyManager.getInstance().getUserId());
+        userEmail.setText(PropertyManager.getInstance().getUserEmail());
+        userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
+        if(!PropertyManager.getInstance().getUserImagePath().equals("")){
+            DisplayImageOptions options;
+            options = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .showImageOnLoading(R.mipmap.profile_img)
+                    .showImageForEmptyUri(R.mipmap.profile_img)
+
+
+                    .considerExifParams(true)
+                    .displayer(new RoundedBitmapDisplayer(50))
+                    .build();
+
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
+            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),userProfileImage, options);
+        }
+
+
+    }
     public void setFont() {
         userId.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
         userEmail.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));

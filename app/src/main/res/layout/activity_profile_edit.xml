@@ -98,21 +98,22 @@
                 android:layout_height="wrap_content"
                 android:text="이름"
                 android:textColor="@color/colorBlack"
-
+                android:layout_alignBottom="@+id/edit_change_id"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/edit_change_id"
-                android:layout_width="230dp"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
+
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="5dp"
                 android:background="@null"
+                android:layout_marginBottom="5dp"
                 android:lines="1"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:paddingTop="5dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
 
                 />
@@ -131,22 +132,23 @@
                 android:layout_height="wrap_content"
                 android:text="비밀번호"
                 android:textColor="@color/colorBlack"
-
+                android:layout_alignBottom="@+id/edit_change_password"
                 android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/edit_change_password"
-                android:layout_width="230dp"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="5dp"
                 android:background="@null"
 
+
                 android:lines="1"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:paddingTop="5dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
 
 
@@ -161,6 +163,7 @@
 
             <TextView
                 android:id="@+id/text_edit_profilepasscon"
+                android:layout_alignBottom="@+id/edit_change_password_confirm"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -171,7 +174,7 @@
 
             <EditText
                 android:id="@+id/edit_change_password_confirm"
-                android:layout_width="230dp"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="5dp"
@@ -181,7 +184,7 @@
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:paddingTop="5dp"
+                android:paddingTop="10dp"
                 android:singleLine="true"
 
                 />

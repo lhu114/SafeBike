@@ -3,6 +3,7 @@ package com.safering.safebike;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,13 +25,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.safering.safebike.account.AccountFragment;
 import com.safering.safebike.exercisereport.ExerciseReportFragment;
 import com.safering.safebike.friend.FriendFragment;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.navigation.NavigationFragment;
+import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.SettingFragment;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,13 +61,18 @@ public class MainActivity extends AppCompatActivity
     private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
     private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
+    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
 
     public static String FABFINDROUTE_ONOFF_FLAG = "off";
     private static String ON = "on";
     private static String OFF = "off";
 
-    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
     TextView textMainTitle;
+    View naviHeaderView;
+    ImageView imageAccountSetting;
+    ImageView imageUserProfile;
+    TextView textUserId;
+    TextView textUserEmail;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,9 +102,15 @@ public class MainActivity extends AppCompatActivity
         }
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
 
-        View header = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
-        ImageView settingImage = (ImageView)header.findViewById(R.id.btn_account_setting);
-        settingImage.setOnClickListener(new View.OnClickListener() {
+        naviHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
+        imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
+
+        imageUserProfile = (ImageView)naviHeaderView.findViewById(R.id.image_user_profile);
+        textUserId = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_id);
+        textUserEmail = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_email);
+
+        setProfile();
+        imageAccountSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -297,6 +316,28 @@ public class MainActivity extends AppCompatActivity
         textMainTitle.setText("SafeBike");
         textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.BMJUA));
 
+
+    }
+
+    public void setProfile(){
+        textUserId.setText(PropertyManager.getInstance().getUserId());
+        textUserEmail.setText(PropertyManager.getInstance().getUserEmail());
+        if(!PropertyManager.getInstance().getUserImagePath().equals("")){
+            DisplayImageOptions options;
+            options = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .showImageOnLoading(R.mipmap.profile_img)
+                    .showImageForEmptyUri(R.mipmap.profile_img)
+
+
+                    .considerExifParams(true)
+                    .displayer(new RoundedBitmapDisplayer(50))
+                    .build();
+
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
+            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),imageUserProfile, options);
+        }
 
     }
 

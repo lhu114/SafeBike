@@ -155,9 +155,11 @@ public class CalorieFragment extends Fragment {
                 NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-                        parentCal.setText(String.valueOf(result.workout.get(0).calorie) + " kcal");
-                        parentSpeed.setText(String.valueOf(result.workout.get(0).speed) + " km/h");
-                        parentDistance.setText(String.valueOf(result.workout.get(0).road) + " km");
+                        if(result.workout.size() > 0) {
+                            parentCal.setText(String.valueOf(result.workout.get(0).calorie) + " kcal");
+                            parentSpeed.setText(String.valueOf(result.workout.get(0).speed) + " km/h");
+                            parentDistance.setText(String.valueOf(result.workout.get(0).road) + " km");
+                        }
                     }
 
                     @Override
