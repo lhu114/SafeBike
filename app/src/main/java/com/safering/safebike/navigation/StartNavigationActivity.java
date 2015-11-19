@@ -106,6 +106,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
     TextView tvNaviDescription;
 
+    boolean isStartNavigation = true;
+    boolean isFirstFinishDialog = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -293,7 +296,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             }
 
             return;
-        } else if (mLM != null && mLM.isProviderEnabled(mProvider)) {
+        } else if (mLM != null && mLM.isProviderEnabled(mProvider) && isStartNavigation == true) {
             if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(StartNavigationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(StartNavigationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
@@ -343,6 +346,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
             Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.removeUpdates.mInitialListener");
             Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.removeUpdates.mIterativeListener");
+
             mLM.removeUpdates(mInitialListener);
             mLM.removeUpdates(mIterativeListener);
 
@@ -1076,45 +1080,109 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     }
 
     private void autoFinishNavigationDialog() {
-        if (mLM != null) {
-            if (Build.VERSION.SDK_INT > 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
+        if (isFirstFinishDialog == true) {
+            if (mLM != null) {
+                if (Build.VERSION.SDK_INT > 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                Log.d(DEBUG_TAG, "StartNavigationActivity.autoFinishNavigationDialog.removeUpdates.mInitialListener");
+                Log.d(DEBUG_TAG, "StartNavigationActivity.autoFinishNavigationDialog.removeUpdates.mIterativeListener");
+
+                mLM.removeUpdates(mInitialListener);
+                mLM.removeUpdates(mIterativeListener);
+
+                mHandler.removeMessages(MESSAGE_INITIAL_LOCATION_TIMEOUT);
+                mHandler.removeMessages(MESSAGE_ITERATIVE_LOCATION_TIMEOUT);
+                mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
             }
 
-            Log.d(DEBUG_TAG, "StartNavigationActivity.autoFinishNavigationDialog.removeUpdates.mIterativeListener");
-
-            mLM.removeUpdates(mIterativeListener);
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("내비게이션 안내종료");
-        builder.setMessage("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(android.R.drawable.ic_dialog_info);
+            builder.setTitle("내비게이션 안내종료");
+            builder.setMessage("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
                  /*
                  *  목적지 위도, 경도, searchoption 날리기
                  */
-                PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
-                PropertyManager.getInstance().setDestinationLatitude(null);
-                PropertyManager.getInstance().setDestinationLongitude(null);
-                PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
+                    PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+                    PropertyManager.getInstance().setDestinationLatitude(null);
+                    PropertyManager.getInstance().setDestinationLongitude(null);
+                    PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
 
 //                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
-                intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
-                startActivity(intent);
+                    Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
+                    intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
+                    startActivity(intent);
+                }
+            });
+
+            builder.setCancelable(false);
+
+            builder.create().show();
+
+            isStartNavigation = false;
+            isFirstFinishDialog = false;
+        }
+    }
+
+    private void withinRouteLimitDistanceDialog() {
+        if (isFirstFinishDialog) {
+            if (mLM != null) {
+                if (Build.VERSION.SDK_INT > 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                Log.d(DEBUG_TAG, "StartNavigationActivity.autoFinishNavigationDialog.removeUpdates.mInitialListener");
+                Log.d(DEBUG_TAG, "StartNavigationActivity.autoFinishNavigationDialog.removeUpdates.mIterativeListener");
+
+                mLM.removeUpdates(mInitialListener);
+                mLM.removeUpdates(mIterativeListener);
+
+                mHandler.removeMessages(MESSAGE_INITIAL_LOCATION_TIMEOUT);
+                mHandler.removeMessages(MESSAGE_ITERATIVE_LOCATION_TIMEOUT);
+                mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
             }
-        });
 
-        builder.setCancelable(false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(android.R.drawable.ic_dialog_info);
+            builder.setTitle("내비게이션 안내종료");
+            builder.setMessage("목적지가 출발지와 근접합니다.(30m 이내) 내비게이션 안내를 종료합니다.");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                 /*
+                 *  목적지 위도, 경도, searchoption 날리기
+                 */
+                    PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+                    PropertyManager.getInstance().setDestinationLatitude(null);
+                    PropertyManager.getInstance().setDestinationLongitude(null);
+                    PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
 
-        builder.create().show();
+//                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
+                    intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
+                    startActivity(intent);
+                }
+            });
+
+            builder.setCancelable(false);
+
+            builder.create().show();
+
+            isStartNavigation = false;
+            isFirstFinishDialog = false;
+        }
     }
 
 //    double startX, double startY, double endX, double endY, int searchOption
@@ -1346,7 +1414,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                         @Override
                         public void onFail(int code) {
-
+                            if (code == 3209) {
+                                withinRouteLimitDistanceDialog();
+                            }
                         }
                     });
         }

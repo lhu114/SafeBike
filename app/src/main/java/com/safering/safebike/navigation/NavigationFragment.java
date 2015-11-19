@@ -419,7 +419,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (mLocation != null) {
             Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
-            Toast.makeText(getContext(), "NavigationFragment.onConnected : " +Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()),
+            Toast.makeText(((MainActivity)getContext()), "NavigationFragment.onConnected : " +Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()),
                     Toast.LENGTH_SHORT).show();
 
             PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));

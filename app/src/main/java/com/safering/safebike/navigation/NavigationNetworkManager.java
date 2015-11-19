@@ -38,7 +38,7 @@ public class NavigationNetworkManager {
     private static final String VALUE_TMAP_HEADERS_APPKEY = "fae4be30-90e4-3c96-b227-0086b07ae5e1";
 
     AsyncHttpClient client;
-    Gson poiGson, rvsGeoGson, bicycleRouteGson;
+    Gson poiGson, rvsGeoGson, bicycleRouteGson, tmapResponseInfoGson;
     Gson routeGson;
     private NavigationNetworkManager() {
         try {
@@ -65,6 +65,7 @@ public class NavigationNetworkManager {
 
         poiGson = new Gson();
         bicycleRouteGson = new GsonBuilder().registerTypeAdapter(Geometry.class, new GeometryDeserializer()).create();
+        tmapResponseInfoGson = new Gson();
     }
 
     public static synchronized NavigationNetworkManager getInstance() {
@@ -279,6 +280,12 @@ public class NavigationNetworkManager {
                     for(int i = 0; i < count; i++) {
                         Log.d("safebike", "headers : " + headers[i]);
                     }
+                }
+
+                if (statusCode == 400) {
+                    TmapResponseInfoResult info = tmapResponseInfoGson.fromJson(responseString, TmapResponseInfoResult.class);
+
+                    listener.onFail(Integer.parseInt(info.error.code));
                 }
             }
 
