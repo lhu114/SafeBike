@@ -77,7 +77,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     public static final int LOCATION_TIMEOUT_INTERVAL = 60000;
     public static final int REROUTE_NAVIGATION_TIMEOUT_INTERVAL = 15000;
 
-    private static final float LIMIT_DISTANCE = 20;
+    private static final float LIMIT_DISTANCE = 25;
 
     private GoogleMap mMap;
     LocationManager mLM;
