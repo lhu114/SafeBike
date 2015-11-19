@@ -18,7 +18,7 @@ public class SpeakVoice implements TextToSpeech.OnInitListener{
     }
 
     public void translate(String des){
-        tts.speak(des,TextToSpeech.QUEUE_FLUSH,null);
+        tts.speak(des,TextToSpeech.QUEUE_ADD,null);
 
     }
 
