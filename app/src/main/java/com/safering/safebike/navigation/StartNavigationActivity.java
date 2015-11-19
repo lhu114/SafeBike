@@ -100,9 +100,11 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     ArrayList<Float> mOrthogonalDistanceList;
     ArrayList<Float> mPointDistanceList;
     ArrayList<BicycleNavigationInfo> mBicycleNaviInfoList;
+    ArrayList<Integer> mPointLatLngIndexList;
 
     int gpIndex = 0;
     int naviLatLngIndex = 0;
+    int mPointLatLngIndex = 0;
 
     TextView tvNaviDescription;
 
@@ -142,6 +144,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         mOrthogonalDistanceList = new ArrayList<Float>();
         mPointDistanceList = new ArrayList<Float>();
         mBicycleNaviInfoList = new ArrayList<BicycleNavigationInfo>();
+        mPointLatLngIndexList = new ArrayList<Integer>();
 
         mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -679,16 +682,17 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                                             BicycleNavigationInfo info = mBicycleNaviInfoList.get(j);
 
-                                            if (info.properties != null) {
-                                                Log.d(DEBUG_TAG, Integer.toString(mBicycleNaviInfoList.size()));
-                                                if (info.properties.description != null && !info.properties.description.equals("")) {
-                                                    tvNaviDescription.setText(info.properties.description);
-                                                    Log.d(DEBUG_TAG, "(수선의 발 있는 경우 지나친 인덱스 description != null) naviLatLngIndex : " + j + " | description : " + info.properties.description);
-                                                } else {
-                                                    Log.d(DEBUG_TAG, "(수선의 발 있는 경우 지나친 인덱스 description == null) naviLatLngIndex : " + j + " | description : " + info.properties.description);
-                                                }
-                                            }
+//                                            if (info.properties != null) {
+//                                                Log.d(DEBUG_TAG, Integer.toString(mBicycleNaviInfoList.size()));
+//                                                if (info.properties.description != null && !info.properties.description.equals("")) {
+//                                                    tvNaviDescription.setText(info.properties.description);
+//                                                    Log.d(DEBUG_TAG, "(수선의 발 있는 경우 지나친 인덱스 description != null) naviLatLngIndex : " + j + " | description : " + info.properties.description);
+//                                                } else {
+//                                                    Log.d(DEBUG_TAG, "(수선의 발 있는 경우 지나친 인덱스 description == null) naviLatLngIndex : " + j + " | description : " + info.properties.description);
+//                                                }
+//                                            }
 
+                                            getPointInfoNotifications(j);
                                             /*
                                              *  종료 처리
                                              */
@@ -716,14 +720,16 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                  *  TextView에 정보 보여주기 처리
                                 */
                                 BicycleNavigationInfo info = mBicycleNaviInfoList.get(naviLatLngIndex);
+//
+//                                if (info.properties != null) {
+//                                    if (info.properties.description != null && !info.properties.description.equals("")) {
+//                                        tvNaviDescription.setText(info.properties.description);
+//
+//                                        Log.d(DEBUG_TAG, info.properties.description);
+//                                    }
+//                                }
 
-                                if (info.properties != null) {
-                                    if (info.properties.description != null && !info.properties.description.equals("")) {
-                                        tvNaviDescription.setText(info.properties.description);
-
-                                        Log.d(DEBUG_TAG, info.properties.description);
-                                    }
-                                }
+                                getPointInfoNotifications(naviLatLngIndex);
 
                                 if (info.properties != null) {
                                     Toast.makeText(StartNavigationActivity.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
@@ -779,15 +785,16 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                                                 BicycleNavigationInfo info = mBicycleNaviInfoList.get(j);
 
-                                                if (info.properties != null) {
-                                                    if (info.properties.description != null && !info.properties.description.equals("")) {
-                                                        tvNaviDescription.setText(mBicycleNaviInfoList.get(j).properties.description);
-                                                        Log.d(DEBUG_TAG, "(수선의 발 없는 경우 지나친 인덱스 description) naviLatLngIndex : " + j + " | description : " + info.properties.description);
-                                                    } else {
-                                                        Log.d(DEBUG_TAG, "(수선의 발 없는 경우 지나친 인덱스 description == null) naviLatLngIndex : " + j + " | description : " + info.properties.description);
-                                                    }
-                                                }
+//                                                if (info.properties != null) {
+//                                                    if (info.properties.description != null && !info.properties.description.equals("")) {
+//                                                        tvNaviDescription.setText(mBicycleNaviInfoList.get(j).properties.description);
+//                                                        Log.d(DEBUG_TAG, "(수선의 발 없는 경우 지나친 인덱스 description) naviLatLngIndex : " + j + " | description : " + info.properties.description);
+//                                                    } else {
+//                                                        Log.d(DEBUG_TAG, "(수선의 발 없는 경우 지나친 인덱스 description == null) naviLatLngIndex : " + j + " | description : " + info.properties.description);
+//                                                    }
+//                                                }
 
+                                                getPointInfoNotifications(j);
                                                 /*
                                                  *  종료 처리
                                                  */
@@ -815,13 +822,15 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                      */
                                     BicycleNavigationInfo info = mBicycleNaviInfoList.get(naviLatLngIndex);
 
-                                    if (info.properties != null) {
-                                        if (info.properties.description != null && !info.properties.description.equals("")) {
-                                            tvNaviDescription.setText(info.properties.description);
+//                                    if (info.properties != null) {
+//                                        if (info.properties.description != null && !info.properties.description.equals("")) {
+//                                            tvNaviDescription.setText(info.properties.description);
+//
+//                                            Log.d(DEBUG_TAG, info.properties.description);
+//                                        }
+//                                    }
 
-                                            Log.d(DEBUG_TAG, info.properties.description);
-                                        }
-                                    }
+                                    getPointInfoNotifications(naviLatLngIndex);
 
                                     if (info.properties != null) {
                                         Toast.makeText(StartNavigationActivity.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
@@ -975,6 +984,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         if (mPointDistanceList.size() > 0) {
             mPointDistanceList.clear();
             mPointDistanceResolver.clear();
+        }
+    }
+
+    private void clearAllPointLatLngIndexList() {
+        if (mPointLatLngIndexList.size() > 0) {
+            mPointLatLngIndexList.clear();
+            mPointLatLngIndex = 0;
         }
     }
 
@@ -1185,6 +1201,38 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
     }
 
+    private void getPointInfoNotifications(int currentLatLngIndex) {
+        Log.d(DEBUG_TAG, "StartNavigationActivity.getPointInfoNotifications.currentLatLngIndex : " + currentLatLngIndex);
+        if (mPointLatLngIndex + 1 < mPointLatLngIndexList.size()) {
+            if (currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex)) {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.getPointInfoNotifications.currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex)");
+                BicycleNavigationInfo pointInfo;
+                float distance = 0;
+                mPointLatLngIndex++;
+
+                for (int i = currentLatLngIndex; i <= mPointLatLngIndexList.get(mPointLatLngIndex); i++) {
+                    pointInfo = mBicycleNaviInfoList.get(i);
+
+                    distance += pointInfo.distance;
+                }
+
+                pointInfo = mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex));
+
+                Log.d(DEBUG_TAG, Float.toString(distance) + "m 이후 " + pointInfo.properties.description + " | pointLatLngIndex : " + currentLatLngIndex);
+                tvNaviDescription.setText(Float.toString(distance) + "m 이후 " + pointInfo.properties.description);
+            } else {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.getPointInfoNotifications.currentLatLngIndex != mPointLatLngIndexList.get(mPointLatLngIndex)");
+            }
+        } else if (mPointLatLngIndex + 1 == mPointLatLngIndexList.size()) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.getPointInfoNotifications.mPointLatLngIndex + 1 == mPointLatLngIndexList.size()");
+
+            BicycleNavigationInfo pointInfo = mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex));
+
+            Log.d(DEBUG_TAG, pointInfo.properties.description + " | pointLatLngIndex : " + currentLatLngIndex);
+//            tvNaviDescription.setText(pointInfo.properties.description);
+        }
+    }
+
 //    double startX, double startY, double endX, double endY, int searchOption
     private void findRoute() {
         final double startX = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
@@ -1205,6 +1253,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                 clearAllMarker();
                                 clearAllPolyline();
                                 clearAllmBicycleNaviInfoList();
+                                clearAllPointLatLngIndexList();
 //                                clearAllNaviLatLngList();
 
                                 int totalTime = result.features.get(0).properties.totalTime;
@@ -1390,6 +1439,20 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 //                                if (mNaviLatLngList.size() > 0 && mAllPropertiesResolver.size() > 0) {
 //                                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.mNaviLatLngList.size : " + mNaviLatLngList.size() + " | mAllPropertiesResolver.size : " + mAllPropertiesResolver.size() + " | mBicycleNaviInfoList.size : " + mBicycleNaviInfoList.size());
 //                                }
+
+                                for (int i = 0; i < mBicycleNaviInfoList.size(); i++) {
+                                    BicycleNavigationInfo info = mBicycleNaviInfoList.get(i);
+
+                                    if (info.properties != null && info.properties.description != null && !info.properties.description.equals("")) {
+                                        mPointLatLngIndexList.add(i);
+                                    }
+                                }
+
+                                for (int i = 0; i < mPointLatLngIndexList.size(); i++) {
+                                    Log.d(DEBUG_TAG, Integer.toString(mPointLatLngIndexList.get(i)));
+                                }
+
+                                Log.d(DEBUG_TAG, Integer.toString(mPointLatLngIndexList.size()));
 
                                 if (mBicycleNaviInfoList.size() > 0) {
                                     Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.mBicycleNaviInfoList.size : " + mBicycleNaviInfoList.size());
