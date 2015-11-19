@@ -50,7 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
 
 
-
         textTitle = (TextView)findViewById(R.id.text_custom_title);
         imageBack = (ImageView)findViewById(R.id.image_backkey);
 
@@ -83,6 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
 
     /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -131,5 +131,11 @@ public class ProfileActivity extends AppCompatActivity {
         resultDate += tokenizer.nextToken() + "월 ";
         resultDate += tokenizer.nextToken() + "일 가입";
         return resultDate;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

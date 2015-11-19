@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.property.PropertyManager;
+import com.safering.safebike.property.SpeakVoice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +79,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     public static final int REROUTE_NAVIGATION_TIMEOUT_INTERVAL = 15000;
 
     private static final float LIMIT_DISTANCE = 25;
-
+    public SpeakVoice tts;
     private GoogleMap mMap;
     LocationManager mLM;
     Location orthogonalLoc, pointLoc, locationA, locationB;
@@ -114,6 +115,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tts = new SpeakVoice();
+
+
         Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate");
         setContentView(R.layout.activity_start_navigation);
 
@@ -375,6 +379,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     protected void onDestroy() {
         super.onDestroy();
         Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
+        tts.close();
     }
 
     @Override
@@ -546,6 +551,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                 if (location != null) {
                     Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.location != null");
+
+
 //                    starIterativeLocationUpdates();
                     PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
                     PropertyManager.getInstance().setRecentLongitude(Double.toString(location.getLongitude()));
