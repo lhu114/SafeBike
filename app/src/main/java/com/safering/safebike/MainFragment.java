@@ -24,6 +24,14 @@ import java.util.Calendar;
 /**
  * A simple {@link Fragment} subclass.
  */
+
+/**
+ * saveExcercise - 운동정보 저장
+ * getFavorite - 즐겨찾기 리스트
+ * saveFavorite - 즐겨찾기 추가
+ * removeFavorite - 즐겨찾기 삭제
+ * removeAllFavorite - 즐겨찾기 전체삭제
+ * */
 public class MainFragment extends Fragment {
     private static final String TAG_NAVIGATION = "navigation";
     private static final String ARG_NAME = "name";
@@ -76,7 +84,7 @@ public class MainFragment extends Fragment {
         final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        Button favorite = (Button)view.findViewById(R.id.btn_favorite_list);
+    /*    Button favorite = (Button)view.findViewById(R.id.btn_favorite_list);
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,9 +101,9 @@ public class MainFragment extends Fragment {
                 });
 
             }
-        });
+        });*/
 
-        favorite = (Button)view.findViewById(R.id.btn_favorite_add);
+       /* favorite = (Button)view.findViewById(R.id.btn_favorite_add);
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,8 +121,8 @@ public class MainFragment extends Fragment {
 
             }
         });
-
-        favorite = (Button)view.findViewById(R.id.btn_favorite_remove);
+*/
+       /* favorite = (Button)view.findViewById(R.id.btn_favorite_remove);
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,8 +139,8 @@ public class MainFragment extends Fragment {
                 });
 
             }
-        });
-
+        });*/
+/*
         favorite = (Button)view.findViewById(R.id.btn_favorite_removeall);
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,14 +158,14 @@ public class MainFragment extends Fragment {
                 });
 
             }
-        });
+        });*/
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
 
         final String date = dateFormat.format(cal.getTime());
 
-        favorite = (Button)view.findViewById(R.id.btn_save_exercise);
+     /*   favorite = (Button)view.findViewById(R.id.btn_save_exercise);
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +181,7 @@ public class MainFragment extends Fragment {
                     }
                 });
             }
-        });
+        });*/
 
 
 

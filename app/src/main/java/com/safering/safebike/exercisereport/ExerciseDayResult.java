@@ -7,5 +7,5 @@ import java.util.ArrayList;
  */
 public class ExerciseDayResult {
 
-    ArrayList<ExerciseDayItem> workout;
+    public ArrayList<ExerciseDayItem> workout;
 }

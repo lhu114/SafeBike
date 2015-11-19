@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">SafeBike</string>
 
+    <string name="app_name">SafeBike</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
 
     <string name="btn_login_sign">회원가입</string>
     <string name="btn_go_login">로그인</string>
@@ -48,7 +48,6 @@
     <string name="account_help">도움말</string>
 
 
-
     <string name="signup_confirm_message">비밀번호를 확인해주세요</string>
     <string name="text_login_main_title">시작</string>
 
@@ -81,7 +80,6 @@
     <string name="text_login_warning">안전하게 주행하세요</string>
 
 
-
     <string name="btn_delete_recent">검색 기록 삭제</string>
     <string name="btn_delete_favorite">즐겨찾기 기록 삭제</string>
     <string name="text_message_favorite">즐겨찾기 기록이 없습니다.</string>
@@ -107,6 +105,5 @@
     <string name="btn_full_screen" />
     <string name="text_navi_description">길안내</string>
 
-</resources>
-<!-- TODO: Remove or change this placeholder text -->
+</resources><!-- TODO: Remove or change this placeholder text -->
 

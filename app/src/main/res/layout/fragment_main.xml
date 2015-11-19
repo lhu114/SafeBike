@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
 
     android:layout_height="match_parent" tools:context="com.safering.safebike.MainFragment">
-    <Button
+   <!-- <Button
         android:id="@+id/btn_favorite_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
 
         android:text="운동정보저장"
         />
-
+-->
 
 
 

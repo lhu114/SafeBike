@@ -14,7 +14,7 @@ public class PropertyManager {
     public static final String USER_EMAIL = "useremail";
     public static final String USER_JOIN = "userjoin";
     public static final String USER_PASSWORD = "userpassword";
-    public static final String USER_IMAGE_PATH = "userimagepath";
+    public static final String USER_IMAGE_PATH = "userimagepa";
 
 
 

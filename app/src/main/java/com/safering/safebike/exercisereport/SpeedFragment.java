@@ -75,7 +75,7 @@ public class SpeedFragment extends Fragment {
         speedChart.getAxisLeft().setDrawGridLines(false);
         speedChart.getAxisRight().setDrawGridLines(false);
         speedChart.getAxisRight().setDrawLabels(false);
-        speedChart.setScaleEnabled(false);
+        //speedChart.setScaleEnabled(false);
         speedChart.setScaleMinima(2f, 1f);
 
         setFont();

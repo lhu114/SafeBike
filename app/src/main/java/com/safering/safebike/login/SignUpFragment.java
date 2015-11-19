@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
@@ -142,6 +143,7 @@ public class SignUpFragment extends Fragment {
         String email = inputEmail.getText().toString();
         String id = inputId.getText().toString();
         String password = inputPassword.getText().toString();
+        Toast.makeText(getContext(),"inputPass : " + password,Toast.LENGTH_SHORT).show();
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(id) || TextUtils.isEmpty(password)) {
             signUpMessage = EMPTY_FORM;
             return signUpMessage;

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,9 @@ public class FriendDirectFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend_direct, container, false);
+        /*((FriendAddActivity)getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((FriendAddActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend);
+*/
         inputEmail = (EditText)view.findViewById(R.id.edit_search_friend_direct);
 
         searchDirect = (Button) view.findViewById(R.id.btn_search_friend_direct);
@@ -74,5 +78,25 @@ public class FriendDirectFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Toast.makeText(getContext(),"DirectOnPause",Toast.LENGTH_SHORT).show();
+        ((FriendAddActivity)getActivity()).actionBarSetting();
+
+
+
+    }
+
+    public void setList(){
+        for (int i = 0; i < 20; i++) {
+            //서버랑 비교해서 가져오기
+            FriendItem item = new FriendItem();
+            item.pname = "friendNumber/" + i;
+            fAdapter.add(item);
+        }
+
     }
 }

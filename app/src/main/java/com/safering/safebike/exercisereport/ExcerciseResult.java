@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Tacademy on 2015-11-06.
  */
 public class ExcerciseResult {
-    int count;
-    ArrayList<ExerciseItem> workoutlist;
+    public int count;
+    public ArrayList<ExerciseItem> workoutlist;
 }
 

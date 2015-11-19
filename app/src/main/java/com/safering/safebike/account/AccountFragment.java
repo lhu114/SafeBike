@@ -4,21 +4,30 @@ package com.safering.safebike.account;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
 
+import java.io.File;
 import java.util.StringTokenizer;
 
 /**
@@ -31,6 +40,7 @@ public class AccountFragment extends Fragment {
     TextView textHelp;
     TextView textLogout;
 
+    ImageView imageProfileUser;
     TextView textProfileName;
     TextView textProfileJoin;
     TextView textProfileEmail;
@@ -55,12 +65,10 @@ public class AccountFragment extends Fragment {
         textProfileName = (TextView)view.findViewById(R.id.text_id_profile);
         textProfileJoin = (TextView)view.findViewById(R.id.text_join_profile);
         textProfileEmail = (TextView)view.findViewById(R.id.text_email_profile);
+        imageProfileUser = (ImageView)view.findViewById(R.id.image_user_profile_account);
 
 
-        textProfileName.setText(PropertyManager.getInstance().getUserId());
-        textProfileEmail.setText(PropertyManager.getInstance().getUserEmail());
-        textProfileJoin.setText(getDateFormat((PropertyManager.getInstance().getUserJoin())));
-
+        setProfile();
         setFont();
 
 
@@ -147,6 +155,27 @@ public class AccountFragment extends Fragment {
         return resultDate;
     }
 
+    public void setProfile(){
+        textProfileName.setText(PropertyManager.getInstance().getUserId());
+        textProfileEmail.setText(PropertyManager.getInstance().getUserEmail());
+        textProfileJoin.setText(getDateFormat((PropertyManager.getInstance().getUserJoin())));
+        if(!PropertyManager.getInstance().getUserImagePath().equals("")){
+            DisplayImageOptions options;
+            options = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .showImageOnLoading(R.mipmap.profile_img)
+                    .showImageForEmptyUri(R.mipmap.profile_img)
+
+
+                    .considerExifParams(true)
+                    .displayer(new RoundedBitmapDisplayer(50))
+                    .build();
+
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
+            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),imageProfileUser, options);
+        }
+    }
 
 
 }

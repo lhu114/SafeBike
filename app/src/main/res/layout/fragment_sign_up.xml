@@ -40,10 +40,10 @@
             android:background="@mipmap/rectangle"
             android:hint="@string/edit_user_name"
             android:lines="1"
-            android:paddingBottom="5dp"
+            android:paddingBottom="20dp"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp"
             android:singleLine="true"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorRegister" />
@@ -56,11 +56,12 @@
             android:background="@mipmap/rectangle"
             android:hint="@string/edit_user_email"
             android:lines="1"
-            android:paddingBottom="5dp"
+            android:paddingBottom="20dp"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp"
             android:singleLine="true"
+            android:inputType="textEmailAddress"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorRegister" />
 
@@ -69,12 +70,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@mipmap/rectangle"
+            android:password="true"
             android:hint="@string/edit_user_password"
             android:lines="1"
-            android:paddingBottom="5dp"
+            android:paddingBottom="20dp"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp"
             android:singleLine="true"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorRegister" />
@@ -88,18 +90,13 @@
 
             >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-
-                >
 
                 <CheckBox
                     android:id="@+id/check_policy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/text_temp_line1"
+                    android:layout_marginRight="10dp"
                     android:button="@drawable/checkbox_selector"
                     />
 
@@ -107,6 +104,10 @@
                     android:id="@+id/text_temp_line1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
+                    android:layout_toLeftOf="@+id/text_user_mannger"
+                    android:layout_alignBaseline="@+id/text_user_mannger"
+
                     android:text="본인은 SafeBike의 "
 
                     />
@@ -115,26 +116,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorWhite"
+                    android:layout_centerHorizontal="true"
                     android:text="@string/text_user_manner" />
                 <TextView
                     android:id="@+id/text_temp_line2"
+                    android:layout_toRightOf="@id/text_user_mannger"
+                    android:layout_alignBaseline="@+id/text_user_mannger"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" 및 " />
                 <TextView
+
                     android:id="@+id/text_private_policy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_private_policy"
+                    android:layout_toRightOf="@id/text_temp_line2"
+
                     android:textColor="@color/colorWhite"
 
                     />
                 <TextView
                     android:id="@+id/text_temp_line3"
+                    android:layout_alignBaseline="@+id/text_user_mannger"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/text_private_policy"
+
                     android:text="에" />
 
 
@@ -143,15 +153,14 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_temp_line"
-                    android:text=" 동의합니다."
+                    android:layout_marginTop="5dp"
+                    android:text="동의합니다."
                     android:layout_gravity="center_horizontal"
 
-                    />
+                    android:layout_below="@+id/text_temp_line1"
+                    android:layout_alignStart="@+id/text_temp_line1" />
 
 
-
-            </LinearLayout>
 
 
 
