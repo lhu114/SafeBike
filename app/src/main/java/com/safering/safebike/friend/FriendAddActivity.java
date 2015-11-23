@@ -1,10 +1,14 @@
 package com.safering.safebike.friend;
 
+import android.media.Image;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +16,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.R;
+import com.safering.safebike.adapter.*;
 import com.safering.safebike.exercisereport.CalorieFragment;
 import com.safering.safebike.exercisereport.DistanceFragment;
 import com.safering.safebike.exercisereport.SpeedFragment;
@@ -28,6 +33,8 @@ public class FriendAddActivity extends AppCompatActivity {
     ImageView imageBack;
     View friendAddress;
     View friendDirect;
+    FriendDirectFragment directFragment;
+    FriendAddressFragment addressFragment;
     public static final String TAG_ADDRESS = "Address";
     public static final String TAG_DIRECT = "Direct";
 
@@ -66,7 +73,7 @@ public class FriendAddActivity extends AppCompatActivity {
     public void actionBarSetting(){
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend);
-
+        getSupportActionBar().setElevation(0);
         textTitle = (TextView) findViewById(R.id.text_custom_title_friend);
         imageBack = (ImageView) findViewById(R.id.image_backkey_friend);
         imageSearch = (ImageView) findViewById(R.id.image_search_friend);
@@ -81,31 +88,110 @@ public class FriendAddActivity extends AppCompatActivity {
         imageSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("search", "click");
+                //Log.i("search", "click");
 
                 Toast.makeText(FriendAddActivity.this, "current : " + tabHost.getCurrentTabTag(), Toast.LENGTH_SHORT).show();
 
                 if (tabHost.getCurrentTabTag() == TAG_ADDRESS) {
 
-                    FriendAddressFragment addrFragment = (FriendAddressFragment) getSupportFragmentManager().findFragmentByTag(TAG_ADDRESS);
-                    addrFragment.setList();
+
+                    addressFragment = (FriendAddressFragment) getSupportFragmentManager().findFragmentByTag(TAG_ADDRESS);
+                    //addrFragment.setList();
 
 
-
-                }
-                if(tabHost.getCurrentTabTag() == TAG_DIRECT){
-                    getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_direct);
-
-                    ImageView imageBackDirect = (ImageView) findViewById(R.id.image_backkey_friend_direct);
-                    ImageView imageSearchDirect = (ImageView) findViewById(R.id.image_search_friend_direct);
-
-                    imageBackDirect.setOnClickListener(new View.OnClickListener() {
+                    getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_address);
+                    EditText editTextAddress = (EditText)findViewById(R.id.edit_friend_search_address);
+                    //Log.i("EditHint", editTextAddress.getText().toString());
+                    editTextAddress.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void onClick(View v) {
-                            finish();
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            Log.i("textChange",s.toString() + "");
+                            if(TextUtils.isEmpty(s.toString())){
+                                addressFragment.fAdapter.clear();
+                            }
+                            else{
+                                addressFragment.fAdapter.clear();
+                                for(int i = 0; i < UserFriendList.getInstance().items.size(); i++){
+                                    if(UserFriendList.getInstance().items.get(i).pemail.contains(s.toString())){
+                                        FriendItem friend = UserFriendList.getInstance().items.get(i);
+                                        addressFragment.fAdapter.add(friend);
+                                    }
+                                }
+
+
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
                         }
                     });
 
+                }
+                if(tabHost.getCurrentTabTag() == TAG_DIRECT){
+                    directFragment = (FriendDirectFragment) getSupportFragmentManager().findFragmentByTag(TAG_DIRECT);
+                    if(directFragment.SEARCH_ONOFF == 1) {
+                        Toast.makeText(FriendAddActivity.this,"SEARCH_ON = 1",Toast.LENGTH_SHORT).show();
+
+                        //directFragment.SEARCH_ONOFF = 2;
+                        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
+                        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
+
+
+                        ImageView imageBackDirect = (ImageView) findViewById(R.id.image_backkey_friend_directOff);
+                        ImageView imageSearch = (ImageView)findViewById(R.id.image_search_friend_directOff);
+                        ImageView imageCancel = (ImageView)findViewById(R.id.image_cancel_friend_directOff);
+                        final EditText editSearchEmail = (EditText)findViewById(R.id.edit_friend_search_directOff);
+                        imageBackDirect.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finish();
+                            }
+                        });
+
+                        imageSearch.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(FriendAddActivity.this,"searchING",Toast.LENGTH_SHORT).show();
+                                if(!TextUtils.isEmpty(editSearchEmail.getText().toString())){
+                                    String email = editSearchEmail.getText().toString();
+                                    directFragment.searchDirect(email);
+                                }
+
+                            }
+                        });
+
+                        imageCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(FriendAddActivity.this,"cancelING",Toast.LENGTH_SHORT).show();
+                                actionBarSetting();
+                            }
+                        });
+
+                    }
+                 /*   else if(directFragment.SEARCH_ONOFF == 2){
+                        Toast.makeText(FriendAddActivity.this,"SEARCH_ON = 2",Toast.LENGTH_SHORT).show();
+                        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_direct);
+                        directFragment.SEARCH_ONOFF = 1;
+
+                        ImageView imageBackDirect = (ImageView) findViewById(R.id.image_backkey_friend_directOn);
+
+                        imageBackDirect.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finish();
+                            }
+                        });
+
+                    }*/
+/*
                     imageSearchDirect.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -114,7 +200,7 @@ public class FriendAddActivity extends AppCompatActivity {
 
 
                         }
-                    });
+                    });*/
 
 
 

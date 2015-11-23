@@ -6,65 +6,73 @@
     tools:context="com.safering.safebike.setting.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
-    <TextView
-        android:id="@+id/btn_connect_device"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="30dp"
-        android:textColor="@color/colorBlack"
-        android:textSize="16sp"
-        android:layout_marginBottom="30dp"
-        android:text="@string/btn_connect_device" />
-    <ListView
-        android:id="@+id/connective_device_list"
-        android:layout_width="match_parent"
-        android:divider="@color/colorWhite"
-        android:layout_height="wrap_content">
-
-    </ListView>
-    <!--<RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        >
-
-        <TextView
-            android:id="@+id/text_switch_vibrator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/switch_vibrator" />
-
-        <Switch
-            android:id="@+id/switch_vibrator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            />
-    </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        >
-
+        android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/btn_connect_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/switch_backlight" />
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:layout_marginBottom="30dp"
+            android:text="@string/btn_connect_device" />
 
-        <Switch
-            android:id="@+id/switch_backlight"
+        <ProgressBar
+            android:id="@+id/progressBar_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/btn_connect_device"
+            android:layout_marginLeft="20dp"
+            android:visibility="invisible"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
             />
+
+
     </RelativeLayout>
-    -->
+
+    <Button
+        android:id="@+id/btn_tmp_left"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="writeLeft"
+        android:visibility="gone"
+
+        />
+
+    <Button
+        android:id="@+id/btn_tmp_right"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="writeRight"
+        android:visibility="gone"
+
+        />
+
+<!--
+    <ProgressBar
+        android:id="@+id/progressBar_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        />-->
+
+
+        <ListView
+            android:id="@+id/connective_device_list"
+            android:layout_width="match_parent"
+            android:divider="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        </ListView>
 
 
 </LinearLayout>

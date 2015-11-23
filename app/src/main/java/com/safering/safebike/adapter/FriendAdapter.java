@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Tacademy on 2015-10-30.
  */
-public class FriendAdapter extends BaseAdapter implements FriendItemView.OnButtonClickListener{
+public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButtonClickListener{
     List<FriendItem> items = new ArrayList<FriendItem>();
     int viewType = 0;
 
@@ -72,6 +72,7 @@ public class FriendAdapter extends BaseAdapter implements FriendItemView.OnButto
         bListener = listener;
 
     }
+
     @Override
     public void onButtonClick(FriendItemView view, FriendItem data) {
         bListener.onButtonClick(view,data);

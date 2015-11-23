@@ -68,6 +68,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
+
         userName = (TextView) findViewById(R.id.text_edit_profilename);
         userPass = (TextView) findViewById(R.id.text_edit_profilepass);
         userPassConfirm = (TextView) findViewById(R.id.text_edit_profilepasscon);
@@ -133,12 +134,13 @@ public class ProfileEditActivity extends AppCompatActivity {
                         PropertyManager.getInstance().setUserId(id);
                         PropertyManager.getInstance().setUserPassword(password);
                         if(Integer.valueOf(success.toString()) == 200){
+                            //사진 url로 응답 받기
                             PropertyManager.getInstance().setUserImagePath(file.getAbsolutePath());
                         }
                         if(Integer.valueOf(success.toString()) == 201){
-                            PropertyManager.getInstance().setUserImagePath("");
+                            //PropertyManager.getInstance().setUserImagePath("");
                         }
-                        PropertyManager.getInstance().setUserImagePath(file.getAbsolutePath());
+                        //PropertyManager.getInstance().setUserImagePath(file.getAbsolutePath());
                         Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivityForResult(intent, GET_USER_IMAGE);
@@ -226,11 +228,11 @@ public class ProfileEditActivity extends AppCompatActivity {
 
 
                     .considerExifParams(true)
-                    .displayer(new RoundedBitmapDisplayer(50))
+                    .displayer(new RoundedBitmapDisplayer(1000))
                     .build();
 
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),userProfileImage, options);
+            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(),userProfileImage, options);
         }
 
 

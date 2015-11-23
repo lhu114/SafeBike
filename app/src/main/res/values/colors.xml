@@ -14,6 +14,8 @@
     <color name="colorGray">#A0A0A0</color>
     <color name="colorYellow">#FFF100</color>
     <color name="colorDarkGray">#505050</color>
+    <color name="colorMainBackground">#F2F2F2</color>
+    <color name="colorDeviceStatus">#2779B0</color>
 
 
 

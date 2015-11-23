@@ -42,7 +42,7 @@ public class ConnectionDeviceFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_connection_device, container, false);
         listViewBand = (ListView) view.findViewById(R.id.listview_band);
         listViewBacklight = (ListView) view.findViewById(R.id.listview_backlight);
-        detectDevices();
+        //detectDevices();
         Button btn = (Button) view.findViewById(R.id.btn_complete);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +65,7 @@ public class ConnectionDeviceFragment extends Fragment {
         return view;
     }
 
-    public void detectDevices() {
+  /*  public void detectDevices() {
         //블루투스 디바이스들 감지해서 화면에 뿌려줌
         BluetoothDeviceAdapter bandAdapter = new BluetoothDeviceAdapter();
         BluetoothDeviceAdapter backligthAdapter = new BluetoothDeviceAdapter();
@@ -100,7 +100,7 @@ public class ConnectionDeviceFragment extends Fragment {
         listViewBacklight.setAdapter(backligthAdapter);
 
 
-    }
+    }*/
 
 
 }

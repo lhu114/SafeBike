@@ -20,6 +20,8 @@ import com.nostra13.universalimageloader.utils.L;
 import com.safering.safebike.R;
 import com.safering.safebike.exercisereport.ExcerciseResult;
 import com.safering.safebike.exercisereport.ExerciseDayResult;
+import com.safering.safebike.friend.FriendAddressFragment;
+import com.safering.safebike.friend.FriendDirectSearchResult;
 import com.safering.safebike.friend.FriendProfileResult;
 import com.safering.safebike.friend.FriendResult;
 import com.safering.safebike.friend.FriendSearchResult;
@@ -88,7 +90,7 @@ public class NetworkManager {
     private static final String FRIEND_ADDRESS_URL = "http://52.69.133.212:3000/user/psearch";//서버 URL
     private static final String FRIEND_ADD_URL = "http://52.69.133.212:3000/user/friend/add";//서버 URL
     private static final String FRIEND_REMOVE_URL = "http://52.69.133.212:3000/user/friend/delete";//서버 URL
-    private static final String FRIEND_DIRECT_URL = "http:...";//서버 URL
+    private static final String FRIEND_DIRECT_URL = "http://52.69.133.212:3000/user/esearch";//서버 URL
     private static final String FRIEND_PROFILE_URL = "http://52.69.133.212:3000/user/friend/profile";//서버 URL
     private static final String FRIEND_EMAIL = "pemail";
     private static final String FRIEND_PHONE_LIST = "FRIEND_PHONE_LIST";
@@ -100,7 +102,7 @@ public class NetworkManager {
     private static final String LOGIN_JOIN_URL = "http://52.69.133.212:3000/user/add";//서버 URL
     private static final String LOGIN_SEND_TEMP_URL = "http:...";//서버 URL
     private static final String LOGIN_AUTHOR_URL = "http://52.69.133.212:3000/user/login";//서버 URL
-    private static final String LOGIN_EXAM_URL = "http:...";//서버 URL
+    private static final String LOGIN_EXAM_URL = "http://52.69.133.212:3000/user/email";//서버 URL
 
 
     /**
@@ -364,6 +366,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("exercise",responseString);
                 ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
 
                 listener.onSuccess(result);
@@ -502,47 +505,42 @@ public class NetworkManager {
     }
 
 
-    public void getUserFriendAddress(Context context, String email, ArrayList phoneList, final OnResultListener<FriendSearchResult> listener) {
+    public void getUserFriendAddress(Context context,ArrayList<FriendAddressFragment.Contact> phoneList, final OnResultListener<FriendSearchResult> listener) {
         //PARAMETER : 유저 이메일,전화번호리스트(Array)
         //결과값 : JSON(친구아이디,이메일,사진)
         RequestParams params = new RequestParams();
+        /*params.add("phone", "01023232321");
+        params.add("phone", "01023212333");
+        params.add("phone", "01041110256");
+        */
+        for(int i = 0; i < phoneList.size(); i++){
+            params.add("phone",phoneList.get(i).getPhonenum());
+        }
 
-        params.put(USER_EAMIL, email);
-            params.add("phone",phoneList.get(0).toString());
-            params.add("phone",phoneList.get(1).toString());
-        params.add("phone",phoneList.get(2).toString());
-        params.add("phone",phoneList.get(3).toString());
-
-        //params.put(USER_PHONE,phoneList);
-
-           // params.put(FRIEND_PHONE_LIST, phoneList);//array보내기 질문하기
-
-        client.get(context, FRIEND_ADDRESS_URL, params, new TextHttpResponseHandler() {
+        client.post(context, FRIEND_ADDRESS_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i("getUserFrendFail",statusCode + "");
-
-                //listener.onFail(ON_FAIL);
-
+                //Log.i("getUserFrendFail", statusCode + "");
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.i("getUserFrendSuccess",statusCode + "");
 
-                //FriendSearchResult result = gson.fromJson(responseString, FriendSearchResult.class);
-                //listener.onSuccess(result);
+                Log.i("searchResultSuccess",responseString);
+                FriendSearchResult result = gson.fromJson(responseString, FriendSearchResult.class);
+                listener.onSuccess(result);
+
             }
         });
 
     }
 
-    public void getUserFriendDirect(Context context, String uEmail, String iEmail, final OnResultListener listener) {
+    public void getUserFriendDirect(Context context, String uEmail, final OnResultListener<FriendDirectSearchResult> listener) {
         //PARAMETER : 유저 이메일,입력이메일값
         //결과값 : JSON(친구아이디,이메일,사진)
         RequestParams params = new RequestParams();
-        params.put(USER_EAMIL, uEmail);
-        params.put(FRIEND_EMAIL, iEmail);
+        params.put(USER_EAMIL, "lowgiant@gmail.com");
+      //  params.put(FRIEND_EMAIL, iEmail);
         client.get(context, FRIEND_DIRECT_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -551,7 +549,11 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                Log.i("direct suc", responseString);
+               // listener.onSuccess(ON_SUCCESS);
+                FriendDirectSearchResult result = gson.fromJson(responseString, FriendDirectSearchResult.class);
+                listener.onSuccess(result);
+
             }
         });
 
@@ -582,11 +584,11 @@ public class NetworkManager {
                 FriendProfileResult result = gson.fromJson(responseString, FriendProfileResult.class);
                 listener.onSuccess(result);
                 Log.i("friend name", result.friendprofile.name);
-                Log.i("friend email",result.friendprofile.email);
-                Log.i("friend join",result.friendprofile.join);
-                Log.i("friend calorie",result.friendprofile.calorie + "");
-                Log.i("friend speed",result.friendprofile.speed + "");
-                Log.i("friend road",result.friendprofile.road + "");
+                Log.i("friend email", result.friendprofile.email);
+                Log.i("friend join", result.friendprofile.join);
+                Log.i("friend calorie", result.friendprofile.calorie + "");
+                Log.i("friend speed", result.friendprofile.speed + "");
+                Log.i("friend road", result.friendprofile.road + "");
 
 
             }
@@ -608,7 +610,7 @@ public class NetworkManager {
         params.put(USER_ID, id);
         params.put(USER_PASSWORD, password);
         params.put(USER_PHONE, phone);
-
+        params.put(USER_IMAGE,"null");
 
         client.post(context, LOGIN_JOIN_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -633,12 +635,15 @@ public class NetworkManager {
         //결과값 : 이메일,비밀번호,패스워드,가입일
 
         RequestParams params = new RequestParams();
-        /*params.put(USER_EAMIL, email);
+        Log.i("inputid",email);
+        Log.i("inputpass",password);
+        params.put(USER_EAMIL, email);
         params.put(USER_PASSWORD, password);
-        */
-        params.put(USER_EAMIL, "lowgiant@gmail.com");
-        params.put(USER_PASSWORD, "1234");
-        client.get(context, LOGIN_AUTHOR_URL, params, new TextHttpResponseHandler() {
+
+        //params.put(USER_EAMIL, "lowgiant@gmail.com");
+        //params.put(USER_PASSWORD, "1234");
+
+        client.post(context, LOGIN_AUTHOR_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.i("LoginInputFragmentFail", "fail");
@@ -648,8 +653,30 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.i("LoginInputFragmentSucc", responseString);
-                LoginResult result = gson.fromJson(responseString, LoginResult.class);
-                listener.onSuccess(result);
+                if (responseString.equals("1")){
+                    Log.i("LoginInputNoId", responseString);
+                    LoginResult result = null;
+                    listener.onSuccess(result);
+
+                    //listener.onSuccess();
+                    //return;
+
+                }
+                else if (responseString.equals("2")){
+                    Log.i("LoginInputNoPass", responseString);
+                    LoginResult result = null;
+                    listener.onSuccess(result);
+
+
+                }
+                else {
+
+
+                    LoginResult result = gson.fromJson(responseString, LoginResult.class);
+                    listener.onSuccess(result);
+                    //
+                    // "userlogin":{"id":"ㅂㅎ","join":"345463@gmail.com"}
+                }
             }
         });
     }
@@ -675,22 +702,26 @@ public class NetworkManager {
         });
     }
 
-    public void checkEmail(Context context, String email, final OnResultListener listener) {
+    public void checkEmail(Context context, String email, final OnResultListener<String> listener) {
         //PARAMETER : 유저이메일
         //결과값 INT
 
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
 
-        client.get(context, LOGIN_EXAM_URL, params, new TextHttpResponseHandler() {
+        client.post(context, LOGIN_EXAM_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(ON_FAIL);
+                listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                //listener.onSuccess(ON_SUCCESS);
+                //if(responseString.equals("1"))
+                Log.i("suc",responseString);
+
+                listener.onSuccess(responseString);
             }
         });
 

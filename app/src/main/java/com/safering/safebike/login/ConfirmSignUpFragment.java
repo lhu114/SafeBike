@@ -4,6 +4,7 @@ package com.safering.safebike.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,7 @@ public class ConfirmSignUpFragment extends Fragment {
         final String email = signBundle.getString(SignUpFragment.SIGN_UP_EMAIL);
         final String id = signBundle.getString(SignUpFragment.SIGN_UP_ID);
         final String password = signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD);
+        Log.i("myphoneNumber",PropertyManager.getInstance().getUserPhoneNumber()+"");
         final String phone = PropertyManager.getInstance().getUserPhoneNumber();
 
 /*

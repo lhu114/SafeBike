@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 /**
  * Created by Tacademy on 2015-10-29.
@@ -166,8 +167,10 @@ public class PropertyManager {
     public String getUserPhoneNumber(){
         TelephonyManager telManager = (TelephonyManager)MyApplication.getContext().getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNum = telManager.getLine1Number();
-        if(phoneNum.startsWith("+82")){
-            phoneNum = phoneNum.replace("+82", "0");
+        if(phoneNum != null) {
+            if (phoneNum.startsWith("+82")) {
+                phoneNum = phoneNum.replace("+82", "0");
+            }
         }
         return phoneNum;
     }

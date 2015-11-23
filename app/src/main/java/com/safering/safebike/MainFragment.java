@@ -40,6 +40,9 @@ public class MainFragment extends Fragment {
 //    String serviceCondition;
     Button fwdNavigation, startNavigation;
     TextView textMainTitle;
+    TextView textBandOnOff;
+    TextView textBackLightOnOff;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -83,6 +86,8 @@ public class MainFragment extends Fragment {
 
         final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        textBandOnOff = (TextView)view.findViewById(R.id.text_band_status);
+        textBackLightOnOff = (TextView)view.findViewById(R.id.text_backlight_status);
 
     /*    Button favorite = (Button)view.findViewById(R.id.btn_favorite_list);
         favorite.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +251,8 @@ public class MainFragment extends Fragment {
     public void setFont(){
         textMainTitle.setText("SafeBike");
         textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
+        textBandOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textBackLightOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
 
 
     }

@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
@@ -60,16 +62,45 @@ public class LoginInputFragment extends Fragment {
                     NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<LoginResult>() {
                         @Override
                         public void onSuccess(LoginResult logResult) {
-                            LoginItem userInform = logResult.result;
 
-                            PropertyManager.getInstance().setUserEmail(email);
-                            PropertyManager.getInstance().setUserPassword(password);
-                            PropertyManager.getInstance().setUserId(userInform.id);
-                            PropertyManager.getInstance().setUserJoin(userInform.join);
+                            if(logResult != null){
+                                LoginItem userInform = logResult.userlogin;
+                                PropertyManager.getInstance().setUserEmail(email);
+                                PropertyManager.getInstance().setUserPassword(password);
+                                PropertyManager.getInstance().setUserId(userInform.id);
+                                PropertyManager.getInstance().setUserJoin(userInform.join);
+                                PropertyManager.getInstance().setUserImagePath(userInform.photo);
+                                Log.i("userEmail", email);
+                                Log.i("userPassword",password);
+                                Log.i("userInform",userInform.id);
+                                Log.i("userJoin",userInform.join);
+                                Log.i("userPhoto",userInform.photo + "");
 
-                            Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
-                            startActivity(intent);
-                            ((LoginActivity) getActivity()).finish();
+
+                                Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
+                                startActivity(intent);
+                                ((LoginActivity) getActivity()).finish();
+                            }
+                            else{
+                                Toast.makeText(getContext(),"로그인실패",Toast.LENGTH_SHORT).show();
+                                LoginFailDialogFragment loginFailDialogFragment = new LoginFailDialogFragment();
+                                loginFailDialogFragment.show(getChildFragmentManager(), "loginFail");
+
+                            }
+                            /*if(userInform != null) {
+                                PropertyManager.getInstance().setUserEmail(email);
+                                PropertyManager.getInstance().setUserPassword(password);
+                                PropertyManager.getInstance().setUserId(userInform.id);
+                                PropertyManager.getInstance().setUserJoin(userInform.join);
+
+                                Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
+                                startActivity(intent);
+                                ((LoginActivity) getActivity()).finish();
+                            }
+                            else{
+                                Toast.makeText(getContext(),"로그인실패",Toast.LENGTH_SHORT).show();
+                            }*/
+
                         }
 
                         @Override
@@ -79,14 +110,14 @@ public class LoginInputFragment extends Fragment {
                         }
                     });
                     //더미데이터로 테스트
-                    if (dummy == 1) {
+                    /*if (dummy == 1) {
                         Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
                         startActivity(intent);
                         ((LoginActivity) getActivity()).finish();
                     } else if (dummy == 0) {
                         LoginFailDialogFragment loginFailDialogFragment = new LoginFailDialogFragment();
                         loginFailDialogFragment.show(getChildFragmentManager(), "loginFail");
-                    }
+                    }*/
                 }
             }
         });

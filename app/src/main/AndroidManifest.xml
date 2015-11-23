@@ -85,7 +85,6 @@
             android:theme="@style/CustomAppTheme"
 
             ></activity>
-        <activity android:name=".setting.ConnectionDeviceActivity"></activity>
         <activity android:name=".navigation.SelectRouteActivity"></activity>
         <activity android:name=".navigation.StartNavigationActivity"></activity>
     </application>

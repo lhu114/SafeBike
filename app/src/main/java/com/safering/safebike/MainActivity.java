@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity
     ImageView imageUserProfile;
     TextView textUserId;
     TextView textUserEmail;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +82,26 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+
         setSupportActionBar(toolbar);
+        /*
         getSupportActionBar().setTitle(null);
+        getSupportActionBar().setElevation(0);
+        */
+        //getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ///getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend);
+        getSupportActionBar().setTitle(null);
+
+        getSupportActionBar().setElevation(0);
+
+        /*getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend);
+        getSupportActionBar().setElevation(0);
+        */
+
         textMainTitle = (TextView)findViewById(R.id.text_main_title);
         setFont();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -105,15 +123,20 @@ public class MainActivity extends AppCompatActivity
         naviHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
 
-        imageUserProfile = (ImageView)naviHeaderView.findViewById(R.id.image_user_profile);
+        imageUserProfile = (ImageView)naviHeaderView.findViewById(R.id.image_join_user);
         textUserId = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_id);
         textUserEmail = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_email);
 
-        setProfile();
+        if(imageUserProfile == null){
+//            imageUserProfile.getBaseline();
+            Toast.makeText(MainActivity.this,"imageUserProfile is null!!",Toast.LENGTH_SHORT).show();
+        }
+
         imageAccountSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//                setProfile();
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.closeDrawer(GravityCompat.START);
                 }
@@ -122,6 +145,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        setProfile();
+
     }
 
     @Override
@@ -329,14 +354,12 @@ public class MainActivity extends AppCompatActivity
                     .cacheOnDisc(true)
                     .showImageOnLoading(R.mipmap.profile_img)
                     .showImageForEmptyUri(R.mipmap.profile_img)
-
-
                     .considerExifParams(true)
-                    .displayer(new RoundedBitmapDisplayer(50))
+                    .displayer(new RoundedBitmapDisplayer(1000))
                     .build();
 
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),imageUserProfile, options);
+            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(), imageUserProfile, options);
         }
 
     }

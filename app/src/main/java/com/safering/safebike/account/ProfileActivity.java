@@ -109,11 +109,11 @@ public class ProfileActivity extends AppCompatActivity {
 
 
                     .considerExifParams(true)
-                    .displayer(new RoundedBitmapDisplayer(50))
+                    .displayer(new RoundedBitmapDisplayer(1000))
                     .build();
 
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),imageProfileUser, options);
+            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(),imageProfileUser, options);
         }
     }
 
