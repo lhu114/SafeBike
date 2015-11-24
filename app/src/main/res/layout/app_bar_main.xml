@@ -12,20 +12,28 @@
         <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
             android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
             android:background="@color/colorUserImform"
-
-            app:popupTheme="@style/CustomAppTheme"
-            >
-            <TextView
-                android:id="@+id/text_main_title"
+            app:popupTheme="@style/CustomAppTheme" >
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginRight="60dp"
-                android:text="SafeBike"
-                android:textSize="20sp"
-                android:textColor="@color/colorWhite"
-                />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/text_main_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/text_main_title"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorWhite" />
 
+                <ImageButton
+                    android:id="@+id/btn_fwd_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/search_selector"
+                    android:visibility="gone"
+                    android:layout_marginRight="14dp"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
         <!--app:popupTheme="@style/AppTheme.PopupOverlay"
         -->

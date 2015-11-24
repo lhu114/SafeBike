@@ -13,11 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,10 +35,11 @@ public class RecentFragment extends Fragment {
 
     ListView listView;
     SimpleCursorAdapter mAdapter;
-    TextView messageView;
-    Button deleteRctBtn;
+    TextView messageView, tvRctPoiName, tvRctSearchDate;
+    ImageButton deleteRctBtn;
 
     int nameColumnIndex = -1;
+    int dateColumnIndex = -1;
 
     public RecentFragment() {
         // Required empty public constructor
@@ -70,8 +72,20 @@ public class RecentFragment extends Fragment {
                     /*
                      *  View 에 글 넣어주기
                      */
-                    TextView tvRctPoiName = (TextView) view.findViewById(R.id.text_rct_poi_name);
+                    tvRctPoiName = (TextView) view.findViewById(R.id.text_rct_poi_name);
                     tvRctPoiName.setText(cursor.getString(columnIndex));
+
+                    tvRctPoiName.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+
+                    return true;
+                } else if (columnIndex == dateColumnIndex) {
+                    /*
+                     *  View 에 글 넣어주기
+                     */
+                    tvRctSearchDate = (TextView) view.findViewById(R.id.text_rct_search_date);
+                    tvRctSearchDate.setText(cursor.getString(columnIndex));
+
+                    tvRctSearchDate.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
                     return true;
                 }
@@ -119,7 +133,7 @@ public class RecentFragment extends Fragment {
             }
         });
 
-        deleteRctBtn = (Button) view.findViewById(R.id.btn_delete_recent);
+        deleteRctBtn = (ImageButton) view.findViewById(R.id.btn_delete_recent);
         deleteRctBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,6 +183,8 @@ public class RecentFragment extends Fragment {
 
         }
 
+        messageView.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+
         return view;
     }
 
@@ -178,6 +194,7 @@ public class RecentFragment extends Fragment {
 //        Toast.makeText(getContext(), "RecentFragment.onResume", Toast.LENGTH_SHORT).show();
         Cursor c = RecentDataManager.getInstance().getRecentCursor(null);
         nameColumnIndex = c.getColumnIndex(RecentDB.RecentTable.COLUMN_POI_NAME);
+        dateColumnIndex = c.getColumnIndex(RecentDB.RecentTable.COLUMN_SEARCH_DATE);
 
         mAdapter.changeCursor(c);
         mAdapter.notifyDataSetChanged();
@@ -190,50 +207,4 @@ public class RecentFragment extends Fragment {
 //        Toast.makeText(getContext(), "RecentFragment.onDestroy", Toast.LENGTH_SHORT).show();
         mAdapter.changeCursor(null);
     }
-
-    private void sendPOI(POI poi) {
-//        String defineAddress = null;
-//
-//        if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 1");
-//        } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " " + poi.firstNo;
-//
-//            Log.d("safebike", "defineAddress 2");
-//        } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress();
-//
-//            Log.d("safebike", "defineAddress 3");
-//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 4");
-//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " " + poi.firstNo;
-//
-//            Log.d("safebike", "defineAddress 5");
-//        } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
-//
-//            Log.d("safebike", "defineAddress 6");
-//        } else {
-//            defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 7");
-//        }
-
-
-//        if (getActivity() != null) {
-//            Log.d("safebike", "RecentFragment.onCreateView.onSuccess.sendPOI.recentFragment != null");
-//
-//            Intent intent = new Intent();
-//            intent.putExtra(KEY_POI_OBJECT, poi);
-//            getActivity().setResult(Activity.RESULT_OK, intent);
-//
-//            getActivity().finish();
-//        }
-    }
-
 }

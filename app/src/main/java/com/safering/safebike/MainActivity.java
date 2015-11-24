@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,12 +84,26 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
         textMainTitle = (TextView)findViewById(R.id.text_main_title);
+
         setFont();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
+        toggle.setDrawerIndicatorEnabled(false);
+        toggle.setHomeAsUpIndicator(R.drawable.pannel);
         drawer.setDrawerListener(toggle);
+
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.openDrawer(GravityCompat.START);
+            }
+        });
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -313,7 +326,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setFont(){
-        textMainTitle.setText("SafeBike");
         textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.BMJUA));
 
 

@@ -1,25 +1,22 @@
 package com.safering.safebike.navigation;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.safering.safebike.R;
+import com.safering.safebike.property.PropertyManager;
 
 public class ParentRctFvActivity extends AppCompatActivity {
     FragmentTabHost tabHost;
@@ -38,6 +35,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
     private static final String TAG_TAB_FAVORITE_NAME = "즐겨찾기";
 
     private static final String KEY_POI_OBJECT = "poiobject";
+    private static final String KEY_DESTINATION_POI_NAME = "destinationpoiname";
 //    private static final String KEY_POI_NAME = "poiName";
 //    private static final String KEY_POI_LATITUDE = "poiLatitude";
 //    private static final String KEY_POI_LONGITUDE = "poiLongitude";
@@ -46,6 +44,9 @@ public class ParentRctFvActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent_rct_fv);
+
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_actionbar_parent_rctfv);
 
         tabHost = (FragmentTabHost)findViewById(R.id.tabHost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -61,8 +62,8 @@ public class ParentRctFvActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 poi = (POI) listView.getItemAtPosition(position);
 
-                if(poi != null) {
-                //    Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
+                if (poi != null) {
+                    //    Toast.makeText(ParentRctFvActivity.this, poiName, Toast.LENGTH_SHORT).show();
 
                     /*
                      *  검색어 RecentDb 에 저장 처리 필요
@@ -80,17 +81,8 @@ public class ParentRctFvActivity extends AppCompatActivity {
                 }
             }
         });
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_parent_rctfv, menu);
-
-        MenuItem item = menu.findItem(R.id.menu_search);
-        View menuView = MenuItemCompat.getActionView(item);
-
-        keywordView = (EditText) menuView.findViewById(R.id.edit_keyword);
+        keywordView = (EditText) findViewById(R.id.edit_keyword);
         keywordView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -108,25 +100,25 @@ public class ParentRctFvActivity extends AppCompatActivity {
             }
         });
 
-        Button btn = (Button) menuView.findViewById(R.id.btn_menu_search);
+        ImageButton btn = (ImageButton) findViewById(R.id.btn_search);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String searchKeyword = keywordView.getText().toString();
 
                 if (!TextUtils.isEmpty(searchKeyword)) {
-                /*
-                 *  검색어 RecentDb 에 저장 처리 필요
-                 */
+
+//                    검색어 RecentDb 에 저장 처리 필요
+
                     RecentItem item = new RecentItem();
                     item.rctPOIName = searchKeyword;
 
                     RecentDataManager.getInstance().insertRecent(item);
 
 
-                /*
-                 * ParentRctFvActivity 에 있는 setResult 처리
-                 */
+
+//                    ParentRctFvActivity 에 있는 setResult 처리
+
 
                     Log.d("safebike", "rctPoiName : " + searchKeyword);
                     NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
@@ -152,7 +144,86 @@ public class ParentRctFvActivity extends AppCompatActivity {
             }
         });
 
-        btn = (Button) menuView.findViewById(R.id.btn_menu_cancel);
+        btn = (ImageButton) findViewById(R.id.btn_cancel);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_parent_rctfv, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_search);
+        View menuView = MenuItemCompat.getActionView(item);
+
+        keywordView = (EditText) menuView.findViewById(R.id.edit_keyword);
+        keywordView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchPOI(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        ImageButton btn = (ImageButton) menuView.findViewById(R.id.btn_menu_search);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String searchKeyword = keywordView.getText().toString();
+
+                if (!TextUtils.isEmpty(searchKeyword)) {
+
+                 *  검색어 RecentDb 에 저장 처리 필요
+
+                    RecentItem item = new RecentItem();
+                    item.rctPOIName = searchKeyword;
+
+                    RecentDataManager.getInstance().insertRecent(item);
+
+
+
+                 * ParentRctFvActivity 에 있는 setResult 처리
+
+
+                    Log.d("safebike", "rctPoiName : " + searchKeyword);
+                    NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
+                        @Override
+                        public void onSuccess(SearchPOIInfo result) {
+                            POI poi = result.pois.poiList.get(0);
+
+                            if (poi != null) {
+//                                String defineAddress = null;
+
+                                Log.d("safebike", "poi.secondNo : " + poi.secondNo);
+
+                                sendPOI(poi);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+        btn = (ImageButton) menuView.findViewById(R.id.btn_menu_cancel);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +232,8 @@ public class ParentRctFvActivity extends AppCompatActivity {
         });
 
         return true;
-    }
+    }*/
+//                }
 
     private void searchPOI(final String keyword) {
         if (!TextUtils.isEmpty(keyword)) {
@@ -237,7 +309,21 @@ public class ParentRctFvActivity extends AppCompatActivity {
 //        intent.putExtra(KEY_POI_LONGITUDE, poi.getLongitude());
 //        intent.putExtra(KEY_POI_NAME, poi.name);
 //        intent.putExtra(KEY_POI_ADDRESS, defineAddress);
-        setResult(Activity.RESULT_OK, intent);
+        setResult(RESULT_OK, intent);
+
+        finish();
+    }
+
+    public void sendFavoritePOI(FavoriteItem fvItem) {
+        PropertyManager.getInstance().setDestinationLatitude(fvItem.fvPOILatitude);
+        PropertyManager.getInstance().setDestinationLongitude(fvItem.fvPOILongitude);
+
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+
+        intent = new Intent(ParentRctFvActivity.this, SelectRouteActivity.class);
+        intent.putExtra(KEY_DESTINATION_POI_NAME , fvItem.fvPOIName);
+        startActivity(intent);
 
         finish();
     }

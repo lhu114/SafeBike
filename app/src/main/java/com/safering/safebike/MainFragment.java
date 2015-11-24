@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.safering.safebike.manager.FontManager;
-import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
@@ -26,7 +25,7 @@ import java.util.Calendar;
  */
 
 /**
- * saveExcercise - 운동정보 저장
+ * saveExercise - 운동정보 저장
  * getFavorite - 즐겨찾기 리스트
  * saveFavorite - 즐겨찾기 추가
  * removeFavorite - 즐겨찾기 삭제
@@ -169,7 +168,7 @@ public class MainFragment extends Fragment {
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NetworkManager.getInstance().saveExcercise(getContext(), uEmail, date, 120, 60, 100, new NetworkManager.OnResultListener() {
+                NetworkManager.getInstance().saveExercise(getContext(), uEmail, date, 120, 60, 100, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object result) {
 
@@ -187,8 +186,9 @@ public class MainFragment extends Fragment {
 
         textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
 
-        Button btn = (Button) view.findViewById(R.id.btn_onoff_band);
         setFont();
+
+        Button btn = (Button) view.findViewById(R.id.btn_onoff_band);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,9 +244,7 @@ public class MainFragment extends Fragment {
     }
 
     public void setFont(){
-        textMainTitle.setText("SafeBike");
+        textMainTitle.setText("Safe Bike");
         textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
-
-
     }
 }

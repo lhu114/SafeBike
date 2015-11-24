@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,9 +20,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,10 +40,14 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.property.SpeakVoice;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,6 +73,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     private static final String POINTTYPE_GP = "GP";
     private static final String POINTTYPE_ST = "ST";
 
+    private static final int LEFT_SIDE = 12;
+    private static final int RIGHT_SIDE = 13;
+    private static final int EIGHT_LEFT_SIDE = 16;
+    private static final int TEN_LEFT_SIDE = 17;
+    private static final int TWO_RIGHT_SIDE = 18;
+    private static final int FOUR_RIGHT_SIDE = 19;
+
     public static final int MESSAGE_INITIAL_LOCATION_TIMEOUT = 1;
     public static final int MESSAGE_ITERATIVE_LOCATION_TIMEOUT = 2;
     public static final int MESSAGE_REROUTE_NAVIGATION = 3;
@@ -85,14 +95,15 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
     private GoogleMap mMap;
     LocationManager mLM;
-    Location orthogonalLoc, pointLoc, locationA, locationB;
+    Location orthogonalLoc, pointLoc, locationA, locationB, lastLocation;
 
     String mProvider;
     Handler mHandler;
 
     Polyline polyline;
-    PolylineOptions options;
+    PolylineOptions polylineOptions;
     ArrayList<Polyline> polylineList;
+    MarkerOptions markerOptions;
 
     final Map<LatLng, Marker> mMarkerResolver = new HashMap<LatLng, Marker>();
     final Map<LatLng, String> mBitmapResolver = new HashMap<LatLng, String>();
@@ -105,16 +116,21 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     ArrayList<Float> mPointDistanceList;
     ArrayList<BicycleNavigationInfo> mBicycleNaviInfoList;
     ArrayList<Integer> mPointLatLngIndexList;
+    ArrayList<Float> mSpeedList;
+    ArrayList<Float> mDistanceList;
 
     int gpIndex = 0;
+    int gpIndexSize = 0;
     int naviLatLngIndex = 0;
     int mPointLatLngIndex = 0;
 
-    TextView tvNaviDescription;
+    TextView tvNaviDescription, tvMainTitle;
+    ImageButton btnFullScreen, btnBackKey, btnFinishNavi;
+    ImageView imageDescription;
 
     boolean isStartNavigation = true;
     boolean isFirstFinishDialog = true;
-    boolean isActivateRouteWitinLimitDistanceNoti = false;
+    boolean isActivateRouteWithinLimitDistanceNoti = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,11 +143,14 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 .findFragmentById(R.id.navigation_map);
         mapFragment.getMapAsync(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_actionbar_navigation);
 
+        tvMainTitle = (TextView) findViewById(R.id.text_main_title);
+        imageDescription = (ImageView) findViewById(R.id.image_description);
         tvNaviDescription = (TextView) findViewById(R.id.text_navi_description);
 
-        Button btnFullScreen = (Button) findViewById(R.id.btn_full_screen);
+        btnFullScreen = (ImageButton) findViewById(R.id.btn_full_screen);
         btnFullScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,11 +158,70 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                 if (actionBar.isShowing()) {
                     actionBar.hide();
+
+                    btnFullScreen.setSelected(true);
                 } else {
                     actionBar.show();
+
+                    btnFullScreen.setSelected(false);
                 }
             }
         });
+
+        btnBackKey = (ImageButton) findViewById(R.id.btn_back_key);
+        btnBackKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
+                startActivity(intent);
+
+                finish();
+            }
+        });
+
+        btnFinishNavi = (ImageButton) findViewById(R.id.btn_finish_navigation);
+        btnFinishNavi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(StartNavigationActivity.this);
+                builder.setIcon(android.R.drawable.ic_dialog_info);
+                builder.setTitle("내비게이션 안내종료");
+                builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                 /*
+                 *  목적지 위도, 경도, searchoption 날리기
+                 */
+                        PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+                        PropertyManager.getInstance().setDestinationLatitude(null);
+                        PropertyManager.getInstance().setDestinationLongitude(null);
+                        PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
+
+//                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
+                        intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+//        builder.setCancelable(false);
+
+                builder.create().show();
+            }
+        });
+
+        setFont();
 
         polylineList = new ArrayList<Polyline>();
         mPointLatLngList = new ArrayList<LatLng>();
@@ -151,6 +229,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         mPointDistanceList = new ArrayList<Float>();
         mBicycleNaviInfoList = new ArrayList<BicycleNavigationInfo>();
         mPointLatLngIndexList = new ArrayList<Integer>();
+        mSpeedList = new ArrayList<Float>();
+        mDistanceList = new ArrayList<Float>();
 
         mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -218,9 +298,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         orthogonalLoc = new Location(mProvider);
         pointLoc = new Location(mProvider);
-
         locationA = new Location(mProvider);
         locationB = new Location(mProvider);
+        lastLocation = new Location(mProvider);
 
 //        checkOrthogonalPoint(-10, 0, 0, 10, 9,-10);
     }
@@ -228,41 +308,41 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     /*
      * 안내종료 버튼 처리
      */
-    public void onFinishNavigationBtn(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("내비게이션 안내종료");
-        builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                 /*
-                 *  목적지 위도, 경도, searchoption 날리기
-                 */
-                PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
-                PropertyManager.getInstance().setDestinationLatitude(null);
-                PropertyManager.getInstance().setDestinationLongitude(null);
-                PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
-
-//                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
-                intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
-                startActivity(intent);
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-//        builder.setCancelable(false);
-
-        builder.create().show();
-    }
+//    public void onFinishNavigationBtn(View view) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setIcon(android.R.drawable.ic_dialog_info);
+//        builder.setTitle("내비게이션 안내종료");
+//        builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
+//        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                 /*
+//                 *  목적지 위도, 경도, searchoption 날리기
+//                 */
+//                PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+//                PropertyManager.getInstance().setDestinationLatitude(null);
+//                PropertyManager.getInstance().setDestinationLongitude(null);
+//                PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
+//
+////                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+//
+//                Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
+//                intent.putExtra(KEY_REPLACE_MAIN_FRAGMENT, VALUE_REPLACE_MAIN_FRAGMENT);
+//                startActivity(intent);
+//            }
+//        });
+//        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
+////        builder.setCancelable(false);
+//
+//        builder.create().show();
+//    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -323,8 +403,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
              *  TextView 처음으로 set
              */
 
-            tvNaviDescription.setText("길안내");
-            tts.translate("경로를 탐색 중 입니다.");
+//            tvNaviDescription.setText("길안내");
+//            tts.translate("경로를 탐색 중 입니다.");
 
             /*
              * GPS_PROVIDER 에 해당하는 마지막 위치만 가져오기 때문에 이전 상태에서 GPS가 아닌 Network로 마지막 위치 읽었을 때 정보 가져오지 못하므로 사용하지 말아야 하나...
@@ -356,8 +436,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 return;
             }
 
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.removeUpdates.mInitialListener");
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.removeUpdates.mIterativeListener");
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onStop.removeUpdates.mInitialListener");
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onStop.removeUpdates.mIterativeListener");
 
             mLM.removeUpdates(mInitialListener);
             mLM.removeUpdates(mIterativeListener);
@@ -384,27 +464,28 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     protected void onDestroy() {
         super.onDestroy();
         Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
+
         tts.close();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
-                startActivity(intent);
-
-                finish();
-                /*
-                 * 왜 finish 안했었는데 종료될까...
-                 */
-
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
+////                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
+//                startActivity(intent);
+//
+//                finish();
+//                /*
+//                 * 왜 finish 안했었는데 종료될까...
+//                 */
+//
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onBackPressed() {
@@ -444,7 +525,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             CameraPosition.Builder builder = new CameraPosition.Builder();
             builder.target(new LatLng(latitude, longitude));
             builder.bearing(bearing);
-            builder.zoom(19);
+            builder.zoom(18);
             builder.tilt(45);
 //            Log.d(DEBUG_TAG, "StartNavigationActivity.moveMap.bearing.mAngle : " + bearing);
 
@@ -642,6 +723,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     Log.d(DEBUG_TAG, "StartNavigationActivity.mIterativeListener.onLocationChanged.location.getLatitude, location.getLongitude : " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()));
                     Log.d(DEBUG_TAG, "StartNavigationActivity.mIterativeListener.onLocationChanged.bearing,speed +: " + Float.toString(location.getBearing()) + ", " + Float.toString(location.getSpeed()));
 
+                    lastLocation.setLatitude(Double.parseDouble(PropertyManager.getInstance().getRecentLatitude()));
+                    lastLocation.setLongitude(Double.parseDouble(PropertyManager.getInstance().getRecentLongitude()));
+
+                    mDistanceList.add(lastLocation.distanceTo(location));
+                    mSpeedList.add(location.getSpeed());
+
                     PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
                     PropertyManager.getInstance().setRecentLongitude(Double.toHexString(location.getLongitude()));
 
@@ -722,7 +809,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                 Toast.makeText(StartNavigationActivity.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 있는 경우)", Toast.LENGTH_SHORT).show();
                                 Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
-                                if (!isActivateRouteWitinLimitDistanceNoti) {
+                                if (!isActivateRouteWithinLimitDistanceNoti) {
                                     tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
 
                                     findRoute();
@@ -828,7 +915,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                     Toast.makeText(StartNavigationActivity.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 없는 경우)", Toast.LENGTH_SHORT).show();
                                     Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
-                                    if (!isActivateRouteWitinLimitDistanceNoti) {
+                                    if (!isActivateRouteWithinLimitDistanceNoti) {
                                         tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
 
                                         findRoute();
@@ -924,31 +1011,80 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     }
 
     private void addPointMarker(LatLng latLng, BicycleProperties properties, String bitmapFlag) {
-        MarkerOptions options = new MarkerOptions();
-        options.position(new LatLng(latLng.latitude, latLng.longitude));
-        options.anchor(0.5f, 1.0f);
-        options.draggable(false);
+        if (bitmapFlag.equals(POINTTYPE_SP) || (bitmapFlag.equals(POINTTYPE_EP))) {
+            markerOptions = new MarkerOptions();
+            markerOptions.position(new LatLng(latLng.latitude, latLng.longitude));
+            markerOptions.anchor(0.5f, 1.0f);
+            markerOptions.draggable(false);
 
-        if (bitmapFlag.equals(POINTTYPE_SP)) {
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-        } else if (bitmapFlag.equals(POINTTYPE_EP)) {
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            if (bitmapFlag.equals(POINTTYPE_SP)) {
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.start));
+            } else if (bitmapFlag.equals(POINTTYPE_EP)) {
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrival));
+            }
         } else if (bitmapFlag.equals(POINTTYPE_GP)) {
             gpIndex++;
 
-            /*
-             * index 순서대로 이미지 다르게 적용
-             */
-
             Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(gpIndex));
 
-            options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            if (gpIndexSize > 0 && gpIndexSize <= 20) {
+                markerOptions = new MarkerOptions();
+                markerOptions.position(new LatLng(latLng.latitude, latLng.longitude));
+                markerOptions.anchor(0.5f, 1.0f);
+                markerOptions.draggable(false);
+
+                addGPPointMarker(gpIndexSize);
+            }
         }
 
-        Marker m = mMap.addMarker(options);
+        Marker m = mMap.addMarker(markerOptions);
         mMarkerResolver.put(latLng, m);
         mPropertiesResolver.put(latLng, properties);
         mBitmapResolver.put(latLng, bitmapFlag);
+    }
+
+    private void addGPPointMarker(int index) {
+        if (index == 1) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_1));
+        } else if (index == 2) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_2));
+        } else if (index == 3) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_3));
+        } else if (index == 4) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_4));
+        } else if (index == 5) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_5));
+        } else if (index == 6) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_6));
+        } else if (index == 7) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_7));
+        } else if (index == 8) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_8));
+        } else if (index == 9) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_9));
+        } else if (index == 10) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_10));
+        } else if (index == 11) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_11));
+        } else if (index == 12) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_12));
+        } else if (index == 13) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_13));
+        } else if (index == 14) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_14));
+        } else if (index == 15) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_15));
+        } else if (index == 16) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_16));
+        } else if (index == 17) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_17));
+        } else if (index == 18) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_18));
+        } else if (index == 19) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_19));
+        } else if (index == 20) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_20));
+        }
     }
 
     private void clearAllMarker() {
@@ -1145,6 +1281,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    // 운동 정보 보냄
+                    sendExerciseReport(mSpeedList, mDistanceList);
                  /*
                  *  목적지 위도, 경도, searchoption 날리기
                  */
@@ -1200,6 +1338,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    // 운동 정보 보냄
+                    sendExerciseReport(mSpeedList, mDistanceList);
+
                  /*
                  *  목적지 위도, 경도, searchoption 날리기
                  */
@@ -1245,9 +1386,38 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 }
 
                 pointInfo = mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex));
-                distance = (int) tempDistance;
+                distance = Math.round(tempDistance);
 
                 tts.translate(Integer.toString(distance) + "m 이후 " + pointInfo.properties.description);
+
+                if (pointInfo.properties.turnType == LEFT_SIDE) {
+                    imageDescription.setVisibility(View.VISIBLE);
+
+                    imageDescription.setImageResource(R.drawable.left_side);
+                } else if (pointInfo.properties.turnType == RIGHT_SIDE) {
+                    imageDescription.setVisibility(View.VISIBLE);
+
+                    imageDescription.setImageResource(R.drawable.right_side);
+                } else if (pointInfo.properties.turnType == EIGHT_LEFT_SIDE) {
+                    imageDescription.setVisibility(View.VISIBLE);
+
+                    imageDescription.setImageResource(R.drawable.left_side);
+                } else if (pointInfo.properties.turnType == TEN_LEFT_SIDE) {
+                    imageDescription.setVisibility(View.VISIBLE);
+
+                    imageDescription.setImageResource(R.drawable.left_side);
+                } else if (pointInfo.properties.turnType == TWO_RIGHT_SIDE) {
+                    imageDescription.setVisibility(View.VISIBLE);
+
+                    imageDescription.setImageResource(R.drawable.right_side);
+                } else if (pointInfo.properties.turnType == FOUR_RIGHT_SIDE) {
+                    imageDescription.setVisibility(View.VISIBLE);
+
+                    imageDescription.setImageResource(R.drawable.right_side);
+                } else {
+                    imageDescription.setVisibility(View.INVISIBLE);
+                }
+
                 tvNaviDescription.setText(Integer.toString(distance) + "m 이후 " + pointInfo.properties.description);
 
                 Log.d(DEBUG_TAG, Integer.toString(distance) + "m 이후 " + pointInfo.properties.description + " | pointLatLngIndex : " + currentLatLngIndex);
@@ -1262,6 +1432,55 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             Log.d(DEBUG_TAG, pointInfo.properties.description + " | pointLatLngIndex : " + currentLatLngIndex);
 //            tvNaviDescription.setText(pointInfo.properties.description);
         }
+    }
+
+    private void sendExerciseReport(ArrayList<Float> speedList, final ArrayList<Float> distanceList) {
+        if (distanceList.size() > 0) {
+            float totalCalorie = 0;
+            float totalSpeed = 0;
+            float totalDistance = 0;
+
+            for (int i = 0; i < speedList.size(); i++) {
+                totalSpeed += speedList.get(i);
+            }
+
+            for (int i = 0; i < distanceList.size(); i++) {
+                totalDistance += distanceList.get(i);
+            }
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar cal = Calendar.getInstance();
+
+            final String userEmail = PropertyManager.getInstance().getUserEmail();
+            final String date = sdf.format(cal.getTime());
+            final int calorie = Math.round(totalCalorie);
+            final int speed = Math.round(totalSpeed / speedList.size());
+            final int distance = Math.round(totalDistance / distanceList.size());
+
+            Log.d(DEBUG_TAG, "userEmail : " + userEmail + " | date : " + date + " | calorie : " + calorie + " | speed : " + speed + " | distance : " + distance);
+
+            NetworkManager.getInstance().saveExercise(StartNavigationActivity.this, userEmail, date, calorie, speed, distance, new NetworkManager.OnResultListener() {
+                @Override
+                public void onSuccess(Object result) {
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onSuccess");
+
+                    mSpeedList.clear();
+                    mDistanceList.clear();
+
+                    /*
+                     *  비정상 종료 처리 시에 기존 데이터(칼로리, 스피드, 거리 리스트 저장해 두었다가 onCreate 에서 저장) bundle 이용
+                     *
+                     *  또는 비정상 종료 시에 데이터 그냥 서버로 보내버림(이 방법이 좋을듯)
+                     */
+                }
+
+                @Override
+                public void onFail(int code) {
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onFail");
+                }
+            });
+        }
+
     }
 
     //    double startX, double startY, double endX, double endY, int searchOption
@@ -1290,7 +1509,14 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                 int totalTime = result.features.get(0).properties.totalTime;
                                 int totalDistance = result.features.get(0).properties.totalDistance;
 
-                                options = new PolylineOptions();
+                                for (BicycleFeature feature : result.features) {
+                                    if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_EP)) {
+                                        gpIndexSize = (feature.properties.index - 2) / 2;
+                                        Log.d(DEBUG_TAG, "StartNavigationActivity.findRoute.POINTTYPE_GP.minGPIndexSize : " + Integer.toString(gpIndexSize));
+                                    }
+                                }
+
+                                polylineOptions = new PolylineOptions();
 
                                 Log.d(DEBUG_TAG, "result.features.size() : " + result.features.size());
 
@@ -1400,7 +1626,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                             Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING | LataLng : " + bicycleNaviInfo.latLng.latitude +
                                                     ", " + bicycleNaviInfo.latLng.longitude + " | distance : " + bicycleNaviInfo.distance);
 
-                                            options.add(latLngA);
+                                            polylineOptions.add(latLngA);
                                         }
 //
                                         Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.mBicycleNaviInfoList : " + mBicycleNaviInfoList.size());
@@ -1489,12 +1715,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                     Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.mBicycleNaviInfoList.size : " + mBicycleNaviInfoList.size());
                                 }
 
-                                if (options != null) {
-                                    options.color(Color.BLUE);
-                                    options.width(10);
-                                    options.geodesic(true);
+                                if (polylineOptions != null) {
+                                    polylineOptions.color(0xba3498db);
+                                    polylineOptions.width(10);
+                                    polylineOptions.geodesic(true);
 
-                                    polyline = mMap.addPolyline(options);
+                                    polyline = mMap.addPolyline(polylineOptions);
 
                                     polylineList.add(polyline);
                                 }
@@ -1509,7 +1735,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                         @Override
                         public void onFail(int code) {
                             if (code == ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE) {
-                                isActivateRouteWitinLimitDistanceNoti = true;
+                                isActivateRouteWithinLimitDistanceNoti = true;
 
                                 withinRouteLimitDistanceDialog();
                             }
@@ -1517,6 +1743,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     });
         }
     }
+
+    private void setFont() {
+        tvMainTitle.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.BMJUA));
+        tvNaviDescription.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.NOTOSANS_M));
+    }
+}
 /*    private void checkOrthogonalPoint(double x1, double y1, double x2, double y2, double x3, double y3) {
         double findX, findY;
 
@@ -1550,7 +1782,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             return false;
         }
     }*/
-}
 
 
 //package com.safering.safebike.navigation;

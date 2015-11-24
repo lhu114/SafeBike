@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 
 /**
  * Created by lhu on 2015-11-03.
@@ -32,15 +33,21 @@ public class FavoriteItemView extends RelativeLayout {
         inflate(getContext(), R.layout.favorite_item_view, this);
         iconView = (ImageView) findViewById(R.id.image_favorite);
         fvPOINameVIew = (TextView) findViewById(R.id.text_fv_poi_name);
+
+        setFont();
     }
 
     public void setItemData(FavoriteItem itemData) {
         mItemData = itemData;
-
-        if (mItemData.poiIcon != null) {
-            iconView.setImageDrawable(mItemData.poiIcon);
-        }
+//iconView.setImageDrawable(R.drawable.);
+//        if (mItemData.poiIcon != null) {
+//            iconView.setImageDrawable(mItemData.poiIcon);
+//        }
 
         fvPOINameVIew.setText(mItemData.fvPOIName);
+    }
+
+    private void setFont() {
+        fvPOINameVIew.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
     }
 }

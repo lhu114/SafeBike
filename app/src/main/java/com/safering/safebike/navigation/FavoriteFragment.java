@@ -3,18 +3,21 @@ package com.safering.safebike.navigation;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.PropertyManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,7 +26,9 @@ public class FavoriteFragment extends Fragment {
     ListView listView;
     FavoriteAdapter mAdapter;
     TextView messageView;
-    Button deleteBtn;
+    ImageButton deleteBtn;
+
+    private static final int SUCCESS = 200;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -43,7 +48,7 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
 
         messageView = (TextView) view.findViewById(R.id.text_message_favorite);
-        deleteBtn = (Button) view.findViewById(R.id.btn_delete_favorite);
+        deleteBtn = (ImageButton) view.findViewById(R.id.btn_delete_favorite);
         listView = (ListView) view.findViewById(R.id.listView_favorite);
         mAdapter = new FavoriteAdapter();
 
@@ -61,9 +66,11 @@ public class FavoriteFragment extends Fragment {
                 /*
                  *  해당 아이템에 목적지 안내시작 화면으로 넘김
                  */
-                Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                FavoriteItem fvItem = (FavoriteItem) listView.getItemAtPosition(position);
+
+                if (getActivity() != null) {
+                    ((ParentRctFvActivity) getActivity()).sendFavoritePOI(fvItem);
+                }
             }
         });
 
@@ -83,9 +90,37 @@ public class FavoriteFragment extends Fragment {
                          *
                          * Visibility Gone 처리
                          */
+                        Log.d("safebike", "FavoriteFragment.initData");
 
-                        mAdapter.notifyDataSetChanged();
-                        mAdapter.notifyDataSetInvalidated();
+                        final String userEmail = PropertyManager.getInstance().getUserEmail();
+
+                        NetworkManager.getInstance().removeAllFavorite(getContext(), userEmail, new NetworkManager.OnResultListener() {
+                            @Override
+                            public void onSuccess(Object result) {
+                                Log.d("safebike", "FavoriteFragment.removeAllFavorite.onSuccess");
+
+                                if ((int) result == SUCCESS) {
+                                    Log.d("safebike", "FavoriteFragment.removeAllFavorite.onSuccess.200");
+
+                                    mAdapter.remove();
+
+                                    messageView.setVisibility(View.VISIBLE);
+                                    listView.setVisibility(View.GONE);
+                                    deleteBtn.setVisibility(View.GONE);
+                                }
+                            }
+
+                            @Override
+                            public void onFail(int code) {
+                                Log.d("safebike", "FavoriteFragment.removeAllFavorite.onFail");
+                            }
+                        });
+
+                        /*
+                         *  remove 에서 했는데 관련 여부 따져서 삭제
+                         */
+//                        mAdapter.notifyDataSetChanged();
+//                        mAdapter.notifyDataSetInvalidated();
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -100,26 +135,53 @@ public class FavoriteFragment extends Fragment {
             }
         });
 
-        if (mAdapter.getCount() > 0) {
-            messageView.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
-            deleteBtn.setVisibility(View.VISIBLE);
-        } else {
-
-        }
+        messageView.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void initData() {
         /*
          * 네트워크 요청해서 즐겨찾기 데이터 가져오기
          */
+        Log.d("safebike", "FavoriteFragment.initData");
 
-        for (int i = 0; i < 10; i++) {
-            FavoriteItem itemData = new FavoriteItem();
-            itemData.fvPOIName = "즐겨찾기 목적지";
-            mAdapter.add(itemData);
-        }
+        final String userEmail = PropertyManager.getInstance().getUserEmail();
+
+        NetworkManager.getInstance().getFavorite(getContext(), userEmail, new NetworkManager.OnResultListener<FavoriteResult>() {
+            @Override
+            public void onSuccess(FavoriteResult result) {
+                Log.d("safebike", "FavoriteFragment.initData.onSuccess.favoriteItemList.size : " + Integer.toString(result.favoriteItemList.size()));
+
+                for (FavoriteItem item : result.favoriteItemList) {
+                    mAdapter.add(item);
+                }
+
+                if (mAdapter.getCount() > 0) {
+                    listView.setVisibility(View.VISIBLE);
+                    deleteBtn.setVisibility(View.VISIBLE);
+                } else {
+                    messageView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+                Log.d("safebike", "FavoriteFragment.initData.onFail");
+
+                messageView.setVisibility(View.VISIBLE);
+            }
+        });
+
+//        for (int i = 0; i < 10; i++) {
+//            FavoriteItem itemData = new FavoriteItem();
+//            itemData.fvPOIName = "즐겨찾기 목적지";
+//            mAdapter.add(itemData);
+//        }
     }
 }

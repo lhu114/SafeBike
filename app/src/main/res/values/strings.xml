@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">SafeBike</string>
+    <string name="app_name">Safe Bike</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -104,6 +104,7 @@
     <string name="btn_status_bluetooth" />
     <string name="btn_full_screen" />
     <string name="text_navi_description">길안내</string>
+    <string name="text_main_title">Safe Bike</string>
 
 </resources><!-- TODO: Remove or change this placeholder text -->
 

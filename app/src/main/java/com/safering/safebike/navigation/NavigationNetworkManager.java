@@ -246,6 +246,7 @@ public class NavigationNetworkManager {
     private static final String BICYCLE_ROUTE_GEOMETRY_TYPE_POINT = "Point";
 
     private static final String POINTTYPE_ST = "ST";
+    private static final String POINTTYPE_CI = "CI";
 
     public void findRoute(Context context, double startX, double startY, double endX, double endY, int searchOption, final OnResultListener<BicycleRouteInfo> listener) {
         Log.d("safebike", "NavigationNetworkManager.findRoute");
@@ -311,12 +312,12 @@ public class NavigationNetworkManager {
 
                     if ((feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_ST))) {
                         info.features.remove(i);
+                    } else if ((feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_CI))) {
+                        info.features.remove(i);
                     }
                 }
 
                 listener.onSuccess(info);
-
-
             }
         });
 

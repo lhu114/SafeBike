@@ -4,26 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.safering.safebike.navigation.SelectRouteActivity">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_status_bluetooth"
-        android:id="@+id/btn_status_bluetooth"
-        android:layout_gravity="left|top"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_full_screen"
-        android:id="@+id/btn_full_screen"
-        android:layout_gravity="right|top"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -33,6 +13,23 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:id="@+id/navigation_map" />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_status_bluetooth"
+            android:layout_gravity="left|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/button_bluetooth_selector"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_full_screen"
+            android:layout_gravity="right|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_full_screen_selector"/>
     </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,19 +42,22 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="68dp"
             android:background="#ffffff">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageView2" />
+                android:layout_marginLeft="33dp"
+                android:id="@+id/image_description" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
                 android:text="@string/text_navi_description"
+                android:layout_gravity="center"
+                android:textSize="16sp"
+                android:textColor="#000000"
                 android:id="@+id/text_navi_description" />
 
         </LinearLayout>
@@ -65,15 +65,15 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff">
+            android:layout_height="37dp"
+            android:background="#717171">
 
-            <Button
+            <ImageButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_finish_navigation"
+                android:layout_height="37dp"
                 android:id="@+id/btn_finish_navigation"
-                android:onClick="onFinishNavigationBtn" />
+                android:onClick="onFinishNavigationBtn"
+                android:background="@drawable/button_finish_navi_selector" />
         </LinearLayout>
     </LinearLayout>
 

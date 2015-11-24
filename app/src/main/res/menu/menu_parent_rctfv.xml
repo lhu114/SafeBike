@@ -7,5 +7,5 @@
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="always"
-        app:actionLayout="@layout/menu_parent_rctfv_layout" />
+        app:actionLayout="@layout/custom_actionbar_parent_rctfv" />
 </menu>

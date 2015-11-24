@@ -2,30 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorUserImform" >
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/edit_keyword"
-        android:layout_weight="1"
-        android:text="@string/edit_keyword"
-        android:minWidth="300dp"/>
+        android:textColor="#000000"
+        android:singleLine="true"
+        android:background="@drawable/search_box"
+        android:paddingLeft="5dp" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_menu_search"
-        android:id="@+id/btn_menu_search"
-        />
+        android:id="@+id/btn_search"
+        android:background="@drawable/search_selector"
+        android:layout_marginLeft="5dp"/>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_menu_cancel"
-        android:id="@+id/btn_menu_cancel"
-        />
+        android:id="@+id/btn_cancel"
+        android:background="@drawable/button_cancel_selector"
+        android:layout_marginLeft="5dp"/>
 
 </LinearLayout>

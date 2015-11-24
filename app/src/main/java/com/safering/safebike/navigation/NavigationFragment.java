@@ -2,23 +2,22 @@ package com.safering.safebike.navigation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,6 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
 
 import java.util.ArrayList;
@@ -65,13 +65,20 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private static final String ON = "on";
     private static final String OFF = "off";
 
-    private static final String KEY_FAVORITE_POI_NAME = "favoritepoiname";
+    private static final String KEY_DESTINATION_POI_NAME = "destinationpoiname";
 
     private GoogleMap mMap;
 
     GoogleApiClient mGoogleApiClient;
     Location mLocation, mCacheLocation;
     LocationRequest mLocationRequest;
+
+    Sensor mRotationSensor;
+    SensorManager mSM;
+
+    float[] orientation = new float[3];
+    float[] mRotationMatrix = new float[9];
+    float mAngle;
 
     final Map<POI, Marker> mPOIMarkerResolver = new HashMap<POI, Marker>();
 //    final Map<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
@@ -82,10 +89,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     View view;
     LinearLayout addressLayout;
-    FloatingActionButton fabFindRoute;
+//    FloatingActionButton btnFindRoute;
     TextView tvPOIAddress;
     TextView tvPOIName;
-    Button btnFullScreen;
+    ImageButton btnFullScreen, btnFindRoute, btnFwdSearch, btnCurrentLoc;
+
+    boolean isCurrentLocBtnOn = false;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -124,25 +133,39 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
             mapFragment.getMapAsync(this);
 
+            btnFwdSearch = (ImageButton) ((MainActivity)getActivity()).findViewById(R.id.btn_fwd_search);
+
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
             addressLayout.setVisibility(View.INVISIBLE);
 
             tvPOIAddress = (TextView) view.findViewById(R.id.text_poi_address);
             tvPOIName = (TextView) view.findViewById(R.id.text_poi_name);
 
-            btnFullScreen = (Button) view.findViewById(R.id.btn_full_screen);
+            btnFullScreen = (ImageButton) view.findViewById(R.id.btn_full_screen);
 
-            fabFindRoute = (FloatingActionButton) view.findViewById(R.id.btn_find_route);
-            fabFindRoute.setVisibility(View.GONE);
+            btnFindRoute = (ImageButton) view.findViewById(R.id.btn_find_route);
+            btnFindRoute.setVisibility(View.GONE);
 
-            if (View.GONE == fabFindRoute.getVisibility()) {
+            if (View.GONE == btnFindRoute.getVisibility()) {
                 LOCATION_CHANGE_FLAG = ON;
                 Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.ON");
 
                 MainActivity.FABFINDROUTE_ONOFF_FLAG = OFF;
-            } else if (View.VISIBLE == fabFindRoute.getVisibility()) {
+            } else if (View.VISIBLE == btnFindRoute.getVisibility()) {
                 MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
             }
+
+            btnFwdSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(DEBUG_TAG, "NavigationFragment.onOptionsItemSelected.menu_fwd_search");
+                    Intent intent = new Intent(getContext(), ParentRctFvActivity.class);
+                    startActivityForResult(intent, REQUEST_SEARCH_POI);
+
+                    LOCATION_CHANGE_FLAG = OFF;
+                    Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
+                }
+            });
 
             btnFullScreen.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -151,14 +174,18 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                     if (actionBar.isShowing()) {
                         actionBar.hide();
+
+                        btnFullScreen.setSelected(true);
                     } else {
                         actionBar.show();
+
+                        btnFullScreen.setSelected(false);
                     }
                 }
             });
 
-            FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.btn_crt_location);
-            fab.setOnClickListener(new View.OnClickListener() {
+            btnCurrentLoc = (ImageButton) view.findViewById(R.id.btn_crt_location);
+            btnCurrentLoc.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     /*
@@ -181,8 +208,23 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     } else {
                         Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
                     }
+
+                    if (!isCurrentLocBtnOn) {
+                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.false");
+
+                        isCurrentLocBtnOn = true;
+                        btnCurrentLoc.setSelected(true);
+                    } else if (isCurrentLocBtnOn) {
+                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.true");
+
+                        isCurrentLocBtnOn = false;
+                        btnCurrentLoc.setSelected(false);
+                    }
                 }
             });
+
+            setFont();
+
         } catch (InflateException e) {            /*
              * 구글맵 View가 이미 inflate되어 있는 상태이므로, 에러를 무시합니다.
              */
@@ -194,6 +236,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onResume() {
         super.onResume();
+        btnFwdSearch.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -225,6 +268,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect");
         }
+
+        btnFwdSearch.setVisibility(View.GONE);
     }
 
     /*
@@ -252,9 +297,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     }
 
-    @Override
+/*    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_navigation, menu);
+//        inflater.inflate(R.menu.menu_navigation, menu);
 
     }
 
@@ -263,9 +308,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         int id = item.getItemId();
 
         if (id == R.id.menu_fwd_search) {
-            /*
+            *//*
              * 최근이용, 즐겨찾기 탭 활성화
-             */
+             *//*
             Log.d(DEBUG_TAG, "NavigationFragment.onOptionsItemSelected.menu_fwd_search");
             Intent intent = new Intent(getContext(), ParentRctFvActivity.class);
             startActivityForResult(intent, REQUEST_SEARCH_POI);
@@ -277,7 +322,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -285,6 +330,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult");
         if (requestCode == REQUEST_SEARCH_POI) {
             if (resultCode == Activity.RESULT_OK) {
+                Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.REQUEST_SEARCH_POI.RESULT_OK");
+
                 POI poi = (POI) data.getSerializableExtra(KEY_POI_OBJECT);
 
 //                double poiLatitude = data.getDoubleExtra(KEY_POI_LATITUDE, 0);
@@ -319,16 +366,16 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     PropertyManager.getInstance().setDestinationLongitude(Double.toString(poi.getLongitude()));
 
                     addressLayout.setVisibility(View.VISIBLE);
-                    fabFindRoute.setVisibility(View.VISIBLE);
+                    btnFindRoute.setVisibility(View.VISIBLE);
 
-                    if (View.VISIBLE == fabFindRoute.getVisibility()) {
+                    if (View.VISIBLE == btnFindRoute.getVisibility()) {
                         LOCATION_CHANGE_FLAG = OFF;
                         Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
 
                         MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
                     }
 
-                    fabFindRoute.setOnClickListener(new View.OnClickListener() {
+                    btnFindRoute.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                     /*
@@ -339,11 +386,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDX,  PropertyManager.getInstance().getDestinationLatitude());
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDY, PropertyManager.getInstance().getDestinationLongitude());
                             Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-                            intent.putExtra(KEY_FAVORITE_POI_NAME, tvPOIName.getText().toString());
+                            intent.putExtra(KEY_DESTINATION_POI_NAME, tvPOIName.getText().toString());
                             startActivity(intent);
                         }
                     });
                 }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.REQUEST_SEARCH_POI.RESULT_CANCELED");
             }
         }
     }
@@ -376,13 +425,33 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.recent.moveMap");
             moveMap(recentLatitude, recentLongitude, MOVE_CAMERA);
         }
-
-
-//        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addPOIMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+    SensorEventListener mSensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_ROTATION_VECTOR :
+                    SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
+                    SensorManager.getOrientation(mRotationMatrix, orientation);
+
+                    mAngle = (float) Math.toDegrees(orientation[0]);
+
+                    if (mAngle < 0) {
+                        mAngle += 360;
+                    }
+
+//                    Log.d(DEBUG_TAG, "StartNavigationActivity.mSensorListener.onSensorChanged.mAngle : " + mAngle);
+
+                    break;
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 
     protected void createLocationRequest() {
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
@@ -419,8 +488,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (mLocation != null) {
             Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
-            Toast.makeText(((MainActivity)getContext()), "NavigationFragment.onConnected : " +Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()),
-                    Toast.LENGTH_SHORT).show();
+         /*   Toast.makeText(((MainActivity)getContext()), "NavigationFragment.onConnected : " +Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()),
+                    Toast.LENGTH_SHORT).show();*/
 
             PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
             PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
@@ -472,8 +541,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
                         PropertyManager.getInstance().setRecentLongitude(Double.toString(location.getLongitude()));
                         Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
-                        Toast.makeText(getContext(), "NavigationFragment.onLocationChanged : " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()),
-                                Toast.LENGTH_SHORT).show();
+                        /*Toast.makeText(getContext(), "NavigationFragment.onLocationChanged : " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()),
+                                Toast.LENGTH_SHORT).show();*/
                     }
                 }
             } else {
@@ -491,7 +560,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         clearALLMarker();
 
         addressLayout.setVisibility(View.INVISIBLE);
-        fabFindRoute.setVisibility(View.GONE);
+        btnFindRoute.setVisibility(View.GONE);
     }
 
     @Override
@@ -505,6 +574,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     if (result != null) {
                         String defineAddress = getDefineRvsGeoAddress(result);
 
+                        /*
+                         * tvPOIName 번지까지 포함시키는 defineAddress 정의 필요
+                         */
                         if (!result.buildingName.equals("")) {
                             tvPOIName.setText(result.buildingName);
                             tvPOIAddress.setText(defineAddress);
@@ -541,15 +613,15 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             });
 
             addressLayout.setVisibility(View.VISIBLE);
-            fabFindRoute.setVisibility(View.VISIBLE);
+            btnFindRoute.setVisibility(View.VISIBLE);
 
             MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
 
-            fabFindRoute.setOnClickListener(new View.OnClickListener() {
+            btnFindRoute.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-                    intent.putExtra(KEY_FAVORITE_POI_NAME, tvPOIName.getText().toString());
+                    intent.putExtra(KEY_DESTINATION_POI_NAME, tvPOIName.getText().toString());
                     startActivity(intent);
                 }
             });
@@ -581,7 +653,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
          */
 //        options.position(new LatLng(poi.getLatitude(), poi.getLongitude()));
         options.position(new LatLng(latLng.latitude, latLng.longitude));
-        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrival));
         options.anchor(0.5f, 1.0f);
 //        options.title(addressInfo.);
         options.draggable(false);
@@ -652,58 +724,81 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private String getDefinePOIAddress(POI poi) {
         String defineAddress = null;
 
-        if (!poi.detailAddrName.equals("")) {
+        if (!poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+            Log.d("safebike", "defineAddress 1");
+
+            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
+        } else if (!poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            Log.d("safebike", "defineAddress 2");
+
+            defineAddress = poi.getAddress() + " " + poi.firstNo;
+        } else {
+            Log.d("safebike", "defineAddress 3");
+
             defineAddress = poi.getAddress();
-        } else if (poi.detailAddrName.equals("")){
-            defineAddress = poi.upperAddrName + " " + poi.middleAddrName + " " + poi.lowerAddrName;
         }
-//        if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 1");
-//        } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " " + poi.firstNo;
-//
-//            Log.d("safebike", "defineAddress 2");
-//        } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress();
-//
-//            Log.d("safebike", "defineAddress 3");
-//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 4");
-//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " " + poi.firstNo;
-//
-//            Log.d("safebike", "defineAddress 5");
-//        } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
-//
-//            Log.d("safebike", "defineAddress 6");
-//        } else {
-//            defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 7");
-//        }
 
         return defineAddress;
+
+        //        if (!poi.detailAddrName.equals("")) {
+//            defineAddress = poi.getAddress();
+//        } else if (poi.detailAddrName.equals("")){
+//            defineAddress = poi.upperAddrName + " " + poi.middleAddrName + " " + poi.lowerAddrName;
+//        }
+
+        /*if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
+
+            Log.d("safebike", "defineAddress 1");
+        } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+            Log.d("safebike", "defineAddress 2");
+        } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress();
+
+            Log.d("safebike", "defineAddress 3");
+        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
+            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
+
+            Log.d("safebike", "defineAddress 4");
+        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.getAddress() + " " + poi.firstNo;
+
+            Log.d("safebike", "defineAddress 5");
+        } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
+            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
+
+            Log.d("safebike", "defineAddress 6");
+        } else {
+            defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
+
+            Log.d("safebike", "defineAddress 7");
+        }*/
     }
 
     private String getDefineRvsGeoAddress(AddressInfo addressInfo) {
         String defineAddress = null;
 
-        defineAddress = addressInfo.city_do + " " + addressInfo.gu_gun + " " + addressInfo.legalDong;
+        if (!addressInfo.bunji.equals("") && !addressInfo.bunji.equals(null)) {
+            defineAddress = addressInfo.city_do + " " + addressInfo.gu_gun + " " + addressInfo.legalDong + " " + addressInfo.bunji;
+        } else {
+            defineAddress = addressInfo.city_do + " " + addressInfo.gu_gun + " " + addressInfo.legalDong;
+        }
 
         return defineAddress;
     }
 
-    public  void setFabFindRouteChange() {
+    public void setFabFindRouteChange() {
         clearALLMarker();
 
         addressLayout.setVisibility(View.INVISIBLE);
-        fabFindRoute.setVisibility(View.GONE);
+        btnFindRoute.setVisibility(View.GONE);
     }
 
+    private void setFont() {
+        tvPOIName.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
+        tvPOIAddress.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+    }
 }
 

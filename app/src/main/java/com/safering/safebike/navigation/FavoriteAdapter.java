@@ -18,6 +18,14 @@ public class FavoriteAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void remove() {
+        if (items.size() > 0) {
+            items.clear();
+            notifyDataSetChanged();
+            notifyDataSetInvalidated();
+        }
+    }
+
     @Override
     public int getCount() {
         return items.size();

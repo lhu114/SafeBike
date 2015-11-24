@@ -4,36 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.safering.safebike.navigation.SelectRouteActivity">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_status_bluetooth"
-        android:id="@+id/btn_status_bluetooth"
-        android:layout_gravity="left|top"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_full_screen"
-        android:id="@+id/btn_full_screen"
-        android:layout_gravity="right|top"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_favorite_onoff"
-        android:id="@+id/btn_favorite_onoff"
-        android:layout_gravity="right|center_vertical"
-        android:layout_below="@+id/btn_full_screen"
-        android:layout_alignParentEnd="true" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -43,6 +13,32 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:id="@+id/route_map" />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_status_bluetooth"
+            android:layout_gravity="left|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/button_bluetooth_selector"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_full_screen"
+            android:layout_gravity="right|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_full_screen_selector"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_favorite_onoff"
+            android:layout_gravity="right"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_favorite_selector"/>
     </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,103 +47,120 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true">
+
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:id="@+id/layout_bicyclelane">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_bicyclelane"
-                android:id="@+id/text_bicyclelane" />
+            android:id="@+id/layout_select_option"
+            android:background="@drawable/whithe_box_and_shadow_big_1" >
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp">
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:id="@+id/layout_bicyclelane">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_bicyclelane"
+                    android:textSize="16sp"
+                    android:textColor="#92c9aa"
+                    android:id="@+id/text_bicyclelane" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_bicyclelane_totaltime"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
                     android:id="@+id/text_bicyclelane_totaltime" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_bicyclelane_arrivetime"
+                    android:textSize="12sp"
+                    android:textColor="#9a9a9a"
                     android:id="@+id/text_bicyclelane_arrivetime" />
 
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_bicyclelane_totaldistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:text="@string/text_bicyclelane_totaldistance"
+                    android:textColor="#9a9a9a"
+                    android:textSize="12sp" />
+
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_bicyclelane_totaldistance"
-                android:id="@+id/text_bicyclelane_totaldistance"
-                android:layout_marginLeft="100dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:id="@+id/layout_minimuntime">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_minimumtime"
-                android:id="@+id/text_minimumtime" />
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp">
+                android:id="@+id/layout_minimuntime"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/text_minimumtime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_minimumtime_totaltime"
-                    android:id="@+id/text_minimumtime_totaltime" />
+                    android:text="@string/text_minimumtime"
+                    android:textColor="#f29b9e"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_minimumtime_totaltime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_minimumtime_totaltime"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/text_minimumtime_arrivetime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_minimumtime_arrivetime"
+                        android:textColor="#9a9a9a"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
                 <TextView
+                    android:id="@+id/text_minimumtime_totaldistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_minimumtime_arrivetime"
-                    android:id="@+id/text_minimumtime_arrivetime" />
+                    android:layout_marginLeft="100dp"
+                    android:text="@string/text_minimumtime_totaldistance"
+                    android:textColor="#9a9a9a"
+                    android:textSize="12sp" />
 
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_minimumtime_totaldistance"
-                android:id="@+id/text_minimumtime_totaldistance"
-                android:layout_marginLeft="100dp" />
-
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff">
+            android:layout_height="37dp"
+            android:id="@+id/btn_start_navigation"
+            android:onClick="onStartNavigationBtn"
+            android:background="@drawable/button_start_navi_selector" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_start_navigation"
-                android:id="@+id/btn_start_navigation"
-                android:onClick="onStartNavigationBtn" />
-        </LinearLayout>
     </LinearLayout>
 
 

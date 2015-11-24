@@ -12,24 +12,26 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/btn_delete_recent"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:divider="#ffffff"/>
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_delete_recent"
         android:id="@+id/btn_delete_recent"
-        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:layout_below="@+id/listView_recent"
         android:layout_centerHorizontal="true"
-        android:visibility="gone" />
+        android:background="@drawable/button_delete_recent_selector"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_messag_recent"
-        android:id="@+id/text_messag_recent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:textSize="16sp"
+        android:textColor="#a0a0a0"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/text_messag_recent" />
 
 </RelativeLayout>
