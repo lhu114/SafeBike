@@ -1,5 +1,6 @@
 package com.safering.safebike.adapter;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +23,17 @@ public class BluetoothDeviceAdapter extends BaseAdapter implements BluetoothItem
         return items.get(position);
     }
 
+    public BluetoothDeviceItem getItem(String address){
+        BluetoothDeviceItem item = null;
+        for(int i = 0; i < items.size(); i++){
+            if(items.get(i).deviceAddress.equals(address)){
+                return items.get(i);
+
+            }
+        };
+        return null;
+    }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -37,32 +49,44 @@ public class BluetoothDeviceAdapter extends BaseAdapter implements BluetoothItem
         else{
             view = (BluetoothItemView)convertView;
         }
+
         if(items.get(position).isSel){
             view.setBluetoothData(items.get(position),true);
         }
         else{
             view.setBluetoothData(items.get(position),false);
         }
+       // view.setBluetoothData(items.get(position),false);
+
 
         return view;
     }
 
     public void add(BluetoothDeviceItem item,boolean isSel){
 
-        boolean isDuple = false;
+       boolean isDuple = false;
         for(int i = 0; i < items.size(); i++){
-            if(items.get(i).deviceAddress.equals(item.deviceAddress))
+            if(items.get(i).deviceAddress.equals(item.deviceAddress)) {
                 isDuple = true;
+                break;
+              //  Log.i("isDuple","is Duple!!");
+
+            }
+
         }
         if(isDuple == false) {
+
             item.isSel = isSel;
             items.add(item);
             notifyDataSetChanged();
         }
 
+
     }
 /*
-    public void addRegisterDevice(BluetoothDeviceItem item){
+    public void addRegisterDevice(Blu
+
+    etoothDeviceItem item){
         boolean isDuple = false;
         for(int i = 0; i < items.size(); i++){
             if(items.get(i).deviceAddress.equals(item.deviceAddress))

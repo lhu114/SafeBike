@@ -109,6 +109,8 @@ public class ConfirmSignUpFragment extends Fragment {
                 PropertyManager.getInstance().setUserId(id);
                 PropertyManager.getInstance().setUserPassword(password);
                 PropertyManager.getInstance().setUserJoin(date);
+             //   PropertyManager.getInstance().setUserImagePath("null");
+
                 textProgressSignup.setVisibility(View.GONE);
                 textCompleteSign.setVisibility(View.VISIBLE);
                 textCompleteSign1.setVisibility(View.VISIBLE);

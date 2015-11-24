@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         */
 
         textMainTitle = (TextView)findViewById(R.id.text_main_title);
-        setFont();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
 
         naviHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
-        imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
 
+        imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
         imageUserProfile = (ImageView)naviHeaderView.findViewById(R.id.image_join_user);
         textUserId = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_id);
         textUserEmail = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_email);
@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         setProfile();
+        setFont();
 
     }
 
@@ -339,9 +340,9 @@ public class MainActivity extends AppCompatActivity
 
     public void setFont(){
         textMainTitle.setText("SafeBike");
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.BMJUA));
-
-
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.BMJUA));
+        textUserEmail.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.NOTOSANS));
+        textUserId.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.NOTOSANS));
     }
 
     public void setProfile(){

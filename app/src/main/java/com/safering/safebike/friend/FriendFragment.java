@@ -76,7 +76,7 @@ public class FriendFragment extends Fragment {
                             return true;
                         } else {
                             String uEmail = PropertyManager.getInstance().getUserEmail();
-                            String fEmail = PropertyManager.getInstance().getUserEmail();
+                            String fEmail = friendItem.pemail;
 
                             NetworkManager.getInstance().removeUserFriend(getContext(), uEmail, fEmail, new NetworkManager.OnResultListener() {
                                 @Override

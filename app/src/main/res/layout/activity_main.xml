@@ -22,6 +22,7 @@
 
         app:itemIconTint="@color/colorUserImform"
         app:itemTextColor="@color/colorUserImform"
+
         />
 <!--
     app:itemBackground="@drawable/menuitem_background_layer"

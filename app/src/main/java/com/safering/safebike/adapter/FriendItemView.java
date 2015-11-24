@@ -1,6 +1,8 @@
 package com.safering.safebike.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -78,10 +80,16 @@ public class FriendItemView extends RelativeLayout {
     public void setFriendData(FriendItem data) {
         fData = data;
         friendId.setText(data.pname);
-        /*if(!data.photo.equals("null")){
+        if(data.photo == null) {
+            Log.i("friend photo", data.photo + "");
+        }else {
+            ImageLoader.getInstance().displayImage(data.photo,friendImage, options);
+
+        /*if(!data.photo.equals("null") && !TextUtils.isEmpty(data.photo)){
             Toast.makeText(getContext(), "photo url : " + data.photo, Toast.LENGTH_SHORT).show();
             ImageLoader.getInstance().displayImage(data.photo,friendImage, options);
         }*/
+        }
     }
 
     public void setAddButtonVisible(boolean isVisible) {

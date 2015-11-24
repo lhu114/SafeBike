@@ -54,16 +54,21 @@ public class FriendAddressFragment extends Fragment {
                 String uEmail = PropertyManager.getInstance().getUserEmail();
                 String fEmail = data.pemail;
                 String fId = data.pname;
-                NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-                    }
+                String fPhoto = data.photo;
+                if(UserFriendList.getInstance().isFriend(fEmail) == true){
+                    Toast.makeText(getContext(),"이미등록된친구입니당",Toast.LENGTH_SHORT).show();
+                }else {
+                    NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
+                        @Override
+                        public void onSuccess(Object result) {
+                        }
 
-                    @Override
-                    public void onFail(int code) {
+                        @Override
+                        public void onFail(int code) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
 

@@ -53,21 +53,27 @@ public class FriendDirectFragment extends Fragment {
         fAdapter.setOnButtonClickListener(new FriendItemView.OnButtonClickListener() {
             @Override
             public void onButtonClick(FriendItemView view, FriendItem data) {
+
                 String uEmail = PropertyManager.getInstance().getUserEmail();
                 String fEmail = data.pemail;
                 String fId = data.pname;
-                NetworkManager.getInstance().addUserFriend(getContext(),uEmail,fEmail,fId, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        fAdapter.clear();
+                String fPhoto = data.photo;
+                if(UserFriendList.getInstance().isFriend(fEmail) == true){
+                    Toast.makeText(getContext(),"이미등록된 친구",Toast.LENGTH_SHORT).show();
+                }else {
+                    NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            fAdapter.clear();
 
-                    }
+                        }
 
-                    @Override
-                    public void onFail(int code) {
+                        @Override
+                        public void onFail(int code) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
 
@@ -95,6 +101,18 @@ public class FriendDirectFragment extends Fragment {
                         friend.pemail = result.usereserch.uemail;
                         friend.pname = result.usereserch.name;
                         friend.photo = result.usereserch.photo;
+                        Log.i("friend pmail", result.usereserch.uemail);
+                        Log.i("friend pname",result.usereserch.name);
+                        Log.i("friend pphoto", result.usereserch.photo);
+                        for(int i = 0; i < UserFriendList.getInstance().getFriendList().size(); i++){
+                            Log.i("isFriend",UserFriendList.getInstance().getFriendList().get(i).pemail);
+
+                        }
+                        String e = UserFriendList.getInstance().getFriendList().get(0).pemail;
+                        Log.i("isFriendT/F",UserFriendList.getInstance().isFriend(e) + "");
+
+
+
                         fAdapter.add(friend);
                     }
                 }

@@ -51,6 +51,7 @@ public class SettingFragment extends Fragment {
     private static final int REQUEST_ENABLE_BT = 3;
     public BluetoothGatt mGatt;
     boolean isEnableBluetooth = false;
+    boolean isButtonClick = false;
     BluetoothAdapter mBluetoothAdapter = null;
     BluetoothDeviceAdapter deviceAdapter;
     ProgressBar searchDevice;
@@ -60,6 +61,7 @@ public class SettingFragment extends Fragment {
     TextView textConnectDevice;
 
     public SettingFragment() {
+
         // Required empty public constructor
     }
 
@@ -70,16 +72,17 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
-        Toast.makeText(getContext(),"onCreateView",Toast.LENGTH_SHORT).show();
 
         textConnectDevice = (TextView) view.findViewById(R.id.btn_connect_device);
         deviceList = (ListView) view.findViewById(R.id.connective_device_list);
         searchDevice = (ProgressBar) view.findViewById(R.id.progressBar_search);
         tmpLeft = (Button) view.findViewById(R.id.btn_tmp_left);
         tmpRight = (Button) view.findViewById(R.id.btn_tmp_right);
-
+        isEnableBluetooth = false;
+        isButtonClick = false;
         deviceAdapter = new BluetoothDeviceAdapter();
         deviceList.setAdapter(deviceAdapter);
+        //       deviceList.addView(n);
 
         setFont();
         setDevice();
@@ -107,13 +110,27 @@ public class SettingFragment extends Fragment {
             public void onSwitchClick(BluetoothItemView view, BluetoothDeviceItem item, boolean isChecked) {
 
                 if (isChecked) {
-                    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
-                    connectToDevice(device);
 
-                }
-                else{
+
+
+
+                    if(BluetoothConnection.getInstance().getConnectedValue(item.deviceAddress) == false) {
+                       // Log.i("device~!~address false", item.deviceAddress);
+
+                        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
+                        connectToDevice(device);
+                        //deviceAdapter.getItem(item.deviceAddress).isConnecting = true;
+                       // Log.i("deviceCon", deviceAdapter.getItem(item.deviceAddress).isConnecting + "");
+                    }
+                    else{
+                        Log.i("device~!~address true",item.deviceAddress);
+
+                    }
+
+
+                } else {
                     BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
-                    connectToDevice(device);
+                    disconnectToDevice(device);
 
                 }
 
@@ -148,13 +165,16 @@ public class SettingFragment extends Fragment {
 
     @Override
     public void onResume() {
+
         super.onResume();
         if (isEnableBluetooth) {
             searchDevice.setVisibility(View.VISIBLE);
             scanLeDevice(true);
+            Toast.makeText(getContext(), "onResumeEnable", Toast.LENGTH_SHORT).show();
 
+        } else {
+            Toast.makeText(getContext(), "onResumeFalse", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -171,19 +191,21 @@ public class SettingFragment extends Fragment {
         }
 
     }
-    public void setDevice(){
+
+    public void setDevice() {
         ArrayList<BluetoothDevice> devices = BluetoothConnection.getInstance().getDevices();
-        for(int i = 0; i < devices.size(); i++){
+        for (int i = 0; i < devices.size(); i++) {
+
             BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
             deviceItem.deviceName = devices.get(i).getName();
             deviceItem.deviceAddress = devices.get(i).getAddress();
+//            Log.i("setDevice",devices.get(i).getName());
 
-            //if()
-            if(BluetoothConnection.getInstance().getConnectedValue(devices.get(i).getAddress())){
-                deviceAdapter.add(deviceItem,true);
-            }
-            else{
-                deviceAdapter.add(deviceItem,false);
+
+            if (BluetoothConnection.getInstance().getConnectedValue(devices.get(i).getAddress())) {
+                deviceAdapter.add(deviceItem, true);
+            } else {
+                deviceAdapter.add(deviceItem, false);
             }
 
 
@@ -212,21 +234,19 @@ public class SettingFragment extends Fragment {
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-            searchDevice.setVisibility(View.GONE);
+            //
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("onLeScan", device.toString());
+                    searchDevice.setVisibility(View.GONE);
+                    BluetoothConnection.getInstance().addDevice(device);
+                    BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
 
                     BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
                     deviceItem.deviceName = device.getName();
                     deviceItem.deviceAddress = device.getAddress();
-                    deviceAdapter.add(deviceItem,false);
-                    BluetoothConnection.getInstance().addDevice(device);
-                    BluetoothConnection.getInstance().setConnectedValue(device.getAddress(),false);
-
-                    //중복값처리에 따라 해쉬맵에 넣어주기
-
+                    deviceAdapter.add(deviceItem, false);
+                    isButtonClick = true;
 
 
 
@@ -259,15 +279,9 @@ public class SettingFragment extends Fragment {
             //mGatt = device.connectGatt(getContext(), false, gattCallback);
 
             //객체 설정
-           // scanLeDevice(false);// will stop after first device detection
+            // scanLeDevice(false);// will stop after first device detection
         }
     }
-
-
-
-
-
-
 
 
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
@@ -276,12 +290,18 @@ public class SettingFragment extends Fragment {
             Log.i("onConnectionStateChange", "Status: " + status);
             switch (newState) {
                 case BluetoothProfile.STATE_CONNECTED:
-                   //BluetoothConnection.getInstance()
+                    //BluetoothConnection.getInstance()
                     BluetoothConnection.getInstance().setGatt(gatt);
-                    BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(),true);
-                   // BluetoothConnection.getInstance().getDevice(gatt.getDevice().getAddress())
+                    BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(), true);
+
+                    Log.i("connect!!Device", deviceAdapter.getItem(gatt.getDevice().getAddress()).deviceName);
+                    //deviceAdapter.getItem(gatt.getDevice().getAddress()).isConnecting = true;
+                   // Log.i("deviceConState", deviceAdapter.getItem(gatt.getDevice().getAddress()).isConnecting + "");
+
+                    // BluetoothConnection.getInstance().getDevice(gatt.getDevice().getAddress())
                     Log.i("gattCallback", "STATE_CONNECTED");
                     gatt.discoverServices();
+
 
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:

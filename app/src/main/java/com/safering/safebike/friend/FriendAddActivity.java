@@ -29,6 +29,8 @@ import org.w3c.dom.Text;
 public class FriendAddActivity extends AppCompatActivity {
     FragmentTabHost tabHost;
     TextView textTitle;
+    TextView textAddress;
+    TextView textDirect;
     ImageView imageSearch;
     ImageView imageBack;
     View friendAddress;
@@ -49,6 +51,8 @@ public class FriendAddActivity extends AppCompatActivity {
 
         friendAddress = getLayoutInflater().inflate(R.layout.friend_address_view, null);
         friendDirect = getLayoutInflater().inflate(R.layout.friend_direct_view, null);
+        textAddress = (TextView)friendAddress.findViewById(R.id.text_tab_address);
+        textDirect = (TextView)friendDirect.findViewById(R.id.text_tab_direct);
         tabHost = (FragmentTabHost) findViewById(R.id.friend_tabHost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.friend_realtabcontent);
         tabHost.addTab(tabHost.newTabSpec(TAG_ADDRESS).setIndicator(friendAddress), FriendAddressFragment.class, null);
@@ -65,9 +69,12 @@ public class FriendAddActivity extends AppCompatActivity {
     }
 
 
+
     public void setFont() {
         textTitle.setText(R.string.text_add_friend);
         textTitle.setTypeface(FontManager.getInstance().getTypeface(FriendAddActivity.this, FontManager.NOTOSANS_M));
+        textAddress.setTypeface(FontManager.getInstance().getTypeface(FriendAddActivity.this,FontManager.NOTOSANS));
+        textDirect.setTypeface(FontManager.getInstance().getTypeface(FriendAddActivity.this,FontManager.NOTOSANS));
     }
 
     public void actionBarSetting(){

@@ -94,7 +94,7 @@ public class NetworkManager {
     private static final String FRIEND_PROFILE_URL = "http://52.69.133.212:3000/user/friend/profile";//서버 URL
     private static final String FRIEND_EMAIL = "pemail";
     private static final String FRIEND_PHONE_LIST = "FRIEND_PHONE_LIST";
-    private static final String FRIEND_ID = "name";
+    private static final String FRIEND_ID = "pname";
 
     /*
     * 로그인
@@ -428,7 +428,7 @@ public class NetworkManager {
 
     }
 
-    public void addUserFriend(Context context, String uEmail, String fEamil, String fid, final OnResultListener listener) {
+    public void addUserFriend(Context context, String uEmail, String fEamil, String fid,String fPhoto, final OnResultListener listener) {
         //PARAMETER : 유저 이메일,친구 이메일, 친구 아이디
         //결과값 : INT
 
@@ -441,6 +441,7 @@ public class NetworkManager {
         params.put(USER_EAMIL, uEmail);
         params.put(FRIEND_EMAIL, fEamil);
         params.put(FRIEND_ID, fid);
+        params.put(USER_IMAGE,fPhoto);
 
 
         client.post(context, FRIEND_ADD_URL, params, new TextHttpResponseHandler() {
@@ -471,8 +472,8 @@ public class NetworkManager {
         /*params.put(USER_EAMIL, uEmail);
         params.put(FRIEND_EMAIL, fEamil);
 */
-        params.put(USER_EAMIL, "lowgiant@gmail.com");
-        params.put(FRIEND_EMAIL, "newreview@naver.com");
+        params.put(USER_EAMIL,uEmail);
+        params.put(FRIEND_EMAIL,fEamil);
 
 /*
         client.get(context, FRIEND_REMOVE_URL, params, new TextHttpResponseHandler() {
@@ -559,7 +560,7 @@ public class NetworkManager {
 
     }
 
-    public void getFriendProfile(Context context, String uEmail, String fEmail, final OnResultListener<FriendProfileResult> listener) {
+    public void getFriendProfile(Context context,String fEmail, final OnResultListener<FriendProfileResult> listener) {
         //PARAMETER : 유저 이메일,친구이메일,구분값(친구추가삭제 메소드랑 구분)
         //결과값 : JSON(친구아이디,이메일,가입일,활동량(칼로리,속력,거리))
         RequestParams params = new RequestParams();
@@ -568,7 +569,7 @@ public class NetworkManager {
         params.put(FRIEND_EMAIL, fEmail);
 
 */
-        params.put(USER_EAMIL, "lowgiant@gmail.com");
+        params.put(USER_EAMIL, fEmail);
 
 
         client.get(context, FRIEND_PROFILE_URL, params, new TextHttpResponseHandler() {
@@ -589,6 +590,7 @@ public class NetworkManager {
                 Log.i("friend calorie", result.friendprofile.calorie + "");
                 Log.i("friend speed", result.friendprofile.speed + "");
                 Log.i("friend road", result.friendprofile.road + "");
+
 
 
             }

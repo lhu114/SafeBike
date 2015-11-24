@@ -6,7 +6,7 @@ package com.safering.safebike.adapter;
 public class BluetoothDeviceItem {
     public String deviceName;
     public String deviceAddress;
-    boolean isSel = false;
-    //public String isSelect;
+    public boolean isSel = false;
+
 
 }
