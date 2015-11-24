@@ -1,6 +1,7 @@
 package com.safering.safebike.navigation;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -117,6 +118,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             createLocationRequest();
         }
 
+        mSM = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mRotationSensor = mSM.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+
         mPOIMarkerList = new ArrayList<POI>();
         mLcMarkerList = new ArrayList<LatLng>();
     }
@@ -216,6 +220,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         btnCurrentLoc.setSelected(true);
                     } else if (isCurrentLocBtnOn) {
                         Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.true");
+//                        setBearingMoveMap(mAngle, mLocation.getLatitude(), mLocation.getLongitude());
 
                         isCurrentLocBtnOn = false;
                         btnCurrentLoc.setSelected(false);
@@ -250,6 +255,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 mGoogleApiClient.connect();
             }
         }
+
+        if (mRotationSensor != null) {
+            mSM.registerListener(mSensorListener, mRotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     /*
@@ -267,6 +276,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             mGoogleApiClient.disconnect();
 //            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect");
+        }
+
+        if (mRotationSensor != null) {
+            mSM.unregisterListener(mSensorListener);
         }
 
         btnFwdSearch.setVisibility(View.GONE);
@@ -407,7 +420,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setMyLocationEnabled(true);
-        mMap.setOnMarkerClickListener(this);
+            mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
 
@@ -431,7 +444,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         @Override
         public void onSensorChanged(SensorEvent event) {
             switch (event.sensor.getType()) {
-                case Sensor.TYPE_ROTATION_VECTOR :
+                case Sensor.TYPE_ROTATION_VECTOR:
                     SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
                     SensorManager.getOrientation(mRotationMatrix, orientation);
 
@@ -441,7 +454,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         mAngle += 360;
                     }
 
-//                    Log.d(DEBUG_TAG, "StartNavigationActivity.mSensorListener.onSensorChanged.mAngle : " + mAngle);
+                    if (isCurrentLocBtnOn) {
+//                        setBearingMoveMap(mAngle, Double.parseDouble(PropertyManager.getInstance().getRecentLatitude()), Double.parseDouble(PropertyManager.getInstance().getRecentLongitude()));
+                    }
+
+//                    Log.d(DEBUG_TAG, "NavigationFragment.btnCurrentLoc.mSensorListener.onSensorChanged.mAngle : " + mAngle);
 
                     break;
             }
@@ -452,6 +469,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         }
     };
+
 
     protected void createLocationRequest() {
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
@@ -645,6 +663,19 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
+    private void setBearingMoveMap(float angle, double latitude, double longitude) {
+        if (mMap != null) {
+            CameraPosition.Builder builder = new CameraPosition.Builder();
+            builder.target(new LatLng(latitude, longitude));
+            builder.bearing(angle);
+            builder.zoom(16);
+
+            CameraPosition position = builder.build();
+            CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
+
+            mMap.animateCamera(update);
+        }
+    }
 //    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
     private void addLongClickMarker(LatLng latLng) {
         MarkerOptions options  = new MarkerOptions();

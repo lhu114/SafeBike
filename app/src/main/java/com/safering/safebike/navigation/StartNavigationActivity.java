@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.exercisereport.CalculatorCalorie;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
@@ -87,9 +88,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     public static final int LOCATION_TIMEOUT_INTERVAL = 60000;
     public static final int REROUTE_NAVIGATION_TIMEOUT_INTERVAL = 15000;
 
-    private static final float LIMIT_DISTANCE = 25;
+    private static final float LIMIT_DISTANCE = 30;
 
     private static final int ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE = 3209;
+
+    private static final int SUCCESS = 200;
+    private static final int BAD_REQUEST = 400;
 
     public SpeakVoice tts;
 
@@ -1448,25 +1452,35 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 totalDistance += distanceList.get(i);
             }
 
+//            CalculatorCalorie.getInstance().getCalorie(totalSpeed / speedList.size(), 65 , 1);
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Calendar cal = Calendar.getInstance();
 
             final String userEmail = PropertyManager.getInstance().getUserEmail();
             final String date = sdf.format(cal.getTime());
-            final int calorie = Math.round(totalCalorie);
+            final int calorie = CalculatorCalorie.getInstance().getCalorie(totalSpeed / speedList.size(), 65, 5);
             final int speed = Math.round(totalSpeed / speedList.size());
-            final int distance = Math.round(totalDistance / distanceList.size());
+            final int distance = Math.round(totalDistance);
 
-            Log.d(DEBUG_TAG, "userEmail : " + userEmail + " | date : " + date + " | calorie : " + calorie + " | speed : " + speed + " | distance : " + distance);
-
+            Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + calorie + " | speed : " + speed + " | distance : " + distance);
+            Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + Integer.toString(calorie) + " | speed : " + Integer.toString(speed) + " | distance : " + Integer.toString(distance), Toast.LENGTH_LONG).show();
             NetworkManager.getInstance().saveExercise(StartNavigationActivity.this, userEmail, date, calorie, speed, distance, new NetworkManager.OnResultListener() {
                 @Override
                 public void onSuccess(Object result) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onSuccess");
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onSuccess.result : " + result);
 
-                    mSpeedList.clear();
-                    mDistanceList.clear();
+                    if ((int) result == SUCCESS) {
+                        Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess.200");
+                        Toast.makeText(StartNavigationActivity.this, "saveExercise.SUCCESS.200", Toast.LENGTH_SHORT).show();
 
+                        mSpeedList.clear();
+                        mDistanceList.clear();
+
+                    } else {
+                        Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess.else");
+                        Toast.makeText(StartNavigationActivity.this, "saveExercise.SUCCESS.200.else", Toast.LENGTH_SHORT).show();
+                    }
                     /*
                      *  비정상 종료 처리 시에 기존 데이터(칼로리, 스피드, 거리 리스트 저장해 두었다가 onCreate 에서 저장) bundle 이용
                      *
@@ -1476,7 +1490,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                 @Override
                 public void onFail(int code) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onFail");
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onFail.result : " + Integer.toString(code));
+                    Toast.makeText(StartNavigationActivity.this, "saveExercise.FAIL", Toast.LENGTH_SHORT).show();
                 }
             });
         }

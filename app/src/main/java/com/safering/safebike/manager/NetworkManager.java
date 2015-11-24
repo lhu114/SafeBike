@@ -890,7 +890,6 @@ public class NetworkManager {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("safebike", "NetworkManager.removeAllFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
-                Log.i("removeAllFavoriteFail", statusCode + "");
 
                  listener.onFail(statusCode);
             }
@@ -898,7 +897,6 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.d("safebike", "NetworkManager.removeAllFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
-                Log.i("removeAllFavoriteFail", statusCode + responseString);
 
                  listener.onSuccess(statusCode);
             }
@@ -922,15 +920,16 @@ public class NetworkManager {
         client.post(context, NAVIGATION_SAVE_EXCERCISE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i("saveExcerciseFail", statusCode + "");
+                Log.d("safebike", "NetworkManager.saveExercise.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
-                //listener.onFail(ON_FAIL);
+                listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.i("saveExcerciseSuccess", statusCode + " / " + responseString);
-                //listener.onSuccess(ON_SUCCESS);
+                Log.d("safebike", "NetworkManager.saveExercise.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
+
+                listener.onSuccess(statusCode);
             }
         });
     }

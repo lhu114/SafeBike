@@ -34,7 +34,7 @@ public class CalculatorCalorie {
                 index = i;
             }
         }
-        float cal = coefficientArr[index][0] * weight * interval;
+        float cal = coefficientArr[index][1] * weight * interval;
         return (int)cal;
 
 
