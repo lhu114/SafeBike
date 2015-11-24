@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class StartNavigationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final String DEBUG_TAG = "safebike";
 
@@ -79,7 +78,11 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     public static final int REROUTE_NAVIGATION_TIMEOUT_INTERVAL = 15000;
 
     private static final float LIMIT_DISTANCE = 25;
+
+    private static final int ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE = 3209;
+
     public SpeakVoice tts;
+
     private GoogleMap mMap;
     LocationManager mLM;
     Location orthogonalLoc, pointLoc, locationA, locationB;
@@ -111,14 +114,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
     boolean isStartNavigation = true;
     boolean isFirstFinishDialog = true;
+    boolean isActivateRouteWitinLimitDistanceNoti = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tts = new SpeakVoice();
-
-
         Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate");
+
         setContentView(R.layout.activity_start_navigation);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -152,6 +154,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        tts = new SpeakVoice();
 //        Criteria criteria = new Criteria();
 //        /*
 //         * criteria 설정
@@ -174,19 +177,19 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-                    case MESSAGE_INITIAL_LOCATION_TIMEOUT :
+                    case MESSAGE_INITIAL_LOCATION_TIMEOUT:
                         Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.handleMessage.MESSAGE_INITIAL_LOCATION_TIMEOUT");
                         Toast.makeText(StartNavigationActivity.this, "MESSAGE_INITIAL_LOCATION_TIMEOUT", Toast.LENGTH_SHORT).show();
 
                         break;
 
-                    case MESSAGE_ITERATIVE_LOCATION_TIMEOUT :
+                    case MESSAGE_ITERATIVE_LOCATION_TIMEOUT:
                         Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.handleMessage.MESSAGE_ITERATIVE_LOCATION_TIMEOUT");
                         Toast.makeText(StartNavigationActivity.this, "MESSAGE_INITIAL_LOCATION_TIMEOUT", Toast.LENGTH_SHORT).show();
 
                         break;
 
-                    case MESSAGE_REROUTE_NAVIGATION :
+                    case MESSAGE_REROUTE_NAVIGATION:
                         Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.handleMessage.MESSAGE_REROUTE_NAVIGATION");
                         Toast.makeText(StartNavigationActivity.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Time Out)", Toast.LENGTH_SHORT).show();
 
@@ -321,6 +324,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
              */
 
             tvNaviDescription.setText("길안내");
+            tts.translate("경로를 탐색 중 입니다.");
+
             /*
              * GPS_PROVIDER 에 해당하는 마지막 위치만 가져오기 때문에 이전 상태에서 GPS가 아닌 Network로 마지막 위치 읽었을 때 정보 가져오지 못하므로 사용하지 말아야 하나...
              */
@@ -552,6 +557,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 if (location != null) {
                     Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.location != null");
 
+                    tts.translate("안내를 시작합니다.");
 
 //                    starIterativeLocationUpdates();
                     PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
@@ -716,7 +722,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                 Toast.makeText(StartNavigationActivity.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 있는 경우)", Toast.LENGTH_SHORT).show();
                                 Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
-                                findRoute();
+                                if (!isActivateRouteWitinLimitDistanceNoti) {
+                                    tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+
+                                    findRoute();
+                                }
+
 
 //                                Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(경로 재탐색 직전 인덱스) : " + Integer.toString(naviLatLngIndex));
                             } else {
@@ -817,7 +828,11 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                     Toast.makeText(StartNavigationActivity.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 없는 경우)", Toast.LENGTH_SHORT).show();
                                     Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
-                                    findRoute();
+                                    if (!isActivateRouteWitinLimitDistanceNoti) {
+                                        tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+
+                                        findRoute();
+                                    }
 
 //                                    Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우) : " + Integer.toString(naviLatLngIndex));
                                 } else {
@@ -1024,7 +1039,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         orthogonalLoc.setLatitude(findLatitude);
         orthogonalLoc.setLongitude(findLongitude);
 
-        if (checkIncludeLine(latLngA,latLngB, orthogonalLoc)) {
+        if (checkIncludeLine(latLngA, latLngB, orthogonalLoc)) {
             distance = orthogonalLoc.distanceTo(currentLocC);
 
             mOrthogonalDistanceResolver.put(distance, index);
@@ -1121,6 +1136,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
             }
 
+            tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setIcon(android.R.drawable.ic_dialog_info);
             builder.setTitle("내비게이션 안내종료");
@@ -1174,6 +1191,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
             }
 
+            tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setIcon(android.R.drawable.ic_dialog_info);
             builder.setTitle("내비게이션 안내종료");
@@ -1214,19 +1233,24 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             if (currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex)) {
                 Log.d(DEBUG_TAG, "StartNavigationActivity.getPointInfoNotifications.currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex)");
                 BicycleNavigationInfo pointInfo;
-                float distance = 0;
+                float tempDistance = 0;
+                int distance = 0;
+
                 mPointLatLngIndex++;
 
                 for (int i = currentLatLngIndex; i <= mPointLatLngIndexList.get(mPointLatLngIndex); i++) {
                     pointInfo = mBicycleNaviInfoList.get(i);
 
-                    distance += pointInfo.distance;
+                    tempDistance += pointInfo.distance;
                 }
 
                 pointInfo = mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex));
+                distance = (int) tempDistance;
 
-                Log.d(DEBUG_TAG, Float.toString(distance) + "m 이후 " + pointInfo.properties.description + " | pointLatLngIndex : " + currentLatLngIndex);
-                tvNaviDescription.setText(Float.toString(distance) + "m 이후 " + pointInfo.properties.description);
+                tts.translate(Integer.toString(distance) + "m 이후 " + pointInfo.properties.description);
+                tvNaviDescription.setText(Integer.toString(distance) + "m 이후 " + pointInfo.properties.description);
+
+                Log.d(DEBUG_TAG, Integer.toString(distance) + "m 이후 " + pointInfo.properties.description + " | pointLatLngIndex : " + currentLatLngIndex);
             } else {
                 Log.d(DEBUG_TAG, "StartNavigationActivity.getPointInfoNotifications.currentLatLngIndex != mPointLatLngIndexList.get(mPointLatLngIndex)");
             }
@@ -1240,13 +1264,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
     }
 
-//    double startX, double startY, double endX, double endY, int searchOption
+    //    double startX, double startY, double endX, double endY, int searchOption
     private void findRoute() {
         final double startX = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
         final double startY = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
         final double endX = Double.parseDouble(PropertyManager.getInstance().getDestinationLongitude());
         final double endY = Double.parseDouble(PropertyManager.getInstance().getDestinationLatitude());
-        final int searchOption =  PropertyManager.getInstance().getFindRouteSearchOption();
+        final int searchOption = PropertyManager.getInstance().getFindRouteSearchOption();
 
         Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.출발지, 목적지 위도 경도 : " + startY + ", " + startX + " | " + endY + ", " + endX);
 
@@ -1277,24 +1301,40 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 //                                            || (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_GP))
 //                                            || (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_EP))
 //                                            || feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
-                                        double[] coordForNavi = feature.geometry.coordinates;
+                                    double[] coordForNavi = feature.geometry.coordinates;
 
-                                        for (int j = 0; j < coordForNavi.length; j += 2) {
-                                            float distance = 0;
+                                    for (int j = 0; j < coordForNavi.length; j += 2) {
+                                        float distance = 0;
 
-                                            LatLng latLngA = new LatLng(coordForNavi[j + 1], coordForNavi[j]);
-                                            LatLng latLngB;
+                                        LatLng latLngA = new LatLng(coordForNavi[j + 1], coordForNavi[j]);
+                                        LatLng latLngB;
 
-                                            BicycleProperties properties = feature.properties;
+                                        BicycleProperties properties = feature.properties;
 
-                                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.BicycleProperties.mAllPropertiesResolver : " + properties.description);
+                                        Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.BicycleProperties.mAllPropertiesResolver : " + properties.description);
 
 //                                        mNaviLatLngList.add(latLngA);
 //                                        mAllPropertiesResolver.put(latLngA, properties);
 
-                                            if (j <= coordForNavi.length - 4) {
+                                        if (j <= coordForNavi.length - 4) {
 //                                            latLngA = new LatLng(coordForNavi[i + 1], coordForNavi[i]);
-                                                latLngB = new LatLng(coordForNavi[j + 3], coordForNavi[j + 2]);
+                                            latLngB = new LatLng(coordForNavi[j + 3], coordForNavi[j + 2]);
+
+                                            locationA.setLatitude(latLngA.latitude);
+                                            locationA.setLongitude(latLngA.longitude);
+
+                                            locationB.setLatitude(latLngB.latitude);
+                                            locationB.setLongitude(latLngB.longitude);
+
+                                            distance = locationA.distanceTo(locationB);
+
+                                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막 아닐 때) : " + mBicycleNaviInfoList.size() + " | " + distance);
+                                        } else {
+                                            if (i + 1 < result.features.size()) {
+//                                                Log.d(DEBUG_TAG, "인덱스 마지막 아닐 때 다음 좌표와 거리 계산");
+                                                BicycleFeature tempFeature = result.features.get(i + 1);
+                                                double[] tempCoordForNavi = tempFeature.geometry.coordinates;
+                                                latLngB = new LatLng(tempCoordForNavi[1], tempCoordForNavi[0]);
 
                                                 locationA.setLatitude(latLngA.latitude);
                                                 locationA.setLongitude(latLngA.longitude);
@@ -1304,83 +1344,67 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                                                 distance = locationA.distanceTo(locationB);
 
-                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막 아닐 때) : " + mBicycleNaviInfoList.size() + " | " + distance);
+                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막 아닐 때 다음 좌표와 거리 계산) : " + mBicycleNaviInfoList.size() + " | " + distance);
                                             } else {
-                                                if (i + 1 < result.features.size()) {
-//                                                Log.d(DEBUG_TAG, "인덱스 마지막 아닐 때 다음 좌표와 거리 계산");
-                                                    BicycleFeature tempFeature = result.features.get(i + 1);
-                                                    double[] tempCoordForNavi = tempFeature.geometry.coordinates;
-                                                    latLngB = new LatLng(tempCoordForNavi[1], tempCoordForNavi[0]);
+                                                distance = 0;
 
-                                                    locationA.setLatitude(latLngA.latitude);
-                                                    locationA.setLongitude(latLngA.longitude);
-
-                                                    locationB.setLatitude(latLngB.latitude);
-                                                    locationB.setLongitude(latLngB.longitude);
-
-                                                    distance = locationA.distanceTo(locationB);
-
-                                                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막 아닐 때 다음 좌표와 거리 계산) : " + mBicycleNaviInfoList.size() + " | " + distance);
-                                                } else {
-                                                    distance = 0;
-
-                                                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막) : " + mBicycleNaviInfoList.size() + " | " + distance);
-                                                }
+                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막) : " + mBicycleNaviInfoList.size() + " | " + distance);
                                             }
+                                        }
 
                                         /*
                                          *  !feature.properties.pointType.equals(POINTTYPE_ST)
                                          *  목적지 도착 이후에 종종 pointType이 ST인 좌표가 하나 더 찍히기 때문에 제외시킴
                                          */
-                                            if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT)) {
-                                                BicycleNavigationInfo bicycleNaviInfo = new BicycleNavigationInfo();
-                                                bicycleNaviInfo.latLng = latLngA;
-                                                bicycleNaviInfo.properties = feature.properties;
-                                                bicycleNaviInfo.distance = distance;
+                                        if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT)) {
+                                            BicycleNavigationInfo bicycleNaviInfo = new BicycleNavigationInfo();
+                                            bicycleNaviInfo.latLng = latLngA;
+                                            bicycleNaviInfo.properties = feature.properties;
+                                            bicycleNaviInfo.distance = distance;
 
-                                                mBicycleNaviInfoList.add(bicycleNaviInfo);
+                                            mBicycleNaviInfoList.add(bicycleNaviInfo);
 
-                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.BICYCLE_ROUTE_GEOMETRY_TYPE_POINT | LataLng : " + bicycleNaviInfo.latLng.latitude +
-                                                        ", " + bicycleNaviInfo.latLng.longitude + " | distance : " + bicycleNaviInfo.distance + " | description : " + bicycleNaviInfo.properties.description);
+                                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.BICYCLE_ROUTE_GEOMETRY_TYPE_POINT | LataLng : " + bicycleNaviInfo.latLng.latitude +
+                                                    ", " + bicycleNaviInfo.latLng.longitude + " | distance : " + bicycleNaviInfo.distance + " | description : " + bicycleNaviInfo.properties.description);
 
-                                                if (mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description != null)
-                                                    Log.d(DEBUG_TAG, "mBicycleNaviInfoList.size : " + Integer.toString(mBicycleNaviInfoList.size() - 1) + ", description : " + mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description);
+                                            if (mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description != null)
+                                                Log.d(DEBUG_TAG, "mBicycleNaviInfoList.size : " + Integer.toString(mBicycleNaviInfoList.size() - 1) + ", description : " + mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description);
 
-                                                if (feature.properties.pointType.equals(POINTTYPE_SP)) {
-                                                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
+                                            if (feature.properties.pointType.equals(POINTTYPE_SP)) {
+                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
-                                                    addPointMarker(latLngA, feature.properties, POINTTYPE_SP);
+                                                addPointMarker(latLngA, feature.properties, POINTTYPE_SP);
 
-                                                    mPointLatLngList.add(latLngA);
-                                                } else if ((feature.properties.pointType.equals(POINTTYPE_GP))) {
-                                                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
+                                                mPointLatLngList.add(latLngA);
+                                            } else if ((feature.properties.pointType.equals(POINTTYPE_GP))) {
+                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
-                                                    addPointMarker(latLngA, feature.properties, POINTTYPE_GP);
+                                                addPointMarker(latLngA, feature.properties, POINTTYPE_GP);
 
-                                                    mPointLatLngList.add(latLngA);
-                                                } else if (feature.properties.pointType.equals(POINTTYPE_EP)) {
-                                                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
+                                                mPointLatLngList.add(latLngA);
+                                            } else if (feature.properties.pointType.equals(POINTTYPE_EP)) {
+                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
-                                                    addPointMarker(latLngA, feature.properties, POINTTYPE_EP);
+                                                addPointMarker(latLngA, feature.properties, POINTTYPE_EP);
 
-                                                    mPointLatLngList.add(latLngA);
-                                                }
-                                            } else if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
-                                                BicycleNavigationInfo bicycleNaviInfo = new BicycleNavigationInfo();
-                                                bicycleNaviInfo.latLng = latLngA;
-                                                bicycleNaviInfo.distance = distance;
-                                                bicycleNaviInfo.properties = null;
-
-                                                mBicycleNaviInfoList.add(bicycleNaviInfo);
-
-                                                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING | LataLng : " + bicycleNaviInfo.latLng.latitude +
-                                                        ", " + bicycleNaviInfo.latLng.longitude + " | distance : " + bicycleNaviInfo.distance);
-
-                                                options.add(latLngA);
+                                                mPointLatLngList.add(latLngA);
                                             }
-//
-                                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.mBicycleNaviInfoList : " + mBicycleNaviInfoList.size());
+                                        } else if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
+                                            BicycleNavigationInfo bicycleNaviInfo = new BicycleNavigationInfo();
+                                            bicycleNaviInfo.latLng = latLngA;
+                                            bicycleNaviInfo.distance = distance;
+                                            bicycleNaviInfo.properties = null;
+
+                                            mBicycleNaviInfoList.add(bicycleNaviInfo);
+
+                                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING | LataLng : " + bicycleNaviInfo.latLng.latitude +
+                                                    ", " + bicycleNaviInfo.latLng.longitude + " | distance : " + bicycleNaviInfo.distance);
+
+                                            options.add(latLngA);
                                         }
+//
+                                        Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.findRoute.onSuccess.mBicycleNaviInfoList : " + mBicycleNaviInfoList.size());
+                                    }
 //                                    }
 //                                    if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
 //                                        double[] coord = feature.geometry.coordinates;
@@ -1430,7 +1454,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                 }
 
 
-                                for (int m = 0; m < mBicycleNaviInfoList.size(); m ++) {
+                                for (int m = 0; m < mBicycleNaviInfoList.size(); m++) {
                                     BicycleNavigationInfo tempInfo = mBicycleNaviInfoList.get(m);
                                     if (tempInfo.properties != null) {
                                         if (tempInfo.properties.description != null) {
@@ -1438,7 +1462,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                                         } else {
                                             Log.d(DEBUG_TAG, "index : " + Integer.toString(m) + ", description : null" + ", distance : " + tempInfo.distance);
                                         }
-                                    } else  {
+                                    } else {
                                         Log.d(DEBUG_TAG, "index : " + Integer.toString(m) + ", tempInfo.properties == null" + ", distance : " + tempInfo.distance);
                                     }
                                 }
@@ -1484,7 +1508,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                         @Override
                         public void onFail(int code) {
-                            if (code == 3209) {
+                            if (code == ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE) {
+                                isActivateRouteWitinLimitDistanceNoti = true;
+
                                 withinRouteLimitDistanceDialog();
                             }
                         }
@@ -1525,7 +1551,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
     }*/
 }
-
 
 
 //package com.safering.safebike.navigation;
