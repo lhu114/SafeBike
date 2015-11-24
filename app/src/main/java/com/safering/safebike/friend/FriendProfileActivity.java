@@ -4,16 +4,25 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
+
+import java.util.StringTokenizer;
 
 public class FriendProfileActivity extends AppCompatActivity {
     ImageView friendImage;
@@ -30,6 +39,8 @@ public class FriendProfileActivity extends AppCompatActivity {
     TextView textFriendCalorieResult;
     TextView textFriendCalorie;
     TextView textFriendTotalResult;
+    String getfriendEmail;
+    String getfriendPhoto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +51,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         imageBack = (ImageView)findViewById(R.id.image_backkey);
         textFriendTotalResult = (TextView)findViewById(R.id.text_friend_total_result);
 
-        friendImage = (ImageView)findViewById(R.id.image_friend);
+        friendImage = (ImageView)findViewById(R.id.image_friend_profile);
         friendId = (TextView)findViewById(R.id.text_friendid_profile);
         friendEmail = (TextView)findViewById(R.id.text_friendemail_profile);
         friendJoin = (TextView)findViewById(R.id.text_friendjoin_profile);
@@ -62,13 +73,16 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         FriendItem friend = (FriendItem)intent.getSerializableExtra("friendInform");
-        String uEmail = PropertyManager.getInstance().getUserEmail();
-        String fEmail = friend.pemail;
 
-        NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this, uEmail, fEmail, new NetworkManager.OnResultListener() {
+        getfriendEmail = friend.pemail;
+        getfriendPhoto = friend.photo;
+        Log.i("friendPhoto",getfriendPhoto+"");
+
+
+        NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this,getfriendEmail, new NetworkManager.OnResultListener<FriendProfileResult>() {
             @Override
-            public void onSuccess(Object success) {
-
+            public void onSuccess(FriendProfileResult result) {
+                setFriendProfile(result);
 
             }
 
@@ -84,16 +98,56 @@ public class FriendProfileActivity extends AppCompatActivity {
         textTitle.setText(R.string.text_add_friend);
         textTitle.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS_M));
         textFriendDistanceResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        textFriendDistance.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        textFriendSpeedResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        textFriendSpeed.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        textFriendCalorieResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        textFriendCalorie.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        textFriendTotalResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendDistance.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
+        textFriendSpeedResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
+        textFriendSpeed.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
+        textFriendCalorieResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
+        textFriendCalorie.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
+        textFriendTotalResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         friendId.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        friendEmail.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
-        friendJoin.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        friendEmail.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
+        friendJoin.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
     }
+
+    public void setFriendProfile(FriendProfileResult result){
+        FriendProfile profile = result.friendprofile;
+        friendId.setText(profile.name);
+        friendEmail.setText(profile.email);
+        friendJoin.setText(getDateFormat(profile.join));
+        textFriendDistance.setText(profile.road + "km");
+        textFriendSpeed.setText(profile.speed + "km/h");
+        textFriendCalorie.setText(profile.calorie + "kcal");
+
+        if(!getfriendPhoto.equals("null")) {
+            DisplayImageOptions options;
+            options = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .showImageOnLoading(R.mipmap.profile_img)
+                    .showImageForEmptyUri(R.mipmap.profile_img)
+
+
+                    .considerExifParams(true)
+                    .displayer(new RoundedBitmapDisplayer(1000))
+                    .build();
+
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
+            ImageLoader.getInstance().displayImage(getfriendPhoto, friendImage, options);
+        }
+
+    }
+
+    public String getDateFormat(String date){
+        Log.i("date",date);
+        String resultDate = "";
+        StringTokenizer tokenizer = new StringTokenizer(date,"-");
+        resultDate += tokenizer.nextToken() + "년 ";
+        resultDate += tokenizer.nextToken() + "월 ";
+        resultDate += tokenizer.nextToken() + "일 가입";
+        return resultDate;
+    }
+
+
 
     /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {

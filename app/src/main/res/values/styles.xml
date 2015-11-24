@@ -7,6 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowActionBarOverlay">@null</item>
+
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -19,6 +21,8 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorUserImform</item>
         <item name="colorPrimaryDark">@color/safeBikeColorPrimaryDark</item>
+        <item name="android:windowActionBarOverlay">@null</item>
+
         <item name="android:windowContentOverlay">@null</item>
     </style>
     <style name="CustomAppTheme.NoActionBar">

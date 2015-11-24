@@ -6,7 +6,7 @@
 
     >
     <ImageView
-        android:id="@+id/image_backkey_friend_directOn"
+        android:id="@+id/image_backkey_friend_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/back_selector"
@@ -16,19 +16,20 @@
         />
 
     <EditText
-        android:id="@+id/edit_friend_search_directOn"
+        android:id="@+id/edit_friend_search_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="10dp"
         android:singleLine="true"
         android:lines="1"
-        android:hint="검색"
+        android:hint="이메일 검색"
+
 
         />
     <ImageView
-        android:id="@+id/image_search_friend_directOn"
+        android:id="@+id/image_search_friend_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

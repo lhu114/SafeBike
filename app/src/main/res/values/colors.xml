@@ -15,6 +15,10 @@
     <color name="colorYellow">#FFF100</color>
     <color name="colorDarkGray">#505050</color>
     <color name="safeBikeColorPrimaryDark">#2a7aaf</color>
+    <color name="colorMainBackground">#F2F2F2</color>
+    <color name="colorDeviceStatus">#2779B0</color>
+    <color name="colorTabText">#C6C6C6</color>
+
 
 
 

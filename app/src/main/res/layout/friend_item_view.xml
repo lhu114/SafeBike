@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/image_friend"
+        android:layout_toEndOf="@id/image_friend"
         android:text="friend"
         android:textSize="15sp"
         android:textColor="@color/colorBlack" />

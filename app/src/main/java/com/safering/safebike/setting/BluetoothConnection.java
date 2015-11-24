@@ -1,133 +1,106 @@
 package com.safering.safebike.setting;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by Tacademy on 2015-11-11.
+ * Created by Tacademy on 2015-11-20.
  */
 public class BluetoothConnection {
-    private Handler mHandler;
-    public static final int COMPLETE_PARIED = 1;
+    public static UUID SERVICE_UUID = UUID.fromString("1706BBC0-88AB-4B8D-877E-2237916EE929");
+    private static UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
 
-    public BluetoothConnection(Handler handler) {
-        mHandler = handler;
+    private ArrayList<BluetoothDevice> devices;
+    private static BluetoothConnection instance;
+    public BluetoothGatt mGatt = null;
+    public HashMap<String,Boolean> deviceMap;
+
+    public static BluetoothConnection getInstance(){
+        if(instance == null){
+            instance = new BluetoothConnection();
+        }
+        return instance;
+    }
+
+    private BluetoothConnection(){
+        devices = new ArrayList<BluetoothDevice>();
+        deviceMap = new HashMap<String,Boolean>();
 
     }
 
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
-        BluetoothSocket mmSocket;
-        InputStream mmInStream;
-        OutputStream mmOutStream;
-
-        mmSocket = socket;
-        InputStream tmpIn = null;
-        OutputStream tmpOut = null;
-
-        // Get the BluetoothSocket input and output streams
-        try {
-            Log.i("socket true", "temp sockets not created");
-
-            tmpIn = socket.getInputStream();
-            tmpOut = socket.getOutputStream();
-        } catch (IOException e) {
-            Log.e("socket fail", "temp sockets not created", e);
-        }
-
-        mmInStream = tmpIn;
-        mmOutStream = tmpOut;
-        String message = "1234";
-        byte[] send = message.getBytes();
-
-        try {
-            Log.i("send ok", "send true");
-
-            mmOutStream.write(send);
-        } catch (IOException e) {
-            Log.i("send fail", "send true");
-
-            e.printStackTrace();
-        }
-    }
-
-    public void connect(BluetoothDevice device, UUID uuid) {
-        new ConnectThread(device, uuid).start();
-
-    }
-
-    private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
-        private String mSocketType;
-
-        public ConnectThread(BluetoothDevice device, UUID uuid) {
-            Log.i("con thread", "------con-----");
-            mmDevice = device;
-            BluetoothSocket tmp = null;
-            // mSocketType = secure ? "Secure" : "Insecure";
-
-            // Get a BluetoothSocket for a connection with the
-            // given BluetoothDevice
-            try {
-                //  if (secure) {
-                tmp = device.createRfcommSocketToServiceRecord(
-                        uuid);
-                // } else {
-
-                // }
-            } catch (IOException e) {
-                //    Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
-            }
-            mmSocket = tmp;
-        }
-
-        public void run() {
-
-            // Always cancel discovery because it will slow down a connection
-
-            // Make a connection to the BluetoothSocket
-            try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
-                mmSocket.connect();
-            } catch (IOException e) {
-                // Close the socket
-                Log.i("connect", "------fail------");
-                try {
-                    mmSocket.close();
-                    //다이얼로그 취소 눌렀을시 리던
-                } catch (IOException e2) {
-                }
-                //connectionFailed();
-                return;
-            }
-            //여기 까지 페어링
-            Message msg = mHandler.obtainMessage();
-            msg.obj = mmDevice;
-            msg.arg1 = COMPLETE_PARIED;
-            mHandler.sendMessage(msg);
-
-            connected(mmSocket, mmDevice);//인풋스트림 생성
-        }
-
-        public void cancel() {
-
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                //s  Log.e(TAG, "close() of connect " + mSocketType + " socket failed", e);
+    public void addDevice(BluetoothDevice device){
+        boolean isDevice = false;
+        for(int i = 0; i < devices.size(); i++){
+            if(devices.get(i).getAddress().equals(device.getAddress())){
+                isDevice = true;
             }
         }
+        if(isDevice == false) {
+            devices.add(device);
+            //deviceMap.put(device.getAddress(),false);
+        }
     }
+
+    public void setConnectedValue(String address,boolean isChecked){
+        deviceMap.put(address,isChecked);
+
+    }
+
+    public boolean getConnectedValue(String address){
+        return deviceMap.get(address);
+
+    }
+
+    /*public BluetoothDevice getDevice(String address){
+        for(int i = 0; i < devices.size(); i++){
+            if(devices.get(i).getAddress().equals(address)){
+                return devices.get(i);
+            }
+        }
+        return null;
+
+    }*/
+
+    public ArrayList<BluetoothDevice> getDevices(){
+        return devices;
+    }
+
+    public void setGatt(BluetoothGatt gatt){
+        mGatt = gatt;
+
+    }
+
+    public BluetoothGatt getGatt(){
+        return mGatt;
+    }
+
+    public void writeLeftValue() {
+        // Log.i("writeValue : ", mGatt.writeCharacteristic(mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE)) + "");
+        byte[] arr = new byte[1];
+        arr[0] = 1;
+        if(mGatt != null) {
+            BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
+            characteristic.setValue(arr);
+            mGatt.writeCharacteristic(characteristic);
+        }
+
+    }
+
+    public void writeRightValue() {
+        //  Log.i("writeValue : ", mGatt.writeCharacteristic(mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE)) + "");
+        byte[] arr = new byte[1];
+        arr[0] = 2;
+        if(mGatt != null) {
+            BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
+            characteristic.setValue(arr);
+            mGatt.writeCharacteristic(characteristic);
+        }
+    }
+
 
 }

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
@@ -25,7 +26,7 @@ import java.util.Calendar;
  */
 
 /**
- * saveExercise - 운동정보 저장
+ * saveExcercise - 운동정보 저장
  * getFavorite - 즐겨찾기 리스트
  * saveFavorite - 즐겨찾기 추가
  * removeFavorite - 즐겨찾기 삭제
@@ -39,6 +40,9 @@ public class MainFragment extends Fragment {
 //    String serviceCondition;
     Button fwdNavigation, startNavigation;
     TextView textMainTitle;
+    TextView textBandOnOff;
+    TextView textBackLightOnOff;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -82,6 +86,8 @@ public class MainFragment extends Fragment {
 
         final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        textBandOnOff = (TextView)view.findViewById(R.id.text_band_status);
+        textBackLightOnOff = (TextView)view.findViewById(R.id.text_backlight_status);
 
     /*    Button favorite = (Button)view.findViewById(R.id.btn_favorite_list);
         favorite.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +191,7 @@ public class MainFragment extends Fragment {
 
 
         textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
-
+        
         setFont();
 
         Button btn = (Button) view.findViewById(R.id.btn_onoff_band);
@@ -246,5 +252,9 @@ public class MainFragment extends Fragment {
     public void setFont(){
         textMainTitle.setText("Safe Bike");
         textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
+        textBandOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        textBackLightOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+
+
     }
 }

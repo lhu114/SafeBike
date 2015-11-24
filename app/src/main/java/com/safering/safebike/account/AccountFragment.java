@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,6 +148,7 @@ public class AccountFragment extends Fragment {
 
 
     public String getDateFormat(String date){
+        Log.i("date",date);
         String resultDate = "";
         StringTokenizer tokenizer = new StringTokenizer(date,"-");
         resultDate += tokenizer.nextToken() + "년 ";
@@ -158,7 +160,8 @@ public class AccountFragment extends Fragment {
     public void setProfile(){
         textProfileName.setText(PropertyManager.getInstance().getUserId());
         textProfileEmail.setText(PropertyManager.getInstance().getUserEmail());
-        textProfileJoin.setText(getDateFormat((PropertyManager.getInstance().getUserJoin())));
+       //getDateFormat(PropertyManager.getInstance().getUserJoin());
+       textProfileJoin.setText(getDateFormat((PropertyManager.getInstance().getUserJoin())));
         if(!PropertyManager.getInstance().getUserImagePath().equals("")){
             DisplayImageOptions options;
             options = new DisplayImageOptions.Builder()
@@ -169,11 +172,11 @@ public class AccountFragment extends Fragment {
 
 
                     .considerExifParams(true)
-                    .displayer(new RoundedBitmapDisplayer(50))
+                    .displayer(new RoundedBitmapDisplayer(1000))
                     .build();
 
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),imageProfileUser, options);
+            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(),imageProfileUser, options);
         }
     }
 

@@ -15,9 +15,9 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:gravity="center"
+        android:textColor="@color/tabmenu_text_selector"
 
         android:text="칼로리"
-        android:textColor="@color/colorWhite"
         android:textSize="16sp" />
 
 

@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,8 +86,6 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setTitle(null);
         textMainTitle = (TextView)findViewById(R.id.text_main_title);
 
-        setFont();
-
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -118,11 +117,16 @@ public class MainActivity extends AppCompatActivity
         naviHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
 
-        imageUserProfile = (ImageView)naviHeaderView.findViewById(R.id.image_user_profile);
+        imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
+        imageUserProfile = (ImageView)naviHeaderView.findViewById(R.id.image_join_user);
         textUserId = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_id);
         textUserEmail = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_email);
 
-        setProfile();
+        if(imageUserProfile == null){
+//            imageUserProfile.getBaseline();
+            Toast.makeText(MainActivity.this,"imageUserProfile is null!!",Toast.LENGTH_SHORT).show();
+        }
+
         imageAccountSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +139,9 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        
+        setProfile();
+        setFont();
     }
 
     @Override
@@ -326,9 +333,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setFont(){
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.BMJUA));
-
-
+        textMainTitle.setText("Safe Bike");
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.BMJUA));
+        textUserEmail.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.NOTOSANS));
+        textUserId.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.NOTOSANS));
     }
 
     public void setProfile(){
@@ -341,14 +349,12 @@ public class MainActivity extends AppCompatActivity
                     .cacheOnDisc(true)
                     .showImageOnLoading(R.mipmap.profile_img)
                     .showImageForEmptyUri(R.mipmap.profile_img)
-
-
                     .considerExifParams(true)
-                    .displayer(new RoundedBitmapDisplayer(50))
+                    .displayer(new RoundedBitmapDisplayer(1000))
                     .build();
 
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-            ImageLoader.getInstance().displayImage(Uri.fromFile(new File(PropertyManager.getInstance().getUserImagePath())).toString(),imageUserProfile, options);
+            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(), imageUserProfile, options);
         }
 
     }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
 import com.safering.safebike.adapter.FriendItem;
+import com.safering.safebike.adapter.FriendItemView;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.property.PropertyManager;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class FriendDirectFragment extends Fragment {
+    public static int SEARCH_ONOFF = 1;
     ListView listView;
     FriendAdapter fAdapter;
     EditText inputEmail = null;
@@ -42,41 +45,38 @@ public class FriendDirectFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend_direct, container, false);
-        /*((FriendAddActivity)getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((FriendAddActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend);
-*/
+
         inputEmail = (EditText)view.findViewById(R.id.edit_search_friend_direct);
-
-        searchDirect = (Button) view.findViewById(R.id.btn_search_friend_direct);
-
         listView = (ListView) view.findViewById(R.id.listview_direct_friend);
         fAdapter = new FriendAdapter(1);
         listView.setAdapter(fAdapter);
-        searchDirect.setOnClickListener(new View.OnClickListener() {
-
+        fAdapter.setOnButtonClickListener(new FriendItemView.OnButtonClickListener() {
             @Override
-            public void onClick(View v) {
-                String email = PropertyManager.getInstance().getUserEmail();
-             /*   NetworkManager.getInstance().getUserFriendDirect(getContext(), email, inputEmail.getText().toString(), new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object success) {
+            public void onButtonClick(FriendItemView view, FriendItem data) {
 
-                    }
+                String uEmail = PropertyManager.getInstance().getUserEmail();
+                String fEmail = data.pemail;
+                String fId = data.pname;
+                String fPhoto = data.photo;
+                if(UserFriendList.getInstance().isFriend(fEmail) == true){
+                    Toast.makeText(getContext(),"이미등록된 친구",Toast.LENGTH_SHORT).show();
+                }else {
+                    NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
+                        @Override
+                        public void onSuccess(Object result) {
+                            fAdapter.clear();
 
-                    @Override
-                    public void onFail(int code) {
+                        }
 
-                    }
-                });*/
-                for (int i = 0; i < 20; i++) {
-                    //서버랑 비교해서 가져오기
-                    FriendItem item = new FriendItem();
-                    item.pname = "friendNumber/" + i;
-                    fAdapter.add(item);
+                        @Override
+                        public void onFail(int code) {
+
+                        }
+                    });
                 }
-
             }
         });
+
         return view;
     }
 
@@ -86,6 +86,46 @@ public class FriendDirectFragment extends Fragment {
         Toast.makeText(getContext(),"DirectOnPause",Toast.LENGTH_SHORT).show();
         ((FriendAddActivity)getActivity()).actionBarSetting();
 
+
+
+    }
+
+    public void searchDirect(String email){
+        NetworkManager.getInstance().getUserFriendDirect(getContext(), email, new NetworkManager.OnResultListener<FriendDirectSearchResult>() {
+            @Override
+            public void onSuccess(FriendDirectSearchResult result) {
+                if(result.usereserch != null){
+                    if(!result.usereserch.uemail.equals(PropertyManager.getInstance().getUserEmail())) {
+                        fAdapter.clear();
+                        FriendItem friend = new FriendItem();
+                        friend.pemail = result.usereserch.uemail;
+                        friend.pname = result.usereserch.name;
+                        friend.photo = result.usereserch.photo;
+                        Log.i("friend pmail", result.usereserch.uemail);
+                        Log.i("friend pname",result.usereserch.name);
+                        Log.i("friend pphoto", result.usereserch.photo);
+                        for(int i = 0; i < UserFriendList.getInstance().getFriendList().size(); i++){
+                            Log.i("isFriend",UserFriendList.getInstance().getFriendList().get(i).pemail);
+
+                        }
+                        String e = UserFriendList.getInstance().getFriendList().get(0).pemail;
+                        Log.i("isFriendT/F",UserFriendList.getInstance().isFriend(e) + "");
+
+
+
+                        fAdapter.add(friend);
+                    }
+                }
+                else{
+                    Log.i("directSearch","null!");
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
 
 
     }

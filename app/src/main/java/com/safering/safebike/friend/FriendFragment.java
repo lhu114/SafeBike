@@ -23,13 +23,17 @@ import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FriendFragment extends Fragment {
     public static final int FRIEND_NO_SELECT = 0;
     public static final String FRIEND_INFORM = "friendInform";
+    public static final String USER_FRIEND = "friendList";
     FriendAdapter fAdapter;
+    //ArrayList<String> fEmailList;
     ListView listView;
     TextView textInvite;
     TextView textMainTitle;
@@ -48,6 +52,7 @@ public class FriendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
 
         fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
+        //fEmailList = new ArrayList<String>();
         textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
         textInvite = (TextView)view.findViewById(R.id.text_invite_friend);
 
@@ -71,7 +76,7 @@ public class FriendFragment extends Fragment {
                             return true;
                         } else {
                             String uEmail = PropertyManager.getInstance().getUserEmail();
-                            String fEmail = PropertyManager.getInstance().getUserEmail();
+                            String fEmail = friendItem.pemail;
 
                             NetworkManager.getInstance().removeUserFriend(getContext(), uEmail, fEmail, new NetworkManager.OnResultListener() {
                                 @Override
@@ -107,6 +112,7 @@ public class FriendFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity) getActivity(), FriendAddActivity.class);
+                //intent.putStringArrayListExtra(USER_FRIEND,fEmailList);
                 startActivity(intent);
             }
         });
@@ -123,6 +129,8 @@ public class FriendFragment extends Fragment {
 
     public void setFriendList() {
         fAdapter.clear();
+        UserFriendList.getInstance().removeAll();
+        //fEmailList.clear();
         String email = PropertyManager.getInstance().getUserEmail();
         NetworkManager.getInstance().getUserFriends(getContext(), email, new NetworkManager.OnResultListener<FriendResult>() {
             @Override
@@ -130,10 +138,11 @@ public class FriendFragment extends Fragment {
                 int count = result.count;
                 for (int i = 0; i < count; i++) {
                     FriendItem friendItem = new FriendItem();
-                    //friendItem.pname = result.friendlist.get(i).pname;
-                    friendItem.pname = "friend " + i;
+                    friendItem.pname = result.friendlist.get(i).pname;
                     friendItem.pemail = result.friendlist.get(i).pemail;
                     friendItem.photo = result.friendlist.get(i).photo;
+                    //fEmailList.add(friendItem.pemail);
+                    UserFriendList.getInstance().addFriend(friendItem);
                     fAdapter.add(friendItem);
                 }
 
@@ -145,6 +154,12 @@ public class FriendFragment extends Fragment {
             }
         });
     }
+
+/*
+    public ArrayList<String> getFriendEmail(){
+        return fEmailList;
+    }
+*/
 
     public void setFont(){
         textInvite.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));

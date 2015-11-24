@@ -17,19 +17,20 @@
             android:hint="@string/search_friend_direct"
             android:visibility="invisible"
             />
-
+<!--
         <Button
             android:id="@+id/btn_search_friend_direct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:visibility="invisible"
-            />
+
+            />-->
     </FrameLayout>
 
 
     <ListView
         android:id="@+id/listview_direct_friend"
         android:layout_width="match_parent"
+        android:divider="@color/colorWhite"
         android:layout_height="match_parent"></ListView>
 </LinearLayout>

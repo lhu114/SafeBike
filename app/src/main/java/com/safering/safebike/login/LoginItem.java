@@ -6,4 +6,5 @@ package com.safering.safebike.login;
 public class LoginItem {
     String id;
     String join;
+    String photo;
 }

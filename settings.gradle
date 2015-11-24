@@ -1,1 +1,1 @@
-include ':app', ':MPChartLib', ':asyncHttpLib'
+include ':app', ':MPChartLib', ':asyncHttpLib', ':ImageLoaderLib'

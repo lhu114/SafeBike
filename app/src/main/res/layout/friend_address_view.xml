@@ -9,15 +9,19 @@
     >
 
     <TextView
-        android:id="@+id/text_tab_speed"
+        android:id="@+id/text_tab_address"
         android:layout_width="wrap_content"
         android:layout_height="53dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:gravity="center"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/tabmenu_text_selector"
+
+
         android:textSize="16sp"
         android:text="연락처"
+
+
         />
 
 

@@ -46,6 +46,7 @@ public class FriendAddressFragment extends Fragment {
         fAdapter = new FriendAdapter(FRIEND_SELECT);
         listView = (ListView) view.findViewById(R.id.listview_address_friend);
         listView.setAdapter(fAdapter);
+        listView.setFooterDividersEnabled(false);
 
         fAdapter.setOnButtonClickListener(new FriendItemView.OnButtonClickListener() {
             @Override
@@ -53,18 +54,25 @@ public class FriendAddressFragment extends Fragment {
                 String uEmail = PropertyManager.getInstance().getUserEmail();
                 String fEmail = data.pemail;
                 String fId = data.pname;
-                NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-                    }
+                String fPhoto = data.photo;
+                if(UserFriendList.getInstance().isFriend(fEmail) == true){
+                    Toast.makeText(getContext(),"이미등록된친구입니당",Toast.LENGTH_SHORT).show();
+                }else {
+                    NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
+                        @Override
+                        public void onSuccess(Object result) {
+                        }
 
-                    @Override
-                    public void onFail(int code) {
+                        @Override
+                        public void onFail(int code) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
+
+        setList();
 
 
         return view;
@@ -72,32 +80,21 @@ public class FriendAddressFragment extends Fragment {
 
     public void setList() {
         arContactList = getContactList();
-        for (int i = 0; i < arContactList.size(); i++) {
-            FriendItem friend = new FriendItem();
-            friend.pname = "friend / " + arContactList.get(i).getPhonenum();
-            fAdapter.add(friend);
-        }
-    }
-
-    public void setFriendList(){
-        String email = PropertyManager.getInstance().getUserEmail();
-        ArrayList phoneList = new ArrayList();
-        phoneList.add("010-3343-2324");
-        phoneList.add("010-1143-2324");
-        phoneList.add("010-3243-2324");
-        phoneList.add("010-3223-2324");
-
-        NetworkManager.getInstance().getUserFriendAddress(getContext(), email, phoneList, new NetworkManager.OnResultListener<FriendSearchResult>() {
+        NetworkManager.getInstance().getUserFriendAddress(getContext(),arContactList, new NetworkManager.OnResultListener<FriendSearchResult>() {
             @Override
             public void onSuccess(FriendSearchResult result) {
-                       /* int count = Integer.valueOf(result.count);
-                        for(int i = 0; i < count; i++){
+                int count = result.count;
+                if(count > 0){
+                    for(int i = 0; i < result.userpserch.size(); i++){
+                        if(!UserFriendList.getInstance().isFriend(result.userpserch.get(i).uemail)) {
                             FriendItem friend = new FriendItem();
-                            friend.friendId = result.friendlist.get(i).name;
-                            friend.friendImage = result.friendlist.get(i).photo;
-                            friend.friendEmail = result.friendlist.get(i).email;
+                            friend.pname = result.userpserch.get(i).name;
+                            friend.pemail = result.userpserch.get(i).uemail;
+                            friend.photo = result.userpserch.get(i).photo;
                             fAdapter.add(friend);
-                        }*/
+                        }
+                    }
+                }
 
             }
 
@@ -108,6 +105,35 @@ public class FriendAddressFragment extends Fragment {
         });
     }
 
+ /*   public void setFriendList(){
+        String email = PropertyManager.getInstance().getUserEmail();
+        ArrayList phoneList = new ArrayList();
+        phoneList.add("010-3343-2324");
+        phoneList.add("010-1143-2324");
+        phoneList.add("010-3243-2324");
+        phoneList.add("010-3223-2324");
+
+        NetworkManager.getInstance().getUserFriendAddress(getContext(), email, phoneList, new NetworkManager.OnResultListener<FriendSearchResult>() {
+            @Override
+            public void onSuccess(FriendSearchResult result) {
+                       *//* int count = Integer.valueOf(result.count);
+                        for(int i = 0; i < count; i++){
+                            FriendItem friend = new FriendItem();
+                            friend.friendId = result.friendlist.get(i).name;
+                            friend.friendImage = result.friendlist.get(i).photo;
+                            friend.friendEmail = result.friendlist.get(i).email;
+                            fAdapter.add(friend);
+                        }*//*
+
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
+    }
+*/
 
     private ArrayList<Contact> getContactList() {
 
