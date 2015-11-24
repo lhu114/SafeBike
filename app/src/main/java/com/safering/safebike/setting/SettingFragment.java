@@ -99,7 +99,7 @@ public class SettingFragment extends Fragment {
         tmpRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BluetoothConnection.getInstance().writeLeftValue();
+                BluetoothConnection.getInstance().writeRightValue();
 
                 //writeRightValue();
             }
