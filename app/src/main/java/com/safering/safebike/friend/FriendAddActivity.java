@@ -107,8 +107,16 @@ public class FriendAddActivity extends AppCompatActivity {
 
 
                     getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_address);
+                    ImageView imageBackAddress = (ImageView)findViewById(R.id.image_backkey_friend_address);
+
+
                     EditText editTextAddress = (EditText)findViewById(R.id.edit_friend_search_address);
-                    //Log.i("EditHint", editTextAddress.getText().toString());
+                    imageBackAddress.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
                     editTextAddress.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -148,7 +156,7 @@ public class FriendAddActivity extends AppCompatActivity {
 
                         //directFragment.SEARCH_ONOFF = 2;
                         getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
-                        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
+//                        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
 
 
                         ImageView imageBackDirect = (ImageView) findViewById(R.id.image_backkey_friend_directOff);
