@@ -5,9 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -27,7 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView userJoin;
     TextView textEditProfile;
     ImageView imageProfileUser;
-
+    DisplayImageOptions options;
     TextView textTitle;
     ImageView imageBack;
 
@@ -50,12 +52,23 @@ public class ProfileActivity extends AppCompatActivity {
         imageProfileUser = (ImageView)findViewById(R.id.image_user_profile);
         textEditProfile = (TextView)findViewById(R.id.text_edit_profile);
 
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .showImageOnLoading(R.mipmap.profile_img)
+                .showImageForEmptyUri(R.mipmap.profile_img)
 
 
+                .considerExifParams(true)
+                .displayer(new RoundedBitmapDisplayer(1000))
+                .build();
 
+
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(ProfileActivity.this));
 
         setProfile();
         setFont();
+        Toast.makeText(ProfileActivity.this,"imageurl : " + PropertyManager.getInstance().getUserImagePath(),Toast.LENGTH_SHORT).show();
 
         textEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,20 +104,13 @@ public class ProfileActivity extends AppCompatActivity {
         userEmail.setText(PropertyManager.getInstance().getUserEmail());
         userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
         if(!PropertyManager.getInstance().getUserImagePath().equals("")){
-            DisplayImageOptions options;
-            options = new DisplayImageOptions.Builder()
-                    .cacheInMemory(true)
-                    .cacheOnDisc(true)
-                    .showImageOnLoading(R.mipmap.profile_img)
-                    .showImageForEmptyUri(R.mipmap.profile_img)
 
 
-                    .considerExifParams(true)
-                    .displayer(new RoundedBitmapDisplayer(1000))
-                    .build();
+            //Log.i("ProfileActivity", PropertyManager.getInstance().getUserImagePath());
+            String imagePath = PropertyManager.getInstance().getUserImagePath();
+            Log.i("ProfileActivity", "dddd");
 
-            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(),imageProfileUser, options);
+            ImageLoader.getInstance().displayImage(imagePath, imageProfileUser, options);
         }
     }
 

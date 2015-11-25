@@ -1,6 +1,7 @@
 package com.safering.safebike.exercisereport;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -35,6 +36,7 @@ import com.safering.safebike.property.PropertyManager;
 import org.w3c.dom.Text;
 
 import java.lang.annotation.Annotation;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,10 +55,12 @@ public class CalorieFragment extends Fragment {
     ArrayList<String> xVals = new ArrayList<String>();
     ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
     ArrayList<BarDataSet> dataSets;
+    String lastDate = "";
     ArrayList<ExerciseItem> values = new ArrayList<ExerciseItem>();
     BarDataSet set;
     Button moveRecent;
     int total = 0;
+    //sCalendar cal;
 
     public CalorieFragment() {
         // Required empty public constructor
@@ -85,14 +89,23 @@ public class CalorieFragment extends Fragment {
         calorieChart.getAxisLeft().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawLabels(false);
-        calorieChart.setScaleMinima(2f, 1f);
-
+        //calorieChart.setScaleMinima(2f, 1f);
         calorieChart.setVerticalScrollBarEnabled(false);
+        calorieChart.setGridBackgroundColor(Color.parseColor("#B6E2FF"));
 
+
+        calorieChart.setGridBackgroundColor(Color.parseColor("#FFFFFF"));
+        calorieChart.setBorderColor(Color.parseColor("#000000"));
+     //   calorieChart
 
         //calorieChart.set
         setFont();
-        requestData();
+        //cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String today = dateFormat.format(cal.getTime());
+
+        requestData(today);
 
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
@@ -104,9 +117,23 @@ public class CalorieFragment extends Fragment {
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
                 if (calorieChart.getLowestVisibleXIndex() == 0) {
-                    calorieChart.animateX(2000);
 
-                    requestData();
+                    calorieChart.animateX(2000);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Calendar cal = Calendar.getInstance();
+                    String getDate = calorieChart.getXValue(calorieChart.getLowestVisibleXIndex());
+                    try {
+                        Date d = dateFormat.parse(getDate);
+                        cal.setTime(d);
+                        cal.add(Calendar.DATE, -1);
+
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i("requestDate",dateFormat.format(cal.getTime()));
+                    requestData(dateFormat.format(cal.getTime()));
+
                 }
             }
 
@@ -146,16 +173,21 @@ public class CalorieFragment extends Fragment {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
+
+              //  Toast.makeText(getContext(),"ClickDate :"+ calorieChart.getXValue(  e.getXIndex()) + "", Toast.LENGTH_SHORT).show();
+
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
                 String email = PropertyManager.getInstance().getUserEmail();
-                String date = dateFormat.format(cal.getTime());
+                String date = calorieChart.getXValue(  e.getXIndex());
+
 
 
                 NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
-                        if(result.workout.size() > 0) {
+                        if (result.workout.size() > 0) {
                             parentCal.setText(String.valueOf(result.workout.get(0).calorie) + " kcal");
                             parentSpeed.setText(String.valueOf(result.workout.get(0).speed) + " km/h");
                             parentDistance.setText(String.valueOf(result.workout.get(0).road) + " km");
@@ -197,15 +229,44 @@ public class CalorieFragment extends Fragment {
     float bscale = 1f;
 
 
-    private void requestData() {
+    private void requestData(String today) {
         int count = 0;
         int range = 0;
-
+        ArrayList<String> dateList = new ArrayList<String>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        final Calendar cal = Calendar.getInstance();
-        String date = dateFormat.format(cal.getTime());
+        //2015-12-23
+        Calendar cal = Calendar.getInstance();
+
+        dateList.add(today);
+
+/*
+        Date d = dateFormat.parse(getDate);
+        cal.setTime(d);
+        cal.add(Calendar.DATE, -1);
+        */
+        for(int i = 0; i < 9; i++){
+            try {
+                Date d = dateFormat.parse(today);
+                cal.setTime(d);
+                cal.add(Calendar.DATE, -1);
+                String date = dateFormat.format(cal.getTime());
+                dateList.add(date);
+                today = date;
+                Log.i("date : ",date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        /*    cal.add(Calendar.DATE,-1);
+            String date = dateFormat.format(cal.getTime());
+            dateList.add(date);
+            Log.i("date : ",date);
+*/
+        }
+
         String email = PropertyManager.getInstance().getUserEmail();
-        NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email,dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
 
@@ -213,23 +274,29 @@ public class CalorieFragment extends Fragment {
 
                 BarData data;
                 int count = result.workoutlist.size();
+               // Toast.makeText(getContext(),"count : " + count,Toast.LENGTH_SHORT).show();
+                Log.i("count : ",count + "");
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(result.workoutlist.get(i).date);
+                        xVals.add(result.workoutlist.get(i)._id);
                         yVals.add(new BarEntry(result.workoutlist.get(i).calorie, total+i));
                     }
-                    total += count;
+                   total += count;
                     BarDataSet set = new BarDataSet(yVals, "Distance");
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
+
                     data = new BarData(xVals, dataSets);
                     data.setValueTextSize(10f);
                     calorieChart.setData(data);
+   /*                 calorieChart.getXValue(0);
+   */
 
 
                     calorieChart.notifyDataSetChanged();
                     calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
                     calorieChart.invalidate();
+
                 }
 
 

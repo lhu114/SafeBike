@@ -76,7 +76,7 @@ public class SpeedFragment extends Fragment {
         speedChart.getAxisRight().setDrawGridLines(false);
         speedChart.getAxisRight().setDrawLabels(false);
         //speedChart.setScaleEnabled(false);
-        speedChart.setScaleMinima(2f, 1f);
+//        speedChart.setScaleMinima(2f, 1f);
 
         setFont();
         requestData();
@@ -171,12 +171,19 @@ public class SpeedFragment extends Fragment {
     private void requestData() {
         int count = 0;
         int range = 0;
-
+        ArrayList<String> dateList = new ArrayList<String>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //2015-12-23
         final Calendar cal = Calendar.getInstance();
-        String date = dateFormat.format(cal.getTime());
+        for(int i = 0; i < 10; i++){
+            cal.add(Calendar.DATE,-1);
+            String date = dateFormat.format(cal.getTime());
+            dateList.add(date);
+            Log.i("date : ",date);
+        }
+
         String email = PropertyManager.getInstance().getUserEmail();
-        NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
 
@@ -186,8 +193,8 @@ public class SpeedFragment extends Fragment {
                 int count = result.workoutlist.size();
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(result.workoutlist.get(i).date);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, total+i));
+                        xVals.add(result.workoutlist.get(i)._id);
+                        yVals.add(new BarEntry(result.workoutlist.get(i).speed, total+i));
                     }
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "Distance");

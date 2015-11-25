@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -64,8 +65,7 @@ public class AccountFragment extends Fragment {
         textProfileJoin = (TextView)view.findViewById(R.id.text_join_profile);
         textProfileEmail = (TextView)view.findViewById(R.id.text_email_profile);
         imageProfileUser = (ImageView)view.findViewById(R.id.image_user_profile_account);
-
-
+        Toast.makeText(getContext(),"AccountFragmentOncREATE",Toast.LENGTH_SHORT).show();
         setProfile();
         setFont();
 
@@ -177,5 +177,10 @@ public class AccountFragment extends Fragment {
         }
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getContext(),"AccountFragmentonResume",Toast.LENGTH_SHORT).show();
+        setProfile();
+    }
 }

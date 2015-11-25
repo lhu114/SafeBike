@@ -4,14 +4,21 @@ package com.safering.safebike.exercisereport;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.PropertyManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +49,8 @@ public class ExerciseReportFragment extends Fragment {
 
     public ExerciseReportFragment() {
         // Required empty public constructor
+
+
     }
 
 
@@ -93,6 +102,50 @@ public class ExerciseReportFragment extends Fragment {
     }
 
     public void setFont() {
+      /*  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        final int calorie = CalculatorCalorie.getInstance().getCalorie(1.5f, 65, 5);
+        final int speed = 2;
+        final int distance = 5;
+        final String date = sdf.format(cal.getTime());
+
+
+        NetworkManager.getInstance().saveExercise(getContext(), PropertyManager.getInstance().getUserEmail(), date, calorie, speed, distance, new NetworkManager.OnResultListener() {
+            @Override
+            public void onSuccess(Object result) {
+               // Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onSuccess.result : " + result);
+
+                if ((int) result == 1) {
+*//*
+                    Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess.200");
+                    Toast.makeText(getContext(), "saveExercise.SUCCESS.200", Toast.LENGTH_SHORT).show();
+
+                    mSpeedList.clear();
+                    mDistanceList.clear();
+*//*
+
+                } else {
+*//*
+                    Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess.else");
+                    Toast.makeText(getContext(), "saveExercise.SUCCESS.200.else", Toast.LENGTH_SHORT).show();
+*//*
+                }
+                    *//*
+                     *  비정상 종료 처리 시에 기존 데이터(칼로리, 스피드, 거리 리스트 저장해 두었다가 onCreate 에서 저장) bundle 이용
+                     *
+                     *  또는 비정상 종료 시에 데이터 그냥 서버로 보내버림(이 방법이 좋을듯)
+                     *//*
+            }
+
+            @Override
+            public void onFail(int code) {
+                //Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onFail.result : " + Integer.toString(code));
+                Toast.makeText(getContext(), "saveExercise.FAIL", Toast.LENGTH_SHORT).show();
+            }
+        });
+*/
+
+
         textDistance.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         textSpeed.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         textCalorie.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));

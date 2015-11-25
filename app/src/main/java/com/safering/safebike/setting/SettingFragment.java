@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
+import com.safering.safebike.MainFragment;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.BluetoothDeviceAdapter;
 import com.safering.safebike.adapter.BluetoothDeviceHeaderItem;
@@ -59,6 +60,7 @@ public class SettingFragment extends Fragment {
     Button tmpLeft;
     Button tmpRight;
     TextView textConnectDevice;
+    MainFragment mainFragment;
 
     public SettingFragment() {
 
@@ -112,18 +114,15 @@ public class SettingFragment extends Fragment {
                 if (isChecked) {
 
 
-
-
-                    if(BluetoothConnection.getInstance().getConnectedValue(item.deviceAddress) == false) {
-                       // Log.i("device~!~address false", item.deviceAddress);
+                    if (BluetoothConnection.getInstance().getConnectedValue(item.deviceAddress) == false) {
+                        // Log.i("device~!~address false", item.deviceAddress);
 
                         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
                         connectToDevice(device);
                         //deviceAdapter.getItem(item.deviceAddress).isConnecting = true;
-                       // Log.i("deviceCon", deviceAdapter.getItem(item.deviceAddress).isConnecting + "");
-                    }
-                    else{
-                        Log.i("device~!~address true",item.deviceAddress);
+                        // Log.i("deviceCon", deviceAdapter.getItem(item.deviceAddress).isConnecting + "");
+                    } else {
+                        Log.i("device~!~address true", item.deviceAddress);
 
                     }
 
@@ -249,7 +248,6 @@ public class SettingFragment extends Fragment {
                     isButtonClick = true;
 
 
-
                 }
             });
         }
@@ -293,13 +291,18 @@ public class SettingFragment extends Fragment {
                     //BluetoothConnection.getInstance()
                     BluetoothConnection.getInstance().setGatt(gatt);
                     BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(), true);
-
+                    //  BluetoothConnection.getInstance().setIsConnect(1);
+                    mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+                    mainFragment.connectionOnOff(1);
                     Log.i("connect!!Device", deviceAdapter.getItem(gatt.getDevice().getAddress()).deviceName);
+
+
                     //deviceAdapter.getItem(gatt.getDevice().getAddress()).isConnecting = true;
-                   // Log.i("deviceConState", deviceAdapter.getItem(gatt.getDevice().getAddress()).isConnecting + "");
+                    // Log.i("deviceConState", deviceAdapter.getItem(gatt.getDevice().getAddress()).isConnecting + "");
 
                     // BluetoothConnection.getInstance().getDevice(gatt.getDevice().getAddress())
                     Log.i("gattCallback", "STATE_CONNECTED");
+
                     gatt.discoverServices();
 
 
@@ -307,6 +310,21 @@ public class SettingFragment extends Fragment {
                 case BluetoothProfile.STATE_DISCONNECTED:
                     //다이얼로그 띄우기
                     Log.e("gattCallback", "STATE_DISCONNECTED");
+
+                    if (mGatt != null) {
+                        mGatt.disconnect();
+                        mGatt = null;
+                        BluetoothConnection.getInstance().setGatt(null);
+                        BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(), false);
+
+                        //mGatt = device.connectGatt(getContext(), false, gattCallback);
+
+                        //객체 설정
+                        // scanLeDevice(false);// will stop after first device detection
+                    }
+                    mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+                    mainFragment.connectionOnOff(0);
+
                     break;
                 default:
                     Log.e("gattCallback", "STATE_OTHER");

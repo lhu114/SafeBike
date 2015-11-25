@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String DEBUG_TAG = "safebike";
 
-    private static final String TAG_MAIN = "main";
+    public static final String TAG_MAIN = "main";
     private static final String TAG_NAVIGATION = "navigation";
     private static final String TAG_EXERCISEREPORT = "exercisereport";
     private static final String TAG_FRIEND = "friend";
@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(GravityCompat.START);
+               // Toast.makeText(MainActivity.this,"drawerOopen",Toast.LENGTH_SHORT).show();
+                setProfile();
             }
         });
 

@@ -83,8 +83,9 @@ public class FriendItemView extends RelativeLayout {
         if(data.photo == null) {
             Log.i("friend photo", data.photo + "");
         }else {
-            ImageLoader.getInstance().displayImage(data.photo,friendImage, options);
 
+            ImageLoader.getInstance().displayImage(data.photo,friendImage, options);
+            Log.i("setData",data.photo);
         /*if(!data.photo.equals("null") && !TextUtils.isEmpty(data.photo)){
             Toast.makeText(getContext(), "photo url : " + data.photo, Toast.LENGTH_SHORT).show();
             ImageLoader.getInstance().displayImage(data.photo,friendImage, options);

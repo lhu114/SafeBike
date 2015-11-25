@@ -64,6 +64,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="btn_onoff_band">진동밴드</string>
     <string name="btn_onoff_backlight">후미등</string>
+    <string name="btn_band_status">진동밴드 꺼짐</string>
+    <string name="btn_backlight_status">후미등 꺼짐</string>
 
     <string name="nav_safebike">Safe Bike</string>
     <string name="nav_exercise_report">기록</string>

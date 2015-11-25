@@ -125,7 +125,7 @@ public class NetworkManager {
 
     private static final String NAVIGATION_CALORIE = "calorie";
     private static final String NAVIGATION_SPEED = "speed";
-    private static final String NAVIGATION_DISTANCE = "load";
+    private static final String NAVIGATION_DISTANCE = "road";
 
     private static final int NAVIGATION_VALUE_POI_VERSION = 1;
 
@@ -188,7 +188,7 @@ public class NetworkManager {
 
         } finally {
             if(hasFile){
-                params.put(USER_EAMIL, "lowgiant@gmail.com");
+                params.put(USER_EAMIL, email);
                 params.put(USER_ID, id);
                 params.put(USER_PASSWORD, password);
 
@@ -205,13 +205,13 @@ public class NetworkManager {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
                         Log.i("ProfileEditSuccess", statusCode + "");
-                        //listener.onSuccess(1);
+                        listener.onSuccess(responseString);
 
                     }
                 });
             }else{
 
-                params.put(USER_EAMIL, "lowgiant@gmail.com");
+                params.put(USER_EAMIL, email);
                 params.put(USER_ID, id);
                 params.put(USER_PASSWORD, password);
 
@@ -226,6 +226,7 @@ public class NetworkManager {
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
                         Log.i("ProfileEditNoFileSucc", responseString + "");
                         //201
+                        listener.onSuccess(responseString);
 
                     }
                 });
@@ -339,16 +340,19 @@ public class NetworkManager {
         });
 
     }*/
-    public void getExerciseRecord(Context context, String email, String date, final OnResultListener<ExcerciseResult> listener) {
+    public void getExerciseRecord(Context context, String email, ArrayList<String> dateList, final OnResultListener<ExcerciseResult> listener) {
         RequestParams params = new RequestParams();
         //PARAMETER : 유저 이메일,종류,시작날짜,개수
         //결과값 : JSON(종류에 대한 값들)
        /*params.put(USER_EAMIL,email);
         params.put(EXCERCISE_REQUEST_DATE,date);
         */
-        params.put(USER_EAMIL, "lowgiant@gmail.com");
-        params.put(EXCERCISE_REQUEST_DATE, "2015-11-03");
+        params.put(USER_EAMIL, email);
+        //params.put(EXCERCISE_REQUEST_DATE, date);
 
+        for(int i = 0; i < dateList.size(); i++){
+            params.add(EXCERCISE_REQUEST_DATE,dateList.get(i));
+        }
 
         client.get(context, EXCERCISE_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -375,8 +379,8 @@ public class NetworkManager {
         /*params.put(USER_EAMIL, email);
         params.put(EXCERCISE_REQUEST_DATE, date);
         */
-        params.put("uemail", "lowgiant@gmai.com");
-        params.put("date", "2015-11-03");
+        params.put(USER_EAMIL, email);
+        params.put(EXCERCISE_REQUEST_DATE, date);
 
 
         client.get(context, EXCERCISE_DAY_URL, params, new TextHttpResponseHandler() {
@@ -389,7 +393,7 @@ public class NetworkManager {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.i("click result", responseString);
                 ExerciseDayResult result = gson.fromJson(responseString, ExerciseDayResult.class);
-                Log.i("click size : ",result.workout.size() + "");
+                Log.i("click size : ", result.workout.size() + "");
                 listener.onSuccess(result);
             }
         });
@@ -403,6 +407,7 @@ public class NetworkManager {
 
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
+        Log.i("myemail",email);
 
         client.get(context, FRIEND_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -532,7 +537,7 @@ public class NetworkManager {
         //PARAMETER : 유저 이메일,입력이메일값
         //결과값 : JSON(친구아이디,이메일,사진)
         RequestParams params = new RequestParams();
-        params.put(USER_EAMIL, "lowgiant@gmail.com");
+        params.put(USER_EAMIL, uEmail);
       //  params.put(FRIEND_EMAIL, iEmail);
         client.get(context, FRIEND_DIRECT_URL, params, new TextHttpResponseHandler() {
             @Override

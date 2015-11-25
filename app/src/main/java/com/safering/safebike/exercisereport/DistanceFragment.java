@@ -3,6 +3,7 @@ package com.safering.safebike.exercisereport;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -72,7 +73,7 @@ public class DistanceFragment extends Fragment {
         distanceChart.getAxisRight().setDrawGridLines(false);
         distanceChart.getAxisRight().setDrawLabels(false);
         //distanceChart.setScaleEnabled(false);
-        distanceChart.setScaleMinima(2f, 1f);
+        //distanceChart.setScaleMinima(2f, 1f);
         setFont();
         requestData();
 
@@ -167,12 +168,20 @@ public class DistanceFragment extends Fragment {
     private void requestData() {
         int count = 0;
         int range = 0;
-
+        ArrayList<String> dateList = new ArrayList<String>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        //2015-12-23
         final Calendar cal = Calendar.getInstance();
-        String date = dateFormat.format(cal.getTime());
+        for(int i = 0; i < 10; i++){
+            cal.add(Calendar.DATE,-1);
+            String date = dateFormat.format(cal.getTime());
+            dateList.add(date);
+            Log.i("date : ",date);
+        }
+
+
         String email = PropertyManager.getInstance().getUserEmail();
-        NetworkManager.getInstance().getExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
 
@@ -182,8 +191,8 @@ public class DistanceFragment extends Fragment {
                 int count = result.workoutlist.size();
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(result.workoutlist.get(i).date);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, total+i));
+                        xVals.add(result.workoutlist.get(i)._id);
+                        yVals.add(new BarEntry(result.workoutlist.get(i).road, total+i));
                     }
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "Distance");
