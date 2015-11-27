@@ -60,7 +60,7 @@ public class SettingFragment extends Fragment {
     private List<ScanFilter> filters;
 
     BluetoothAdapter mBluetoothAdapter = null;
-    BluetoothLeScanner mLEScanner;
+    BluetoothLeScanner mLEScanner ;
     BluetoothDeviceAdapter deviceAdapter;
     ProgressBar searchDevice;
     ListView deviceList;
@@ -95,8 +95,8 @@ public class SettingFragment extends Fragment {
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         isEnableBluetooth = false;
-        //mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
-
+        mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
+        settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
         deviceAdapter = new BluetoothDeviceAdapter();
         deviceList.setAdapter(deviceAdapter);
         //       deviceList.addView(n);
@@ -108,8 +108,8 @@ public class SettingFragment extends Fragment {
         tmpLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BluetoothConnection.getInstance() == null){
-                    Log.i("bleLeft","null");
+                if (BluetoothConnection.getInstance() == null) {
+                    Log.i("bleLeft", "null");
                 }
 
                 BluetoothConnection.getInstance().writeLeftValue();
