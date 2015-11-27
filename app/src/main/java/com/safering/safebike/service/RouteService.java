@@ -759,7 +759,7 @@ public class RouteService extends Service {
                 } else {
                     setImageDescription(0, View.INVISIBLE);
 
-
+                    BluetoothConnection.getInstance().writeOffValue();
                 }
 
                 setTextDescription(Integer.toString(mPointLatLngIndex) + ". " + pointInfo.properties.description, distance);
