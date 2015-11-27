@@ -53,10 +53,20 @@
         android:visibility="visible"
 
         />
+    <Button
+        android:id="@+id/btn_tmp_off"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="writeOff"
+        android:visibility="visible"
+
+        />
 
 
 
-        <ListView
+
+    <ListView
             android:id="@+id/connective_device_list"
             android:layout_width="match_parent"
             android:divider="@color/colorWhite"

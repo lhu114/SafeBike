@@ -12,7 +12,9 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -54,6 +56,9 @@ public class SettingFragment extends Fragment {
     public BluetoothGatt mGatt;
     boolean isEnableBluetooth = false;
     // boolean isButtonClick = false;
+    private ScanSettings settings;
+    private List<ScanFilter> filters;
+
     BluetoothAdapter mBluetoothAdapter = null;
     BluetoothLeScanner mLEScanner;
     BluetoothDeviceAdapter deviceAdapter;
@@ -61,6 +66,7 @@ public class SettingFragment extends Fragment {
     ListView deviceList;
     Button tmpLeft;
     Button tmpRight;
+    Button tmpOff;
     TextView textConnectDevice, textMainTitle;
     boolean isConn = false;
 
@@ -85,6 +91,7 @@ public class SettingFragment extends Fragment {
         searchDevice = (ProgressBar) view.findViewById(R.id.progressBar_search);
         tmpLeft = (Button) view.findViewById(R.id.btn_tmp_left);
         tmpRight = (Button) view.findViewById(R.id.btn_tmp_right);
+        tmpOff = (Button)view.findViewById(R.id.btn_tmp_off);
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         isEnableBluetooth = false;
@@ -93,6 +100,10 @@ public class SettingFragment extends Fragment {
         deviceAdapter = new BluetoothDeviceAdapter();
         deviceList.setAdapter(deviceAdapter);
         //       deviceList.addView(n);
+        settings = new ScanSettings.Builder()
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .build();
+        filters = new ArrayList<ScanFilter>();
 
         tmpLeft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +127,12 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        tmpOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BluetoothConnection.getInstance().writeOffValue();
+            }
+        });
         deviceAdapter.setOnSwitchClickListener(new BluetoothItemView.OnSwitchClickListener() {
             @Override
             public void onSwitchClick(BluetoothItemView view, BluetoothDeviceItem item, boolean isChecked) {
@@ -235,21 +252,63 @@ public class SettingFragment extends Fragment {
                 isConn = true;
             }
             else{
-               // mLEScanner.startScan(filters, settings, mScanCallback);
-               // isConn = true;
+               mLEScanner.startScan(filters, settings, mScanCallback);
+                isConn = true;
             }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else{
-               // mLEScanner.startScan(filters, settings, mScanCallback);
-               // isConn = false;
+                mLEScanner.stopScan(mScanCallback);
+                isConn = false;
 
             }
         }
         //핸들러로 제한 시간 5초
     }
+
+   private ScanCallback mScanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            /*Log.i("callbackType", String.valueOf(callbackType));
+            Log.i("result", result.toString());
+            BluetoothDevice btDevice = result.getDevice();
+            connectToDevice(btDevice);
+            */
+            BluetoothDevice device = result.getDevice();
+
+            if (device.getAddress().equals(BACKLIGHT_ADDRESS)) {
+                searchDevice.setVisibility(View.GONE);
+
+                for (int i = 0; i < BluetoothConnection.getInstance().getDevices().size(); i++) {
+                    if (BluetoothConnection.getInstance().getDevices().get(i).getAddress().equals(device.getAddress())) {
+                        return;
+                    }
+                }
+                BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
+                deviceItem.deviceName = device.getName();
+                deviceItem.deviceAddress = device.getAddress();
+                deviceAdapter.add(deviceItem, false);
+                BluetoothConnection.getInstance().addDevice(device);
+                BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
+
+            }
+        }
+
+        @Override
+        public void onBatchScanResults(List<ScanResult> results) {
+            for (ScanResult sr : results) {
+                Log.i("ScanResult - Results", sr.toString());
+            }
+        }
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            Log.e("Scan Failed", "Error Code: " + errorCode);
+        }
+    };
+
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
