@@ -314,7 +314,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         public void setTextDescription(String description, int distance) throws RemoteException {
             Log.d(DEBUG_TAG, "StartNavigationActivity.setTextDescription.description : " + description + " | distance : " + Integer.toString(distance));
 
-            tvNaviDescription.setText(Integer.toString(distance) + "m 이후 " + description);
+//            tvNaviDescription.setText(Integer.toString(distance) + "m 이후 " + description);
+            tvNaviDescription.setText(description);
         }
 
         @Override

@@ -36,6 +36,7 @@ import com.safering.safebike.navigation.BicycleRouteInfo;
 import com.safering.safebike.navigation.NavigationNetworkManager;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.property.SpeakVoice;
+import com.safering.safebike.setting.BluetoothConnection;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -733,18 +734,32 @@ public class RouteService extends Service {
 
                 if (pointInfo.properties.turnType == LEFT_SIDE) {
                     setImageDescription(LEFT_SIDE, View.VISIBLE);
+
+                    BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == RIGHT_SIDE) {
                     setImageDescription(RIGHT_SIDE, View.VISIBLE);
+
+                    BluetoothConnection.getInstance().writeRightValue();
                 } else if (pointInfo.properties.turnType == EIGHT_LEFT_SIDE) {
                     setImageDescription(EIGHT_LEFT_SIDE, View.VISIBLE);
+
+                    BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == TEN_LEFT_SIDE) {
                     setImageDescription(TEN_LEFT_SIDE, View.VISIBLE);
+
+                    BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == TWO_RIGHT_SIDE) {
                     setImageDescription(TWO_RIGHT_SIDE, View.VISIBLE);
+
+                    BluetoothConnection.getInstance().writeRightValue();
                 } else if (pointInfo.properties.turnType == FOUR_RIGHT_SIDE) {
                     setImageDescription(FOUR_RIGHT_SIDE, View.VISIBLE);
+
+                    BluetoothConnection.getInstance().writeRightValue();
                 } else {
                     setImageDescription(0, View.INVISIBLE);
+
+
                 }
 
                 setTextDescription(Integer.toString(mPointLatLngIndex) + ". " + pointInfo.properties.description, distance);
