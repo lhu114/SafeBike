@@ -10,6 +10,9 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -52,6 +55,7 @@ public class SettingFragment extends Fragment {
     boolean isEnableBluetooth = false;
     // boolean isButtonClick = false;
     BluetoothAdapter mBluetoothAdapter = null;
+    BluetoothLeScanner mLEScanner;
     BluetoothDeviceAdapter deviceAdapter;
     ProgressBar searchDevice;
     ListView deviceList;
@@ -84,6 +88,7 @@ public class SettingFragment extends Fragment {
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         isEnableBluetooth = false;
+        //mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
         deviceAdapter = new BluetoothDeviceAdapter();
         deviceList.setAdapter(deviceAdapter);
@@ -229,10 +234,18 @@ public class SettingFragment extends Fragment {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
                 isConn = true;
             }
+            else{
+               // mLEScanner.startScan(filters, settings, mScanCallback);
+               // isConn = true;
+            }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
+            } else{
+               // mLEScanner.startScan(filters, settings, mScanCallback);
+               // isConn = false;
+
             }
         }
         //핸들러로 제한 시간 5초
@@ -268,6 +281,32 @@ public class SettingFragment extends Fragment {
             });
         }
     };
+
+/*
+
+    private ScanCallback mScanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            Log.i("callbackType", String.valueOf(callbackType));
+            Log.i("result", result.toString());
+            BluetoothDevice btDevice = result.getDevice();
+            connect{ToDevice(btDevice);
+        }
+
+        @Override
+        public void onBatchScanResults(List<ScanResult> results) {
+            for (ScanResult sr : results) {
+                Log.i("ScanResult - Results", sr.toString());
+            }
+        }
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            Log.e("Scan Failed", "Error Code: " + errorCode);
+        }
+    };
+*/
+
 
     public void connectToDevice(BluetoothDevice device) {
         if (mGatt == null) {
