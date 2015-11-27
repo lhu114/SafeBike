@@ -54,11 +54,8 @@ public class BluetoothDeviceAdapter extends BaseAdapter implements BluetoothItem
             view = (BluetoothItemView) convertView;
         }
 
-        if (items.get(position).isSel) {
-            view.setBluetoothData(items.get(position), true);
-        } else {
-            view.setBluetoothData(items.get(position), false);
-        }
+        BluetoothDeviceItem item = items.get(position);
+        view.setBluetoothData(item);
         // view.setBluetoothData(items.get(position),false);
 
 
@@ -72,18 +69,19 @@ public class BluetoothDeviceAdapter extends BaseAdapter implements BluetoothItem
             if (items.get(i).deviceAddress.equals(item.deviceAddress)) {
 
                 //if(items.get(i).isSel == true )
+               items.remove(i);
+                //isDuple = true;
 
-                isDuple = true;
                 break;
             }
 
         }
-        if (isDuple == false) {
+       // if (isDuple == false) {
 
             item.isSel = isSel;
             items.add(item);
             notifyDataSetChanged();
-        }
+        //}
 
 
     }

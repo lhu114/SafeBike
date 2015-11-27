@@ -53,13 +53,11 @@ public class BluetoothItemView extends RelativeLayout{
 
     }
 
-    public void setBluetoothData(BluetoothDeviceItem data,boolean isSelect){
+    public void setBluetoothData(BluetoothDeviceItem data){
         bData = data;
         deviceName.setText(data.deviceName);
         deviceAddress.setText(data.deviceAddress);
-        if(isSelect){
-            deviceSwitch.setChecked(true);
-        }
+        deviceSwitch.setChecked(data.isSel);
 
 
     }

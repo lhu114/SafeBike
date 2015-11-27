@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG_NAVIGATION = "navigation";
     private static final String TAG_EXERCISEREPORT = "exercisereport";
     private static final String TAG_FRIEND = "friend";
-    private static final String TAG_SETTING = "setting";
+    public static final String TAG_SETTING = "setting";
 
     private static final String SERVICE_FINISH = "finish";
     private static final String SERVICE_RUNNING = "running";
