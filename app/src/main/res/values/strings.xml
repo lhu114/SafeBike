@@ -17,7 +17,7 @@
     <string name="btn_display_policy">정책보기</string>
     <string name="btn_display_agree">약관보기</string>
     <string name="btn_complete">완료</string>
-    <string name="btn_go_main">안전운행시작하기</string>
+    <string name="btn_go_main">안전운행 시작하기</string>
     <string name="edit_user_email">이메일</string>
     <string name="edit_user_password">비밀번호</string>
     <string name="edit_user_password_confirm">비밀번호 확인</string>
@@ -64,6 +64,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="btn_onoff_band">진동밴드</string>
     <string name="btn_onoff_backlight">후미등</string>
+    <string name="btn_band_status">진동밴드 꺼짐</string>
+    <string name="btn_backlight_status">후미등 꺼짐</string>
 
     <string name="nav_safebike">Safe Bike</string>
     <string name="nav_exercise_report">기록</string>

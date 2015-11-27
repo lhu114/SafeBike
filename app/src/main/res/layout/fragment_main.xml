@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_onoff_band"
-                android:layout_marginLeft="55dp"
+                android:layout_marginLeft="50dp"
                 android:background="@drawable/band_selector"
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="20dp"
@@ -88,15 +88,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_onoff_backlight"
-                android:layout_marginRight="55dp"
-
+                android:layout_marginRight="48dp"
+                android:background="@drawable/backlight_selector"
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center_vertical|right"
-                android:background="@drawable/backlight_selector"
+
                 />
 
+<!--
+        android:background="@drawable/backlight_selector"
+-->
 
+        <TextView
+            android:id="@+id/text_backlight_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_backlight_status"
+            android:textColor="@color/colorDeviceStatus"
+            android:textSize="16sp"
+            android:layout_above="@+id/btn_fwd_navigation"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="53dp"
+            android:layout_marginBottom="50dp"
 
+            android:layout_gravity="right|bottom" />
 
 
     </FrameLayout>
@@ -105,30 +120,15 @@
         android:id="@+id/text_band_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="진동밴드 꺼짐"
+        android:text="@string/btn_band_status"
         android:textColor="@color/colorDeviceStatus"
-
         android:textSize="16sp"
         android:layout_above="@+id/btn_fwd_navigation"
-        android:layout_marginLeft="53dp"
+        android:layout_marginLeft="50dp"
         android:layout_marginBottom="50dp"
 
         />
 
-    <TextView
-        android:id="@+id/text_backlight_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="후미등 켜짐"
-        android:textColor="@color/colorDeviceStatus"
-
-        android:textSize="16sp"
-        android:layout_above="@+id/btn_fwd_navigation"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="55dp"
-        android:layout_marginBottom="50dp"
-
-        />
     <!--<ImageView
         android:id="@+id/image_backlight_onoff_out"
         android:layout_width="wrap_content"
@@ -157,7 +157,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/off"
 
-        android:layout_marginLeft="77dp"
+        android:layout_marginLeft="70dp"
         android:layout_marginBottom="23dp"
 
         />
@@ -168,10 +168,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/off"
-
         android:layout_toRightOf="@id/image_band_onoff_out"
-
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="18dp"
         android:layout_marginBottom="23dp"
         />
 
@@ -187,7 +185,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/off"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="77dp"
+        android:layout_marginRight="70dp"
         android:layout_marginBottom="23dp"
 
 
@@ -202,7 +200,7 @@
 
         android:layout_toLeftOf="@id/image_backlight_onoff_out"
 
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="18dp"
         android:layout_marginBottom="23dp"
         />
 

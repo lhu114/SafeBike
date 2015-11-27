@@ -16,8 +16,7 @@ public class PropertyManager {
     public static final String USER_JOIN = "userjoin";
     public static final String USER_PASSWORD = "userpassword";
     public static final String USER_IMAGE_PATH = "userimagepa";
-
-
+    public static final String BLUETOOTH_SETTING = "bluetooth";
 
     public static final String STARTING_LATITUDE = "startingLatitude";
     public static final String STARTING_LONGITUDE = "startingPointLongitude";
@@ -174,6 +173,16 @@ public class PropertyManager {
         }
         return phoneNum;
     }
+
+    public void setBluetoothSetting(int onoff){
+        mEditor.putInt(BLUETOOTH_SETTING,onoff);
+        mEditor.commit();
+    }
+    public int getBluetoothSetting(){
+        return mPrefs.getInt(BLUETOOTH_SETTING,0);
+    }
+
+
 
 
 }

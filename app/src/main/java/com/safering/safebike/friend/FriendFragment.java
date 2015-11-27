@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -141,6 +142,8 @@ public class FriendFragment extends Fragment {
                     friendItem.pname = result.friendlist.get(i).pname;
                     friendItem.pemail = result.friendlist.get(i).pemail;
                     friendItem.photo = result.friendlist.get(i).photo;
+                    Log.i("friendPhoto",friendItem.photo);
+
                     //fEmailList.add(friendItem.pemail);
                     UserFriendList.getInstance().addFriend(friendItem);
                     fAdapter.add(friendItem);

@@ -45,20 +45,12 @@
                     android:id="@+id/text_report_speed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="80dp"
-                    android:layout_marginRight="80dp"
-
-
+                    android:layout_marginTop="37dp"
+                    android:layout_marginLeft="147dp"
                     android:layout_marginBottom="25dp"
-
-                    android:layout_centerHorizontal="true"
-
-
-
                     android:text="속력"
                     android:textColor="@color/colorGray"
-                    android:textSize="16sp" />
+                    android:textSize="12sp" />
 
 
                 <TextView
@@ -66,13 +58,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="25dp"
+                    android:layout_marginTop="37dp"
 
-                    android:layout_marginTop="20dp"
-                    android:layout_toLeftOf="@id/text_report_speed"
+                    android:layout_marginLeft="27dp"
 
                     android:text="칼로리"
                     android:textColor="@color/colorGray"
-                    android:textSize="16sp" />
+                    android:textSize="12sp" />
 
 
 
@@ -82,35 +74,46 @@
                     android:layout_width="wrap_content"
 
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="37dp"
+
                     android:layout_marginBottom="25dp"
 
+                    android:layout_marginLeft="256dp"
 
-
-                    android:layout_toRightOf="@id/text_report_speed"
 
                     android:text="거리"
                     android:textColor="@color/colorGray"
-                    android:textSize="16sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/text_value_calorie"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/text_report_calorie"
-                    android:layout_alignStart="@id/text_report_calorie"
+
+                    android:layout_marginLeft="27dp"
+
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="39dp"
 
 
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp" />
 
+<!--
+                android:layout_alignStart="@id/text_report_calorie"
+-->
+
                 <TextView
                     android:id="@+id/text_value_speed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/text_report_speed"
-                    android:layout_alignStart="@id/text_report_speed"
 
+                    android:layout_marginLeft="146dp"
+
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="39dp"
 
 
 
@@ -119,15 +122,28 @@
 
                     />
 
+<!--
+                android:layout_alignStart="@id/text_report_speed"
+-->
 
                 <TextView
                     android:id="@+id/text_value_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/text_report_distance"
-                    android:layout_alignStart="@id/text_report_distance"
+
+
+                    android:layout_marginLeft="256dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="39dp"
+
+
                     android:textColor="@color/colorWhite"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    />
+<!--
+                android:layout_alignStart="@id/text_report_distance"
+-->
 
 
                 <!--       <TextView

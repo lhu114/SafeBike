@@ -27,7 +27,6 @@
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/listview_myfriend"
-
         />
     <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -36,10 +35,5 @@
         android:layout_alignParentRight="true"
         android:src="@mipmap/floating_button"
         app:backgroundTint="@color/colorUserImform"
-
-
-
-
-
         />
 </RelativeLayout>

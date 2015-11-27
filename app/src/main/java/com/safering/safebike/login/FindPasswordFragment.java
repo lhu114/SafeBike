@@ -74,7 +74,7 @@ public class FindPasswordFragment extends Fragment {
     public void setFont(){
         editTempEmail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         textFindPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
-        btnSendTemp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        btnSendTemp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
 
     }
 

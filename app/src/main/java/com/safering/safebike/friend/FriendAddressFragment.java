@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-
+import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
-import com.safering.safebike.adapter.FriendItem;
+
 import com.safering.safebike.adapter.FriendItemView;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
@@ -32,7 +32,7 @@ public class FriendAddressFragment extends Fragment {
     ListView listView;
     FriendAdapter fAdapter;
     ArrayList<Contact> arContactList = new ArrayList<Contact>();
-
+    ArrayList<FriendItem> addressFriendList;
     public FriendAddressFragment() {
         // Required empty public constructor
     }
@@ -42,7 +42,7 @@ public class FriendAddressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friend_address, container, false);
-
+        //addressFriendList = new ArrayList<String>();
         fAdapter = new FriendAdapter(FRIEND_SELECT);
         listView = (ListView) view.findViewById(R.id.listview_address_friend);
         listView.setAdapter(fAdapter);
@@ -79,6 +79,7 @@ public class FriendAddressFragment extends Fragment {
     }
 
     public void setList() {
+        addressFriendList = new ArrayList<FriendItem>();
         arContactList = getContactList();
         NetworkManager.getInstance().getUserFriendAddress(getContext(),arContactList, new NetworkManager.OnResultListener<FriendSearchResult>() {
             @Override
@@ -92,6 +93,7 @@ public class FriendAddressFragment extends Fragment {
                             friend.pemail = result.userpserch.get(i).uemail;
                             friend.photo = result.userpserch.get(i).photo;
                             fAdapter.add(friend);
+                            addressFriendList.add(friend);
                         }
                     }
                 }

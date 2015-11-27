@@ -75,7 +75,7 @@ public class ConfirmSignUpFragment extends Fragment {
     public void setFont() {
         textCompleteSign.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textCompleteSign1.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
-        btnCompleteSign.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        btnCompleteSign.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
         textProgressSignup.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
     }

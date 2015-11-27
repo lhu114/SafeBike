@@ -68,6 +68,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
+        //  ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
 
         userName = (TextView) findViewById(R.id.text_edit_profilename);
         userPass = (TextView) findViewById(R.id.text_edit_profilepass);
@@ -92,9 +93,6 @@ public class ProfileEditActivity extends AppCompatActivity {
         changePasswordConfirm = (EditText) findViewById(R.id.edit_change_password_confirm);
 
         textCompelete = (TextView) findViewById(R.id.btn_edit_compelete);
-
-
-
 
 
         textTitle.setText(R.string.edit_profile_title);
@@ -133,17 +131,25 @@ public class ProfileEditActivity extends AppCompatActivity {
 
                         PropertyManager.getInstance().setUserId(id);
                         PropertyManager.getInstance().setUserPassword(password);
-                        if(Integer.valueOf(success.toString()) == 200){
-                            //사진 url로 응답 받기
-                            PropertyManager.getInstance().setUserImagePath(file.getAbsolutePath());
-                        }
-                        if(Integer.valueOf(success.toString()) == 201){
+
+                        if (success.toString().contains("https")) {
                             //PropertyManager.getInstance().setUserImagePath("");
+                            Toast.makeText(ProfileEditActivity.this, "url : " + success.toString(), Toast.LENGTH_SHORT).show();
+
+
+                            PropertyManager.getInstance().setUserImagePath(success.toString().substring(1,success.toString().length()-1));
+
+
+                            Log.i("return:", PropertyManager.getInstance().getUserImagePath());
+
+                        } else {
+                            Toast.makeText(ProfileEditActivity.this, "nonurl : " + success, Toast.LENGTH_SHORT).show();
                         }
-                        //PropertyManager.getInstance().setUserImagePath(file.getAbsolutePath());
+
                         Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         startActivityForResult(intent, GET_USER_IMAGE);
+
                     }
 
                     @Override
@@ -186,17 +192,23 @@ public class ProfileEditActivity extends AppCompatActivity {
                         .showImageOnLoading(R.mipmap.profile_img)
                         .showImageForEmptyUri(R.mipmap.profile_img)
                         .considerExifParams(true)
-                        .displayer(new RoundedBitmapDisplayer(50))
+                        .displayer(new RoundedBitmapDisplayer(1000))
                         .build();
                 ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
 
                 ImageLoader.getInstance().displayImage(Uri.fromFile(new File(file.getAbsolutePath())).toString(), userProfileImage, options);
-                Toast.makeText(ProfileEditActivity.this,"file path : " + file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileEditActivity.this, "file path : " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //  setProfile();
     }
 
     public int checkEditForm() {
@@ -214,11 +226,11 @@ public class ProfileEditActivity extends AppCompatActivity {
         return EDIT_SUCCESS;
     }
 
-    public void setProfile(){
+    public void setProfile() {
         userId.setText(PropertyManager.getInstance().getUserId());
         userEmail.setText(PropertyManager.getInstance().getUserEmail());
         userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
-        if(!PropertyManager.getInstance().getUserImagePath().equals("")){
+        if (!PropertyManager.getInstance().getUserImagePath().equals("")) {
             DisplayImageOptions options;
             options = new DisplayImageOptions.Builder()
                     .cacheInMemory(true)
@@ -232,11 +244,12 @@ public class ProfileEditActivity extends AppCompatActivity {
                     .build();
 
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(),userProfileImage, options);
+            ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(), userProfileImage, options);
         }
 
 
     }
+
     public void setFont() {
         userId.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
         userEmail.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
@@ -250,9 +263,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         textCompelete.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
     }
 
-    public String getDateFormat(String date){
+    public String getDateFormat(String date) {
         String resultDate = "";
-        StringTokenizer tokenizer = new StringTokenizer(date,"-");
+        StringTokenizer tokenizer = new StringTokenizer(date, "-");
         resultDate += tokenizer.nextToken() + "년 ";
         resultDate += tokenizer.nextToken() + "월 ";
         resultDate += tokenizer.nextToken() + "일 가입";

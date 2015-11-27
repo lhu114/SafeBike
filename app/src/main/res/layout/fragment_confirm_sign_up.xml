@@ -1,76 +1,60 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/register_bg"
-    android:orientation="vertical"
-
     tools:context="com.safering.safebike.login.ConfirmSignUpFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/text_progress_signup"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3">
-        <TextView
-            android:id="@+id/text_progress_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="가입처리중입니다..."
-            android:textColor="@color/colorWhite"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="209dp"
+        android:gravity="center_horizontal"
+        android:text="가입처리중입니다..."
+        android:textColor="@color/colorWhite"
 
-            android:textSize="20sp"
-            />
-        <TextView
-            android:id="@+id/text_complete_sign"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
+        android:textSize="20sp" />
 
-            android:visibility="gone"
-
-            android:text="축하합니다!" />
-        <TextView
-            android:id="@+id/text_complete_sign_s"
-            android:layout_below="@id/text_complete_sign"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            android:visibility="gone"
-
-            android:text="가입이 완료되었습니다." />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
+    <TextView
+        android:id="@+id/text_complete_sign"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2">
-        <Button
-            android:layout_centerInParent="true"
-            android:id="@+id/btn_go_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:textColor="@color/colorWhite"
-            android:text="@string/btn_go_main" />
-    </RelativeLayout>
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="209dp"
+        android:text="축하합니다!"
+        android:textColor="@color/colorWhite"
 
-    <LinearLayout
+        android:textSize="20sp"
+
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text_complete_sign_s"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="252dp"
+        android:text="가입이 완료되었습니다."
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+
+        android:visibility="gone" />
 
 
+    <Button
+        android:id="@+id/btn_go_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="478dp"
+        android:layout_marginLeft="24dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/btn_go_main"
+        android:textSize="16sp"
+        android:textColor="@color/colorWhite" />
 
-    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

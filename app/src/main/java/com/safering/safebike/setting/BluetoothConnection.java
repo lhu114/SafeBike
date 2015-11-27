@@ -3,6 +3,8 @@ package com.safering.safebike.setting;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ public class BluetoothConnection {
     private static BluetoothConnection instance;
     public BluetoothGatt mGatt = null;
     public HashMap<String,Boolean> deviceMap;
+    private int isConnect = 0;
 
     public static BluetoothConnection getInstance(){
         if(instance == null){
@@ -88,6 +91,10 @@ public class BluetoothConnection {
             characteristic.setValue(arr);
             mGatt.writeCharacteristic(characteristic);
         }
+        else{
+            Log.i("mGatt", "null");
+        }
+
 
     }
 
@@ -96,10 +103,24 @@ public class BluetoothConnection {
         byte[] arr = new byte[1];
         arr[0] = 2;
         if(mGatt != null) {
+
             BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
+            if(characteristic == null){
+                Log.i("--charactteristic--","null");
+            }
+            if(mGatt.getService(SERVICE_UUID) == null){
+                Log.i("--getService--","null");
+            }
             characteristic.setValue(arr);
             mGatt.writeCharacteristic(characteristic);
         }
+    }
+
+    public int getIsConnect(){
+        return isConnect;
+    }
+    public void setIsConnect(int status){
+        isConnect = status;
     }
 
 

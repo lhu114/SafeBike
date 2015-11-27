@@ -131,10 +131,14 @@ public class FriendAddActivity extends AppCompatActivity {
                             }
                             else{
                                 addressFragment.fAdapter.clear();
-                                for(int i = 0; i < UserFriendList.getInstance().items.size(); i++){
-                                    if(UserFriendList.getInstance().items.get(i).pemail.contains(s.toString())){
-                                        FriendItem friend = UserFriendList.getInstance().items.get(i);
+                                for(int i = 0; i < addressFragment.addressFriendList.size(); i++){
+                                 //   Log.i("UserFriendList",UserFriendList.getInstance().items.get(i).pemail);
+
+                                    if(addressFragment.addressFriendList.get(i).pname.contains(s.toString())){
+                                       // FriendItem friend = UserFriendList.getInstance().items.get(i);
+                                        FriendItem friend = addressFragment.addressFriendList.get(i);
                                         addressFragment.fAdapter.add(friend);
+                                        Log.i("textFriend",friend.pemail);
                                     }
                                 }
 

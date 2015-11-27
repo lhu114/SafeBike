@@ -82,9 +82,12 @@ public class LoginInputFragment extends Fragment {
                                 ((LoginActivity) getActivity()).finish();
                             }
                             else{
-                                Toast.makeText(getContext(),"로그인실패",Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(),"로그인실패",Toast.LENGTH_SHORT).show();
                                 LoginFailDialogFragment loginFailDialogFragment = new LoginFailDialogFragment();
-                                loginFailDialogFragment.show(getChildFragmentManager(), "loginFail");
+
+
+                                loginFailDialogFragment.setContent("로그인","로그인에 실패했습니다");
+                                loginFailDialogFragment.show(getChildFragmentManager(),"loginfail");
 
                             }
                             /*if(userInform != null) {
@@ -144,7 +147,7 @@ public class LoginInputFragment extends Fragment {
 
         textLoginMain.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         textFindPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
-        btnLogin.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        btnLogin.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
         textLoginFail.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
 
     }
