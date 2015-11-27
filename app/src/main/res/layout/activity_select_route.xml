@@ -30,7 +30,7 @@
             android:id="@+id/btn_full_screen"
             android:layout_gravity="right|top"
             android:layout_marginTop="14dp"
-            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/button_full_screen_selector"/>
@@ -40,7 +40,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_favorite_onoff"
             android:layout_gravity="right"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="66dp"
+            android:layout_marginRight="14dp"
             android:layout_alignParentEnd="true"
             android:background="@drawable/button_favorite_selector"/>
     </FrameLayout>

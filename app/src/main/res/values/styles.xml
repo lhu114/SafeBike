@@ -68,7 +68,7 @@
     <style name="CustomNavigationButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingLeft">17dp</item>
         <item name="android:paddingRight">0dp</item>
     </style>
 
