@@ -17,18 +17,58 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="CustomAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CustomAppTheme" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorUserImform</item>
         <item name="colorPrimaryDark">@color/safeBikeColorPrimaryDark</item>
         <item name="android:windowActionBarOverlay">@null</item>
-
         <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">@null</item>
     </style>
+
     <style name="CustomAppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionBarStyle">@style/CustomActionBar</item>
+        <item name="toolbarStyle">@style/CustomToolbar</item>
+        <item name="toolbarNavigationButtonStyle">@style/CustomNavigationButtonStyle</item>
     </style>
 
+    <style name="CustomAppTheme.CustomActionBar">
+        <item name="actionBarStyle">@style/CustomActionBar</item>
+    </style>
+
+    <style name="CustomAppTheme.AppBarOverlay" parent="AppTheme.AppBarOverlay" >
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowActionBarOverlay">@null</item>
+        <item name="windowActionBarOverlay">@null</item>
+    </style>
+
+    <style name="CustomAppTheme.PopupOverlay" parent="AppTheme.PopupOverlay" >
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowActionBarOverlay">@null</item>
+        <item name="windowActionBarOverlay">@null</item>
+    </style>
+
+    <style name="CustomActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
+    <style name="CustomToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
+    <style name="CustomNavigationButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
 
 </resources>

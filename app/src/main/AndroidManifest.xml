@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.safering.safebike">
+    package="com.safering.safebike" >
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -26,25 +25,28 @@
         android:icon="@mipmap/safebike_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/CustomAppTheme">
+        android:theme="@style/CustomAppTheme" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-
             android:launchMode="singleTask"
-            android:theme="@style/CustomAppTheme.NoActionBar">
+            android:theme="@style/CustomAppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".login.SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/CustomAppTheme.NoActionBar">
+            android:theme="@style/CustomAppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginActivity">
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait">
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -62,27 +64,45 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".navigation.ParentRctFvActivity">
+            android:name=".navigation.ParentRctFvActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".friend.FriendAddActivity">
+            android:name=".friend.FriendAddActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".friend.FriendProfileActivity">
+            android:name=".friend.FriendProfileActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".account.ProfileActivity">
+            android:name=".account.ProfileActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".account.ProfileEditActivity">
+            android:name=".account.ProfileEditActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".account.AccountHelpActivity">
+            android:name=".account.AccountHelpActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".navigation.SelectRouteActivity">
+        <activity
+            android:name=".navigation.SelectRouteActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomAppTheme.CustomActionBar" >
         </activity>
-        <activity android:name=".navigation.StartNavigationActivity">
+        <activity
+            android:name=".navigation.StartNavigationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CustomAppTheme.CustomActionBar" >
         </activity>
+
+        <service
+            android:name=".service.RouteService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

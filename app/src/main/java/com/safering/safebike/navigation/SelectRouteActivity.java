@@ -486,7 +486,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                     addPointMarker(latLng, bitmapFlag, BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION, ITERATIVE_FLAG);
                 }
 
-                layoutSelectOption.setBackgroundResource(R.drawable.whithe_box_and_shadow_big_1);
+                layoutSelectOption.setBackgroundResource(R.drawable.white_box_and_shadow_big_1);
                 setPolylineColorAndBoldText(minOptions, laneOptions, tvLane, tvLaneTotalTime, tvLaneArvTime, tvLaneTotalDistance, tvMin, tvMinTotalTime, tvMinArvTime, tvMinTotalDistance);
 
                 PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
@@ -511,7 +511,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                     addPointMarker(latLng, bitmapFlag, BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION, ITERATIVE_FLAG);
                 }
 
-                layoutSelectOption.setBackgroundResource(R.drawable.whithe_box_and_shadow_big_2);
+                layoutSelectOption.setBackgroundResource(R.drawable.white_box_and_shadow_big_2);
                 setPolylineColorAndBoldText(laneOptions, minOptions, tvMin, tvMinTotalTime, tvMinArvTime, tvMinTotalDistance, tvLane, tvLaneTotalTime, tvLaneArvTime, tvLaneTotalDistance);
 
                 PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION);

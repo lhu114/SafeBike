@@ -218,11 +218,11 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_fwd_start_navigation"
         android:id="@+id/btn_fwd_start_navigation"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="84dp"
+        android:background="@drawable/findway_selector"
         android:visibility="gone"/>
 
     <TextView

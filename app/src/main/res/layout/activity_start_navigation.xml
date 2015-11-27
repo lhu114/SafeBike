@@ -56,6 +56,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_navi_description"
                 android:layout_gravity="center"
+                android:layout_centerVertical="true"
                 android:textSize="16sp"
                 android:textColor="#000000"
                 android:id="@+id/text_navi_description" />

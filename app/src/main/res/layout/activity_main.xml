@@ -19,7 +19,6 @@
         android:fitsSystemWindows="true"
         app:menu="@menu/menu_main_drawer"
         app:itemBackground="@color/colorNaviHeader"
-
         app:itemIconTint="@color/colorUserImform"
         app:itemTextColor="@color/colorUserImform"
 

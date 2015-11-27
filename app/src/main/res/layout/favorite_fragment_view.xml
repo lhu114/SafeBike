@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_tab_favorite"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tabmenu_selector" >
+
+    <TextView
+        android:id="@+id/text_tab_favorite_title"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:textColor="@color/tabmenu_text_selector"
+        android:textSize="16sp"
+        android:text="@string/text_tab_favorite_title"  />
+
+</RelativeLayout>

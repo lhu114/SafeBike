@@ -7,34 +7,43 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
-        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_width="match_parent" android:theme="@style/CustomAppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorUserImform"
-            app:popupTheme="@style/CustomAppTheme" >
-            <RelativeLayout
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/text_main_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/text_main_title"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorWhite" />
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorUserImform"
+                app:popupTheme="@style/CustomAppTheme.PopupOverlay">
 
-                <ImageButton
-                    android:id="@+id/btn_fwd_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/search_selector"
-                    android:visibility="gone"
-                    android:layout_marginRight="14dp"
-                    android:layout_alignParentEnd="true"/>
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/btn_fwd_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="19dp"
+                        android:background="@drawable/search_selector"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/text_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/text_main_title"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp" />
+        </FrameLayout>
         <!--app:popupTheme="@style/AppTheme.PopupOverlay"
         -->
 

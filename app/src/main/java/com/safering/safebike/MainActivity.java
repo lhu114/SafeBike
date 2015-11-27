@@ -63,12 +63,15 @@ public class MainActivity extends AppCompatActivity
     private static String ON = "on";
     private static String OFF = "off";
 
+    private static final int NAVIGATION_DRAWER_MARGIN_LEFT = 0;
+
     TextView textMainTitle;
     View naviHeaderView;
     ImageView imageAccountSetting;
     ImageView imageUserProfile;
     TextView textUserId;
     TextView textUserEmail;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,19 +80,22 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Log.d("safebike", Integer.toString(toolbar.getContentInsetLeft()));
+
+        /*int marginLeft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, NAVIGATION_DRAWER_MARGIN_LEFT, this.getResources().getDisplayMetrics());
+        toolbar.setContentInsetsRelative(marginLeft, 0);*/
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-        textMainTitle = (TextView)findViewById(R.id.text_main_title);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-
         toggle.setDrawerIndicatorEnabled(false);
         toggle.setHomeAsUpIndicator(R.drawable.pannel);
+
         drawer.setDrawerListener(toggle);
 
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -102,14 +108,14 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         navigationView.setNavigationItemSelectedListener(this);
+        NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
-        NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
 
+        textMainTitle = (TextView)findViewById(R.id.text_main_title);
         naviHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
 

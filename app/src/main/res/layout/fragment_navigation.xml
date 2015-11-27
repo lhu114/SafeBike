@@ -21,6 +21,7 @@
         android:id="@+id/btn_status_bluetooth"
         android:layout_gravity="left|top"
         android:layout_marginLeft="14dp"
+        android:layout_marginTop="14dp"
         android:background="@drawable/button_bluetooth_selector"/>
 
     <ImageButton
@@ -29,7 +30,8 @@
         android:background="@drawable/button_full_screen_selector"
         android:id="@+id/btn_full_screen"
         android:layout_gravity="right|top"
-        android:layout_marginRight="14dp" />
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="14dp" />
 
 </FrameLayout>
 
@@ -37,7 +39,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="67dp"
-        android:background="@drawable/whithe_box_and_shadow"
+        android:background="@drawable/white_box_and_shadow"
         android:id="@+id/layout_address"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
@@ -50,7 +52,8 @@
             android:text="@string/text_poi_name"
             android:textSize="16sp"
             android:id="@+id/text_poi_name"
-            android:layout_marginLeft="27dp" />
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="19dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,7 +61,8 @@
             android:text="@string/text_poi_address"
             android:textSize="12sp"
             android:id="@+id/text_poi_address"
-            android:layout_marginLeft="27dp" />
+            android:layout_marginLeft="27dp"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
@@ -70,7 +74,7 @@
         android:layout_alignParentEnd="true"
         android:visibility="gone"
         android:background="@drawable/button_choice_selector"
-        android:layout_marginLeft="285dp" />
+        android:layout_marginRight="10dp" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -78,9 +82,9 @@
         android:id="@+id/btn_crt_location"
         android:layout_above="@+id/btn_find_route"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/button_my_location_selector"
-        android:layout_marginLeft="285dp" />
+        android:layout_marginRight="10dp" />
 
 
 </RelativeLayout>

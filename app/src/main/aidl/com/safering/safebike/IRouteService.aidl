@@ -1,0 +1,15 @@
+// IRouteService.aidl
+package com.safering.safebike;
+
+import com.safering.safebike.IRouteCallback;
+// Declare any non-default types here with import statements
+
+interface IRouteService {
+    boolean startRouting();
+    boolean initialStartRouting();
+    boolean activateWithinRouteLimitDistance();
+    boolean activateAutoFinishNavigation();
+    void sendExerciseReport();
+    boolean registerCallback(IRouteCallback callback);
+    boolean unregisterCallback(IRouteCallback callback);
+}

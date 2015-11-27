@@ -10,10 +10,8 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,7 +29,6 @@ import android.widget.Toast;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.BluetoothDeviceAdapter;
-import com.safering.safebike.adapter.BluetoothDeviceHeaderItem;
 import com.safering.safebike.adapter.BluetoothDeviceItem;
 import com.safering.safebike.adapter.BluetoothItemView;
 import com.safering.safebike.manager.FontManager;
@@ -58,7 +55,7 @@ public class SettingFragment extends Fragment {
     ListView deviceList;
     Button tmpLeft;
     Button tmpRight;
-    TextView textConnectDevice;
+    TextView textConnectDevice, textMainTitle;
 
     public SettingFragment() {
 
@@ -73,6 +70,7 @@ public class SettingFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
+        textMainTitle = (TextView) ((MainActivity)getActivity()).findViewById(R.id.text_main_title);
         textConnectDevice = (TextView) view.findViewById(R.id.btn_connect_device);
         deviceList = (ListView) view.findViewById(R.id.connective_device_list);
         searchDevice = (ProgressBar) view.findViewById(R.id.progressBar_search);
@@ -214,6 +212,8 @@ public class SettingFragment extends Fragment {
     }
 
     public void setFont() {
+        textMainTitle.setText("설정");
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
         textConnectDevice.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
     }
 

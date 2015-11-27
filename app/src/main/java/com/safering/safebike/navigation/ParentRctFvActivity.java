@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.safering.safebike.R;
 import com.safering.safebike.property.PropertyManager;
@@ -21,9 +22,10 @@ import com.safering.safebike.property.PropertyManager;
 public class ParentRctFvActivity extends AppCompatActivity {
     FragmentTabHost tabHost;
 
-    View view;
+    View view, viewRecent, viewFavorite;
     EditText keywordView;
     ListView listView;
+    TextView tvRecentTitle, tvFavoriteTitle;
 
     ArrayAdapter<POI> mAdapter;
 
@@ -50,9 +52,16 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
         tabHost = (FragmentTabHost)findViewById(R.id.tabHost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+        tabHost.getTabWidget().setDividerDrawable(null);
 
-        tabHost.addTab(tabHost.newTabSpec(TAG_TAB_RECENT).setIndicator(TAG_TAB_RECENT_NAME), RecentFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec(TAG_TAB_FAVORITE).setIndicator(TAG_TAB_FAVORITE_NAME), FavoriteFragment.class, null);
+        viewRecent = getLayoutInflater().inflate(R.layout.recent_fragment_view, null);
+        viewFavorite = getLayoutInflater().inflate(R.layout.favorite_fragment_view, null);
+
+        tvRecentTitle = (TextView) findViewById(R.id.text_tab_recent_title);
+        tvFavoriteTitle = (TextView) findViewById(R.id.text_tab_favorite_title);
+
+        tabHost.addTab(tabHost.newTabSpec(TAG_TAB_RECENT).setIndicator(viewRecent), RecentFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec(TAG_TAB_FAVORITE).setIndicator(viewFavorite), FavoriteFragment.class, null);
 
         listView = (ListView) findViewById(R.id.listView_destination_search);
         mAdapter = new ArrayAdapter<POI>(this, android.R.layout.simple_list_item_1);
