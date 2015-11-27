@@ -86,7 +86,7 @@ public class LoginInputFragment extends Fragment {
                                 LoginFailDialogFragment loginFailDialogFragment = new LoginFailDialogFragment();
 
 
-                                loginFailDialogFragment.setContent("로그인","로그인에 실패했습니다");
+                                loginFailDialogFragment.setContent("로그인","로그인에 실패했습니다\r\n다시 접속해주세요");
                                 loginFailDialogFragment.show(getChildFragmentManager(),"loginfail");
 
                             }

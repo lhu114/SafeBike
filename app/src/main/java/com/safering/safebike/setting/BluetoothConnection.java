@@ -24,6 +24,7 @@ public class BluetoothConnection {
     public BluetoothGatt mGatt = null;
     public HashMap<String,Boolean> deviceMap;
     private int isConnect = 0;
+    private int onServerResponse = 0;
 
     public static BluetoothConnection getInstance(){
         if(instance == null){
@@ -95,6 +96,10 @@ public class BluetoothConnection {
                 mGatt.writeCharacteristic(characteristic);
             }
         }
+        else{
+            Log.i("mGatt ","--null--");
+        }
+
 
 
 
@@ -111,6 +116,10 @@ public class BluetoothConnection {
                 mGatt.writeCharacteristic(characteristic);
             }
         }
+        else{
+            Log.i("mGatt ","--null--");
+        }
+
     }
 
     public void writeOffValue(){
@@ -123,6 +132,7 @@ public class BluetoothConnection {
                 mGatt.writeCharacteristic(characteristic);
             }
         }
+
     }
 
 
@@ -134,5 +144,9 @@ public class BluetoothConnection {
         isConnect = status;
     }
 
+    public int getOnServerResponse(){return onServerResponse;}
+    public void setServerResponse(int status){
+        onServerResponse = status;
+    }
 
 }

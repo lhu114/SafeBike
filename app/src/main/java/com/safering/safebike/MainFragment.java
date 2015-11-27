@@ -112,6 +112,9 @@ public class MainFragment extends Fragment {
         imageBacklightOut = (ImageView) view.findViewById(R.id.image_backlight_onoff_out);
         btnBacklight = (Button) view.findViewById(R.id.btn_onoff_backlight);
         btnBand = (Button) view.findViewById(R.id.btn_onoff_band);
+
+     //   startActivityForResult();
+
         // btnBacklight.setSelected(true);
 
 

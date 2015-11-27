@@ -26,8 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/image_custom_safelogo"
             android:layout_alignBottom="@id/image_custom_safelogo"
+            android:textColor="@color/colorTabText"
             android:text="로그인"
-            android:textSize="12sp"
+            android:textSize="16sp"
             />
 
     </RelativeLayout>
@@ -60,8 +61,37 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:text="로그인 실패"
+            android:textColor="@color/colorTabText"
             android:gravity="center_horizontal|center_vertical"
             />
     </LinearLayout>
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_underline_layer_gray"
+        >
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            />
+
+    </RelativeLayout>
+-->
+        <Button
+            style="?android:attr/actionButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="YES"
+            android:textColor="@color/colorTabText"
+            android:id="@+id/btn_custom_dialog_positive"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/dialog_underline_layer_gray"
+
+            />
+
+
+
 
 </LinearLayout>
