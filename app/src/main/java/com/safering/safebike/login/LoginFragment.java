@@ -18,7 +18,7 @@ import com.safering.safebike.manager.FontManager;
  */
 public class LoginFragment extends Fragment {
 
-    TextView textLoginMain;
+    TextView textLoginMain ;
     TextView textWarning;
 
 
@@ -71,8 +71,8 @@ public class LoginFragment extends Fragment {
     public void setFont(){
         textLoginMain.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
         textWarning.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
-        btnLogin.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
-        btnSignUp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        btnLogin.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
+        btnSignUp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
 
 
     }

@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -36,6 +37,7 @@ import com.safering.safebike.property.PropertyManager;
 import org.w3c.dom.Text;
 
 import java.lang.annotation.Annotation;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,21 +54,18 @@ public class CalorieFragment extends Fragment {
     TextView parentCal;
     TextView parentSpeed;
     TextView parentDistance;
-    ArrayList<String> xVals = new ArrayList<String>();
-    ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
+    ArrayList<String> xVals;
+    ArrayList<BarEntry> yVals;
     ArrayList<BarDataSet> dataSets;
-    String lastDate = "";
-    ArrayList<ExerciseItem> values = new ArrayList<ExerciseItem>();
-    BarDataSet set;
-    Button moveRecent;
     int total = 0;
-    //sCalendar cal;
+   // public static int init = 0;
+    public CalorieFragment() {}
 
-    public CalorieFragment() {
-        // Required empty public constructor
-
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Toast.makeText(getContext(),"onCreate",Toast.LENGTH_SHORT).show();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +77,7 @@ public class CalorieFragment extends Fragment {
         parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
         parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);
         parentDistance = (TextView) getParentFragment().getView().findViewById(R.id.text_value_distance);
+        YAxisValueFormatter custom = new MyYAxisValueFormatter(MyYAxisValueFormatter.CHART_CALORIE);
 
         calorieChart = (BarChart) view.findViewById(R.id.chart_calorie);
         calorieChart.setVerticalScrollBarEnabled(true);
@@ -86,26 +86,12 @@ public class CalorieFragment extends Fragment {
         calorieChart.setDrawHighlightArrow(false);
         calorieChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         calorieChart.getXAxis().setDrawGridLines(false);
+
         calorieChart.getAxisLeft().setDrawGridLines(false);
+        calorieChart.getAxisLeft().setValueFormatter(custom);
         calorieChart.getAxisRight().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawLabels(false);
-        //calorieChart.setScaleMinima(2f, 1f);
         calorieChart.setVerticalScrollBarEnabled(false);
-        calorieChart.setGridBackgroundColor(Color.parseColor("#B6E2FF"));
-
-
-        calorieChart.setGridBackgroundColor(Color.parseColor("#FFFFFF"));
-        calorieChart.setBorderColor(Color.parseColor("#000000"));
-     //   calorieChart
-
-        //calorieChart.set
-        setFont();
-        //cal = Calendar.getInstance();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String today = dateFormat.format(cal.getTime());
-
-        requestData(today);
 
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
@@ -118,7 +104,7 @@ public class CalorieFragment extends Fragment {
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
                 if (calorieChart.getLowestVisibleXIndex() == 0) {
 
-                    calorieChart.animateX(2000);
+                    calorieChart.animateXY(3000, 3000);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     Calendar cal = Calendar.getInstance();
                     String getDate = calorieChart.getXValue(calorieChart.getLowestVisibleXIndex());
@@ -131,7 +117,6 @@ public class CalorieFragment extends Fragment {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Log.i("requestDate",dateFormat.format(cal.getTime()));
                     requestData(dateFormat.format(cal.getTime()));
 
                 }
@@ -172,25 +157,26 @@ public class CalorieFragment extends Fragment {
         calorieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
-
-              //  Toast.makeText(getContext(),"ClickDate :"+ calorieChart.getXValue(  e.getXIndex()) + "", Toast.LENGTH_SHORT).show();
-
-
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
                 String email = PropertyManager.getInstance().getUserEmail();
-                String date = calorieChart.getXValue(  e.getXIndex());
-
+                String date = calorieChart.getXValue(e.getXIndex());
 
 
                 NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
                     @Override
                     public void onSuccess(ExerciseDayResult result) {
                         if (result.workout.size() > 0) {
-                            parentCal.setText(String.valueOf(result.workout.get(0).calorie) + " kcal");
-                            parentSpeed.setText(String.valueOf(result.workout.get(0).speed) + " km/h");
-                            parentDistance.setText(String.valueOf(result.workout.get(0).road) + " km");
+
+                            NumberFormat nf = NumberFormat.getInstance();
+                          //  nf.setMinimumFractionDigits(2);//소수점 아래 최소 자리수
+                            nf.setMaximumFractionDigits(2);//소수점 아래 최대자리수
+
+
+
+                            parentCal.setText(String.valueOf(Math.round(result.workout.get(0).calorie)) + " kcal");
+                            parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0)/1000)) + " km/h");
+                            parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road/1000.0)) + " km");
                         }
                     }
 
@@ -207,43 +193,60 @@ public class CalorieFragment extends Fragment {
 
             }
         });
-/*
-        moveRecent = (Button)view.findViewById(R.id.btn_move_calorie);
-        moveRecent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
-            }
-        })*/;
 
 
+
+        total = 0;
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<BarEntry>();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String today = dateFormat.format(cal.getTime());
+        requestData(today);
+        setFont();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Toast.makeText(getContext(),"onResume",Toast.LENGTH_SHORT).show();
 
 
     }
-    float bscale = 1f;
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Toast.makeText(getContext(),"onDetach", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Toast.makeText(getContext(),"onDetoryView",Toast.LENGTH_SHORT).show();
+
+        //onDestroy();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(getContext(),"onDestory",Toast.LENGTH_SHORT).show();
+    }
 
     private void requestData(String today) {
         int count = 0;
         int range = 0;
         ArrayList<String> dateList = new ArrayList<String>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //2015-12-23
+
         Calendar cal = Calendar.getInstance();
 
         dateList.add(today);
 
-/*
-        Date d = dateFormat.parse(getDate);
-        cal.setTime(d);
-        cal.add(Calendar.DATE, -1);
-        */
+
         for(int i = 0; i < 9; i++){
             try {
                 Date d = dateFormat.parse(today);
@@ -252,37 +255,31 @@ public class CalorieFragment extends Fragment {
                 String date = dateFormat.format(cal.getTime());
                 dateList.add(date);
                 today = date;
-                Log.i("date : ",date);
+                Log.i("date : ", date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
 
-        /*    cal.add(Calendar.DATE,-1);
-            String date = dateFormat.format(cal.getTime());
-            dateList.add(date);
-            Log.i("date : ",date);
-*/
         }
 
         String email = PropertyManager.getInstance().getUserEmail();
-        NetworkManager.getInstance().getExerciseRecord(getContext(), email,dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
 
-                ArrayList<ExerciseItem> values = result.workoutlist;
+                // ArrayList<ExerciseItem> values = result.workoutlist;
 
                 BarData data;
                 int count = result.workoutlist.size();
-               // Toast.makeText(getContext(),"count : " + count,Toast.LENGTH_SHORT).show();
-                Log.i("count : ",count + "");
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
                         xVals.add(result.workoutlist.get(i)._id);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie, total+i));
+                        yVals.add(new BarEntry(result.workoutlist.get(i).calorie , total + i));
                     }
-                   total += count;
-                    BarDataSet set = new BarDataSet(yVals, "Distance");
+                    total += count;
+                    BarDataSet set = new BarDataSet(yVals, "calorie : kcal");
+                    set.setColor(Color.parseColor("#B6E2FF"));
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
 
@@ -321,11 +318,12 @@ public class CalorieFragment extends Fragment {
     }
 
     public void setFont(){
-        parentCal.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
-        parentSpeed.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
-        parentDistance.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        parentCal.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        parentSpeed.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        parentDistance.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
     }
+
 
 
 }

@@ -1,49 +1,37 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/register_bg"
-    android:orientation="vertical"
 
     tools:context="com.safering.safebike.login.SignUpFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+
 
         <TextView
             android:id="@+id/text_signup_main"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="28dp"
+            android:gravity="center_horizontal"
             android:text="@string/text_login_main_title"
             android:textColor="@color/colorWhite"
             android:textSize="20sp" />
 
-    </RelativeLayout>
 
-    <LinearLayout
-
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:orientation="vertical">
 
         <EditText
             android:id="@+id/edit_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="75dp"
             android:background="@mipmap/rectangle"
             android:hint="@string/edit_user_name"
             android:lines="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="5dp"
+
+            android:paddingLeft="17dp"
             android:paddingRight="20dp"
-            android:paddingTop="20dp"
             android:singleLine="true"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorRegister" />
@@ -52,14 +40,13 @@
             android:id="@+id/edit_user_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+
             android:background="@mipmap/rectangle"
+            android:layout_marginTop="120dp"
             android:hint="@string/edit_user_email"
             android:lines="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="5dp"
+            android:paddingLeft="17dp"
             android:paddingRight="20dp"
-            android:paddingTop="20dp"
             android:singleLine="true"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorWhite"
@@ -73,10 +60,9 @@
             android:password="true"
             android:hint="@string/edit_user_password"
             android:lines="1"
-            android:paddingBottom="20dp"
-            android:paddingLeft="5dp"
+            android:layout_marginTop="165dp"
+            android:paddingLeft="17dp"
             android:paddingRight="20dp"
-            android:paddingTop="20dp"
             android:singleLine="true"
             android:textColor="@color/colorWhite"
             android:textColorHint="@color/colorRegister" />
@@ -85,8 +71,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="220dp"
+
 
             >
 
@@ -155,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="동의합니다."
-                    android:layout_gravity="center_horizontal"
+
 
                     android:layout_below="@+id/text_temp_line1"
                     android:layout_alignStart="@+id/text_temp_line1" />
@@ -218,25 +204,19 @@
                 -->
 
         <Button
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="265dp"
             android:id="@+id/btn_go_next"
-            android:layout_gravity="center_horizontal"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:background="@drawable/button_selector"
+            android:textSize="16sp"
+            android:layout_marginLeft="24dp"
             android:text="@string/btn_go_next" />
 
 
-    </LinearLayout>
 
-    <LinearLayout
-
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-
-        android:orientation="vertical">
         <!--
 
                 <TextView
@@ -307,9 +287,8 @@
 
                     -->
 
-    </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>
 
 

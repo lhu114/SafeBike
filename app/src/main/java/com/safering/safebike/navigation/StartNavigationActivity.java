@@ -840,13 +840,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                                 getPointInfoNotifications(naviLatLngIndex);
 
-                                if (info.properties != null) {
+                              /*  if (info.properties != null) {
                                     Toast.makeText(StartNavigationActivity.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
                                     Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
                                 } else {
                                     Toast.makeText(StartNavigationActivity.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
                                     Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
-                                }
+                                }*/
                                 /*
                                  *  종료 처리
                                  */
@@ -945,13 +945,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                                     getPointInfoNotifications(naviLatLngIndex);
 
-                                    if (info.properties != null) {
+                                 /*   if (info.properties != null) {
                                         Toast.makeText(StartNavigationActivity.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
                                         Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
                                     } else {
                                         Toast.makeText(StartNavigationActivity.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
                                         Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
-                                    }
+                                    }*/
 
                                     /*
                                      *  종료 처리
@@ -1460,12 +1460,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             final String userEmail = PropertyManager.getInstance().getUserEmail();
             final String date = sdf.format(cal.getTime());
             final int calorie = CalculatorCalorie.getInstance().getCalorie(totalSpeed / speedList.size(), 65, 5);
-            final int speed = Math.round(totalSpeed / speedList.size());
-            final int distance = Math.round(totalDistance);
+            final float speed = Math.round(totalSpeed / speedList.size());
+            final float distance = Math.round(totalDistance);
+            Toast.makeText(StartNavigationActivity.this,"intervalTime : "+(distance/speed) + "",Toast.LENGTH_SHORT).show();
 
             Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + calorie + " | speed : " + speed + " | distance : " + distance);
-            Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + Integer.toString(calorie) + " | speed : " + Integer.toString(speed) + " | distance : " + Integer.toString(distance), Toast.LENGTH_LONG).show();
-            NetworkManager.getInstance().saveExercise(StartNavigationActivity.this, userEmail, date, calorie, speed, distance, new NetworkManager.OnResultListener() {
+            Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + Integer.toString(calorie) + " | speed : " + speed + " | distance : " + distance, Toast.LENGTH_LONG).show();
+            NetworkManager.getInstance().saveExercise(StartNavigationActivity.this, userEmail, date, calorie, (int)speed, (int)distance, new NetworkManager.OnResultListener() {
                 @Override
                 public void onSuccess(Object result) {
                     Log.d(DEBUG_TAG, "StartNavigationActivity.sendExerciseReport.saveExercise.onSuccess.result : " + result);

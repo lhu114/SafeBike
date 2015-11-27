@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,56 +7,46 @@
     android:background="@mipmap/register_bg"
     tools:context="com.safering.safebike.login.LoginFragment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+
         <TextView
             android:id="@+id/text_login_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/safebike_small_withe"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_marginLeft="151dp"
+            android:layout_marginTop="40dp"
             android:text="@string/text_login_main"
             android:textColor="@color/colorWhite"
             android:textSize="20dp"
-
-
             />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/text_login_main"
-            android:src="@mipmap/safebike_small_withe"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="7dp"
-            />
 
-    </RelativeLayout>
+            android:src="@mipmap/safebike_small_withe"
+            android:layout_marginLeft="115dp"
+            android:layout_marginTop="33dp"
+            android:layout_gravity="center_horizontal" />
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3">
+
 
         <ImageView
             android:id="@+id/image_logo_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/logo_start"
-            android:layout_centerHorizontal="true"
-
+            android:layout_marginLeft="102dp"
+            android:layout_marginTop="142dp"
             />
         <TextView
             android:id="@+id/text_login_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/safebike_small_withe"
-            android:layout_below="@id/image_logo_start"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
+            android:layout_marginTop="326dp"
+            android:layout_marginLeft="94dp"
             android:text="@string/text_login_warning"
             android:textSize="20sp"
             
@@ -64,16 +54,11 @@
 
 
             />
-    </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+
 
         <Button
-            android:layout_gravity="center_horizontal"
+
             android:id="@+id/btn_login_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,17 +67,23 @@
             android:textColorHint="@color/colorWhite"
             android:textColor="@color/colorWhite"
             android:layout_marginBottom="5dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="474dp"
+            android:textSize="16sp"
             />
 
         <Button
-            android:layout_gravity="center_horizontal"
+
             android:id="@+id/btn_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_login"
+            android:textSize="16sp"
             android:background="@drawable/button_selector"
             android:textColor="@color/colorWhite"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="531dp"
             />
-    </LinearLayout>
 
-</LinearLayout>
+
+</RelativeLayout>

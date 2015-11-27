@@ -18,8 +18,11 @@ import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 
 /**
@@ -49,6 +52,7 @@ public class MainFragment extends Fragment {
     Button btnBand;
     boolean backlightStatus = false;
     boolean bandStatus = false;
+    int deviceStatus = 0;
 
     public MainFragment() {
         // Required empty public constructor
@@ -86,6 +90,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         Log.d("safebike", "MainFragment.onCreateView");
         // Inflate the layout for this fragment
 
@@ -93,6 +98,14 @@ public class MainFragment extends Fragment {
 
         final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        ArrayList<String> arr = new ArrayList<String>();
+        arr.add("2015-11-11");
+        arr.add("2015-11-15");
+        arr.add("2015-11-21");
+        arr.add("2015-11-10");
+        Collections.sort(arr);
+        Log.i("list",arr.toString());
+
         textBandOnOff = (TextView) view.findViewById(R.id.text_band_status);
         textBackLightOnOff = (TextView) view.findViewById(R.id.text_backlight_status);
         imageBacklightIn = (ImageView) view.findViewById(R.id.image_backlight_onoff_in);
@@ -266,6 +279,7 @@ public class MainFragment extends Fragment {
         }
         setFont();
         setBluetooth();
+        checkConnection();
         return view;
     }
 
@@ -286,8 +300,9 @@ public class MainFragment extends Fragment {
 
     }
 
-    public void connectionOnOff(int status) {
-        if (status == 1) {
+    public void setConnectionOnOff(int status) {
+        deviceStatus = status;
+        /*if (deviceStatus == 1) {
             imageBacklightOut.setImageResource(R.drawable.on);
             imageBacklightIn.setImageResource(R.drawable.on);
 
@@ -295,6 +310,26 @@ public class MainFragment extends Fragment {
         } else if (status == 0) {
             imageBacklightOut.setImageResource(R.drawable.off);
             imageBacklightIn.setImageResource(R.drawable.off);
+
+        }*/
+    }
+
+    public int getConnectionOnOff(){
+        return deviceStatus;
+    }
+
+    public void checkConnection() {
+        if (deviceStatus == 1) {
+            imageBacklightOut.setImageResource(R.drawable.on);
+            imageBacklightIn.setImageResource(R.drawable.on);
+            textBackLightOnOff.setText("후미등 켜짐");
+
+        } else if (deviceStatus == 0) {
+            imageBacklightOut.setImageResource(R.drawable.off);
+            imageBacklightIn.setImageResource(R.drawable.off);
+            textBackLightOnOff.setText("후미등 꺼짐");
+
+
 
         }
     }

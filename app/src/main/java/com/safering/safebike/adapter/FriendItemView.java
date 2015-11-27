@@ -80,7 +80,7 @@ public class FriendItemView extends RelativeLayout {
     public void setFriendData(FriendItem data) {
         fData = data;
         friendId.setText(data.pname);
-        if(data.photo == null) {
+        if(data.photo.equals("null")) {
             Log.i("friend photo", data.photo + "");
         }else {
 

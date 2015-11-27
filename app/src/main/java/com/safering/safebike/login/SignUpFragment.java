@@ -211,7 +211,7 @@ public class SignUpFragment extends Fragment {
         inputPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
         textSignupMain.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
-        btnMakeAccount.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        btnMakeAccount.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
         signupPolicy.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         signupDuple.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         signupFail.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
@@ -219,6 +219,9 @@ public class SignUpFragment extends Fragment {
         textTempLine2.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textTempLine3.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textTempLine4.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        userManner.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        privatePolicy.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+
 
     }
 

@@ -1,114 +1,93 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/register_bg"
-
-    android:orientation="vertical"
     tools:context="com.safering.safebike.login.LoginInputFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+
+    <TextView
+        android:id="@+id/text_login_input_main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:gravity="center_horizontal"
+        android:text="@string/text_login_main_title"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/text_login_input_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/text_login_main_title"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp" />
-
-    </RelativeLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/edit_user_mail_login"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="75dp"
+        android:background="@mipmap/rectangle"
+        android:hint="@string/edit_user_email"
+        android:lines="1"
+        android:paddingBottom="5dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorRegister"
+        android:textSize="16sp"
+        />
 
-        <EditText
-            android:id="@+id/edit_user_mail_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:background="@mipmap/rectangle"
-            android:hint="@string/edit_user_email"
-            android:lines="1"
-            android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
-
-            android:singleLine="true"
-            android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorRegister"
-            android:textSize="16sp"
-
-            />
-
-        <EditText
-            android:id="@+id/edit_user_password_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@mipmap/rectangle"
-            android:hint="@string/edit_user_password"
-            android:lines="1"
-            android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
-            android:singleLine="true"
-
-            android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorRegister"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/text_login_fail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/login_fail_message"
-            android:textColor="@color/colorWhite"
-
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/text_find_pass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="25dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/text_find_pass"
-            android:textColor="@color/colorRegister"
-
-            />
-
-        <Button
-            android:layout_gravity="center"
-            android:id="@+id/btn_login_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_selector"
-            android:textColor="@color/colorWhite"
-
-            android:text="@string/btn_login" />
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/edit_user_password_login"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"></LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:background="@mipmap/rectangle"
+        android:hint="@string/edit_user_password"
+        android:lines="1"
+        android:paddingBottom="5dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorRegister"
+        android:textSize="16sp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/text_login_fail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/login_fail_message"
+        android:textColor="@color/colorWhite"
+
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text_find_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:gravity="center_horizontal"
+
+        android:text="@string/text_find_pass"
+        android:textColor="@color/colorRegister"
+
+        />
+
+    <Button
+        android:id="@+id/btn_login_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="220dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/btn_login"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>
