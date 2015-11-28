@@ -33,6 +33,8 @@ public class FriendFragment extends Fragment {
     public static final int FRIEND_NO_SELECT = 0;
     public static final String FRIEND_INFORM = "friendInform";
     public static final String USER_FRIEND = "friendList";
+    public static final String FRIEND_ADAPTER = "friendAdapter";
+    public static final String FRIEND_POSITION = "friendPosition";
     FriendAdapter fAdapter;
     //ArrayList<String> fEmailList;
     ListView listView;
@@ -63,7 +65,12 @@ public class FriendFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 friendItem = (FriendItem) fAdapter.getItem(position);
-
+                Intent intent = new Intent(getContext(), FriendProfileActivity.class);
+                intent.putExtra(FRIEND_INFORM, friendItem);
+                intent.putExtra(FRIEND_ADAPTER,fAdapter);
+                intent.putExtra(FRIEND_POSITION,position);
+                startActivity(intent);
+/*
                 PopupMenu popupMenu = new PopupMenu(getContext(), view);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_popup_friend, popupMenu.getMenu());
                 popupMenu.getMenu().getItem(0).setTitle(friendItem.pname);
@@ -100,7 +107,7 @@ public class FriendFragment extends Fragment {
 
                     }
                 });
-                popupMenu.show();
+                popupMenu.show();*/
             }
         });
 

@@ -16,6 +16,7 @@ import com.safering.safebike.friend.FriendDirectSearchResult;
 import com.safering.safebike.friend.FriendProfileResult;
 import com.safering.safebike.friend.FriendResult;
 import com.safering.safebike.friend.FriendSearchResult;
+import com.safering.safebike.login.LoginInputFragment;
 import com.safering.safebike.login.LoginResult;
 import com.safering.safebike.navigation.FavoriteResult;
 import com.safering.safebike.navigation.SearchPOIInfo;
@@ -90,7 +91,7 @@ public class NetworkManager {
     * 로그인
     * */
     private static final String LOGIN_JOIN_URL = "http://52.69.133.212:3000/user/add";//서버 URL
-    private static final String LOGIN_SEND_TEMP_URL = "http:...";//서버 URL
+    private static final String LOGIN_SEND_TEMP_URL = "http://52.69.133.212:3000/user/ps";//서버 URL
     private static final String LOGIN_AUTHOR_URL = "http://52.69.133.212:3000/user/login";//서버 URL
     private static final String LOGIN_EXAM_URL = "http://52.69.133.212:3000/user/email";//서버 URL
 
@@ -513,6 +514,7 @@ public class NetworkManager {
         */
         for(int i = 0; i < phoneList.size(); i++){
             params.add("phone",phoneList.get(i).getPhonenum());
+            Log.i("phone",phoneList.get(i).getPhonenum());
         }
 
         client.post(context, FRIEND_ADDRESS_URL, params, new TextHttpResponseHandler() {
@@ -688,15 +690,15 @@ public class NetworkManager {
         params.put(USER_EAMIL, email);
 
 
-        client.get(context, LOGIN_SEND_TEMP_URL, params, new TextHttpResponseHandler() {
+        client.post(context, LOGIN_SEND_TEMP_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(ON_FAIL);
+                listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                listener.onSuccess(ON_SUCCESS);
+                listener.onSuccess(responseString);
             }
         });
     }

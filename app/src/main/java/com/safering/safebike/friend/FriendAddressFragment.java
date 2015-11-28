@@ -52,7 +52,7 @@ public class FriendAddressFragment extends Fragment {
             @Override
             public void onButtonClick(FriendItemView view, FriendItem data) {
                 String uEmail = PropertyManager.getInstance().getUserEmail();
-                String fEmail = data.pemail;
+                final String fEmail = data.pemail;
                 String fId = data.pname;
                 String fPhoto = data.photo;
                 if(UserFriendList.getInstance().isFriend(fEmail) == true){
@@ -61,6 +61,7 @@ public class FriendAddressFragment extends Fragment {
                     NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
                         @Override
                         public void onSuccess(Object result) {
+                            fAdapter.remove(fEmail);
                         }
 
                         @Override

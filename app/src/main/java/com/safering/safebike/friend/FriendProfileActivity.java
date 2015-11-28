@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.safering.safebike.R;
+import com.safering.safebike.adapter.FriendAdapter;
 import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
@@ -29,8 +30,12 @@ public class FriendProfileActivity extends AppCompatActivity {
     TextView friendId;
     TextView friendEmail;
     TextView friendJoin;
+    TextView friendDelete;
     TextView textTitle;
     ImageView imageBack;
+    FriendItem friend;
+    FriendAdapter adapter;
+    int friendPosition;
 
     TextView textFriendDistanceResult;
     TextView textFriendDistance;
@@ -41,27 +46,28 @@ public class FriendProfileActivity extends AppCompatActivity {
     TextView textFriendTotalResult;
     String getfriendEmail;
     String getfriendPhoto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
-        textTitle = (TextView)findViewById(R.id.text_custom_title);
-        imageBack = (ImageView)findViewById(R.id.image_backkey);
-        textFriendTotalResult = (TextView)findViewById(R.id.text_friend_total_result);
+        textTitle = (TextView) findViewById(R.id.text_custom_title);
+        imageBack = (ImageView) findViewById(R.id.image_backkey);
+        textFriendTotalResult = (TextView) findViewById(R.id.text_friend_total_result);
 
-        friendImage = (ImageView)findViewById(R.id.image_friend_profile);
-        friendId = (TextView)findViewById(R.id.text_friendid_profile);
-        friendEmail = (TextView)findViewById(R.id.text_friendemail_profile);
-        friendJoin = (TextView)findViewById(R.id.text_friendjoin_profile);
-
-        textFriendDistanceResult = (TextView)findViewById(R.id.text_friend_distance_result);
-        textFriendDistance = (TextView)findViewById(R.id.text_friend_distance);
-        textFriendSpeedResult = (TextView)findViewById(R.id.text_friend_speed_result);
-        textFriendSpeed = (TextView)findViewById(R.id.text_friend_speed);
-        textFriendCalorieResult = (TextView)findViewById(R.id.text_friend_calorie_result);
-        textFriendCalorie = (TextView)findViewById(R.id.text_friend_calorie);
+        friendImage = (ImageView) findViewById(R.id.image_friend_profile);
+        friendId = (TextView) findViewById(R.id.text_friendid_profile);
+        friendEmail = (TextView) findViewById(R.id.text_friendemail_profile);
+        friendJoin = (TextView) findViewById(R.id.text_friendjoin_profile);
+        friendDelete = (TextView) findViewById(R.id.text_friend_delete_profile);
+        textFriendDistanceResult = (TextView) findViewById(R.id.text_friend_distance_result);
+        textFriendDistance = (TextView) findViewById(R.id.text_friend_distance);
+        textFriendSpeedResult = (TextView) findViewById(R.id.text_friend_speed_result);
+        textFriendSpeed = (TextView) findViewById(R.id.text_friend_speed);
+        textFriendCalorieResult = (TextView) findViewById(R.id.text_friend_calorie_result);
+        textFriendCalorie = (TextView) findViewById(R.id.text_friend_calorie);
 
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,14 +78,42 @@ public class FriendProfileActivity extends AppCompatActivity {
         setFont();
 
         Intent intent = getIntent();
-        FriendItem friend = (FriendItem)intent.getSerializableExtra("friendInform");
+        friend = (FriendItem) intent.getSerializableExtra("friendInform");
+        adapter = (FriendAdapter) intent.getSerializableExtra("friendAdapter");
+        friendPosition = intent.getIntExtra("friendPosition", 0);
+
 
         getfriendEmail = friend.pemail;
         getfriendPhoto = friend.photo;
-        Log.i("friendPhoto",getfriendPhoto+"");
+
+        friendDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uEmail = PropertyManager.getInstance().getUserEmail();
+                //String fEmail = friendItem.pemail;
+
+                NetworkManager.getInstance().removeUserFriend(FriendProfileActivity.this, uEmail, getfriendEmail, new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object success) {
+
+                        adapter.remove(friendPosition);
 
 
-        NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this,getfriendEmail, new NetworkManager.OnResultListener<FriendProfileResult>() {
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
+
+
+                //adapter.remove(friendPosition);
+
+            }
+        });
+
+        NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this, getfriendEmail, new NetworkManager.OnResultListener<FriendProfileResult>() {
             @Override
             public void onSuccess(FriendProfileResult result) {
                 setFriendProfile(result);
@@ -94,22 +128,23 @@ public class FriendProfileActivity extends AppCompatActivity {
 
     }
 
-    public void setFont(){
+    public void setFont() {
         textTitle.setText(R.string.text_add_friend);
         textTitle.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS_M));
-        textFriendDistanceResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        textFriendDistanceResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         textFriendDistance.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         textFriendSpeedResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         textFriendSpeed.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         textFriendCalorieResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         textFriendCalorie.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         textFriendTotalResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
-        friendId.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
+        friendId.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         friendEmail.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         friendJoin.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
+        friendDelete.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this,FontManager.NOTOSANS));
     }
 
-    public void setFriendProfile(FriendProfileResult result){
+    public void setFriendProfile(FriendProfileResult result) {
         FriendProfile profile = result.friendprofile;
         friendId.setText(profile.name);
         friendEmail.setText(profile.email);
@@ -118,7 +153,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         textFriendSpeed.setText(profile.speed + "km/h");
         textFriendCalorie.setText(profile.calorie + "kcal");
 
-        if(!getfriendPhoto.equals("null")) {
+        if (!getfriendPhoto.equals("null")) {
             DisplayImageOptions options;
             options = new DisplayImageOptions.Builder()
                     .cacheInMemory(true)
@@ -137,10 +172,10 @@ public class FriendProfileActivity extends AppCompatActivity {
 
     }
 
-    public String getDateFormat(String date){
-        Log.i("date",date);
+    public String getDateFormat(String date) {
+        Log.i("date", date);
         String resultDate = "";
-        StringTokenizer tokenizer = new StringTokenizer(date,"-");
+        StringTokenizer tokenizer = new StringTokenizer(date, "-");
         resultDate += tokenizer.nextToken() + "년 ";
         resultDate += tokenizer.nextToken() + "월 ";
         resultDate += tokenizer.nextToken() + "일 가입";

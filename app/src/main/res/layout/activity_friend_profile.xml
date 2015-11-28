@@ -159,4 +159,15 @@
 
         </RelativeLayout>
     </LinearLayout>
+    <TextView
+        android:id="@+id/text_friend_delete_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="30dp"
+        android:textSize="16sp"
+
+        android:textColor="@color/colorBlack"
+        android:text="친구삭제"
+        />
 </LinearLayout>
