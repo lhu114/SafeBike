@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.IRouteCallback;
 import com.safering.safebike.IRouteService;
 import com.safering.safebike.MainActivity;
+import com.safering.safebike.MainFragment;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
@@ -110,8 +111,10 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     int gpIndex = 0;
 
     TextView tvNaviDescription, tvMainTitle;
-    ImageButton btnFullScreen, btnBackKey, btnFinishNavi;
+    ImageButton btnBluetooth, btnFullScreen, btnBackKey, btnFinishNavi;
     ImageView imageDescription;
+
+    MainFragment mainFragment;
 
     boolean isFirst = true;
     boolean isFirstFinishDialog = true;
@@ -137,6 +140,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         tvMainTitle = (TextView) findViewById(R.id.text_main_title);
         imageDescription = (ImageView) findViewById(R.id.image_description);
         tvNaviDescription = (TextView) findViewById(R.id.text_navi_description);
+
+        btnBluetooth = (ImageButton) findViewById(R.id.btn_status_bluetooth);
 
         btnFullScreen = (ImageButton) findViewById(R.id.btn_full_screen);
         btnFullScreen.setOnClickListener(new View.OnClickListener() {

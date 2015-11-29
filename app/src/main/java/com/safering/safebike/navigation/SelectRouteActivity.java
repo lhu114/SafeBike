@@ -1,10 +1,13 @@
 package com.safering.safebike.navigation;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +30,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.safering.safebike.MainFragment;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
@@ -75,10 +80,14 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     private static final String KEY_DESTINATION_POI_NAME = "destinationpoiname";
     private static final int SUCCESS = 200;
     private static final int BAD_REQUEST = 400;
+    private static final int ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE = 3209;
 
     private static final String EXIST = "200";
     private static final String NOT_EXIST = "201";
+
     private GoogleMap mMap;
+    String mProvider;
+    LocationManager mLM;
 
     Polyline polyline;
     PolylineOptions laneOptions, minOptions;
@@ -104,7 +113,9 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     LinearLayout layoutSelectOption, layoutLane, layoutMin;
     TextView tvLane, tvLaneTotalTime, tvLaneArvTime, tvLaneTotalDistance, tvMin, tvMinTotalTime, tvMinArvTime, tvMinTotalDistance, tvMainTitle;
-    ImageButton btnBackKey, btnFullScreen, btnFavorite, btnStartNavi;
+    ImageButton btnBluetooth, btnBackKey, btnFullScreen, btnFavorite, btnStartNavi;
+
+    MainFragment mainFragment;
 
     String favoritePOIName = null;
     int laneGPIndex = 0;
@@ -113,6 +124,8 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     int minGPIndexSize = 0;
 
     boolean isFavoriteBtnOn = false;
+    boolean isActivateRouteWithinLimitDistanceNoti = false;
+    boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,11 +161,20 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         btnBackKey = (ImageButton) findViewById(R.id.btn_back_key);
         btnStartNavi = (ImageButton) findViewById(R.id.btn_start_navigation);
 
+        btnBluetooth = (ImageButton) findViewById(R.id.btn_status_bluetooth);
+
         polylineList = new ArrayList<Polyline>();
         mLaneLatLngList = new ArrayList<LatLng>();
         mMinLatLngList = new ArrayList<LatLng>();
 
+        btnStartNavi.setEnabled(false);
 //        mHandler = new Handler(Looper.getMainLooper());
+
+        if (mProvider == null) {
+            mProvider = LocationManager.GPS_PROVIDER;
+        }
+
+        mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         setFont();
 
@@ -245,6 +267,8 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                         @Override
                         public void onSuccess(BicycleRouteInfo result) {
                             if (result.features != null && result.features.size() > 0) {
+                                btnStartNavi.setEnabled(true);
+
                                 clearAllLaneMarker();
 
                                 int totalTime = result.features.get(0).properties.totalTime;
@@ -342,7 +366,9 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                         @Override
                         public void onFail(int code) {
-
+                            if (code == ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE) {
+                                withinRouteLimitDistanceDialog();
+                            }
                         }
                     });
         }
@@ -353,6 +379,8 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                     public void onSuccess(BicycleRouteInfo result) {
                         Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.onSuccess");
                         if (result.features != null && result.features.size() > 0) {
+                            btnStartNavi.setEnabled(true);
+
                             clearAllMinMarker();
 
                             int totalTime = result.features.get(0).properties.totalTime;
@@ -461,7 +489,9 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                     @Override
                     public void onFail(int code) {
-
+                        if (code == ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE) {
+                            withinRouteLimitDistanceDialog();
+                        }
                     }
                 });
 
@@ -697,6 +727,28 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     protected void onStart() {
         Log.d(DEBUG_TAG, "SelectRouteActivity.onStart");
         super.onStart();
+
+        if (!mLM.isProviderEnabled(mProvider)) {
+            if (isFirst) {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+
+                isFirst = false;
+
+                Toast.makeText(SelectRouteActivity.this, "GPS를 설정해주세요.", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).!isFirst");
+                /*
+                 * 확인 후 처리
+                 */
+                Toast.makeText(SelectRouteActivity.this, "GPS 설정이 필요합니다.", Toast.LENGTH_SHORT).show();
+
+                finish();
+            }
+
+            return;
+        }
     }
 
     @Override
@@ -1078,5 +1130,31 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         tvMinTotalTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
         tvMinArvTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
         tvMinTotalDistance.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
+    }
+
+    private void withinRouteLimitDistanceDialog() {
+        if (!isActivateRouteWithinLimitDistanceNoti) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onWithinRouteLimitDistanceDialog");
+
+            /*
+             * 다이얼로그가 두번 불리지는 않는지 QA 필요
+             */
+            isActivateRouteWithinLimitDistanceNoti = true;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(android.R.drawable.ic_dialog_info);
+            builder.setTitle("알림");
+            builder.setMessage("목적지가 출발지와 근접합니다. 경로를 다시 선택해주세요.");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+
+            builder.setCancelable(false);
+
+            builder.create().show();
+        }
     }
 }

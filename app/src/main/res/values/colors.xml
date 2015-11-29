@@ -7,6 +7,7 @@
     <color name="colorToolbar">#3498DB</color>
     <color name="colorRegister">#94D4FF</color>
     <color name="colorUserImform">#3498DB</color>
+    <color name="colorTab">#42a4e5</color>
     <color name="colorNaviHeader">#FAFAFA</color>
     <color name="colorMenu">#EAEAEA</color>
     <color name="colorBlack">#000000</color>
@@ -17,7 +18,7 @@
     <color name="safeBikeColorPrimaryDark">#2a7aaf</color>
     <color name="colorMainBackground">#F2F2F2</color>
     <color name="colorDeviceStatus">#2779B0</color>
-    <color name="colorTabText">#C6C6C6</color>
+    <color name="colorTabText">#B1D5F2</color>
     <color name="colorExerciseBar">#B6E2FF</color>
 
 

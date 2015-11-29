@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -71,10 +73,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private static final String KEY_DESTINATION_POI_NAME = "destinationpoiname";
 
     private GoogleMap mMap;
+    String mProvider;
 
     GoogleApiClient mGoogleApiClient;
     Location mLocation, mCacheLocation;
     LocationRequest mLocationRequest;
+    LocationManager mLM;
 
     Sensor mRotationSensor;
     SensorManager mSM;
@@ -96,13 +100,15 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     TextView textMainTitle;
     TextView tvPOIAddress;
     TextView tvPOIName;
-    ImageButton btnFullScreen, btnFindRoute, btnFwdSearch, btnCurrentLoc;
-    ImageButton btnBluetooth;
+    ImageButton btnBluetooth, btnFullScreen, btnFindRoute, btnFwdSearch, btnCurrentLoc;
+
     MainFragment mainFragment;
+
     boolean isCurrentLocBtnOn = false;
     boolean isActivateRotation = false;
     boolean isActivateCurrentLocBtn = false;
     boolean isCheckGetRecentLoc = false;
+    boolean isFirst = true;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -130,6 +136,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         mPOIMarkerList = new ArrayList<POI>();
         mLcMarkerList = new ArrayList<LatLng>();
+
+        if (mProvider == null) {
+            mProvider = LocationManager.GPS_PROVIDER;
+        }
+
+        mLM = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
@@ -155,13 +167,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
             btnFullScreen = (ImageButton) view.findViewById(R.id.btn_full_screen);
             btnBluetooth = (ImageButton)view.findViewById(R.id.btn_status_bluetooth);
+
             mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
-            if(mainFragment.getConnectionOnOff() == 1){
+            if (mainFragment.getConnectionOnOff() == 1) {
                 btnBluetooth.setSelected(true);
-            }
-            else{
+            } else {
                 btnBluetooth.setSelected(false);
             }
+
             btnFindRoute = (ImageButton) view.findViewById(R.id.btn_find_route);
             btnFindRoute.setVisibility(View.GONE);
 
@@ -276,6 +289,28 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 Log.d(DEBUG_TAG, "NavigationFragment.onStart.mGoogleApiClient.connect");
                 mGoogleApiClient.connect();
             }
+        }
+
+        if (!mLM.isProviderEnabled(mProvider)) {
+            if (isFirst) {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+
+                isFirst = false;
+
+                Toast.makeText(getContext(), "GPS를 설정해주세요.", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).!isFirst");
+                /*
+                 * 확인 후 처리
+                 */
+                Toast.makeText(getContext(), "GPS 설정이 필요합니다.", Toast.LENGTH_SHORT).show();
+
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+
+            return;
         }
 
         if (mRotationSensor != null) {
