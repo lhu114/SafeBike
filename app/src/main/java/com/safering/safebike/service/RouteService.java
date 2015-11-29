@@ -259,7 +259,7 @@ public class RouteService extends Service {
          /*
              * 시연 후 삭제
              */
-        mSimulationHandler.removeCallbacks(mRouting);
+        mHandler.removeCallbacks(null);
         tts.close();
     }
 
@@ -353,7 +353,7 @@ public class RouteService extends Service {
              */
             Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run");
 
-            mSimulationHandler.postDelayed(this, 1000);
+            mHandler.postDelayed(this, 1000);
 
             LatLng simulationLatLng;
 
@@ -370,7 +370,7 @@ public class RouteService extends Service {
             } else if (simulationLatLngIndex == mBicycleNaviInfoList.size()) {
                 Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run.simulationLatLngIndex == mBicycleNaviInfoList.size()");
 
-                mSimulationHandler.removeCallbacks(mRouting);
+                mHandler.removeCallbacks(null);
 //                stopSelf();
             }
         }
@@ -1488,7 +1488,7 @@ public class RouteService extends Service {
             /*
              * 시연 후 삭제
              */
-            mSimulationHandler.removeCallbacks(mRouting);
+            mHandler.removeCallbacks(null);
 
             sendExerciseReport(mSpeedList, mDistanceList);
 
