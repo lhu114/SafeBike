@@ -53,6 +53,7 @@ import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.property.SpeakVoice;
 import com.safering.safebike.service.RouteService;
+import com.safering.safebike.setting.BluetoothConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,6 +146,14 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         tvNaviDescription = (TextView) findViewById(R.id.text_navi_description);
 
         btnBluetooth = (ImageButton) findViewById(R.id.btn_status_bluetooth);
+     //   mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+
+
+        if (BluetoothConnection.getInstance().getIsConnect() == 1) {
+            btnBluetooth.setSelected(true);
+        } else {
+            btnBluetooth.setSelected(false);
+        }
 
         btnFullScreen = (ImageButton) findViewById(R.id.btn_full_screen);
         btnFullScreen.setOnClickListener(new View.OnClickListener() {

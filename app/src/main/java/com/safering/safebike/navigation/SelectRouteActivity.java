@@ -35,6 +35,7 @@ import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
+import com.safering.safebike.setting.BluetoothConnection;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -162,6 +163,11 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         btnStartNavi = (ImageButton) findViewById(R.id.btn_start_navigation);
 
         btnBluetooth = (ImageButton) findViewById(R.id.btn_status_bluetooth);
+        if (BluetoothConnection.getInstance().getIsConnect() == 1) {
+            btnBluetooth.setSelected(true);
+        } else {
+            btnBluetooth.setSelected(false);
+        }
 
         polylineList = new ArrayList<Polyline>();
         mLaneLatLngList = new ArrayList<LatLng>();

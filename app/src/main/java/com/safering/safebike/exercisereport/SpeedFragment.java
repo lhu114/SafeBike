@@ -157,7 +157,8 @@ public class SpeedFragment extends Fragment {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar cal = Calendar.getInstance();
                 String email = PropertyManager.getInstance().getUserEmail();
-                String date = dateFormat.format(cal.getTime());
+ //               String date = dateFormat.format(cal.getTime());
+                String date = speedChart.getXValue(e.getXIndex());
 
 
                 NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {

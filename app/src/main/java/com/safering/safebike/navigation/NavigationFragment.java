@@ -46,6 +46,7 @@ import com.safering.safebike.MainFragment;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
+import com.safering.safebike.setting.BluetoothConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -186,7 +187,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
             mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
 
-            if (mainFragment.getConnectionOnOff() == 1) {
+            if (BluetoothConnection.getInstance().getIsConnect() == 1) {
                 btnBluetooth.setSelected(true);
             } else {
                 btnBluetooth.setSelected(false);
