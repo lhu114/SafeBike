@@ -174,7 +174,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             } else {
                 btnBluetooth.setSelected(false);
             }
-
+///d
             btnFindRoute = (ImageButton) view.findViewById(R.id.btn_find_route);
             btnFindRoute.setVisibility(View.GONE);
 
