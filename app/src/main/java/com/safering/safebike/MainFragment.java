@@ -235,6 +235,7 @@ public class MainFragment extends Fragment {
                     PropertyManager.getInstance().setBluetoothSetting(0);
 
                     backlightStatus = false;
+
                 } else {
                     btnBacklight.setSelected(true);
                     PropertyManager.getInstance().setBluetoothSetting(1);
@@ -296,24 +297,15 @@ public class MainFragment extends Fragment {
 
     }
 
-    public void setConnectionOnOff(int status) {
+    /*public void setConnectionOnOff(int status) {
         deviceStatus = status;
-        /*if (deviceStatus == 1) {
-            imageBacklightOut.setImageResource(R.drawable.on);
-            imageBacklightIn.setImageResource(R.drawable.on);
 
-
-        } else if (status == 0) {
-            imageBacklightOut.setImageResource(R.drawable.off);
-            imageBacklightIn.setImageResource(R.drawable.off);
-
-        }*/
     }
 
     public int getConnectionOnOff(){
         return deviceStatus;
     }
-
+*/
     public void checkConnection() {
         if (deviceStatus == 1) {
             imageBacklightOut.setImageResource(R.drawable.on);

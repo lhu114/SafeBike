@@ -201,7 +201,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                         .displayer(new RoundedBitmapDisplayer(1000))
                         .build();
                 ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-
                 ImageLoader.getInstance().displayImage(Uri.fromFile(new File(file.getAbsolutePath())).toString(), userProfileImage, options);
                 Toast.makeText(ProfileEditActivity.this, "file path : " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 

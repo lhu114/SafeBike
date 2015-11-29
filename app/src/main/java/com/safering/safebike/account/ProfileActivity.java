@@ -40,8 +40,9 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.custom_actionbar);
 
+       // getSupportActionBar().
+        getSupportActionBar().setCustomView(R.layout.custom_actionbar);
 
         textTitle = (TextView)findViewById(R.id.text_custom_title);
         imageBack = (ImageView)findViewById(R.id.image_backkey);

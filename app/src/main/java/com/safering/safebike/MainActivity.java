@@ -3,6 +3,7 @@ package com.safering.safebike;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,8 +16,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +39,7 @@ import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.service.RouteService;
+import com.safering.safebike.setting.CustomTypefaceSpan;
 import com.safering.safebike.setting.SettingFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -112,7 +117,27 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
+
+
+        Menu m = nav.getMenu();
+        for (int i=0;i<m.size();i++) {
+            MenuItem mi = m.getItem(i);
+
+            //for aapplying a font to subMenu ...
+        /*    SubMenu subMenu = mi.getSubMenu();
+            if (subMenu!=null && subMenu.size() >0 ) {
+                for (int j=0; j <subMenu.size();j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    applyFontToMenuItem(subMenuItem);
+                }
+            }
+*/
+            //the method we have create in activity
+            applyFontToMenuItem(mi);
+        }
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
@@ -209,6 +234,13 @@ public class MainActivity extends AppCompatActivity
             }
         }
     };
+
+    private void applyFontToMenuItem(MenuItem mi) {
+        Typeface font = Typeface.createFromAsset(getAssets(),"NotoSansKR-Regular.otf");
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
+    }
 
     @Override
     public void onBackPressed() {

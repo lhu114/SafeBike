@@ -99,7 +99,7 @@ public class SettingFragment extends Fragment {
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         isEnableBluetooth = false;
-       // mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
+        // mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
         deviceAdapter = new BluetoothDeviceAdapter();
         deviceList.setAdapter(deviceAdapter);
@@ -257,16 +257,16 @@ public class SettingFragment extends Fragment {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
                 isConn = true;
             } else {
-               // mLEScanner.startScan(filters, settings, mScanCallback);
-               // isConn = true;
+                // mLEScanner.startScan(filters, settings, mScanCallback);
+                // isConn = true;
             }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else {
-              //  mLEScanner.stopScan(mScanCallback);
-               // isConn = false;
+                //  mLEScanner.stopScan(mScanCallback);
+                // isConn = false;
 
             }
         }
@@ -390,8 +390,13 @@ public class SettingFragment extends Fragment {
         }
         BluetoothConnection.getInstance().setGatt(null);
         BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
-        mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+        BluetoothConnection.getInstance().setIsConnect(0);
+        /*mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
         mainFragment.setConnectionOnOff(0);
+        */
+
+
+
         isConn = false;
     }
 
@@ -437,11 +442,13 @@ public class SettingFragment extends Fragment {
             BluetoothConnection.getInstance().setServerResponse(1);
             Log.e("gattCallback", "STATE_CONNECTED!!!!!!!");
 
-                BluetoothConnection.getInstance().setGatt(gatt);
-                BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(), true);
-                mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+            BluetoothConnection.getInstance().setGatt(gatt);
+            BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(), true);
+            BluetoothConnection.getInstance().setIsConnect(1);
+            /*    mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
                 mainFragment.setConnectionOnOff(1);
-                isConn = true;
+            */
+            isConn = true;
 
 
             /*SettingFragment settingFragment;
