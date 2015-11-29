@@ -1,133 +1,168 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/colorMainBackground"
-    android:layout_height="match_parent" tools:context="com.safering.safebike.MainFragment">
-   <!-- <Button
-        android:id="@+id/btn_favorite_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="즐겨찾기 리스트"
-        />
-    <Button
-        android:id="@+id/btn_favorite_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="즐겨찾기 추가"
-        android:layout_toRightOf="@id/btn_favorite_list"
+    tools:context="com.safering.safebike.MainFragment">
+    <!-- <Button
+         android:id="@+id/btn_favorite_list"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="즐겨찾기 리스트"
+         />
+     <Button
+         android:id="@+id/btn_favorite_add"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="즐겨찾기 추가"
+         android:layout_toRightOf="@id/btn_favorite_list"
 
-        />
-    <Button
-        android:id="@+id/btn_favorite_remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="즐겨찾기 삭제"
-        android:layout_toRightOf="@id/btn_favorite_add"
+         />
+     <Button
+         android:id="@+id/btn_favorite_remove"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="즐겨찾기 삭제"
+         android:layout_toRightOf="@id/btn_favorite_add"
 
-        />
-    <Button
-        android:id="@+id/btn_favorite_removeall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/btn_favorite_remove"
+         />
+     <Button
+         android:id="@+id/btn_favorite_removeall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@id/btn_favorite_remove"
 
-        android:text="즐겨찾기 전체삭제"
-        />
+         android:text="즐겨찾기 전체삭제"
+         />
 
-    <Button
-        android:id="@+id/btn_save_exercise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn_favorite_removeall"
+     <Button
+         android:id="@+id/btn_save_exercise"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/btn_favorite_removeall"
 
-        android:text="운동정보저장"
-        />
--->
-
-
-
-
+         android:text="운동정보저장"
+         />
+ -->
 
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/btn_fwd_navigation"
-        android:background="@drawable/findway_selector"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/btn_frame"
-
-
-        android:layout_marginTop="25dp" />
-
-
-
-
-
-    <FrameLayout
-        android:id="@+id/btn_frame"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg"
-        >
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="210dp"
+
+        android:background="@drawable/findway_selector"
+
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+
+        android:background="@drawable/bg" />
 
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_onoff_band"
-                android:layout_marginLeft="50dp"
-                android:background="@drawable/band_selector"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="20dp"
+    <Button
+        android:id="@+id/btn_onoff_band"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="54dp"
+        android:layout_marginTop="47dp"
 
+        android:background="@drawable/band_selector"
+        />
 
-                />
+    <Button
 
-            <Button
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_onoff_backlight"
-                android:layout_marginRight="48dp"
-                android:background="@drawable/backlight_selector"
-                android:layout_marginBottom="20dp"
-                android:layout_gravity="center_vertical|right"
-
-                />
-
-<!--
+        android:id="@+id/btn_onoff_backlight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="230dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/backlight_selector"
--->
-
-        <TextView
-            android:id="@+id/text_backlight_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_backlight_status"
-            android:textColor="@color/colorDeviceStatus"
-            android:textSize="16sp"
-            android:layout_above="@+id/btn_fwd_navigation"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="53dp"
-            android:layout_marginBottom="50dp"
-
-            android:layout_gravity="right|bottom" />
 
 
-    </FrameLayout>
+        />
+
+    <!--
+            android:background="@drawable/backlight_selector"
+    -->
+
+    <TextView
+        android:id="@+id/text_backlight_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/btn_backlight_status"
+        android:textColor="@color/colorDeviceStatus"
+        android:layout_marginLeft="234dp"
+
+        android:layout_marginTop="120dp"
+
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/text_band_status"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
+
         android:text="@string/btn_band_status"
         android:textColor="@color/colorDeviceStatus"
+        android:layout_marginLeft="54dp"
+
+        android:layout_marginTop="120dp"
+
         android:textSize="16sp"
-        android:layout_above="@+id/btn_fwd_navigation"
-        android:layout_marginLeft="50dp"
-        android:layout_marginBottom="50dp"
 
         />
+
+    <ImageView
+        android:id="@+id/image_band_onoff_out"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="78dp"
+
+        android:layout_marginTop="148dp"
+
+        android:src="@drawable/off" />
+
+    <ImageView
+        android:id="@+id/image_band_onoff_in"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="108dp"
+
+        android:layout_marginTop="148dp"
+
+        android:src="@drawable/off" />
+
+
+    <ImageView
+        android:id="@+id/image_backlight_onoff_out"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="250dp"
+
+        android:layout_marginTop="148dp"
+        android:src="@drawable/off" />
+
+
+    <ImageView
+        android:id="@+id/image_backlight_onoff_in"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="280dp"
+
+        android:layout_marginTop="148dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/off" />
+
 
     <!--<ImageView
         android:id="@+id/image_backlight_onoff_out"
@@ -149,88 +184,83 @@
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@id/image_backlight_onoff_out"
         />-->
-    <ImageView
-        android:id="@+id/image_band_onoff_out"
-        android:layout_above="@+id/btn_fwd_navigation"
+    <!-- <ImageView
+         android:id="@+id/image_band_onoff_out"
+         android:layout_above="@+id/btn_fwd_navigation"
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/off"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@drawable/off"
 
-        android:layout_marginLeft="70dp"
-        android:layout_marginBottom="23dp"
+         android:layout_marginLeft="70dp"
+         android:layout_marginBottom="23dp"
 
-        />
-    <ImageView
-        android:id="@+id/image_band_onoff_in"
-        android:layout_above="@+id/btn_fwd_navigation"
+         />
+     <ImageView
+         android:id="@+id/image_band_onoff_in"
+         android:layout_above="@+id/btn_fwd_navigation"
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/off"
-        android:layout_toRightOf="@id/image_band_onoff_out"
-        android:layout_marginLeft="18dp"
-        android:layout_marginBottom="23dp"
-        />
-
-
-
-
-
-    <ImageView
-        android:id="@+id/image_backlight_onoff_out"
-        android:layout_above="@+id/btn_fwd_navigation"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/off"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="70dp"
-        android:layout_marginBottom="23dp"
-
-
-        />
-    <ImageView
-        android:id="@+id/image_backlight_onoff_in"
-        android:layout_above="@+id/btn_fwd_navigation"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/off"
-
-        android:layout_toLeftOf="@id/image_backlight_onoff_out"
-
-        android:layout_marginRight="18dp"
-        android:layout_marginBottom="23dp"
-        />
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@drawable/off"
+         android:layout_toRightOf="@id/image_band_onoff_out"
+         android:layout_marginLeft="18dp"
+         android:layout_marginBottom="23dp"
+         />
 
 
 
 
 
+     <ImageView
+         android:id="@+id/image_backlight_onoff_out"
+
+         android:layout_below="@+id/text_backlight_status"
+         android:layout_alignParentEnd="true"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginRight="53dp"
+         android:layout_marginBottom="23dp"
+         android:src="@drawable/off"
+         />
 
 
+
+
+     <ImageView
+         android:id="@+id/image_backlight_onoff_in"
+         android:layout_above="@+id/btn_fwd_navigation"
+
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@drawable/off"
+
+         android:layout_toLeftOf="@id/image_backlight_onoff_out"
+
+         android:layout_marginRight="18dp"
+         android:layout_marginBottom="23dp"
+         />
+ -->
 
 
     <Button
+        android:id="@+id/btn_fwd_start_navigation"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_fwd_start_navigation"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="84dp"
+        android:layout_marginTop="210dp"
         android:background="@drawable/findway_selector"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
+        android:id="@+id/temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/temp"
 
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:layout_marginTop="200dp"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.utils.L;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.InformDialogFragment;
 import com.safering.safebike.manager.NetworkManager;
 
 /**
@@ -32,7 +33,9 @@ public class SignUpFragment extends Fragment {
     public static final int DUPLICATE_EMAIL = -2;
     public static final int NON_CHECKUP_POLICY = -3;
     public static final int SIGN_UP_OK = 1;
+    public static final int NOT_VALID_EMAIL = -4;
 
+    InformDialogFragment dialog;
     EditText inputId;
     EditText inputEmail;
     EditText inputPassword;
@@ -79,25 +82,27 @@ public class SignUpFragment extends Fragment {
         privatePolicy = (TextView) view.findViewById(R.id.text_private_policy);
 
         btnMakeAccount = (Button) view.findViewById(R.id.btn_go_next);
-
+        dialog = new InformDialogFragment();
         setFont();
         btnMakeAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 signUpMessage = SIGN_UP_OK;
                 signupFail.setVisibility(View.GONE);
                 signupDuple.setVisibility(View.GONE);
                 signupPolicy.setVisibility(View.GONE);
-                //다음페이지 넘어가기전에 공백/중복 검사
                 switch (checkSignFormat()) {
                     case EMPTY_FORM:
-                        signupFail.setVisibility(View.VISIBLE);
-                        //nextPage = false;
+                        dialog.setContent("회원가입", "가입양식을 확인해주세요.");
+                        dialog.show(getChildFragmentManager(), "fail");
+                        return;
+                    case NOT_VALID_EMAIL:
+                        dialog.setContent("회원가입", "유효한 이메일을 입력해주세요.");
+                        dialog.show(getChildFragmentManager(),"fail");
                         return;
                     case NON_CHECKUP_POLICY:
-                        //nextPage = false;
-                        signupPolicy.setVisibility(View.VISIBLE);
+                        dialog.setContent("회원가입", "약관정책을 확인해주세요.");
+                        dialog.show(getChildFragmentManager(), "fail");
                         return;
                 }
 
@@ -106,17 +111,11 @@ public class SignUpFragment extends Fragment {
                 NetworkManager.getInstance().checkEmail(getContext(), email, new NetworkManager.OnResultListener<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        Toast.makeText(getContext(),"result : "  +result , Toast.LENGTH_SHORT).show();
-                       // checkDuple = true;
-
+                        Toast.makeText(getContext(), "result : " + result, Toast.LENGTH_SHORT).show();
                         if (result.equals("1")) {
-                            Toast.makeText(getContext(),"dupple!!",Toast.LENGTH_SHORT).show();
-                            signupDuple.setVisibility(View.VISIBLE);
-
-                        }
-                        else{
-
-
+                            dialog.setContent("회원가입", "이미 존재하는 이메일입니다.");
+                            dialog.show(getChildFragmentManager(), "fail");
+                        } else {
                             ConfirmSignUpFragment confirmFragment = new ConfirmSignUpFragment();
                             Bundle signBundle = new Bundle();
                             signBundle.putString(SIGN_UP_ID, inputId.getText().toString());
@@ -127,9 +126,6 @@ public class SignUpFragment extends Fragment {
                             ft.replace(R.id.login_container, confirmFragment);
                             ft.addToBackStack(null);
                             ft.commit();
-
-
-
                         }
                     }
 
@@ -138,7 +134,6 @@ public class SignUpFragment extends Fragment {
 
                     }
                 });
-
 
 
             }
@@ -173,15 +168,31 @@ public class SignUpFragment extends Fragment {
             signUpMessage = EMPTY_FORM;
             return signUpMessage;
         }
+        if(!checkEmailForm(email)){
+            signUpMessage = NOT_VALID_EMAIL;
+            return signUpMessage;
+        }
+
         if (!checkPolicy.isChecked()) {
             signUpMessage = NON_CHECKUP_POLICY;
             return signUpMessage;
         }
-
         return signUpMessage;
     }
 
-    public boolean checkDuple(){
+    public boolean checkEmailForm(String email){
+
+        if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            Toast.makeText(getContext(),"email valid",Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else {
+            Toast.makeText(getContext(),"email unvalid",Toast.LENGTH_SHORT).show();
+
+            return false;
+        }
+    }
+    public boolean checkDuple() {
         checkDuple = false;
         String email = inputEmail.getText().toString();
 
@@ -219,8 +230,8 @@ public class SignUpFragment extends Fragment {
         textTempLine2.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textTempLine3.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textTempLine4.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
-        userManner.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
-        privatePolicy.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+        userManner.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        privatePolicy.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
 
     }

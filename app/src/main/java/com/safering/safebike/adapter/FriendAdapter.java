@@ -4,13 +4,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Tacademy on 2015-10-30.
  */
-public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButtonClickListener{
+public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButtonClickListener,Serializable{
     List<FriendItem> items = new ArrayList<FriendItem>();
     int viewType = 0;
 
@@ -50,6 +51,11 @@ public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButt
         if(viewType == 1){
             view.setAddButtonVisible(true);
         }
+        else if(viewType == 2){
+            view.setAddButtonVisible(true);
+            view.setDisplayEmail(true);
+        }
+
 
         view.setFriendData(items.get(position));
 
@@ -66,6 +72,16 @@ public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButt
         items.remove(position);
         notifyDataSetChanged();
 
+    }
+
+    public void remove(String email){
+        for(int i = 0; i < items.size(); i++){
+            if(items.get(i).pemail.equals(email)){
+                items.remove(i);
+                break;
+            }
+        }
+        notifyDataSetChanged();
     }
     FriendItemView.OnButtonClickListener bListener;
     public void setOnButtonClickListener(FriendItemView.OnButtonClickListener listener){

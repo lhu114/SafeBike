@@ -128,6 +128,7 @@ public class FriendAddActivity extends AppCompatActivity {
                             Log.i("textChange",s.toString() + "");
                             if(TextUtils.isEmpty(s.toString())){
                                 addressFragment.fAdapter.clear();
+                                addressFragment.setList();
                             }
                             else{
                                 addressFragment.fAdapter.clear();

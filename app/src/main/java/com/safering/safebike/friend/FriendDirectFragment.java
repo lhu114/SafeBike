@@ -31,6 +31,7 @@ import java.util.ArrayList;
  */
 public class FriendDirectFragment extends Fragment {
     public static int SEARCH_ONOFF = 1;
+    private static int FRIEND_SELECT_IMAGE = 2;
     ListView listView;
     FriendAdapter fAdapter;
     EditText inputEmail = null;
@@ -48,7 +49,7 @@ public class FriendDirectFragment extends Fragment {
 
         inputEmail = (EditText)view.findViewById(R.id.edit_search_friend_direct);
         listView = (ListView) view.findViewById(R.id.listview_direct_friend);
-        fAdapter = new FriendAdapter(1);
+        fAdapter = new FriendAdapter(FRIEND_SELECT_IMAGE);
         listView.setAdapter(fAdapter);
         fAdapter.setOnButtonClickListener(new FriendItemView.OnButtonClickListener() {
             @Override

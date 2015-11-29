@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="30dp"
+        android:background="@drawable/search_box"
+        android:textColor="@color/colorBlack"
         android:singleLine="true"
         android:lines="1"
         android:hint="검색"

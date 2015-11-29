@@ -47,6 +47,7 @@ public class ConfirmSignUpFragment extends Fragment {
         textCompleteSign = (TextView) view.findViewById(R.id.text_complete_sign);
         textCompleteSign1 = (TextView) view.findViewById(R.id.text_complete_sign_s);
         btnCompleteSign = (Button) view.findViewById(R.id.btn_go_main);
+
         setFont();
         sendUserInform();
 
@@ -90,7 +91,6 @@ public class ConfirmSignUpFragment extends Fragment {
         final String email = signBundle.getString(SignUpFragment.SIGN_UP_EMAIL);
         final String id = signBundle.getString(SignUpFragment.SIGN_UP_ID);
         final String password = signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD);
-        Log.i("myphoneNumber",PropertyManager.getInstance().getUserPhoneNumber()+"");
         final String phone = PropertyManager.getInstance().getUserPhoneNumber();
 
 /*
