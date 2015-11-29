@@ -34,6 +34,7 @@ import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
+import com.safering.safebike.service.RouteService;
 import com.safering.safebike.setting.SettingFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -271,7 +272,19 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            /*    try {
+                    mRouteService.sendExerciseReport();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                */
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
+                PropertyManager.getInstance().setDestinationLatitude(null);
+                PropertyManager.getInstance().setDestinationLongitude(null);
+                PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
+
+                Intent serviceIntent = new Intent(MainActivity.this, RouteService.class);
+                stopService(serviceIntent);
 
                 Log.d("safebike", "Replace.MainFragment");
                 /*

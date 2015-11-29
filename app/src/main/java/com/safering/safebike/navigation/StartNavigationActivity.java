@@ -483,6 +483,19 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+
+                if (mRouteService != null) {
+                    try {
+                        boolean success = mRouteService.simulationStartRouting();
+                        Log.d(DEBUG_TAG, "StartNavigationActivity.onServiceConnected.mRouteService != null");
+
+                        if (!success) {
+                            Log.d(DEBUG_TAG, "StartNavigationActivity.Override.another simulationStartRouting running");
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 
@@ -602,18 +615,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     protected void onResume() {
         super.onResume();
         Log.d(DEBUG_TAG, "StartNavigationActivity.onResume");
-
-        if (mRouteService != null) {
-            try {
-                boolean success = mRouteService.simulationStartRouting();
-
-                if (!success) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.Override.another simulationStartRouting running");
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
 
         if (mRouteService != null && isFirstFinishDialog) {
             try {

@@ -26,6 +26,7 @@ import com.safering.safebike.login.LoginActivity;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
+import com.safering.safebike.service.RouteService;
 
 import java.util.StringTokenizer;
 
@@ -92,10 +93,19 @@ public class AccountFragment extends Fragment {
                         /*
                          *  목적지 위도, 경도, searchoption 날리기
                          */
+                            /*    try {
+                    mRouteService.sendExerciseReport();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                */
                             PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                             PropertyManager.getInstance().setDestinationLatitude(null);
                             PropertyManager.getInstance().setDestinationLongitude(null);
                             PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
+
+                            Intent serviceIntent = new Intent(getContext(), RouteService.class);
+                            getActivity().stopService(serviceIntent);
 
                             Intent intent = new Intent(((MainActivity) getActivity()), LoginActivity.class);
                             startActivity(intent);

@@ -3,6 +3,6 @@
     <item android:state_selected="true" android:state_pressed="true" android:drawable="@drawable/tabbackground_layer"/>
     <item android:state_selected="true" android:drawable="@drawable/tabbackground_layer"/>
     <item android:state_pressed="true" android:drawable="@drawable/tabbackground_layer"/>
-    <item android:drawable="@color/colorUserImform"/>
+    <item android:drawable="@color/colorTab"/>
 
 </selector>

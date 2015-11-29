@@ -9,7 +9,7 @@
 
     <item android:bottom="3dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorUserImform"/>
+            <solid android:color="@color/colorTab"/>
             <padding android:left="20dp">
             </padding>
         </shape>

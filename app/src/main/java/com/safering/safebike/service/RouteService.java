@@ -218,6 +218,8 @@ public class RouteService extends Service {
 
         @Override
         public boolean registerCallback(IRouteCallback callback) throws RemoteException {
+
+
             return mCallbacks.register(callback);
         }
 
@@ -240,7 +242,7 @@ public class RouteService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(DEBUG_TAG, "RouteService.onDestroy.");
+        Log.d(DEBUG_TAG, "RouteService.onDestroy");
 
         if (mLM != null) {
             if (Build.VERSION.SDK_INT > 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -254,6 +256,10 @@ public class RouteService extends Service {
             mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
         }
 
+         /*
+             * 시연 후 삭제
+             */
+        mSimulationHandler.removeCallbacks(mRouting);
         tts.close();
     }
 
@@ -345,16 +351,27 @@ public class RouteService extends Service {
             /*
              *  거리에 따라
              */
-            mHandler.postDelayed(this, 1000);
+            Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run");
+
+            mSimulationHandler.postDelayed(this, 1000);
 
             LatLng simulationLatLng;
 
+            Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run.mBicycleNaviInfoList.size() - 1: " + Integer.toString(mBicycleNaviInfoList.size() - 1));
+            
             if (simulationLatLngIndex < mBicycleNaviInfoList.size()) {
+                Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run.simulationLatLngIndex : " + Integer.toString(simulationLatLngIndex));
+
                 simulationLatLng = mBicycleNaviInfoList.get(simulationLatLngIndex).latLng;
 
                 simulationRouting(simulationLatLng);
 
                 simulationLatLngIndex++;
+            } else if (simulationLatLngIndex == mBicycleNaviInfoList.size()) {
+                Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run.simulationLatLngIndex == mBicycleNaviInfoList.size()");
+
+                mSimulationHandler.removeCallbacks(mRouting);
+//                stopSelf();
             }
         }
     };
@@ -956,14 +973,17 @@ public class RouteService extends Service {
             }
         }
 
-        if (currentIndex == lastIndex - 2) {
+        /*
+         * 시연 후 원래대로 복구!!!
+         */
+        /*if (currentIndex == lastIndex - 2) {
             float distance = getBetweenLastLatLngDistance(currentLocation, info);
 
             if (distance <= 10) {
-                /*
+                *//*
                  *  다이얼로그 보여주면서 종료
                  *  sharedpreferences 값 날리기
-                 */
+                 *//*
                 autoFinishNavigationDialog();
             }
         } else if (currentIndex == lastIndex - 1) {
@@ -974,6 +994,15 @@ public class RouteService extends Service {
             }
         } else if (currentIndex == lastIndex) {
             autoFinishNavigationDialog();
+        }*/
+        if (currentIndex == lastIndex - 1) {
+            Log.d(DEBUG_TAG, "RouteService.checkFinishNavigation.currentIndex == lastIndex - 1");
+            autoFinishNavigationDialog();
+        } else if (currentIndex == lastIndex) {
+            Log.d(DEBUG_TAG, "RouteService.checkFinishNavigation.currentIndex == lastIndex");
+            autoFinishNavigationDialog();
+        } else {
+            Log.d(DEBUG_TAG, "RouteService.checkFinishNavigation.else.currentIndex : " + Integer.toString(currentIndex) + " | lastIndex : " + Integer.toString(lastIndex));
         }
     }
 
@@ -1456,6 +1485,10 @@ public class RouteService extends Service {
 
         if (isFirstFinishDialog == true) {
             tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+            /*
+             * 시연 후 삭제
+             */
+            mSimulationHandler.removeCallbacks(mRouting);
 
             sendExerciseReport(mSpeedList, mDistanceList);
 
