@@ -223,14 +223,14 @@ public class MainActivity extends AppCompatActivity
                 Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + FABFINDROUTE_ONOFF_FLAG);
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(ON)) {
 //                NavigationFragment naviFragment = new NavigationFragment();
-//                naviFragment.setFabFindRouteChange();
+//                naviFragment.setBtnFindRouteChange();
 
                 FABFINDROUTE_ONOFF_FLAG = OFF;
 
                 NavigationFragment old = (NavigationFragment) getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
                 if (old != null) {
-                    old.setFabFindRouteChange();
+                    old.setBtnFindRouteChange();
                 }
             } else {
                 if (isBackPressed) {

@@ -43,8 +43,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="68dp"
             android:background="#ffffff">
@@ -52,20 +52,24 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_marginLeft="33dp"
-                android:id="@+id/image_description" />
+                android:id="@+id/image_description"
+                android:layout_marginTop="21dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="236dp"
                 android:layout_height="wrap_content"
                 android:text="@string/text_navi_description"
-                android:layout_gravity="center"
-                android:layout_centerVertical="true"
+                android:maxLines="2"
                 android:textSize="16sp"
                 android:textColor="#000000"
-                android:id="@+id/text_navi_description" />
+                android:id="@+id/text_navi_description"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:orientation="horizontal"

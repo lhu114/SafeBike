@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
@@ -97,7 +98,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     Polyline polyline;
     PolylineOptions polylineOptions;
     ArrayList<Polyline> polylineList;
+    ArrayList<MarkerOptions> markerOptionsList;
     MarkerOptions markerOptions;
+    Marker tempM;
 
     final Map<LatLng, Marker> mMarkerResolver = new HashMap<LatLng, Marker>();
     final Map<LatLng, String> mBitmapResolver = new HashMap<LatLng, String>();
@@ -169,7 +172,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
                 startActivity(intent);
 
-                finish();
+//                finish();
             }
         });
 
@@ -187,7 +190,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                  /*
                  *  목적지 위도, 경도, searchoption 날리기
                  */
-                        tts.translate("내비게이션 안내를 종료합니다.");
+//                        tts.translate("내비게이션 안내를 종료합니다.");
 
                         try {
                             mRouteService.sendExerciseReport();
@@ -233,6 +236,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         mPointDistanceList = new ArrayList<Float>();
         mBicycleNaviInfoList = new ArrayList<BicycleNavigationInfo>();
         mPointLatLngIndexList = new ArrayList<Integer>();
+        markerOptionsList = new ArrayList<MarkerOptions>();
 
         mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -270,13 +274,32 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         };
 //        mSM = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 //        mRotationSensor = mSM.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        Bundle tempSavedInstanceState = new Bundle();
 
+//        if (savedInstanceState != null) {
+        if (tempSavedInstanceState != null) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.savedInstanceState != null");
+
+            if (tempSavedInstanceState.containsKey("markeroptions")) {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.savedInstanceState != null.markeroptions");
+
+                markerOptionsList = tempSavedInstanceState.getParcelableArrayList("markeroptions");
+
+                if (markerOptionsList != null && markerOptionsList.size() > 0) {
+                    markerOptions = new MarkerOptions();
+
+                    for (int i = 0; i < markerOptionsList.size(); i++) {
+                        markerOptions = markerOptionsList.get(i);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onNewIntent", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onNewIntent", Toast.LENGTH_SHORT).show();
     }
 
     IRouteCallback.Stub callback = new IRouteCallback.Stub() {
@@ -361,6 +384,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             mMarkerResolver.put(latLng, m);
             mBitmapResolver.put(latLng, bitmapFlag);
             mPointLatLngList.add(latLng);
+
+            markerOptionsList.add(markerOptions);
         }
 
         @Override
@@ -408,6 +433,14 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
             polylineOptions = new PolylineOptions();
             polylineList.clear();
+
+            if (tempM != null) {
+                tempM.remove();
+            }
+
+            if (markerOptionsList.size() > 0) {
+                markerOptionsList.clear();
+            }
         }
 
         @Override
@@ -501,9 +534,11 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
             Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.requestSingleUpdate");
 
-            mLM.requestSingleUpdate(mProvider, mInitialListener, null);
-
-            mHandler.sendEmptyMessageDelayed(MESSAGE_INITIAL_LOCATION_TIMEOUT, LOCATION_TIMEOUT_INTERVAL);
+            /*
+             *  시연 하고나서 원래대로 복구할것!!!
+             */
+          /*  mLM.requestSingleUpdate(mProvider, mInitialListener, null);
+            mHandler.sendEmptyMessageDelayed(MESSAGE_INITIAL_LOCATION_TIMEOUT, LOCATION_TIMEOUT_INTERVAL);*/
 
             Intent intent = new Intent(StartNavigationActivity.this, RouteService.class);
             startService(intent);
@@ -568,6 +603,18 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         super.onResume();
         Log.d(DEBUG_TAG, "StartNavigationActivity.onResume");
 
+        if (mRouteService != null) {
+            try {
+                boolean success = mRouteService.simulationStartRouting();
+
+                if (!success) {
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.Override.another simulationStartRouting running");
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
         if (mRouteService != null && isFirstFinishDialog) {
             try {
                 boolean success = mRouteService.activateWithinRouteLimitDistance();
@@ -595,6 +642,10 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 e.printStackTrace();
             }
         }
+
+        if (markerOptions != null) {
+            tempM = mMap.addMarker(markerOptions);
+        }
     }
 
     @Override
@@ -609,6 +660,22 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
 
         tts.close();
+
+        if (markerOptionsList.size() > 0) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy.markerOptionsList.size() > 0");
+
+            Bundle outState = new Bundle();
+            outState.putParcelableArrayList("markeroptions", markerOptionsList);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
+
+        outState.putParcelableArrayList("markeroptions", markerOptionsList);
+
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
@@ -619,7 +686,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
         startActivity(intent);
 
-        finish();
+//        finish();
         /*
          * 플래그와 finish 관계 여쭤보기
          */
@@ -795,7 +862,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                         boolean success = mRouteService.startRouting();
 
                         if (!success) {
-                            Toast.makeText(StartNavigationActivity.this, "another routing running....", Toast.LENGTH_SHORT).show();
+                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.another routing running");
+
+//                            Toast.makeText(StartNavigationActivity.this, "another routing running....", Toast.LENGTH_SHORT).show();
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -972,7 +1041,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
     private void setFont() {
         tvMainTitle.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.BMJUA));
-        tvNaviDescription.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.NOTOSANS_M));
+//        tvNaviDescription.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.NOTOSANS_M));
     }
 }
 /*    private void checkOrthogonalPoint(double x1, double y1, double x2, double y2, double x3, double y3) {

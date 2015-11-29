@@ -34,7 +34,7 @@
         android:textColor="#a0a0a0"
         android:id="@+id/text_message_favorite"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="237dp"
         android:visibility="gone"/>
 
 </RelativeLayout>

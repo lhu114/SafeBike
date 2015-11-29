@@ -94,7 +94,7 @@
         <activity
             android:name=".navigation.StartNavigationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomAppTheme.CustomActionBar" >
+            android:theme="@style/CustomAppTheme.CustomActionBar">
         </activity>
 
         <service

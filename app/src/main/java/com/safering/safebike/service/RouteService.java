@@ -69,7 +69,7 @@ public class RouteService extends Service {
 
     public static final int LOCATION_TIMEOUT_INTERVAL = 60000;
     public static final int REROUTE_NAVIGATION_TIMEOUT_INTERVAL = 15000;
-
+    private static final int REQUEST_LOCATION_UPDATES_ITERATIVE_INTERVAL = 1000;
     private static final float LIMIT_DISTANCE = 25;
 
     private static final int ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE = 3209;
@@ -79,7 +79,7 @@ public class RouteService extends Service {
     public SpeakVoice tts;
 
     LocationManager mLM;
-    Location orthogonalLoc, pointLoc, locationA, locationB, lastLocation;
+    Location orthogonalLoc, pointLoc, locationA, locationB, lastLocation, simulationLoc;
     LatLng endPointLatLng;
 
     String mProvider;
@@ -87,7 +87,7 @@ public class RouteService extends Service {
     PolylineOptions polylineOptions;
     ArrayList<Polyline> polylineList;
 
-    Handler mHandler;
+    Handler mHandler, mSimulationHandler;
 
     final Map<Float, Integer> mOrthogonalDistanceResolver = new HashMap<Float, Integer>();
     final Map<Float, Integer> mPointDistanceResolver = new HashMap<Float, Integer>();
@@ -170,10 +170,14 @@ public class RouteService extends Service {
         locationA = new Location(mProvider);
         locationB = new Location(mProvider);
         lastLocation = new Location(mProvider);
+        simulationLoc = new Location(mProvider);
+
+        mSimulationHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(DEBUG_TAG, "RouteService.onBind");
 
         return mBinder;
     }
@@ -184,6 +188,11 @@ public class RouteService extends Service {
         @Override
         public boolean startRouting() throws RemoteException {
             return RouteService.this.startRouting();
+        }
+
+        @Override
+        public boolean simulationStartRouting() throws RemoteException {
+            return RouteService.this.simulationStartRouting();
         }
 
         @Override
@@ -203,6 +212,7 @@ public class RouteService extends Service {
 
         @Override
         public void sendExerciseReport() throws RemoteException {
+            Log.d(DEBUG_TAG, "RouteService.mBinder.sendExerciseReport");
             RouteService.this.sendExerciseReport(mSpeedList, mDistanceList);
         }
 
@@ -260,7 +270,7 @@ public class RouteService extends Service {
 
                 tts.translate("안내를 시작합니다.");
 
-                mLM.requestLocationUpdates(mProvider, 1500, 0, mIterativeListener);
+                mLM.requestLocationUpdates(mProvider, REQUEST_LOCATION_UPDATES_ITERATIVE_INTERVAL, 0, mIterativeListener);
                 mHandler.sendEmptyMessageDelayed(MESSAGE_ITERATIVE_LOCATION_TIMEOUT, LOCATION_TIMEOUT_INTERVAL);
 
                 startTime = System.currentTimeMillis();
@@ -273,6 +283,28 @@ public class RouteService extends Service {
 
             return true;
         } else {
+            return false;
+        }
+    }
+
+    boolean simulationStartRouting() {
+        if (isInitialServiceRunning) {
+            Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.isInitialServiceRunning");
+
+            tts.translate("안내를 시작합니다.");
+
+            startTime = System.currentTimeMillis();
+            Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.startTime : " + Long.toString(startTime));
+
+            findRoute();
+
+            isInitialServiceRunning = false;
+
+            mSimulationHandler.post(mRouting);
+
+            return true;
+        } else {
+
             return false;
         }
     }
@@ -303,6 +335,242 @@ public class RouteService extends Service {
 
     private void restartRouting() {
 
+    }
+
+    int simulationLatLngIndex = 0;
+
+    Runnable mRouting = new Runnable() {
+        @Override
+        public void run() {
+            /*
+             *  거리에 따라
+             */
+            mHandler.postDelayed(this, 1000);
+
+            LatLng simulationLatLng;
+
+            if (simulationLatLngIndex < mBicycleNaviInfoList.size()) {
+                simulationLatLng = mBicycleNaviInfoList.get(simulationLatLngIndex).latLng;
+
+                simulationRouting(simulationLatLng);
+
+                simulationLatLngIndex++;
+            }
+        }
+    };
+
+    private void simulationRouting(LatLng simulationLatLng) {
+        simulationLoc.setLatitude(simulationLatLng.latitude);
+        simulationLoc.setLongitude(simulationLatLng.longitude);
+
+        lastLocation.setLatitude(Double.parseDouble(PropertyManager.getInstance().getRecentLatitude()));
+        lastLocation.setLongitude(Double.parseDouble(PropertyManager.getInstance().getRecentLongitude()));
+
+        mDistanceList.add(lastLocation.distanceTo(simulationLoc));
+        mSpeedList.add(simulationLoc.getSpeed());
+
+        PropertyManager.getInstance().setRecentLatitude(Double.toString(simulationLoc.getLatitude()));
+        PropertyManager.getInstance().setRecentLongitude(Double.toHexString(simulationLoc.getLongitude()));
+
+        moveMap(simulationLoc.getLatitude(), simulationLoc.getLongitude(), simulationLoc.getBearing(), ANIMATE_CAMERA);
+        Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.moveMap");
+
+        if (mBicycleNaviInfoList.size() > 0) {
+            int maxNaviLatLngIndex = mBicycleNaviInfoList.size() - 1;
+            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.maxNaviLatLngIndex : " + maxNaviLatLngIndex);
+
+            clearAllOrthogonalDistanceList();
+
+            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : " + naviLatLngIndex + "(비교 전 인덱스)");
+            if (naviLatLngIndex + 3 <= maxNaviLatLngIndex) {
+                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 3개 index 비교");
+                getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex);
+                getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, simulationLoc, naviLatLngIndex + 1);
+                getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 3).latLng, simulationLoc, naviLatLngIndex + 2);
+
+            } else if (naviLatLngIndex + 2 <= maxNaviLatLngIndex && naviLatLngIndex + 3 > maxNaviLatLngIndex) {
+                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 2개 index 비교");
+                getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex);
+                getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, simulationLoc, naviLatLngIndex + 1);
+
+            } else if (naviLatLngIndex + 1 <= maxNaviLatLngIndex && naviLatLngIndex + 2 > maxNaviLatLngIndex) {
+                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 1개 index 비교");
+                getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex);
+            }
+
+            if (mOrthogonalDistanceList.size() > 0) {
+                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.mOrthogonalDistanceList(distance 비교 개수) : " + Integer.toString(mOrthogonalDistanceList.size()));
+
+                mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
+
+                float minDistance = mOrthogonalDistanceList.get(0);
+
+                for (int i = 0; i < mOrthogonalDistanceList.size(); i++) {
+                    if (mOrthogonalDistanceList.get(i) <= minDistance) {
+                        minDistance = mOrthogonalDistanceList.get(i);
+
+                                    /*
+                                     *  여기서 거치지 않은 index description 보여주기
+                                     */
+                        int newNaviLatLngIndex = mOrthogonalDistanceResolver.get(minDistance);
+
+                        if (naviLatLngIndex != newNaviLatLngIndex) {
+                            for (int j = naviLatLngIndex; j < newNaviLatLngIndex; j++) {
+                                Log.d(DEBUG_TAG, "(수선의 발 있는 경우 지나친 인덱스 검색) naviLatLngIndex : " + j + " | newNaviLatLngIndex 까지 : " + newNaviLatLngIndex);
+
+                                getPointInfoNotifications(j);
+                                            /*
+                                             *  종료 처리
+                                             */
+                                checkFinishNavigation(j, maxNaviLatLngIndex, simulationLoc);
+                            }
+                        }
+
+                        naviLatLngIndex = newNaviLatLngIndex;
+
+                    }
+                }
+
+                if (minDistance >= LIMIT_DISTANCE) {
+                    Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 있는 경우)", Toast.LENGTH_SHORT).show();
+                    Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
+
+                    if (!isActivateRouteWithinLimitDistanceNoti) {
+                        tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+
+                        findRoute();
+                    }
+
+
+//                                Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(경로 재탐색 직전 인덱스) : " + Integer.toString(naviLatLngIndex));
+                } else {
+                                /*
+                                 *  TextView에 정보 보여주기 처리
+                                */
+                    BicycleNavigationInfo info = mBicycleNaviInfoList.get(naviLatLngIndex);
+
+                    getPointInfoNotifications(naviLatLngIndex);
+
+                    if (info.properties != null) {
+                        Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
+                        Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
+                    } else {
+                        Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
+                        Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
+                    }
+                                /*
+                                 *  종료 처리
+                                 */
+                    checkFinishNavigation(naviLatLngIndex, maxNaviLatLngIndex, simulationLoc);
+                }
+            } else {
+                mHandler.sendEmptyMessageDelayed(MESSAGE_REROUTE_NAVIGATION, REROUTE_NAVIGATION_TIMEOUT_INTERVAL);
+                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.수선의 발 없는 경우");
+
+                clearAllPointDistanceList();
+                if (naviLatLngIndex + 3 <= maxNaviLatLngIndex) {
+                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 3개 index 비교");
+                    getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex);
+                    getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, simulationLoc, naviLatLngIndex + 1);
+                    getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 3).latLng, simulationLoc, naviLatLngIndex + 2);
+
+                } else if (naviLatLngIndex + 2 <= maxNaviLatLngIndex && naviLatLngIndex + 3 > maxNaviLatLngIndex) {
+                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 2개 index 비교");
+                    getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex);
+                    getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, simulationLoc, naviLatLngIndex + 1);
+
+                } else if (naviLatLngIndex + 1 <= maxNaviLatLngIndex && naviLatLngIndex + 2 > maxNaviLatLngIndex) {
+                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 1개 index 비교");
+                    getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex);
+                }
+
+                if (naviLatLngIndex + 2 <= maxNaviLatLngIndex) {
+                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(수선의 발 없는 경우) : 3개 index 비교");
+
+                    getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, simulationLoc, naviLatLngIndex);
+                    getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex + 1);
+                    getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, simulationLoc, naviLatLngIndex + 2);
+                } else if (naviLatLngIndex + 1 <= maxNaviLatLngIndex && naviLatLngIndex + 2 > maxNaviLatLngIndex) {
+                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(수선의 발 없는 경우) : 2개 index 비교");
+
+                    getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, simulationLoc, naviLatLngIndex);
+                    getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, simulationLoc, naviLatLngIndex + 1);
+                } else if (naviLatLngIndex <= maxNaviLatLngIndex && naviLatLngIndex + 1 > maxNaviLatLngIndex) {
+                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(수선의 발 없는 경우) : 1개 index 비교");
+
+                    getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, simulationLoc, naviLatLngIndex);
+                }
+
+                if (mPointDistanceList.size() > 0) {
+                    mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
+
+                    float minDistance = mPointDistanceList.get(0);
+
+                    for (int i = 0; i < mPointDistanceList.size(); i++) {
+                        if (mPointDistanceList.get(i) <= minDistance) {
+                            minDistance = mPointDistanceList.get(i);
+                                        /*
+                                         *  여기서 거치지 않은 index description 보여주기
+                                         */
+                            int newNaviLatLngIndex = mPointDistanceResolver.get(minDistance);
+
+                            if (naviLatLngIndex != newNaviLatLngIndex) {
+                                for (int j = naviLatLngIndex; j < newNaviLatLngIndex; j++) {
+                                    Log.d(DEBUG_TAG, "(수선의 발 없는 경우 지나친 인덱스 검색) naviLatLngIndex : " + j + " | newNaviLatLngIndex 까지 : " + newNaviLatLngIndex);
+
+                                    getPointInfoNotifications(j);
+                                                /*
+                                                 *  종료 처리
+                                                 */
+                                    checkFinishNavigation(j, maxNaviLatLngIndex, simulationLoc);
+                                }
+                            }
+
+                            naviLatLngIndex = newNaviLatLngIndex;
+                        }
+                    }
+
+                    if (minDistance >= LIMIT_DISTANCE) {
+                        Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 없는 경우)", Toast.LENGTH_SHORT).show();
+                        Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
+
+                        if (!isActivateRouteWithinLimitDistanceNoti) {
+                            tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+
+                            findRoute();
+                        }
+
+//                                    Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우) : " + Integer.toString(naviLatLngIndex));
+                    } else {
+                                    /*
+                                     *  TextView에 정보 보여주기 처리
+                                     */
+                        BicycleNavigationInfo info = mBicycleNaviInfoList.get(naviLatLngIndex);
+
+                        getPointInfoNotifications(naviLatLngIndex);
+
+                        if (info.properties != null) {
+                            Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
+                            Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
+                        } else {
+                            Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
+                            Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
+                        }
+
+                                    /*
+                                     *  종료 처리
+                                     */
+                        checkFinishNavigation(naviLatLngIndex, maxNaviLatLngIndex, simulationLoc);
+
+                    }
+                } else {
+
+                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(둘 다 없는 경우)");
+                }
+
+//                            Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우) : " + Integer.toString(naviLatLngIndex));
+            }
+        }
     }
 
     LocationListener mIterativeListener = new LocationListener() {
@@ -788,7 +1056,8 @@ public class RouteService extends Service {
             int totalTime = 0;
             float totalSpeed = 0;
             float totalDistance = 0;
-            int second = (int) ((endTime - startTime / 1000) % 60);
+//            int second = (int) ((endTime - startTime / 1000) % 60);
+            int second = (int) TimeUnit.MILLISECONDS.toSeconds(endTime - startTime);
 
             Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.second : " + Integer.toString(second));
 
@@ -801,10 +1070,12 @@ public class RouteService extends Service {
             }
 
             for (int i = 0; i < speedList.size(); i++) {
+//                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.speedList : " + Float.toString(speedList.get(i)));
                 totalSpeed += speedList.get(i);
             }
 
             for (int i = 0; i < distanceList.size(); i++) {
+                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.distanceList : " + Float.toString(distanceList.get(i)));
                 totalDistance += distanceList.get(i);
             }
 
@@ -826,14 +1097,14 @@ public class RouteService extends Service {
 
                     if ((int) result == SUCCESS) {
                         Log.d("safebike", "RouteService.removeFavorite.onSuccess.200");
-                        Toast.makeText(RouteService.this, "saveExercise.SUCCESS.200", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RouteService.this, "saveExercise.SUCCESS.200", Toast.LENGTH_SHORT).show();
 
                         mSpeedList.clear();
                         mDistanceList.clear();
 
                     } else {
                         Log.d("safebike", "RouteService.removeFavorite.onSuccess.else");
-                        Toast.makeText(RouteService.this, "saveExercise.SUCCESS.200.else", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RouteService.this, "saveExercise.SUCCESS.200.else", Toast.LENGTH_SHORT).show();
                     }
                     /*
                      *  비정상 종료 처리 시에 기존 데이터(칼로리, 스피드, 거리 리스트 저장해 두었다가 onCreate 에서 저장) bundle 이용
@@ -845,12 +1116,12 @@ public class RouteService extends Service {
                 @Override
                 public void onFail(int code) {
                     Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.saveExercise.onFail.result : " + Integer.toString(code));
-                    Toast.makeText(RouteService.this, "saveExercise.FAIL", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(RouteService.this, "saveExercise.FAIL", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
             Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.distanceList < 0");
-            Toast.makeText(RouteService.this, "RouteService.sendExerciseReport.distanceList < 0", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(RouteService.this, "RouteService.sendExerciseReport.distanceList < 0", Toast.LENGTH_SHORT).show();
         }
 
     }

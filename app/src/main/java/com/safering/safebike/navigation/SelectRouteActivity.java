@@ -1121,15 +1121,15 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     private void setFont() {
         tvMainTitle.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.BMJUA));
 
-        tvLane.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS_M));
-        tvLaneTotalTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
-        tvLaneArvTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
-        tvLaneTotalDistance.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
-
-        tvMin.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS_M));
-        tvMinTotalTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
-        tvMinArvTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
-        tvMinTotalDistance.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
+//        tvLane.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS_M));
+//        tvLaneTotalTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
+//        tvLaneArvTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
+//        tvLaneTotalDistance.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
+//
+//        tvMin.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS_M));
+//        tvMinTotalTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
+//        tvMinArvTime.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
+//        tvMinTotalDistance.setTypeface(FontManager.getInstance().getTypeface(SelectRouteActivity.this, FontManager.NOTOSANS));
     }
 
     private void withinRouteLimitDistanceDialog() {

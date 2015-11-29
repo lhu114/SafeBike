@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout_navigationfragment"
     tools:context="com.safering.safebike.navigation.NavigationFragment"
    >
 
@@ -44,7 +45,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,21 +71,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_find_route"
-        android:layout_above="@+id/layout_address"
         android:layout_alignParentEnd="true"
         android:visibility="gone"
         android:background="@drawable/button_choice_selector"
+        android:layout_marginTop="425dp"
         android:layout_marginRight="10dp" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_crt_location"
-        android:layout_above="@+id/btn_find_route"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/button_my_location_selector"
-        android:layout_marginRight="10dp" />
+        android:layout_marginTop="495dp"
+        android:layout_marginLeft="285dp"
+        android:background="@drawable/button_basic_location_selector" />
 
 
 </RelativeLayout>

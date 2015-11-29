@@ -6,6 +6,7 @@ import com.safering.safebike.IRouteCallback;
 
 interface IRouteService {
     boolean startRouting();
+    boolean simulationStartRouting();
     boolean initialStartRouting();
     boolean activateWithinRouteLimitDistance();
     boolean activateAutoFinishNavigation();

@@ -14,12 +14,15 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,8 +98,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     ArrayList<LatLng> mLcMarkerList;
 
     View view;
+    RelativeLayout relativeLayout;
     LinearLayout addressLayout;
-    //    FloatingActionButton btnFindRoute;
+
     TextView textMainTitle;
     TextView tvPOIAddress;
     TextView tvPOIName;
@@ -104,11 +108,19 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     MainFragment mainFragment;
 
+    boolean isBasicLocBtnOn = true;
     boolean isCurrentLocBtnOn = false;
+    boolean isChangeLocBtnOn = false;
     boolean isActivateRotation = false;
     boolean isActivateCurrentLocBtn = false;
     boolean isCheckGetRecentLoc = false;
     boolean isFirst = true;
+
+    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT = 285;
+    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_TOP = 495;
+    private static final int CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP = 355;
+
+    int marginLeft, marginTop;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -142,6 +154,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
 
         mLM = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.marginLeft : " + Integer.toString(marginLeft) + " | marginTop : " + marginTop);
     }
 
     @Override
@@ -156,11 +170,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.main_map);
             mapFragment.getMapAsync(this);
 
+            relativeLayout = (RelativeLayout) view.findViewById(R.id.layout_navigationfragment);
+
             textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
             btnFwdSearch = (ImageButton) ((MainActivity) getActivity()).findViewById(R.id.btn_fwd_search);
 
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
-            addressLayout.setVisibility(View.INVISIBLE);
+            addressLayout.setVisibility(View.GONE);
 
             tvPOIAddress = (TextView) view.findViewById(R.id.text_poi_address);
             tvPOIName = (TextView) view.findViewById(R.id.text_poi_name);
@@ -169,6 +185,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             btnBluetooth = (ImageButton)view.findViewById(R.id.btn_status_bluetooth);
 
             mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+
             if (mainFragment.getConnectionOnOff() == 1) {
                 btnBluetooth.setSelected(true);
             } else {
@@ -228,42 +245,53 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                      */
                     mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-                    if (mLocation != null) {
-                        Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
+                    if (isBasicLocBtnOn) {
+                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.false");
 
-                        moveMap(mLocation.getLatitude(), mLocation.getLongitude(), ANIMATE_CAMERA);
+                        if (mLocation != null) {
+                            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
 
-                        PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
-                        PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
-                        Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
+                            moveMap(mLocation.getLatitude(), mLocation.getLongitude(), ANIMATE_CAMERA);
+
+                            PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
+                            PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
+                            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
                         /*
                          * 마커 찍기
                          */
 //                        addCurrentMarker(mLocation);
-                    } else {
-                        Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
-                    }
+                        } else {
+                            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
+                        }
 
-                    if (!isCurrentLocBtnOn) {
-                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.false");
-
-                        isActivateRotation = false;
+                        isBasicLocBtnOn = false;
                         isCurrentLocBtnOn = true;
                         isActivateCurrentLocBtn = true;
 
-                        btnCurrentLoc.setSelected(true);
+                        btnCurrentLoc.setBackgroundResource(R.drawable.button_my_location_selector);
                     } else if (isCurrentLocBtnOn) {
                         Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.true");
 
-                        isActivateRotation = true;
                         isCurrentLocBtnOn = false;
+                        isActivateRotation = true;
+                        isChangeLocBtnOn = true;
 
-                        btnCurrentLoc.setSelected(false);
+                        btnCurrentLoc.setBackgroundResource(R.drawable.button_change_direction_selector);
+                    } else if (isChangeLocBtnOn) {
+                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isBasicLocBtnOn.true");
+
+                        isChangeLocBtnOn = false;
+                        isActivateRotation = false;
+                        isBasicLocBtnOn = true;
+
+                        btnCurrentLoc.setBackgroundResource(R.drawable.button_basic_location_selector);
+
+                        setBearingMoveMap(0);
                     }
                 }
             });
 
-            setFont();
+//            setFont();
 
         } catch (InflateException e) {            /*
              * 구글맵 View가 이미 inflate되어 있는 상태이므로, 에러를 무시합니다.
@@ -415,6 +443,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //            activateDestination();
 
                 if (poi != null) {
+                    setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP);
+
                     tvPOIName.setText(poi.name);
                     tvPOIAddress.setText(getDefinePOIAddress(poi));
 
@@ -642,13 +672,17 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
          */
         clearALLMarker();
 
-        addressLayout.setVisibility(View.INVISIBLE);
+        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, BASIC_BUTTON_CURRENTLOC_MARGIN_TOP);
+
+        addressLayout.setVisibility(View.GONE);
         btnFindRoute.setVisibility(View.GONE);
     }
 
     @Override
     public void onMapLongClick(final LatLng latLng) {
-//        activateDestination();
+        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP);
+
+        Log.d(DEBUG_TAG, "NavigationFragment.onMapLongClick.marginLeft : " + Integer.toString(marginLeft) + " | marginTop : " + marginTop);
 
         if (latLng != null) {
             NavigationNetworkManager.getInstance().searchReverseGeo(getContext(), latLng, new NavigationNetworkManager.OnResultListener<AddressInfo>() {
@@ -881,11 +915,22 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         return defineAddress;
     }
 
-    public void setFabFindRouteChange() {
+    public void setBtnFindRouteChange() {
         clearALLMarker();
 
-        addressLayout.setVisibility(View.INVISIBLE);
+        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, BASIC_BUTTON_CURRENTLOC_MARGIN_TOP);
+
+        addressLayout.setVisibility(View.GONE);
         btnFindRoute.setVisibility(View.GONE);
+    }
+
+    private void setBtnCurrentLocMarginChange(int changeMarginLeft, int changeMarginTop) {
+        marginLeft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginLeft, this.getResources().getDisplayMetrics());
+        marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginTop, this.getResources().getDisplayMetrics());
+
+        MarginLayoutParams margin = new MarginLayoutParams(btnCurrentLoc.getLayoutParams());
+        margin.setMargins(marginLeft, marginTop, 0, 0);
+        btnCurrentLoc.setLayoutParams(new RelativeLayout.LayoutParams(margin));
     }
 
     private void setFont() {
