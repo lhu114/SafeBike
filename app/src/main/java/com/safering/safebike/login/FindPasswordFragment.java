@@ -72,7 +72,7 @@ public class FindPasswordFragment extends Fragment {
 
                     @Override
                     public void onFail(int code) {
-                        dialog.setContent("로그인","네트워크 에러(다시 시도해주세요)");
+                        dialog.setContent("로그인","존재하지 않는 이메일입니다.");
                         dialog.show(getChildFragmentManager(), "login");
 
                     }

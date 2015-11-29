@@ -43,7 +43,7 @@ public class AccountFragment extends Fragment {
     TextView textProfileName;
     TextView textProfileJoin;
     TextView textProfileEmail;
-
+    TextView textMainTitle;
     RelativeLayout userProfile;
     Button btnLogout;
 
@@ -65,6 +65,7 @@ public class AccountFragment extends Fragment {
         textProfileJoin = (TextView)view.findViewById(R.id.text_join_profile);
         textProfileEmail = (TextView)view.findViewById(R.id.text_email_profile);
         imageProfileUser = (ImageView)view.findViewById(R.id.image_user_profile_account);
+        textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
         Toast.makeText(getContext(),"AccountFragmentOncREATE",Toast.LENGTH_SHORT).show();
         setProfile();
         setFont();
@@ -136,6 +137,8 @@ public class AccountFragment extends Fragment {
     }
 
     public void setFont(){
+        textMainTitle.setText(R.string.text_account);
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
         textHelp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
         textLogout.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
         textProfileName.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));

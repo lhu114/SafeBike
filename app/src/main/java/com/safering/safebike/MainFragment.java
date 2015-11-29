@@ -98,13 +98,6 @@ public class MainFragment extends Fragment {
 
         final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ArrayList<String> arr = new ArrayList<String>();
-        arr.add("2015-11-11");
-        arr.add("2015-11-15");
-        arr.add("2015-11-21");
-        arr.add("2015-11-10");
-        Collections.sort(arr);
-        Log.i("list",arr.toString());
 
         textBandOnOff = (TextView) view.findViewById(R.id.text_band_status);
         textBackLightOnOff = (TextView) view.findViewById(R.id.text_backlight_status);

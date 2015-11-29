@@ -89,7 +89,7 @@ public class LoginInputFragment extends Fragment {
                             else{
                                 //Toast.makeText(getContext(),"로그인실패",Toast.LENGTH_SHORT).show();
                                 //InformDialogFragment loginDialog = new InformDialogFragment();
-                                dialog.setContent("로그인","로그인에 실패했습니다.");
+                                dialog.setContent("로그인","로그인에 실패했습니다. 로그인정보를 확인해주세요.");
                                 dialog.show(getChildFragmentManager(), "loginfail");
 
 

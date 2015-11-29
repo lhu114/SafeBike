@@ -51,6 +51,11 @@ public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButt
         if(viewType == 1){
             view.setAddButtonVisible(true);
         }
+        else if(viewType == 2){
+            view.setAddButtonVisible(true);
+            view.setDisplayEmail(true);
+        }
+
 
         view.setFriendData(items.get(position));
 

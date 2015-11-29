@@ -25,7 +25,7 @@ import com.safering.safebike.property.PropertyManager;
 public class FriendItemView extends RelativeLayout {
     ImageView friendImage;
     TextView friendId;
-    TextView friendRank;
+    TextView friendEmail;
     ImageView imagePlus;
     FriendItem fData;
     DisplayImageOptions options;
@@ -49,6 +49,7 @@ public class FriendItemView extends RelativeLayout {
         inflate(getContext(), R.layout.friend_item_view, this);
         friendImage = (ImageView) findViewById(R.id.image_friend);
         friendId = (TextView) findViewById(R.id.text_friend_id);
+        friendEmail = (TextView)findViewById(R.id.text_friend_email);
         imagePlus = (ImageView) findViewById(R.id.image_plus_friend);
 
         options = new DisplayImageOptions.Builder()
@@ -80,6 +81,7 @@ public class FriendItemView extends RelativeLayout {
     public void setFriendData(FriendItem data) {
         fData = data;
         friendId.setText(data.pname);
+        friendEmail.setText(data.pemail);
         if(data.photo.equals("null")) {
             Log.i("friend photo", data.photo + "");
         }else {
@@ -100,6 +102,14 @@ public class FriendItemView extends RelativeLayout {
         } else
             imagePlus.setVisibility(View.INVISIBLE);
 
+    }
+
+    public void setDisplayEmail(boolean isVisible){
+        if(isVisible){
+            friendId.setVisibility(GONE);
+            friendEmail.setVisibility(VISIBLE);
+
+        }
     }
 
     public void setFont() {

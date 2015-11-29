@@ -28,6 +28,7 @@ import com.nostra13.universalimageloader.core.display.RoundedVignetteBitmapDispl
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.InformDialogFragment;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
@@ -54,6 +55,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     ImageView userProfileImage;
     DisplayImageOptions options;
     ImageView imageBack;
+    InformDialogFragment dialog;
 
     Uri uri = null;
     public static final int GET_USER_IMAGE = 11;
@@ -69,7 +71,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
         //  ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-
+        dialog = new InformDialogFragment();
         userName = (TextView) findViewById(R.id.text_edit_profilename);
         userPass = (TextView) findViewById(R.id.text_edit_profilepass);
         userPassConfirm = (TextView) findViewById(R.id.text_edit_profilepasscon);
@@ -95,10 +97,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         textCompelete = (TextView) findViewById(R.id.btn_edit_compelete);
 
 
-        textTitle.setText(R.string.edit_profile_title);
 
-        setProfile();
-        setFont();
+
+
         textEditPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +124,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                 String passwordConfirm = changePasswordConfirm.getText().toString();
                 if (checkEditForm() == EDIT_FAIL) {
                     //에디트 텍스트 밑에 텍스트 띄우기
+                    dialog.setContent("프로필 편집","프로필 정보를 확인해주세요.");
+                    dialog.show(getSupportFragmentManager(), "profile");
                     return;
                 }
                 NetworkManager.getInstance().saveUserProfile(ProfileEditActivity.this, email, id, password, file, new NetworkManager.OnResultListener() {
@@ -161,6 +164,9 @@ public class ProfileEditActivity extends AppCompatActivity {
 
             }
         });
+
+        setProfile();
+        setFont();
 
 
     }
@@ -251,6 +257,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     }
 
     public void setFont() {
+
         userId.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
         userEmail.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
         userJoin.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
@@ -259,6 +266,8 @@ public class ProfileEditActivity extends AppCompatActivity {
         userName.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
         userPass.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
         userPassConfirm.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
+        textTitle.setText(R.string.edit_profile_title);
+        textTitle.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this,FontManager.NOTOSANS_M));
         textEditPhoto.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
         textCompelete.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
     }

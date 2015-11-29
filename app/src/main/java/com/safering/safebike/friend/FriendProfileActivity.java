@@ -69,48 +69,40 @@ public class FriendProfileActivity extends AppCompatActivity {
         textFriendCalorieResult = (TextView) findViewById(R.id.text_friend_calorie_result);
         textFriendCalorie = (TextView) findViewById(R.id.text_friend_calorie);
 
+
+
+        Intent intent = getIntent();
+        friend = (FriendItem) intent.getSerializableExtra("friendInform");
+        adapter = (FriendAdapter) intent.getSerializableExtra("friendAdapter");
+        friendPosition = intent.getIntExtra("friendPosition", 0);
+        getfriendEmail = friend.pemail;
+        getfriendPhoto = friend.photo;
+
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        setFont();
 
-        Intent intent = getIntent();
-        friend = (FriendItem) intent.getSerializableExtra("friendInform");
-        adapter = (FriendAdapter) intent.getSerializableExtra("friendAdapter");
-        friendPosition = intent.getIntExtra("friendPosition", 0);
-
-
-        getfriendEmail = friend.pemail;
-        getfriendPhoto = friend.photo;
 
         friendDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String uEmail = PropertyManager.getInstance().getUserEmail();
-                //String fEmail = friendItem.pemail;
-
                 NetworkManager.getInstance().removeUserFriend(FriendProfileActivity.this, uEmail, getfriendEmail, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object success) {
-
                         adapter.remove(friendPosition);
-
-
                     }
-
                     @Override
                     public void onFail(int code) {
 
                     }
                 });
-
-
-                //adapter.remove(friendPosition);
-
+                finish();
             }
+
         });
 
         NetworkManager.getInstance().getFriendProfile(FriendProfileActivity.this, getfriendEmail, new NetworkManager.OnResultListener<FriendProfileResult>() {
@@ -126,10 +118,12 @@ public class FriendProfileActivity extends AppCompatActivity {
             }
         });
 
+        setFont();
+
     }
 
     public void setFont() {
-        textTitle.setText(R.string.text_add_friend);
+        textTitle.setText(R.string.text_friend_profile);
         textTitle.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS_M));
         textFriendDistanceResult.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));
         textFriendDistance.setTypeface(FontManager.getInstance().getTypeface(FriendProfileActivity.this, FontManager.NOTOSANS));

@@ -25,7 +25,9 @@ public class InformDialogFragment extends DialogFragment{
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = ((LoginActivity)getActivity()).getLayoutInflater();
+        //LayoutInflater inflater = ((LoginActivity)getActivity()).getLayoutInflater();
+        LayoutInflater inflater = (getActivity()).getLayoutInflater();
+
 
         View contentView = inflater.inflate(R.layout.custom_dialog_content,null);
 

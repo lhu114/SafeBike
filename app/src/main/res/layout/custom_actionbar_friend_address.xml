@@ -23,11 +23,9 @@
         android:layout_marginLeft="70dp"
         android:layout_marginRight="10dp"
         android:singleLine="true"
-        android:lines="1"
-        android:hint="이메일 검색"
-
-
-        />
+        android:textColor="@color/colorBlack"
+        android:background="@drawable/search_box"
+        android:lines="1" />
     <ImageView
         android:id="@+id/image_search_friend_address"
         android:layout_width="wrap_content"

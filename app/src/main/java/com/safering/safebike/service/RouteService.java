@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.IRouteCallback;
 import com.safering.safebike.IRouteService;
 import com.safering.safebike.exercisereport.CalculatorCalorie;
+import com.safering.safebike.login.LoginInputFragment;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.BicycleFeature;
 import com.safering.safebike.navigation.BicycleNavigationInfo;
@@ -788,7 +789,11 @@ public class RouteService extends Service {
             int totalTime = 0;
             float totalSpeed = 0;
             float totalDistance = 0;
-            int second = (int) ((endTime - startTime / 1000) % 60);
+            Log.i("endTime - startTime",(endTime - startTime) + "");
+
+            int second = (int)((endTime - startTime / 1000));
+
+            Log.i("endTime-startTime/1000",((endTime - startTime)/1000) + "");
 
             Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.second : " + Integer.toString(second));
 
