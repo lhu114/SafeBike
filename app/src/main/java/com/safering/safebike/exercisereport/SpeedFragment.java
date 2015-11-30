@@ -238,7 +238,7 @@ public class SpeedFragment extends Fragment {
                     }
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "speed");
-                    set.setBarSpacePercent(85f);
+                    set.setBarSpacePercent(80f);
 
                     set.setColor(Color.parseColor("#B6E2FF"));
                     dataSets = new ArrayList<BarDataSet>();

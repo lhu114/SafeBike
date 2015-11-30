@@ -304,7 +304,7 @@ public class DistanceFragment extends Fragment {
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "distance");
                     set.setColor(Color.parseColor("#B6E2FF"));
-                    set.setBarSpacePercent(85f);
+                    set.setBarSpacePercent(80f);
 
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
