@@ -62,7 +62,6 @@ public class SpeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_speed, container, false);
-        Toast.makeText(getContext(), "onCreateViewSpeed", Toast.LENGTH_SHORT).show();
 
         parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
         parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);

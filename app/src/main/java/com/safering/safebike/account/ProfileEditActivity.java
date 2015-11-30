@@ -136,22 +136,12 @@ public class ProfileEditActivity extends AppCompatActivity {
                         PropertyManager.getInstance().setUserPassword(password);
 
                         if (success.toString().contains("https")) {
-                            //PropertyManager.getInstance().setUserImagePath("");
-                            Toast.makeText(ProfileEditActivity.this, "url : " + success.toString(), Toast.LENGTH_SHORT).show();
-
-
                             PropertyManager.getInstance().setUserImagePath(success.toString().substring(1,success.toString().length()-1));
+                            Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivityForResult(intent, GET_USER_IMAGE);
 
-
-                            Log.i("return:", PropertyManager.getInstance().getUserImagePath());
-
-                        } else {
-                            Toast.makeText(ProfileEditActivity.this, "nonurl : " + success, Toast.LENGTH_SHORT).show();
                         }
-
-                        Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivityForResult(intent, GET_USER_IMAGE);
 
                     }
 
@@ -173,8 +163,6 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     private Uri getTempUri() {
         file = new File(Environment.getExternalStorageDirectory(), "temp_" + System.currentTimeMillis() / 1000);
-        Toast.makeText(this, "getTempUri", Toast.LENGTH_SHORT).show();
-        Log.i("getTempUri", file.getAbsolutePath());
         return Uri.fromFile(file);
     }
 
@@ -202,7 +190,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                         .build();
                 ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
                 ImageLoader.getInstance().displayImage(Uri.fromFile(new File(file.getAbsolutePath())).toString(), userProfileImage, options);
-                Toast.makeText(ProfileEditActivity.this, "file path : " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
             }
         }

@@ -111,7 +111,6 @@ public class SignUpFragment extends Fragment {
                 NetworkManager.getInstance().checkEmail(getContext(), email, new NetworkManager.OnResultListener<String>() {
                     @Override
                     public void onSuccess(String result) {
-                        Toast.makeText(getContext(), "result : " + result, Toast.LENGTH_SHORT).show();
                         if (result.equals("1")) {
                             dialog.setContent("회원가입", "이미 존재하는 이메일입니다.");
                             dialog.show(getChildFragmentManager(), "fail");
@@ -163,7 +162,6 @@ public class SignUpFragment extends Fragment {
         String email = inputEmail.getText().toString();
         String id = inputId.getText().toString();
         String password = inputPassword.getText().toString();
-        Toast.makeText(getContext(), "inputPass : " + password, Toast.LENGTH_SHORT).show();
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(id) || TextUtils.isEmpty(password)) {
             signUpMessage = EMPTY_FORM;
             return signUpMessage;
@@ -183,12 +181,12 @@ public class SignUpFragment extends Fragment {
     public boolean checkEmailForm(String email){
 
         if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(getContext(),"email valid",Toast.LENGTH_SHORT).show();
             return true;
         }
         else {
-            Toast.makeText(getContext(),"email unvalid",Toast.LENGTH_SHORT).show();
-
+            InformDialogFragment dialog = new InformDialogFragment();
+            dialog.setContent("회원가입","유효한 이메일 형식이 아닙니다.");
+            dialog.show(getChildFragmentManager(),"signup");
             return false;
         }
     }

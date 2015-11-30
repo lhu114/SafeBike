@@ -91,9 +91,11 @@ public class BluetoothConnection {
         arr[0] = 1;
         if(mGatt != null) {
             if(PropertyManager.getInstance().getBluetoothSetting() == 1) {
-                BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
-                characteristic.setValue(arr);
-                mGatt.writeCharacteristic(characteristic);
+                if (BluetoothConnection.getInstance().getIsConnect() == 1) {
+                    BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
+                    characteristic.setValue(arr);
+                    mGatt.writeCharacteristic(characteristic);
+                }
             }
         }
         else{
@@ -111,9 +113,11 @@ public class BluetoothConnection {
         arr[0] = 2;
         if(mGatt != null) {
             if(PropertyManager.getInstance().getBluetoothSetting() == 1) {
-                BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
-                characteristic.setValue(arr);
-                mGatt.writeCharacteristic(characteristic);
+                if (BluetoothConnection.getInstance().getIsConnect() == 1) {
+                    BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
+                    characteristic.setValue(arr);
+                    mGatt.writeCharacteristic(characteristic);
+                }
             }
         }
         else{
@@ -127,9 +131,11 @@ public class BluetoothConnection {
         arr[0] = 3;
         if(mGatt != null){
             if(PropertyManager.getInstance().getBluetoothSetting() == 1) {
-                BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
-                characteristic.setValue(arr);
-                mGatt.writeCharacteristic(characteristic);
+                if (BluetoothConnection.getInstance().getIsConnect() == 1) {
+                    BluetoothGattCharacteristic characteristic = mGatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE);
+                    characteristic.setValue(arr);
+                    mGatt.writeCharacteristic(characteristic);
+                }
             }
         }
 

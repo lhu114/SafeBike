@@ -152,10 +152,7 @@ public class MainActivity extends AppCompatActivity
         textUserId = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_id);
         textUserEmail = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_email);
 
-        if(imageUserProfile == null){
-//            imageUserProfile.getBaseline();
-            Toast.makeText(MainActivity.this,"imageUserProfile is null!!",Toast.LENGTH_SHORT).show();
-        }
+
 
         imageAccountSetting.setOnClickListener(new View.OnClickListener() {
             @Override

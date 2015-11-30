@@ -474,25 +474,20 @@ public class SettingFragment extends Fragment {
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic
                                                  characteristic, int status) {
-            //Log.i("onCharacteristicRead", characteristic.getUuid().toString());
             Log.i("onCharacteristicRead", gatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE).getUuid().toString());
-            //연결됬음
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             //클라이언트에서 write 후 서버가 응답해주면 호출
             Log.i("onCaractorersticChanged", "onCharactoeristicWrite");
-
             super.onCharacteristicChanged(gatt, characteristic);
         }
 
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             Log.i("onCharacteristicWrite", gatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE).getUuid().toString());
-
             super.onCharacteristicWrite(gatt, characteristic, status);
-
         }
     };
 

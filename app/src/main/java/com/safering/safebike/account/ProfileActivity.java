@@ -66,7 +66,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         setProfile();
         setFont();
-        Toast.makeText(ProfileActivity.this,"imageurl : " + PropertyManager.getInstance().getUserImagePath(),Toast.LENGTH_SHORT).show();
 
         textEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
