@@ -37,14 +37,11 @@ import com.safering.safebike.R;
 import com.safering.safebike.adapter.BluetoothDeviceAdapter;
 import com.safering.safebike.adapter.BluetoothDeviceItem;
 import com.safering.safebike.adapter.BluetoothItemView;
-import com.safering.safebike.login.LoginInputFragment;
 import com.safering.safebike.manager.FontManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 import static com.google.android.gms.internal.zzid.runOnUiThread;
 
@@ -68,9 +65,9 @@ public class SettingFragment extends Fragment {
     BluetoothDeviceAdapter deviceAdapter;
     ProgressBar searchDevice;
     ListView deviceList;
-    Button tmpLeft;
+ /*   Button tmpLeft;
     Button tmpRight;
-    Button tmpOff;
+    Button tmpOff;*/
     public int onServerResponse = 0;
     TextView textConnectDevice, textMainTitle;
     boolean isConn = false;
@@ -94,9 +91,9 @@ public class SettingFragment extends Fragment {
         textConnectDevice = (TextView) view.findViewById(R.id.btn_connect_device);
         deviceList = (ListView) view.findViewById(R.id.connective_device_list);
         searchDevice = (ProgressBar) view.findViewById(R.id.progressBar_search);
-        tmpLeft = (Button) view.findViewById(R.id.btn_tmp_left);
-        tmpRight = (Button) view.findViewById(R.id.btn_tmp_right);
-        tmpOff = (Button) view.findViewById(R.id.btn_tmp_off);
+//        tmpLeft = (Button) view.findViewById(R.id.btn_tmp_left);
+//        tmpRight = (Button) view.findViewById(R.id.btn_tmp_right);
+//        tmpOff = (Button) view.findViewById(R.id.btn_tmp_off);
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         isEnableBluetooth = false;
@@ -114,7 +111,7 @@ public class SettingFragment extends Fragment {
             filters = new ArrayList<ScanFilter>();
         }
 
-        tmpLeft.setOnClickListener(new View.OnClickListener() {
+        /*tmpLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (BluetoothConnection.getInstance() == null) {
@@ -141,7 +138,7 @@ public class SettingFragment extends Fragment {
             public void onClick(View v) {
                 BluetoothConnection.getInstance().writeOffValue();
             }
-        });
+        });*/
         deviceAdapter.setOnSwitchClickListener(new BluetoothItemView.OnSwitchClickListener() {
             @Override
             public void onSwitchClick(BluetoothItemView view, BluetoothDeviceItem item, boolean isChecked) {
