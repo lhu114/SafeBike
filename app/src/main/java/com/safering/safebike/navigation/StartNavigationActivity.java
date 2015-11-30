@@ -465,13 +465,17 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     private void addMapInfoMarker(MarkerOptions markerOptions) {
         Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoMarker");
 
-        mapInfoMarker = mMap.addMarker(markerOptions);
+        if (markerOptions != null) {
+            mapInfoMarker = mMap.addMarker(markerOptions);
+        }
     }
 
     private void addMapInfoPolyline(PolylineOptions polylineOptions) {
         Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoPolyline");
 
-        mapInfoPolyline = mMap.addPolyline(polylineOptions);
+        if (polylineOptions != null) {
+            mapInfoPolyline = mMap.addPolyline(polylineOptions);
+        }
     }
 
     ServiceConnection mConn = new ServiceConnection() {
@@ -657,13 +661,19 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
 
 
-        MarkerOptions mapInfoMarkerOptions = MapInfoManager.getInstance().getMarkerOptionsInfo();
+        ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
         PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
 
-        if (mapInfoMarkerOptions != null && mapInfoPolylineOptions != null) {
+        if (mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null) {
             Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptions != null && mapInfoPolylineOptions != null");
-            addMapInfoMarker(mapInfoMarkerOptions);
+
+            for (int i = 0; i < mapInfoMarkerOptionsList.size(); i++) {
+                addMapInfoMarker(mapInfoMarkerOptionsList.get(i));
+            }
+
             addMapInfoPolyline(mapInfoPolylineOptions);
+
+            MapInfoManager.getInstance().mapInfoClearMarkerAndPolyline();
         }
     }
 

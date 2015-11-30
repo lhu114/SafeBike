@@ -29,21 +29,21 @@ public class MapInfoManager {
     public void setMarkerOptionsInfo(MarkerOptions markerOptions) {
         Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo");
 
-        if(markerOptionsList.size() > 0) {
-            Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo.markerOptionsList.size() > 0");
-            markerOptionsList.clear();
-        }
+//        if(markerOptionsList.size() > 0) {
+//            Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo.markerOptionsList.size() > 0");
+//            markerOptionsList.clear();
+//        }
 
         markerOptionsList.add(markerOptions);
     }
 
-    public MarkerOptions getMarkerOptionsInfo() {
+    public ArrayList<MarkerOptions> getMarkerOptionsInfo() {
         Log.d("safebike", "MapInfoManager.getMarkerOptionsInfo");
 
         if (markerOptionsList.size() > 0) {
             Log.d("safebike", "MapInfoManager.getMarkerOptionsInfo.markerOptionsList.size() > 0");
 
-            return markerOptionsList.get(0);
+            return markerOptionsList;
         }
 
         return null;
@@ -73,6 +73,19 @@ public class MapInfoManager {
         return null;
     }
 
+    public void mapInfoClearMarkerAndPolyline() {
+        if(markerOptionsList.size() > 0) {
+            Log.d("safebike", "MapInfoManager.mapInfoClearMarkerAndPolyline.markerOptionsList.size() > 0");
+
+            markerOptionsList.clear();
+        }
+
+        if (polylineOptionsList.size() > 0) {
+            Log.d("safebike", "MapInfoManager.mapInfoClearMarkerAndPolyline.polylineOptionsList.size() > 0");
+
+            polylineOptionsList.clear();
+        }
+    }
     /*public void clearMarkerAndPolyline() {
         Log.d("safebike", "StartNavigationActivity.clearMarkerAndPolyline");
 
