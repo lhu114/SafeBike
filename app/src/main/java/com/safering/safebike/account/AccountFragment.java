@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -67,7 +66,7 @@ public class AccountFragment extends Fragment {
         textProfileEmail = (TextView)view.findViewById(R.id.text_email_profile);
         imageProfileUser = (ImageView)view.findViewById(R.id.image_user_profile_account);
         textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
-        Toast.makeText(getContext(),"AccountFragmentOncREATE",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(),"AccountFragmentOncREATE",Toast.LENGTH_SHORT).show();
         setProfile();
         setFont();
 

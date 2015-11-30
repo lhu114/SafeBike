@@ -16,7 +16,8 @@ public class MapInfoManager {
     ArrayList<MarkerOptions> markerOptionsList = new ArrayList<MarkerOptions>();
     ArrayList<PolylineOptions> polylineOptionsList = new ArrayList<PolylineOptions>();
 
-    String updateDescription = null;
+    String updateTextDescription = null;
+    int updateImageDescription = -1;
 
     public static MapInfoManager getInstance() {
         Log.d("safebike", "MapInfoManager.getInstance");
@@ -90,20 +91,31 @@ public class MapInfoManager {
             polylineOptionsList.clear();
         }
 
-        updateDescription = null;
+        updateTextDescription = null;
+        updateImageDescription = -1;
     }
 
     public void setUpdateTextDescription(String description) {
-        updateDescription = description;
+        updateTextDescription = description;
     }
 
     public String getUpdateTextDescription() {
-        if (updateDescription != null) {
-            return updateDescription;
+        if (updateTextDescription != null) {
+            return updateTextDescription;
         }
 
         return null;
     }
+
+    public void setUpdateImageDescription(int direction) {
+        updateImageDescription = direction;
+    }
+
+    public int getUpdateImageDescription() {
+        return updateImageDescription;
+    }
+
+
 
     /*public void clearMarkerAndPolyline() {
         Log.d("safebike", "StartNavigationActivity.clearMarkerAndPolyline");

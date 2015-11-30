@@ -19,7 +19,6 @@ import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -1031,31 +1030,31 @@ public class RouteService extends Service {
 
 
                 if (pointInfo.properties.turnType == LEFT_SIDE) {
-                    setImageDescription(LEFT_SIDE, View.VISIBLE);
+                    setImageDescription(LEFT_SIDE);
 
                     BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == RIGHT_SIDE) {
-                    setImageDescription(RIGHT_SIDE, View.VISIBLE);
+                    setImageDescription(RIGHT_SIDE);
 
                     BluetoothConnection.getInstance().writeRightValue();
                 } else if (pointInfo.properties.turnType == EIGHT_LEFT_SIDE) {
-                    setImageDescription(EIGHT_LEFT_SIDE, View.VISIBLE);
+                    setImageDescription(EIGHT_LEFT_SIDE);
 
                     BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == TEN_LEFT_SIDE) {
-                    setImageDescription(TEN_LEFT_SIDE, View.VISIBLE);
+                    setImageDescription(TEN_LEFT_SIDE);
 
                     BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == TWO_RIGHT_SIDE) {
-                    setImageDescription(TWO_RIGHT_SIDE, View.VISIBLE);
+                    setImageDescription(TWO_RIGHT_SIDE);
 
                     BluetoothConnection.getInstance().writeRightValue();
                 } else if (pointInfo.properties.turnType == FOUR_RIGHT_SIDE) {
-                    setImageDescription(FOUR_RIGHT_SIDE, View.VISIBLE);
+                    setImageDescription(FOUR_RIGHT_SIDE);
 
                     BluetoothConnection.getInstance().writeRightValue();
                 } else {
-                    setImageDescription(0, View.INVISIBLE);
+                    setImageDescription(0);
 
                     BluetoothConnection.getInstance().writeOffValue();
                 }
@@ -1353,7 +1352,7 @@ public class RouteService extends Service {
         mCallbacks.finishBroadcast();
     }
 
-    private void setImageDescription(int direction, int visibility) {
+    private void setImageDescription(int direction) {
         Log.d(DEBUG_TAG, "RouteService.setImageDescription");
 
         int count = mCallbacks.beginBroadcast();
@@ -1361,13 +1360,16 @@ public class RouteService extends Service {
         for (int i = 0; i < count; i++) {
             IRouteCallback callback = mCallbacks.getBroadcastItem(i);
             try {
-                callback.setImageDescription(direction, visibility);
+                callback.setImageDescription(direction);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
 
+
         mCallbacks.finishBroadcast();
+
+        MapInfoManager.getInstance().setUpdateImageDescription(direction);
     }
 
     private void setTextDescription(String description, int distance) {

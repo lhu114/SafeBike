@@ -304,30 +304,31 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
 
         @Override
-        public void setImageDescription(int direction, int visibility) throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.setImageDescription.direction : " + Integer.toString(direction) + " | visibility : " + Integer.toString(visibility));
+        public void setImageDescription(int direction) throws RemoteException {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.setImageDescription.direction : " + Integer.toString(direction));
 
-            if (direction == LEFT_SIDE) {
-                imageDescription.setVisibility(View.VISIBLE);
+            onSetUpdateImageDescription(direction);
+            /*if (direction == LEFT_SIDE) {
+                imageDescription.setVisibility(visibility);
                 imageDescription.setImageResource(R.drawable.left_side);
             } else if (direction == RIGHT_SIDE) {
-                imageDescription.setVisibility(View.VISIBLE);
+                imageDescription.setVisibility(visibility);
                 imageDescription.setImageResource(R.drawable.right_side);
             } else if (direction == EIGHT_LEFT_SIDE) {
-                imageDescription.setVisibility(View.VISIBLE);
+                imageDescription.setVisibility(visibility);
                 imageDescription.setImageResource(R.drawable.left_side);
             } else if (direction == TEN_LEFT_SIDE) {
-                imageDescription.setVisibility(View.VISIBLE);
+                imageDescription.setVisibility(visibility);
                 imageDescription.setImageResource(R.drawable.left_side);
             } else if (direction == TWO_RIGHT_SIDE) {
-                imageDescription.setVisibility(View.VISIBLE);
+                imageDescription.setVisibility(visibility);
                 imageDescription.setImageResource(R.drawable.right_side);
             } else if (direction == FOUR_RIGHT_SIDE) {
-                imageDescription.setVisibility(View.VISIBLE);
+                imageDescription.setVisibility(visibility);
                 imageDescription.setImageResource(R.drawable.right_side);
             } else {
-                imageDescription.setVisibility(View.INVISIBLE);
-            }
+                imageDescription.setVisibility(visibility);
+            }*/
         }
 
         @Override
@@ -703,12 +704,18 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             }
         }*/
 
-        String updateDescription = MapInfoManager.getInstance().getUpdateTextDescription();
+        String updateTextDescription = MapInfoManager.getInstance().getUpdateTextDescription();
 
-        if (updateDescription != null) {
-            tvNaviDescription.setText(updateDescription);
+        if (updateTextDescription != null && !updateTextDescription.equals("")) {
+            tvNaviDescription.setText(updateTextDescription);
         }
 
+
+        int updateImageDescription = MapInfoManager.getInstance().getUpdateImageDescription();
+
+        if (updateImageDescription != -1) {
+            onSetUpdateImageDescription(updateImageDescription);
+        }
 //        ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
 //        PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
 //
@@ -809,6 +816,30 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             } else if (moveAction.equals(MOVE_CAMERA)) {
                 mMap.moveCamera(update);
             }
+        }
+    }
+
+    private void onSetUpdateImageDescription(int direction) {
+        if (direction == LEFT_SIDE) {
+            imageDescription.setVisibility(View.VISIBLE);
+            imageDescription.setImageResource(R.drawable.left_side);
+        } else if (direction == RIGHT_SIDE) {
+            imageDescription.setVisibility(View.VISIBLE);
+            imageDescription.setImageResource(R.drawable.right_side);
+        } else if (direction == EIGHT_LEFT_SIDE) {
+            imageDescription.setVisibility(View.VISIBLE);
+            imageDescription.setImageResource(R.drawable.left_side);
+        } else if (direction == TEN_LEFT_SIDE) {
+            imageDescription.setVisibility(View.VISIBLE);
+            imageDescription.setImageResource(R.drawable.left_side);
+        } else if (direction == TWO_RIGHT_SIDE) {
+            imageDescription.setVisibility(View.VISIBLE);
+            imageDescription.setImageResource(R.drawable.right_side);
+        } else if (direction == FOUR_RIGHT_SIDE) {
+            imageDescription.setVisibility(View.VISIBLE);
+            imageDescription.setImageResource(R.drawable.right_side);
+        } else {
+            imageDescription.setVisibility(View.GONE);
         }
     }
 //

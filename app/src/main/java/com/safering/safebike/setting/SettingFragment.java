@@ -297,6 +297,7 @@ public class SettingFragment extends Fragment {
                 deviceAdapter.add(deviceItem, true);
                 BluetoothConnection.getInstance().addDevice(device);
                 BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), true);
+                BluetoothConnection.getInstance().setIsConnect(1);
 
             }
         }

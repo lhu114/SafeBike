@@ -6,17 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.safering.safebike.adapter.FriendItem;
+
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
-
+import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.adapter.FriendItemView;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
@@ -154,7 +151,8 @@ public class FriendAddressFragment extends Fragment {
 
         if (contactCursor.moveToFirst()) {
             do {
-                String phonenumber = contactCursor.getString(1);
+                //String phonenumber = contactCursor.getString(1);
+                String phonenumber = contactCursor.getString(1).replaceAll("-", "");
                 /*
                 String phonenumber = contactCursor.getString(1).replaceAll("-",
                         "");

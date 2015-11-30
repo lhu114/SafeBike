@@ -17,6 +17,7 @@ import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
+import com.safering.safebike.setting.BluetoothConnection;
 
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
@@ -307,12 +308,12 @@ public class MainFragment extends Fragment {
     }
 */
     public void checkConnection() {
-        if (deviceStatus == 1) {
+        if (BluetoothConnection.getInstance().getIsConnect() == 1) {
             imageBacklightOut.setImageResource(R.drawable.on);
             imageBacklightIn.setImageResource(R.drawable.on);
             textBackLightOnOff.setText("후미등 켜짐");
 
-        } else if (deviceStatus == 0) {
+        } else if (BluetoothConnection.getInstance().getIsConnect() == 0) {
             imageBacklightOut.setImageResource(R.drawable.off);
             imageBacklightIn.setImageResource(R.drawable.off);
             textBackLightOnOff.setText("후미등 꺼짐");

@@ -6,7 +6,7 @@ package com.safering.safebike;
 
 interface IRouteCallback {
     void moveMap(double latitude, double longitude, float bearing, String moveAction);
-    void setImageDescription(int direction, int visibility);
+    void setImageDescription(int direction);
     void setTextDescription(String description, int distance);
     void addPointMarker(double latitude, double longitude, String bitmapFlag, int gpIndexSize);
     void addPolyline(double latitude, double longitude);
