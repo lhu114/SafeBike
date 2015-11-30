@@ -43,6 +43,7 @@
         android:layout_marginTop="120dp"
         android:background="@mipmap/rectangle"
         android:hint="@string/edit_user_password"
+        android:inputType="textPassword"
         android:lines="1"
         android:paddingBottom="5dp"
         android:paddingLeft="17dp"

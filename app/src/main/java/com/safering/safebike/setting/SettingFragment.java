@@ -261,6 +261,7 @@ public class SettingFragment extends Fragment {
             } else {
                 mLEScanner.startScan(filters, settings, mScanCallback);
                 isConn = true;
+
             }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
@@ -274,6 +275,7 @@ public class SettingFragment extends Fragment {
         }
         //핸들러로 제한 시간 5초
     }
+
 
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
@@ -314,6 +316,7 @@ public class SettingFragment extends Fragment {
             Log.e("Scan Failed", "Error Code: " + errorCode);
         }
     };
+
 
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {

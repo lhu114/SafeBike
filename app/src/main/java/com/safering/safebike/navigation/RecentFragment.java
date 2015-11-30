@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 
@@ -36,7 +37,7 @@ public class RecentFragment extends Fragment {
     ListView listView;
     SimpleCursorAdapter mAdapter;
     TextView messageView, tvRctPoiName, tvRctSearchDate;
-    ImageButton deleteRctBtn;
+    View deleteRctBtn;
 
     int nameColumnIndex = -1;
     int dateColumnIndex = -1;
@@ -60,7 +61,7 @@ public class RecentFragment extends Fragment {
 
         messageView = (TextView) view.findViewById(R.id.text_messag_recent);
         listView = (ListView) view.findViewById(R.id.listView_recent);
-        deleteRctBtn = (ImageButton) view.findViewById(R.id.btn_delete_recent);
+//        deleteRctBtn = (ImageButton) view.findViewById(R.id.btn_delete_recent);
 
         String[] from = {RecentDB.RecentTable.COLUMN_POI_NAME, RecentDB.RecentTable.COLUMN_SEARCH_DATE};
         int[] to = {R.id.text_rct_poi_name, R.id.text_rct_search_date};
@@ -94,9 +95,18 @@ public class RecentFragment extends Fragment {
                 return false;
             }
         });
+        //View vv = getLayoutInflater(savedInstanceState).inflate(R.layout.delete_recent_view,null);
 
+        deleteRctBtn = inflater.inflate(R.layout.delete_recent_view,null);
         listView.addFooterView(deleteRctBtn);
+
+        // listView.addFooterView(deleteRctBtn);
+
         listView.setAdapter(mAdapter);
+//        listView.addFooterView(deleteRctBtn);
+
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -135,7 +145,7 @@ public class RecentFragment extends Fragment {
             }
         });
 
-        deleteRctBtn.setOnClickListener(new View.OnClickListener() {
+        deleteRctBtn.findViewById(R.id.btn_delete_recent).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -180,6 +190,8 @@ public class RecentFragment extends Fragment {
             messageView.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
             deleteRctBtn.setVisibility(View.VISIBLE);
+
+
         } else {
 
         }

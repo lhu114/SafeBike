@@ -16,7 +16,7 @@
         android:visibility="gone"
         android:divider="#ffffff"/>
 
-    <ImageButton
+ <!--   <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_delete_recent"
@@ -24,7 +24,7 @@
         android:layout_marginTop="18dp"
         android:layout_below="@+id/listView_recent"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_delete_recent_selector"/>
+        android:background="@drawable/button_delete_recent_selector"/>-->
 
     <TextView
         android:layout_width="wrap_content"

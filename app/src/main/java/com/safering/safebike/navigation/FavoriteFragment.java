@@ -26,7 +26,7 @@ public class FavoriteFragment extends Fragment {
     ListView listView;
     FavoriteAdapter mAdapter;
     TextView messageView;
-    ImageButton deleteBtn;
+    View deleteBtn;
 
     private static final int SUCCESS = 200;
 
@@ -48,19 +48,23 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
 
         messageView = (TextView) view.findViewById(R.id.text_message_favorite);
-        deleteBtn = (ImageButton) view.findViewById(R.id.btn_delete_favorite);
+       // deleteBtn = (ImageButton) view.findViewById(R.id.btn_delete_favorite);
         listView = (ListView) view.findViewById(R.id.listView_favorite);
         mAdapter = new FavoriteAdapter();
 
-//        listView.addFooterView(deleteBtn);
+//
 
         /*
          *  네트워크 요청 이메일 서버에 보내서 즐겨찾기 항목 가져오기
          */
 
+
+        deleteBtn = inflater.inflate(R.layout.delete_favorite_view,null);
+        listView.addFooterView(deleteBtn);
         listView.setAdapter(mAdapter);
 
         initData();
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -76,7 +80,7 @@ public class FavoriteFragment extends Fragment {
             }
         });
 
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
+        deleteBtn.findViewById(R.id.btn_delete_favorite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
