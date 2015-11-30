@@ -265,7 +265,7 @@ public class CalorieFragment extends Fragment {
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "calorie : kcal");
                     set.setColor(Color.parseColor("#B6E2FF"));
-                    set.setBarSpacePercent(70f);
+                    set.setBarSpacePercent(85f);
 
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);

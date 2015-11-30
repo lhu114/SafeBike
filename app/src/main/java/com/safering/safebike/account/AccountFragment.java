@@ -75,12 +75,6 @@ public class AccountFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                PropertyManager.getInstance().setUserId("");
-                PropertyManager.getInstance().setUserPassword("");
-                PropertyManager.getInstance().setUserEmail("");
-                PropertyManager.getInstance().setUserJoin("");
-                PropertyManager.getInstance().setUserImagePath("");
-
                 if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setIcon(android.R.drawable.ic_dialog_info);
@@ -106,6 +100,12 @@ public class AccountFragment extends Fragment {
                             Intent serviceIntent = new Intent(getContext(), RouteService.class);
                             getActivity().stopService(serviceIntent);
 
+                            PropertyManager.getInstance().setUserId("");
+                            PropertyManager.getInstance().setUserPassword("");
+                            PropertyManager.getInstance().setUserEmail("");
+                            PropertyManager.getInstance().setUserJoin("");
+                            PropertyManager.getInstance().setUserImagePath("");
+
                             Intent intent = new Intent(((MainActivity) getActivity()), LoginActivity.class);
                             startActivity(intent);
                             ((MainActivity) getActivity()).finish();
@@ -120,6 +120,12 @@ public class AccountFragment extends Fragment {
 
                     builder.create().show();
                 } else {
+                    PropertyManager.getInstance().setUserId("");
+                    PropertyManager.getInstance().setUserPassword("");
+                    PropertyManager.getInstance().setUserEmail("");
+                    PropertyManager.getInstance().setUserJoin("");
+                    PropertyManager.getInstance().setUserImagePath("");
+
                     Intent intent = new Intent(((MainActivity) getActivity()), LoginActivity.class);
                     startActivity(intent);
                     ((MainActivity) getActivity()).finish();
