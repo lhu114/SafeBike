@@ -7,7 +7,7 @@
         android:id="@+id/image_splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@mipmap/activity_splash"
+        android:src="@drawable/activity_splash"
 
         />
 </RelativeLayout>
