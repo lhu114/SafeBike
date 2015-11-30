@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -306,6 +304,8 @@ public class DistanceFragment extends Fragment {
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "distance");
                     set.setColor(Color.parseColor("#B6E2FF"));
+                    set.setBarSpacePercent(70f);
+
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
 

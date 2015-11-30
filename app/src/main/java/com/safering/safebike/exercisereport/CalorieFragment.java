@@ -5,38 +5,28 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.listener.OnDrawListener;
 import com.safering.safebike.R;
-import com.safering.safebike.login.LoginActivity;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
-import org.w3c.dom.Text;
-
-import java.lang.annotation.Annotation;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -275,6 +265,8 @@ public class CalorieFragment extends Fragment {
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "calorie : kcal");
                     set.setColor(Color.parseColor("#B6E2FF"));
+                    set.setBarSpacePercent(70f);
+
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
 

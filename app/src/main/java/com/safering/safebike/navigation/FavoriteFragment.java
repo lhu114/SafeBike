@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -59,7 +58,7 @@ public class FavoriteFragment extends Fragment {
          */
 
 
-        deleteBtn = inflater.inflate(R.layout.delete_favorite_view,null);
+        deleteBtn = inflater.inflate(R.layout.delete_favorite_view, null);
         listView.addFooterView(deleteBtn);
         listView.setAdapter(mAdapter);
 

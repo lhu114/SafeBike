@@ -13,11 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 
@@ -97,7 +95,7 @@ public class RecentFragment extends Fragment {
         });
         //View vv = getLayoutInflater(savedInstanceState).inflate(R.layout.delete_recent_view,null);
 
-        deleteRctBtn = inflater.inflate(R.layout.delete_recent_view,null);
+        deleteRctBtn = inflater.inflate(R.layout.delete_recent_view, null);
         listView.addFooterView(deleteRctBtn);
 
         // listView.addFooterView(deleteRctBtn);
