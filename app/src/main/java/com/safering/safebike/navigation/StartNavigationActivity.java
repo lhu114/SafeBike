@@ -50,6 +50,7 @@ import com.safering.safebike.MainActivity;
 import com.safering.safebike.MainFragment;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.MapInfoManager;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.property.SpeakVoice;
 import com.safering.safebike.service.RouteService;
@@ -99,9 +100,10 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     Polyline polyline;
     PolylineOptions polylineOptions;
     ArrayList<Polyline> polylineList;
-    ArrayList<MarkerOptions> markerOptionsList;
+//    ArrayList<MarkerOptions> markerOptionsList;
     MarkerOptions markerOptions;
-    Marker tempM;
+    Marker mapInfoMarker;
+    Polyline mapInfoPolyline;
 
     final Map<LatLng, Marker> mMarkerResolver = new HashMap<LatLng, Marker>();
     final Map<LatLng, String> mBitmapResolver = new HashMap<LatLng, String>();
@@ -201,11 +203,11 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                  */
 //                        tts.translate("내비게이션 안내를 종료합니다.");
 
-                        try {
-                            mRouteService.sendExerciseReport();
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            mRouteService.sendExerciseReport();
+//                        } catch (RemoteException e) {
+//                            e.printStackTrace();
+//                        }
 
                         PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                         PropertyManager.getInstance().setDestinationLatitude(null);
@@ -245,7 +247,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         mPointDistanceList = new ArrayList<Float>();
         mBicycleNaviInfoList = new ArrayList<BicycleNavigationInfo>();
         mPointLatLngIndexList = new ArrayList<Integer>();
-        markerOptionsList = new ArrayList<MarkerOptions>();
+//        markerOptionsList = new ArrayList<MarkerOptions>();
 
         mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -283,26 +285,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         };
 //        mSM = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 //        mRotationSensor = mSM.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        Bundle tempSavedInstanceState = new Bundle();
 
-//        if (savedInstanceState != null) {
-        if (tempSavedInstanceState != null) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.savedInstanceState != null");
-
-            if (tempSavedInstanceState.containsKey("markeroptions")) {
-                Log.d(DEBUG_TAG, "StartNavigationActivity.savedInstanceState != null.markeroptions");
-
-                markerOptionsList = tempSavedInstanceState.getParcelableArrayList("markeroptions");
-
-                if (markerOptionsList != null && markerOptionsList.size() > 0) {
-                    markerOptions = new MarkerOptions();
-
-                    for (int i = 0; i < markerOptionsList.size(); i++) {
-                        markerOptions = markerOptionsList.get(i);
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -394,7 +377,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             mBitmapResolver.put(latLng, bitmapFlag);
             mPointLatLngList.add(latLng);
 
-            markerOptionsList.add(markerOptions);
+//            markerOptionsList.add(markerOptions);
+
+            MapInfoManager.getInstance().setMarkerOptionsInfo(markerOptions);
         }
 
         @Override
@@ -412,6 +397,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 polyline = mMap.addPolyline(polylineOptions);
 
                 polylineList.add(polyline);
+
+                MapInfoManager.getInstance().setPolylineOptionsInfo(polylineOptions);
             }
         }
 
@@ -443,12 +430,16 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             polylineOptions = new PolylineOptions();
             polylineList.clear();
 
-            if (tempM != null) {
-                tempM.remove();
+//            if (markerOptionsList.size() > 0) {
+//                markerOptionsList.clear();
+//            }
+
+            if (mapInfoMarker != null) {
+                mapInfoMarker.remove();
             }
 
-            if (markerOptionsList.size() > 0) {
-                markerOptionsList.clear();
+            if (mapInfoPolyline != null) {
+                mapInfoPolyline.remove();
             }
         }
 
@@ -470,6 +461,18 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             }
         }
     };
+
+    private void addMapInfoMarker(MarkerOptions markerOptions) {
+        Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoMarker");
+
+        mapInfoMarker = mMap.addMarker(markerOptions);
+    }
+
+    private void addMapInfoPolyline(PolylineOptions polylineOptions) {
+        Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoPolyline");
+
+        mapInfoPolyline = mMap.addPolyline(polylineOptions);
+    }
 
     ServiceConnection mConn = new ServiceConnection() {
         @Override
@@ -653,8 +656,14 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             }
         }
 
-        if (markerOptions != null) {
-            tempM = mMap.addMarker(markerOptions);
+
+        MarkerOptions mapInfoMarkerOptions = MapInfoManager.getInstance().getMarkerOptionsInfo();
+        PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
+
+        if (mapInfoMarkerOptions != null && mapInfoPolylineOptions != null) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptions != null && mapInfoPolylineOptions != null");
+            addMapInfoMarker(mapInfoMarkerOptions);
+            addMapInfoPolyline(mapInfoPolylineOptions);
         }
     }
 
@@ -670,20 +679,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
 
         tts.close();
-
-        if (markerOptionsList.size() > 0) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy.markerOptionsList.size() > 0");
-
-            Bundle outState = new Bundle();
-            outState.putParcelableArrayList("markeroptions", markerOptionsList);
-        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
 
-        outState.putParcelableArrayList("markeroptions", markerOptionsList);
+//        outState.putParcelableArrayList("markeroptions", markerOptionsList);
 
         super.onSaveInstanceState(outState, outPersistentState);
     }
@@ -847,7 +849,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                             PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
                             PropertyManager.getInstance().setRecentLongitude(Double.toString(location.getLongitude()));
 
-                            Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.mInitialListener.initialStartRouting : true", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.mInitialListener.initialStartRouting : true", Toast.LENGTH_SHORT).show();
                             Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.initialStartRouting : true");
                         } else {
                             Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.initialStartRouting : false");
@@ -880,7 +882,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                         e.printStackTrace();
                     }
 
-                    Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.mInitialListener.onLocationChanged +: " + location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.mInitialListener.onLocationChanged +: " + location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
                     Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged +: " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()));
 
 //                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.출발지, 목적지 위도 경도 : " + recentLatitude + ", " + recentLongitude + " | " + destinationLatitude + ", " + destinationLongitude);

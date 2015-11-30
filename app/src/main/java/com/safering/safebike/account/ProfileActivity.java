@@ -1,7 +1,6 @@
 package com.safering.safebike.account;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +16,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
-import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
 
-import java.io.File;
 import java.util.StringTokenizer;
 
 public class ProfileActivity extends AppCompatActivity {

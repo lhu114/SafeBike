@@ -52,6 +52,8 @@ public class FavoriteFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.listView_favorite);
         mAdapter = new FavoriteAdapter();
 
+//        listView.addFooterView(deleteBtn);
+
         /*
          *  네트워크 요청 이메일 서버에 보내서 즐겨찾기 항목 가져오기
          */

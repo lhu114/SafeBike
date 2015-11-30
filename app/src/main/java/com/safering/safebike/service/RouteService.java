@@ -211,15 +211,7 @@ public class RouteService extends Service {
         }
 
         @Override
-        public void sendExerciseReport() throws RemoteException {
-            Log.d(DEBUG_TAG, "RouteService.mBinder.sendExerciseReport");
-            RouteService.this.sendExerciseReport(mSpeedList, mDistanceList);
-        }
-
-        @Override
         public boolean registerCallback(IRouteCallback callback) throws RemoteException {
-
-
             return mCallbacks.register(callback);
         }
 
@@ -256,11 +248,12 @@ public class RouteService extends Service {
             mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
         }
 
+        sendExerciseReport(mSpeedList, mDistanceList);
          /*
              * 시연 후 삭제
              */
         mSimulationHandler.removeCallbacks(mRouting);
-        mHandler.removeCallbacks(mRouting);
+
         tts.close();
     }
 
@@ -354,7 +347,7 @@ public class RouteService extends Service {
              */
             Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run");
 
-            mHandler.postDelayed(this, 1000);
+            mSimulationHandler.postDelayed(mRouting, 1000);
 
             LatLng simulationLatLng;
 
@@ -368,12 +361,10 @@ public class RouteService extends Service {
                 simulationRouting(simulationLatLng);
 
                 simulationLatLngIndex++;
-            } else if (simulationLatLngIndex == mBicycleNaviInfoList.size()) {
+            } else if (simulationLatLngIndex == mBicycleNaviInfoList.size() && mBicycleNaviInfoList.size() != 0) {
                 Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.run.simulationLatLngIndex == mBicycleNaviInfoList.size()");
 
-                mSimulationHandler.removeCallbacks(mRouting);
-                mHandler.removeCallbacks(mRouting);
-//                stopSelf();
+                autoFinishNavigationDialog();
             }
         }
     };
@@ -386,7 +377,12 @@ public class RouteService extends Service {
         lastLocation.setLongitude(Double.parseDouble(PropertyManager.getInstance().getRecentLongitude()));
 
         mDistanceList.add(lastLocation.distanceTo(simulationLoc));
-        mSpeedList.add(simulationLoc.getSpeed());
+        /*
+         * 시연 후 원래대로 복구!!!
+         */
+//        mSpeedList.add(simulationLoc.getSpeed());
+        float simulationSpeed = 15;
+        mSpeedList.add(simulationSpeed);
 
         PropertyManager.getInstance().setRecentLatitude(Double.toString(simulationLoc.getLatitude()));
         PropertyManager.getInstance().setRecentLongitude(Double.toHexString(simulationLoc.getLongitude()));
@@ -451,7 +447,7 @@ public class RouteService extends Service {
                 }
 
                 if (minDistance >= LIMIT_DISTANCE) {
-                    Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 있는 경우)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance)", Toast.LENGTH_SHORT).show();
                     Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
                     if (!isActivateRouteWithinLimitDistanceNoti) {
@@ -471,10 +467,10 @@ public class RouteService extends Service {
                     getPointInfoNotifications(naviLatLngIndex);
 
                     if (info.properties != null) {
-                        Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
                         Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
                     } else {
-                        Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
                         Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
                     }
                                 /*
@@ -550,7 +546,7 @@ public class RouteService extends Service {
                     }
 
                     if (minDistance >= LIMIT_DISTANCE) {
-                        Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 없는 경우)", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance)", Toast.LENGTH_SHORT).show();
                         Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
                         if (!isActivateRouteWithinLimitDistanceNoti) {
@@ -569,10 +565,10 @@ public class RouteService extends Service {
                         getPointInfoNotifications(naviLatLngIndex);
 
                         if (info.properties != null) {
-                            Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
                             Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
                         } else {
-                            Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
                             Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
                         }
 
@@ -674,7 +670,7 @@ public class RouteService extends Service {
                         }
 
                         if (minDistance >= LIMIT_DISTANCE) {
-                            Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 있는 경우)", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance)", Toast.LENGTH_SHORT).show();
                             Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
                             if (!isActivateRouteWithinLimitDistanceNoti) {
@@ -694,10 +690,10 @@ public class RouteService extends Service {
                             getPointInfoNotifications(naviLatLngIndex);
 
                             if (info.properties != null) {
-                                Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
                                 Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
                             } else {
-                                Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
                                 Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
                             }
                                 /*
@@ -773,7 +769,7 @@ public class RouteService extends Service {
                             }
 
                             if (minDistance >= LIMIT_DISTANCE) {
-                                Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance|수선의 발 없는 경우)", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Limit Distance)", Toast.LENGTH_SHORT).show();
                                 Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
                                 if (!isActivateRouteWithinLimitDistanceNoti) {
@@ -792,10 +788,10 @@ public class RouteService extends Service {
                                 getPointInfoNotifications(naviLatLngIndex);
 
                                 if (info.properties != null) {
-                                    Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
                                     Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
                                 } else {
-                                    Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
                                     Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
                                 }
 
@@ -1106,7 +1102,7 @@ public class RouteService extends Service {
             }
 
             for (int i = 0; i < distanceList.size(); i++) {
-                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.distanceList : " + Float.toString(distanceList.get(i)));
+//                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.distanceList : " + Float.toString(distanceList.get(i)));
                 totalDistance += distanceList.get(i);
             }
 
@@ -1120,7 +1116,7 @@ public class RouteService extends Service {
             final int distance = Math.round(totalDistance);
 
             Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + calorie + " | speed : " + speed + " | distance : " + distance + " | time : " + totalTime);
-            Toast.makeText(RouteService.this, "RouteService.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + Integer.toString(calorie) + " | speed : " + Integer.toString(speed) + " | distance : " + Integer.toString(distance) + " | time : " + totalTime, Toast.LENGTH_LONG).show();
+//            Toast.makeText(RouteService.this, "RouteService.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + Integer.toString(calorie) + " | speed : " + Integer.toString(speed) + " | distance : " + Integer.toString(distance) + " | time : " + totalTime, Toast.LENGTH_LONG).show();
             NetworkManager.getInstance().saveExercise(RouteService.this, userEmail, date, calorie, speed, distance, new NetworkManager.OnResultListener() {
                 @Override
                 public void onSuccess(Object result) {
@@ -1445,7 +1441,7 @@ public class RouteService extends Service {
         if (isFirstFinishDialog) {
             tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
 
-            sendExerciseReport(mSpeedList, mDistanceList);
+//            sendExerciseReport(mSpeedList, mDistanceList);
 
             if (mLM != null) {
                 if (Build.VERSION.SDK_INT > 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -1491,9 +1487,8 @@ public class RouteService extends Service {
              * 시연 후 삭제
              */
             mSimulationHandler.removeCallbacks(mRouting);
-            mHandler.removeCallbacks(mRouting);
 
-            sendExerciseReport(mSpeedList, mDistanceList);
+//            sendExerciseReport(mSpeedList, mDistanceList);
 
             if (mLM != null) {
                 if (Build.VERSION.SDK_INT > 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&

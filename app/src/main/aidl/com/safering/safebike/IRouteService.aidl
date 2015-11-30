@@ -10,7 +10,6 @@ interface IRouteService {
     boolean initialStartRouting();
     boolean activateWithinRouteLimitDistance();
     boolean activateAutoFinishNavigation();
-    void sendExerciseReport();
     boolean registerCallback(IRouteCallback callback);
     boolean unregisterCallback(IRouteCallback callback);
 }

@@ -109,6 +109,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     MainFragment mainFragment;
 
+    String definePOIName = null;
+
     boolean isBasicLocBtnOn = true;
     boolean isCurrentLocBtnOn = false;
     boolean isChangeLocBtnOn = false;
@@ -195,6 +197,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 ///d
             btnFindRoute = (ImageButton) view.findViewById(R.id.btn_find_route);
             btnFindRoute.setVisibility(View.GONE);
+            btnFindRoute.setEnabled(false);
 
             if (View.GONE == btnFindRoute.getVisibility()) {
                 LOCATION_CHANGE_FLAG = ON;
@@ -449,6 +452,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     tvPOIName.setText(poi.name);
                     tvPOIAddress.setText(getDefinePOIAddress(poi));
 
+                    definePOIName = poi.name;
+
                     /*
                      * 맵 이동하면서 poi 마커 찍기
                      */
@@ -476,6 +481,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
                     }
 
+                    if (!definePOIName.equals("") && definePOIName != null) {
+                        btnFindRoute.setEnabled(true);
+                    }
+
                     btnFindRoute.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -487,10 +496,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDX,  PropertyManager.getInstance().getDestinationLatitude());
 //                            intent.putExtra(KEY_BICYCLE_ROUTE_ENDY, PropertyManager.getInstance().getDestinationLongitude());
                             Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-                            intent.putExtra(KEY_DESTINATION_POI_NAME, tvPOIName.getText().toString());
+                            intent.putExtra(KEY_DESTINATION_POI_NAME, definePOIName);
                             startActivity(intent);
                         }
                     });
+                } else {
+                    definePOIName = null;
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.REQUEST_SEARCH_POI.RESULT_CANCELED");
@@ -686,10 +697,20 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         Log.d(DEBUG_TAG, "NavigationFragment.onMapLongClick.marginLeft : " + Integer.toString(marginLeft) + " | marginTop : " + marginTop);
 
         if (latLng != null) {
+            PropertyManager.getInstance().setDestinationLatitude(Double.toString(latLng.latitude));
+            PropertyManager.getInstance().setDestinationLongitude(Double.toString(latLng.longitude));
+
+            clearALLMarker();
+
+            addLongClickMarker(latLng);
+            mLcMarkerList.add(latLng);
+
             NavigationNetworkManager.getInstance().searchReverseGeo(getContext(), latLng, new NavigationNetworkManager.OnResultListener<AddressInfo>() {
                 @Override
                 public void onSuccess(AddressInfo result) {
                     if (result != null) {
+                        Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.result != nul" );
+
                         String defineAddress = getDefineRvsGeoAddress(result);
 
                         /*
@@ -698,11 +719,20 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         if (!result.buildingName.equals("")) {
                             tvPOIName.setText(result.buildingName);
                             tvPOIAddress.setText(defineAddress);
+
+                            definePOIName = result.buildingName;
+//                            btnFindRoute.setEnabled(true);
                         } else {
                             tvPOIName.setText(defineAddress);
                             tvPOIAddress.setText("");
+
+                            definePOIName = defineAddress;
+//                            btnFindRoute.setEnabled(true);
                         }
 
+                        if (!definePOIName.equals("") && definePOIName != null) {
+                            btnFindRoute.setEnabled(true);
+                        }
 //                        if (!result.buildingName.equals("")) {
 //                            tvPOIName.setText(result.buildingName);
 //                            tvPOIAddress.setText(result.fullAddress);
@@ -712,13 +742,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //                        }
 
 //                    addLongClickMarker(latLng, result);
-                        clearALLMarker();
 
-                        addLongClickMarker(latLng);
-                        mLcMarkerList.add(latLng);
-
-                        PropertyManager.getInstance().setDestinationLatitude(Double.toString(latLng.latitude));
-                        PropertyManager.getInstance().setDestinationLongitude(Double.toString(latLng.longitude));
+//                        clearALLMarker();
+//
+//                        addLongClickMarker(latLng);
+//                        mLcMarkerList.add(latLng);
 
                         Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
                     }
@@ -726,7 +754,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                 @Override
                 public void onFail(int code) {
+                    Log.d(DEBUG_TAG, "searchReverseGeo.onFail");
 
+                    tvPOIName.setText("");
+                    tvPOIAddress.setText("");
+
+                    definePOIName = null;
+
+                    btnFindRoute.setEnabled(false);
                 }
             });
 
@@ -739,7 +774,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), SelectRouteActivity.class);
-                    intent.putExtra(KEY_DESTINATION_POI_NAME, tvPOIName.getText().toString());
+                    intent.putExtra(KEY_DESTINATION_POI_NAME, definePOIName);
                     startActivity(intent);
                 }
             });

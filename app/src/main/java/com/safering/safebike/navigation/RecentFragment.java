@@ -60,6 +60,7 @@ public class RecentFragment extends Fragment {
 
         messageView = (TextView) view.findViewById(R.id.text_messag_recent);
         listView = (ListView) view.findViewById(R.id.listView_recent);
+        deleteRctBtn = (ImageButton) view.findViewById(R.id.btn_delete_recent);
 
         String[] from = {RecentDB.RecentTable.COLUMN_POI_NAME, RecentDB.RecentTable.COLUMN_SEARCH_DATE};
         int[] to = {R.id.text_rct_poi_name, R.id.text_rct_search_date};
@@ -94,6 +95,7 @@ public class RecentFragment extends Fragment {
             }
         });
 
+        listView.addFooterView(deleteRctBtn);
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -133,7 +135,6 @@ public class RecentFragment extends Fragment {
             }
         });
 
-        deleteRctBtn = (ImageButton) view.findViewById(R.id.btn_delete_recent);
         deleteRctBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

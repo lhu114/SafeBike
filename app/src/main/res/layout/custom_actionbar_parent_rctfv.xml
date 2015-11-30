@@ -14,8 +14,10 @@
         android:layout_marginLeft="11dp"
         android:textSize="16dp"
         android:singleLine="true"
+        android:maxWidth="228dp"
         android:background="@drawable/search_box"
-        android:paddingLeft="11dp" />
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
     <ImageButton
         android:layout_width="wrap_content"

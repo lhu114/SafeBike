@@ -63,7 +63,7 @@
             android:textSize="12sp"
             android:id="@+id/text_poi_address"
             android:layout_marginLeft="27dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
     </LinearLayout>
 
