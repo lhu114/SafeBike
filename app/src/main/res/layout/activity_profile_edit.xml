@@ -142,7 +142,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="5dp"
                 android:background="@null"
-
+                android:inputType="textPassword"
 
                 android:lines="1"
                 android:paddingBottom="5dp"
@@ -168,6 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="비밀번호 확인"
+
                 android:textColor="@color/colorBlack"
 
                 android:textSize="16sp" />
@@ -179,7 +180,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginBottom="5dp"
                 android:background="@null"
-
+                android:inputType="textPassword"
                 android:lines="1"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
