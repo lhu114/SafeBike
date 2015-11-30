@@ -97,8 +97,6 @@ public class FriendAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Log.i("search", "click");
 
-                Toast.makeText(FriendAddActivity.this, "current : " + tabHost.getCurrentTabTag(), Toast.LENGTH_SHORT).show();
-
                 if (tabHost.getCurrentTabTag() == TAG_ADDRESS) {
 
 
@@ -157,7 +155,6 @@ public class FriendAddActivity extends AppCompatActivity {
                 if(tabHost.getCurrentTabTag() == TAG_DIRECT){
                     directFragment = (FriendDirectFragment) getSupportFragmentManager().findFragmentByTag(TAG_DIRECT);
                     if(directFragment.SEARCH_ONOFF == 1) {
-                        Toast.makeText(FriendAddActivity.this,"SEARCH_ON = 1",Toast.LENGTH_SHORT).show();
 
                         //directFragment.SEARCH_ONOFF = 2;
                         getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
@@ -178,7 +175,6 @@ public class FriendAddActivity extends AppCompatActivity {
                         imageSearch.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(FriendAddActivity.this,"searchING",Toast.LENGTH_SHORT).show();
                                 if(!TextUtils.isEmpty(editSearchEmail.getText().toString())){
                                     String email = editSearchEmail.getText().toString();
                                     directFragment.searchDirect(email);
@@ -190,7 +186,6 @@ public class FriendAddActivity extends AppCompatActivity {
                         imageCancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(FriendAddActivity.this,"cancelING",Toast.LENGTH_SHORT).show();
                                 actionBarSetting();
                             }
                         });

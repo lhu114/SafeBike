@@ -64,7 +64,6 @@ public class CalorieFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toast.makeText(getContext(),"onCreate",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -210,7 +209,6 @@ public class CalorieFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getContext(),"onResume",Toast.LENGTH_SHORT).show();
 
 
     }
@@ -218,13 +216,11 @@ public class CalorieFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Toast.makeText(getContext(),"onDetach", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Toast.makeText(getContext(),"onDetoryView",Toast.LENGTH_SHORT).show();
 
         //onDestroy();
 
@@ -233,7 +229,6 @@ public class CalorieFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(getContext(),"onDestory",Toast.LENGTH_SHORT).show();
     }
 
     private void requestData(String today) {

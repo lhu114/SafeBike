@@ -193,7 +193,6 @@ public class AccountFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getContext(),"AccountFragmentonResume",Toast.LENGTH_SHORT).show();
         setProfile();
     }
 }

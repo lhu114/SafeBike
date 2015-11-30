@@ -56,7 +56,6 @@ public class FriendAddressFragment extends Fragment {
                 String fId = data.pname;
                 String fPhoto = data.photo;
                 if(UserFriendList.getInstance().isFriend(fEmail) == true){
-                    Toast.makeText(getContext(),"이미등록된친구입니당",Toast.LENGTH_SHORT).show();
                 }else {
                     NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
                         @Override
@@ -181,7 +180,6 @@ public class FriendAddressFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Toast.makeText(getContext(), "AddressOnPause", Toast.LENGTH_SHORT).show();
         ((FriendAddActivity) getActivity()).actionBarSetting();
 
     }
