@@ -377,7 +377,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             mBitmapResolver.put(latLng, bitmapFlag);
             mPointLatLngList.add(latLng);
 
-//            markerOptionsList.add(markerOptions);
+//             markerOptionsList.add(markerOptions);
 
             MapInfoManager.getInstance().setMarkerOptionsInfo(markerOptions);
         }
