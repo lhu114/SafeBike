@@ -406,7 +406,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         public void clearMarkerAndPolyline() throws RemoteException {
             Log.d(DEBUG_TAG, "StartNavigationActivity.clearMarkerAndPolyline");
 
-            MapInfoManager.getInstance().mapInfoClearMarkerAndPolyline();
+            MapInfoManager.getInstance().ClearAllMapInfoData();
 
             for (int i = 0; i < mPointLatLngList.size(); i++) {
                 LatLng latLng = mPointLatLngList.get(i);
@@ -662,6 +662,11 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             }
         }
 
+        String updateDescription = MapInfoManager.getInstance().getUpdateTextDescription();
+
+        if (updateDescription != null) {
+            tvNaviDescription.setText(updateDescription);
+        }
 
 //        ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
 //        PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
@@ -675,7 +680,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 //
 //            addMapInfoPolyline(mapInfoPolylineOptions);
 //
-//            MapInfoManager.getInstance().mapInfoClearMarkerAndPolyline();
+//            MapInfoManager.getInstance().ClearAllMapInfoData();
 //        }
     }
 

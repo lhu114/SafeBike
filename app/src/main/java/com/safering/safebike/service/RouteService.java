@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.IRouteCallback;
 import com.safering.safebike.IRouteService;
 import com.safering.safebike.exercisereport.CalculatorCalorie;
+import com.safering.safebike.manager.MapInfoManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.BicycleFeature;
 import com.safering.safebike.navigation.BicycleNavigationInfo;
@@ -255,6 +256,8 @@ public class RouteService extends Service {
         mSimulationHandler.removeCallbacks(mRouting);
 
         tts.close();
+
+        MapInfoManager.getInstance().ClearAllMapInfoData();
     }
 
     boolean startRouting() {
@@ -1382,6 +1385,10 @@ public class RouteService extends Service {
         }
 
         mCallbacks.finishBroadcast();
+
+        if (description != null && !description.equals("")) {
+            MapInfoManager.getInstance().setUpdateTextDescription(description);
+        }
     }
 
     private void addPointMarker(LatLng latLng, String bitmapFlag, int gpIndexSize) {
