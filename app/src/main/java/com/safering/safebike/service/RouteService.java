@@ -381,7 +381,7 @@ public class RouteService extends Service {
          * 시연 후 원래대로 복구!!!
          */
 //        mSpeedList.add(simulationLoc.getSpeed());
-        float simulationSpeed = 15;
+        float simulationSpeed = 8;
         mSpeedList.add(simulationSpeed);
 
         PropertyManager.getInstance().setRecentLatitude(Double.toString(simulationLoc.getLatitude()));

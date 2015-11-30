@@ -74,6 +74,7 @@ public class MapInfoManager {
     }
 
     public void mapInfoClearMarkerAndPolyline() {
+        Log.d("safebike", "MapInfoManager.mapInfoClearMarkerAndPolyline");
         if(markerOptionsList.size() > 0) {
             Log.d("safebike", "MapInfoManager.mapInfoClearMarkerAndPolyline.markerOptionsList.size() > 0");
 

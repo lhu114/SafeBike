@@ -406,6 +406,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         public void clearMarkerAndPolyline() throws RemoteException {
             Log.d(DEBUG_TAG, "StartNavigationActivity.clearMarkerAndPolyline");
 
+            MapInfoManager.getInstance().mapInfoClearMarkerAndPolyline();
+
             for (int i = 0; i < mPointLatLngList.size(); i++) {
                 LatLng latLng = mPointLatLngList.get(i);
 
@@ -465,7 +467,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     private void addMapInfoMarker(MarkerOptions markerOptions) {
         Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoMarker");
 
-        if (markerOptions != null) {
+        if (mMap != null && markerOptions != null) {
             mapInfoMarker = mMap.addMarker(markerOptions);
         }
     }
@@ -473,7 +475,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     private void addMapInfoPolyline(PolylineOptions polylineOptions) {
         Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoPolyline");
 
-        if (polylineOptions != null) {
+        if (mMap != null && polylineOptions != null) {
             mapInfoPolyline = mMap.addPolyline(polylineOptions);
         }
     }
@@ -661,20 +663,20 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
 
 
-        ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
-        PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
-
-        if (mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptions != null && mapInfoPolylineOptions != null");
-
-            for (int i = 0; i < mapInfoMarkerOptionsList.size(); i++) {
-                addMapInfoMarker(mapInfoMarkerOptionsList.get(i));
-            }
-
-            addMapInfoPolyline(mapInfoPolylineOptions);
-
-            MapInfoManager.getInstance().mapInfoClearMarkerAndPolyline();
-        }
+//        ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
+//        PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
+//
+//        if (mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null) {
+//            Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptions != null && mapInfoPolylineOptions != null");
+//
+//            for (int i = 0; i < mapInfoMarkerOptionsList.size(); i++) {
+//                addMapInfoMarker(mapInfoMarkerOptionsList.get(i));
+//            }
+//
+//            addMapInfoPolyline(mapInfoPolylineOptions);
+//
+//            MapInfoManager.getInstance().mapInfoClearMarkerAndPolyline();
+//        }
     }
 
     @Override
@@ -730,6 +732,19 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         Log.d(DEBUG_TAG, "StartNavigationActivity.onMapReady.recent.onMoveMap");
         onMoveMap(recentLatitude, recentLongitude, 0, MOVE_CAMERA);
+
+        ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
+        PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
+
+        if (mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptions != null && mapInfoPolylineOptions != null");
+
+            for (int i = 0; i < mapInfoMarkerOptionsList.size(); i++) {
+                addMapInfoMarker(mapInfoMarkerOptionsList.get(i));
+            }
+
+            addMapInfoPolyline(mapInfoPolylineOptions);
+        }
     }
 
     private void onMoveMap(double latitude, double longitude, float bearing, String moveAction) {
