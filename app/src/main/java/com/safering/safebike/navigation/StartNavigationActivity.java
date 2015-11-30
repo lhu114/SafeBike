@@ -483,6 +483,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     ServiceConnection mConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onServiceConnected");
+
             if (mRouteService != null) {
                 try {
                     mRouteService.unregisterCallback(callback);
@@ -497,6 +499,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 mRouteService = IRouteService.Stub.asInterface(service);
 
                 try {
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.onServiceConnected.mRouteService.registerCallback(callback)");
                     mRouteService.registerCallback(callback);
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -513,12 +516,46 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
+
+                    if (mRouteService != null && isFirstFinishDialog) {
+                        try {
+                            boolean success = mRouteService.activateWithinRouteLimitDistance();
+
+                            if (success) {
+                                Log.d(DEBUG_TAG, "StartNavigationActivity.activateWithinRouteLimitDistance.success");
+                                onWithinRouteLimitDistanceDialog();
+
+                                isFirstFinishDialog = false;
+                            } else {
+                                Log.d(DEBUG_TAG, "StartNavigationActivity.activateWithinRouteLimitDistance.fail");
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            boolean success = mRouteService.activateAutoFinishNavigation();
+
+                            if (success) {
+                                Log.d(DEBUG_TAG, "StartNavigationActivity.activateAutoFinishNavigation.success");
+                                onAutoFinishNavigationDialog();
+
+                                isFirstFinishDialog = false;
+                            } else {
+                                Log.d(DEBUG_TAG, "StartNavigationActivity.activateAutoFinishNavigation.fail");
+                            }
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onServiceDisconnected");
+
             mRouteService = null;
         }
     };
@@ -634,7 +671,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         super.onResume();
         Log.d(DEBUG_TAG, "StartNavigationActivity.onResume");
 
-        if (mRouteService != null && isFirstFinishDialog) {
+       /* if (mRouteService != null && isFirstFinishDialog) {
             try {
                 boolean success = mRouteService.activateWithinRouteLimitDistance();
 
@@ -643,6 +680,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     onWithinRouteLimitDistanceDialog();
 
                     isFirstFinishDialog = false;
+                } else {
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.activateWithinRouteLimitDistance.fail");
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -656,11 +695,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     onAutoFinishNavigationDialog();
 
                     isFirstFinishDialog = false;
+                } else {
+                    Log.d(DEBUG_TAG, "StartNavigationActivity.activateAutoFinishNavigation.fail");
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         String updateDescription = MapInfoManager.getInstance().getUpdateTextDescription();
 
