@@ -259,21 +259,23 @@ public class SettingFragment extends Fragment {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
                 isConn = true;
             } else {
-                mLEScanner.startScan(filters, settings, mScanCallback);
+                /*mLEScanner.startScan(filters, settings, mScanCallback);
                 isConn = true;
+                */
             }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else {
-                mLEScanner.stopScan(mScanCallback);
+                /*mLEScanner.stopScan(mScanCallback);
                 isConn = false;
-
+*/
             }
         }
         //핸들러로 제한 시간 5초
     }
+/*
 
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
@@ -314,6 +316,7 @@ public class SettingFragment extends Fragment {
             Log.e("Scan Failed", "Error Code: " + errorCode);
         }
     };
+*/
 
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
