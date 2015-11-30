@@ -37,6 +37,7 @@ import com.safering.safebike.R;
 import com.safering.safebike.adapter.BluetoothDeviceAdapter;
 import com.safering.safebike.adapter.BluetoothDeviceItem;
 import com.safering.safebike.adapter.BluetoothItemView;
+import com.safering.safebike.login.LoginInputFragment;
 import com.safering.safebike.manager.FontManager;
 
 import java.util.ArrayList;
@@ -99,16 +100,19 @@ public class SettingFragment extends Fragment {
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         isEnableBluetooth = false;
-        // mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
         deviceAdapter = new BluetoothDeviceAdapter();
         deviceList.setAdapter(deviceAdapter);
         //       deviceList.addView(n);
-       /* settings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build();
-        filters = new ArrayList<ScanFilter>();
-*/
+        if (Build.VERSION.SDK_INT >= 21) {
+            Log.i("sdk>21","lescan");
+            mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
+
+            settings = new ScanSettings.Builder()
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                    .build();
+            filters = new ArrayList<ScanFilter>();
+        }
 
         tmpLeft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,10 +196,8 @@ public class SettingFragment extends Fragment {
         if (isEnableBluetooth) {
             searchDevice.setVisibility(View.VISIBLE);
             scanLeDevice(true);
-            Toast.makeText(getContext(), "onResumeEnable", Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(getContext(), "onResumeFalse", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -257,23 +259,23 @@ public class SettingFragment extends Fragment {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
                 isConn = true;
             } else {
-                // mLEScanner.startScan(filters, settings, mScanCallback);
-                // isConn = true;
+                mLEScanner.startScan(filters, settings, mScanCallback);
+                isConn = true;
             }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else {
-                //  mLEScanner.stopScan(mScanCallback);
-                // isConn = false;
+                mLEScanner.stopScan(mScanCallback);
+                isConn = false;
 
             }
         }
         //핸들러로 제한 시간 5초
     }
 
-    /*private ScanCallback mScanCallback = new ScanCallback() {
+    private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             Log.i("result", result.toString());
@@ -312,7 +314,7 @@ public class SettingFragment extends Fragment {
             Log.e("Scan Failed", "Error Code: " + errorCode);
         }
     };
-*/
+
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
@@ -345,31 +347,6 @@ public class SettingFragment extends Fragment {
         }
     };
 
-/*
-
-    private ScanCallback mScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            Log.i("callbackType", String.valueOf(callbackType));
-            Log.i("result", result.toString());
-            BluetoothDevice btDevice = result.getDevice();
-            connect{ToDevice(btDevice);
-        }
-
-        @Override
-        public void onBatchScanResults(List<ScanResult> results) {
-            for (ScanResult sr : results) {
-                Log.i("ScanResult - Results", sr.toString());
-            }
-        }
-
-        @Override
-        public void onScanFailed(int errorCode) {
-            Log.e("Scan Failed", "Error Code: " + errorCode);
-        }
-    };
-*/
-
 
     public void connectToDevice(BluetoothDevice device) {
         if (mGatt == null) {
@@ -396,7 +373,6 @@ public class SettingFragment extends Fragment {
         */
 
 
-
         isConn = false;
     }
 
@@ -415,6 +391,7 @@ public class SettingFragment extends Fragment {
 
                     isConn = true;
                     */
+
                     gatt.discoverServices();
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
