@@ -137,11 +137,13 @@ public class ProfileEditActivity extends AppCompatActivity {
 
                         if (success.toString().contains("https")) {
                             PropertyManager.getInstance().setUserImagePath(success.toString().substring(1,success.toString().length()-1));
-                            Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivityForResult(intent, GET_USER_IMAGE);
+
 
                         }
+                        Intent intent = new Intent(ProfileEditActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivityForResult(intent, GET_USER_IMAGE);
+
 
                     }
 
