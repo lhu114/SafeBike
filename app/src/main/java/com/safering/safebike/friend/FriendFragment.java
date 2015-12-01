@@ -41,6 +41,7 @@ public class FriendFragment extends Fragment {
     TextView textInvite;
     TextView textMainTitle;
     FriendItem friendItem;
+    View listFooter;
 
 
     public FriendFragment() {
@@ -57,10 +58,13 @@ public class FriendFragment extends Fragment {
         fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
         //fEmailList = new ArrayList<String>();
         textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
-        textInvite = (TextView)view.findViewById(R.id.text_invite_friend);
+        listFooter = inflater.inflate(R.layout.custom_friend_view,null);
+        textInvite = (TextView)listFooter.findViewById(R.id.text_invite_friend);
 
         listView = (ListView) view.findViewById(R.id.listview_myfriend);
         setFont();
+        listView.addFooterView(listFooter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
