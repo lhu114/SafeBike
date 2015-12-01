@@ -11,7 +11,9 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
@@ -264,10 +266,10 @@ public class SettingFragment extends Fragment {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
                 isConn = true;
             } else {
-/*
+
                 mLEScanner.startScan(filters, settings, mScanCallback);
                 isConn = true;
-*/
+
 
             }
         } else {
@@ -275,16 +277,16 @@ public class SettingFragment extends Fragment {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else {
-                /*mLEScanner.stopScan(mScanCallback);
+                mLEScanner.stopScan(mScanCallback);
                 isConn = false;
-                */
+
 
             }
         }
         //핸들러로 제한 시간 5초
     }
 
-/*
+
 
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
@@ -326,7 +328,7 @@ public class SettingFragment extends Fragment {
             Log.e("Scan Failed", "Error Code: " + errorCode);
         }
     };
-*/
+
 
 
 

@@ -86,7 +86,7 @@
     <string name="btn_delete_recent">검색 기록 삭제</string>
     <string name="btn_delete_favorite">즐겨찾기 기록 삭제</string>
     <string name="text_message_favorite">즐겨찾기 기록이 없습니다.</string>
-    <string name="text_messag_recent">최근 검색 기록이 없습니다.</string>
+    <string name="text_messag_recent">최근검색 기록이 없습니다.</string>
     <string name="btn_start_navigation">안내시작</string>
     <string name="btn_finish_navigation">안내종료</string>
     <string name="btn_fwd_start_navigation">네비게이션 동작 중</string>

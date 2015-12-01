@@ -21,11 +21,14 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.safering.safebike.IRouteCallback;
 import com.safering.safebike.IRouteService;
+import com.safering.safebike.R;
 import com.safering.safebike.exercisereport.CalculatorCalorie;
 import com.safering.safebike.manager.MapInfoManager;
 import com.safering.safebike.manager.NetworkManager;
@@ -84,6 +87,8 @@ public class RouteService extends Service {
 
     String mProvider;
 
+    MarkerOptions markerOptions;
+
     PolylineOptions polylineOptions;
     ArrayList<Polyline> polylineList;
 
@@ -112,6 +117,8 @@ public class RouteService extends Service {
 
     long startTime = 0;
     long endTime = 0;
+
+    int gpIndex = 0;
 
     public RouteService() {
     }
@@ -1396,12 +1403,52 @@ public class RouteService extends Service {
     private void addPointMarker(LatLng latLng, String bitmapFlag, int gpIndexSize) {
         Log.d(DEBUG_TAG, "RouteService.addPointMarker");
 
+        Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.latitude : " + Double.toString(latLng.latitude) + " | longitude : " + Double.toString(latLng.longitude) +
+                " | bitmapFlag : " + bitmapFlag);
+
+        if (bitmapFlag.equals(POINTTYPE_SP) || (bitmapFlag.equals(POINTTYPE_EP))) {
+            markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.anchor(0.5f, 1.0f);
+            markerOptions.draggable(false);
+
+            if (bitmapFlag.equals(POINTTYPE_SP)) {
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.start));
+            } else if (bitmapFlag.equals(POINTTYPE_EP)) {
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrival));
+            }
+        } else if (bitmapFlag.equals(POINTTYPE_GP)) {
+            gpIndex++;
+
+            Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(gpIndex));
+
+            if (gpIndexSize > 0 && gpIndexSize <= 20) {
+                Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : (gpIndexSize > 0 && gpIndexSize <= 20)");
+                markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.anchor(0.5f, 1.0f);
+                markerOptions.draggable(false);
+
+                addGPPointMarker(gpIndex);
+            }
+        }
+
+        if (markerOptions != null) {
+            MapInfoManager.getInstance().setMarkerOptionsInfo(markerOptions);
+        }
+//        Marker m = mMap.addMarker(markerOptions);
+//        mMarkerResolver.put(latLng, m);
+//        mBitmapResolver.put(latLng, bitmapFlag);
+//        mPointLatLngList.add(latLng);
+
+//             markerOptionsList.add(markerOptions);
+
         int count = mCallbacks.beginBroadcast();
 
         for (int i = 0; i < count; i++) {
             IRouteCallback callback = mCallbacks.getBroadcastItem(i);
             try {
-                callback.addPointMarker(latLng.latitude, latLng.longitude, bitmapFlag, gpIndexSize);
+                callback.addPointMarker(latLng.latitude, latLng.longitude);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -1413,18 +1460,75 @@ public class RouteService extends Service {
     private void addPolyline(LatLng latLng) {
         Log.d(DEBUG_TAG, "RouteService.addPolyline");
 
+        if (polylineOptions != null) {
+            polylineOptions.add(latLng);
+            polylineOptions.color(0xba3498db);
+            polylineOptions.width(10);
+            polylineOptions.geodesic(true);
+
+//            polyline = mMap.addPolyline(polylineOptions);
+//
+//            polylineList.add(polyline);
+
+            MapInfoManager.getInstance().setPolylineOptionsInfo(polylineOptions);
+        }
+
         int count = mCallbacks.beginBroadcast();
 
         for (int i = 0; i < count; i++) {
             IRouteCallback callback = mCallbacks.getBroadcastItem(i);
             try {
-                callback.addPolyline(latLng.latitude, latLng.longitude);
+                callback.addPolyline();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
 
         mCallbacks.finishBroadcast();
+    }
+
+    private void addGPPointMarker(int index) {
+        if (index == 1) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_1));
+        } else if (index == 2) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_2));
+        } else if (index == 3) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_3));
+        } else if (index == 4) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_4));
+        } else if (index == 5) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_5));
+        } else if (index == 6) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_6));
+        } else if (index == 7) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_7));
+        } else if (index == 8) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_8));
+        } else if (index == 9) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_9));
+        } else if (index == 10) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_10));
+        } else if (index == 11) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_11));
+        } else if (index == 12) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_12));
+        } else if (index == 13) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_13));
+        } else if (index == 14) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_14));
+        } else if (index == 15) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_15));
+        } else if (index == 16) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_16));
+        } else if (index == 17) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_17));
+        } else if (index == 18) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_18));
+        } else if (index == 19) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_19));
+        } else if (index == 20) {
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_20));
+        }
     }
 
     private void clearMarkerAndPolyline() {

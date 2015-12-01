@@ -224,18 +224,19 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                     /*
                      * 일치하는거 있으면  or 성공 200 은 왔지만 없는 경우
                      */
+
                     if (result.equals(EXIST)) {
                         Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.EXIST");
 
-                        btnFavorite.setEnabled(true);
-                        isFavoriteBtnOn = true;
                         btnFavorite.setSelected(true);
+                        isFavoriteBtnOn = true;
+                        btnFavorite.setEnabled(true);
                     } else if (result.equals(NOT_EXIST)) {
                         Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.NOT_EXIST");
 
-                        btnFavorite.setEnabled(true);
-                        isFavoriteBtnOn = false;
                         btnFavorite.setSelected(false);
+                        isFavoriteBtnOn = false;
+                        btnFavorite.setEnabled(true);
                     }
                 }
 
@@ -245,13 +246,11 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                     if (code == BAD_REQUEST) {
                         Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.BAD_REQUEST");
-
                         btnFavorite.setEnabled(false);
                         isFavoriteBtnOn = false;
                         btnFavorite.setSelected(false);
                     } else {
                         Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.else");
-
                         btnFavorite.setEnabled(false);
                         isFavoriteBtnOn = false;
                         btnFavorite.setSelected(false);
