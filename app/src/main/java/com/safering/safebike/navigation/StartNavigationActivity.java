@@ -37,7 +37,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -57,8 +56,6 @@ import com.safering.safebike.service.RouteService;
 import com.safering.safebike.setting.BluetoothConnection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class StartNavigationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final String DEBUG_TAG = "safebike";
@@ -75,9 +72,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
     private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
 
-    private static final String POINTTYPE_SP = "SP";
-    private static final String POINTTYPE_EP = "EP";
-    private static final String POINTTYPE_GP = "GP";
+//    private static final String POINTTYPE_SP = "SP";
+//    private static final String POINTTYPE_EP = "EP";
+//    private static final String POINTTYPE_GP = "GP";
 
     private static final int LEFT_SIDE = 12;
     private static final int RIGHT_SIDE = 13;
@@ -87,7 +84,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     private static final int FOUR_RIGHT_SIDE = 19;
 
     public static final int MESSAGE_INITIAL_LOCATION_TIMEOUT = 1;
-    public static final int LOCATION_TIMEOUT_INTERVAL = 60000;
+//    public static final int LOCATION_TIMEOUT_INTERVAL = 60000;
 
     public SpeakVoice tts;
 
@@ -97,24 +94,24 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     String mProvider;
     Handler mHandler;
 
-    Polyline polyline;
-    PolylineOptions polylineOptions;
-    ArrayList<Polyline> polylineList;
+//    Polyline polyline;
+//    PolylineOptions polylineOptions;
+//    ArrayList<Polyline> polylineList;
 //    ArrayList<MarkerOptions> markerOptionsList;
-    MarkerOptions markerOptions;
+//    MarkerOptions markerOptions;
     Marker mapInfoMarker;
     Polyline mapInfoPolyline;
 
-    final Map<LatLng, Marker> mMarkerResolver = new HashMap<LatLng, Marker>();
-    final Map<LatLng, String> mBitmapResolver = new HashMap<LatLng, String>();
+//    final Map<LatLng, Marker> mMarkerResolver = new HashMap<LatLng, Marker>();
+//    final Map<LatLng, String> mBitmapResolver = new HashMap<LatLng, String>();
+//
+//    ArrayList<LatLng> mPointLatLngList;
+//    ArrayList<Float> mOrthogonalDistanceList;
+//    ArrayList<Float> mPointDistanceList;
+//    ArrayList<BicycleNavigationInfo> mBicycleNaviInfoList;
+//    ArrayList<Integer> mPointLatLngIndexList;
 
-    ArrayList<LatLng> mPointLatLngList;
-    ArrayList<Float> mOrthogonalDistanceList;
-    ArrayList<Float> mPointDistanceList;
-    ArrayList<BicycleNavigationInfo> mBicycleNaviInfoList;
-    ArrayList<Integer> mPointLatLngIndexList;
-
-    int gpIndex = 0;
+//    int gpIndex = 0;
 
     TextView tvNaviDescription, tvMainTitle;
     ImageButton btnBluetooth, btnFullScreen, btnBackKey, btnFinishNavi;
@@ -241,12 +238,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         setFont();
 
-        polylineList = new ArrayList<Polyline>();
-        mPointLatLngList = new ArrayList<LatLng>();
-        mOrthogonalDistanceList = new ArrayList<Float>();
-        mPointDistanceList = new ArrayList<Float>();
-        mBicycleNaviInfoList = new ArrayList<BicycleNavigationInfo>();
-        mPointLatLngIndexList = new ArrayList<Integer>();
+//        polylineList = new ArrayList<Polyline>();
+//        mPointLatLngList = new ArrayList<LatLng>();
+//        mOrthogonalDistanceList = new ArrayList<Float>();
+//        mPointDistanceList = new ArrayList<Float>();
+//        mBicycleNaviInfoList = new ArrayList<BicycleNavigationInfo>();
+//        mPointLatLngIndexList = new ArrayList<Integer>();
 //        markerOptionsList = new ArrayList<MarkerOptions>();
 
         mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -340,66 +337,37 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
 
         @Override
-        public void addPointMarker(double latitude, double longitude, String bitmapFlag, int gpIndexSize) throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.latitude : " + Double.toString(latitude) + " | longitude : " + Double.toString(longitude) +
-                    " | bitmapFlag : " + bitmapFlag);
+        public void addPointMarker(double latitude, double longitude) throws RemoteException {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.latitude : " + Double.toString(latitude) + " | longitude : " + Double.toString(longitude));
 
-            if (bitmapFlag.equals(POINTTYPE_SP) || (bitmapFlag.equals(POINTTYPE_EP))) {
-                markerOptions = new MarkerOptions();
-                markerOptions.position(new LatLng(latitude, longitude));
-                markerOptions.anchor(0.5f, 1.0f);
-                markerOptions.draggable(false);
+            LatLng latLng = new LatLng(latitude, longitude);
 
-                if (bitmapFlag.equals(POINTTYPE_SP)) {
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.start));
-                } else if (bitmapFlag.equals(POINTTYPE_EP)) {
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrival));
-                }
-            } else if (bitmapFlag.equals(POINTTYPE_GP)) {
-                gpIndex++;
+            MarkerOptions markerOptions = null;
+            ArrayList<MarkerOptions> markerOptionsList = new ArrayList<MarkerOptions>();
 
-                Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(gpIndex));
+            markerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
 
-                if (gpIndexSize > 0 && gpIndexSize <= 20) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : (gpIndexSize > 0 && gpIndexSize <= 20)");
-                    markerOptions = new MarkerOptions();
-                    markerOptions.position(new LatLng(latitude, longitude));
-                    markerOptions.anchor(0.5f, 1.0f);
-                    markerOptions.draggable(false);
-
-                    addGPPointMarker(gpIndex);
+            if (markerOptionsList.size() > 0) {
+                for (int i = 0; i < markerOptionsList.size(); i++) {
+                    if (latLng.equals(markerOptionsList.get(i).getPosition())) {
+                        markerOptions = markerOptionsList.get(i);
+                    }
                 }
             }
 
-            LatLng latLng = new LatLng(latitude, longitude);
-
-            Marker m = mMap.addMarker(markerOptions);
-            mMarkerResolver.put(latLng, m);
-            mBitmapResolver.put(latLng, bitmapFlag);
-            mPointLatLngList.add(latLng);
-
-//             markerOptionsList.add(markerOptions);
-
-            MapInfoManager.getInstance().setMarkerOptionsInfo(markerOptions);
+            if (markerOptions != null) {
+                addMapInfoMarker(markerOptions);
+            }
         }
 
         @Override
-        public void addPolyline(double latitude, double longitude) throws RemoteException {
+        public void addPolyline() throws RemoteException {
             Log.d(DEBUG_TAG, "StartNavigationActivity.addPolyline");
 
-            LatLng latLng = new LatLng(latitude, longitude);
+            PolylineOptions addPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
 
-            if (polylineOptions != null) {
-                polylineOptions.add(latLng);
-                polylineOptions.color(0xba3498db);
-                polylineOptions.width(10);
-                polylineOptions.geodesic(true);
-
-                polyline = mMap.addPolyline(polylineOptions);
-
-                polylineList.add(polyline);
-
-                MapInfoManager.getInstance().setPolylineOptionsInfo(polylineOptions);
+            if (addPolylineOptions != null) {
+                addMapInfoPolyline(addPolylineOptions);
             }
         }
 
@@ -408,30 +376,30 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             Log.d(DEBUG_TAG, "StartNavigationActivity.clearMarkerAndPolyline");
 
             MapInfoManager.getInstance().ClearAllMapInfoData();
+//
+//            for (int i = 0; i < mPointLatLngList.size(); i++) {
+//                LatLng latLng = mPointLatLngList.get(i);
+//
+//                if (mMarkerResolver.size() > 0) {
+//                    Marker m = mMarkerResolver.get(latLng);
+//                    String bitmapFlag = mBitmapResolver.get(latLng);
+//
+//                    mMarkerResolver.remove(m);
+//                    mBitmapResolver.remove(bitmapFlag);
+//
+//                    m.remove();
+//                }
+//            }
+//
+//            mPointLatLngList.clear();
+//            gpIndex = 0;
 
-            for (int i = 0; i < mPointLatLngList.size(); i++) {
-                LatLng latLng = mPointLatLngList.get(i);
+//            for (Polyline line : polylineList) {
+//                line.remove();
+//            }
 
-                if (mMarkerResolver.size() > 0) {
-                    Marker m = mMarkerResolver.get(latLng);
-                    String bitmapFlag = mBitmapResolver.get(latLng);
-
-                    mMarkerResolver.remove(m);
-                    mBitmapResolver.remove(bitmapFlag);
-
-                    m.remove();
-                }
-            }
-
-            mPointLatLngList.clear();
-            gpIndex = 0;
-
-            for (Polyline line : polylineList) {
-                line.remove();
-            }
-
-            polylineOptions = new PolylineOptions();
-            polylineList.clear();
+//            polylineOptions = new PolylineOptions();
+//            polylineList.clear();
 
 //            if (markerOptionsList.size() > 0) {
 //                markerOptionsList.clear();
@@ -704,6 +672,8 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
             }
         }*/
 
+        setMapInfo();
+
         String updateTextDescription = MapInfoManager.getInstance().getUpdateTextDescription();
 
         if (updateTextDescription != null && !updateTextDescription.equals("")) {
@@ -786,17 +756,53 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         Log.d(DEBUG_TAG, "StartNavigationActivity.onMapReady.recent.onMoveMap");
         onMoveMap(recentLatitude, recentLongitude, 0, MOVE_CAMERA);
 
+        setMapInfo();
+//        ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
+//        PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
+//
+//        if (mapInfoMarker != null) {
+//            mapInfoMarker.remove();
+//        }
+//
+//        if (mapInfoPolyline != null) {
+//            mapInfoPolyline.remove();
+//        }
+//
+//        if (mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null) {
+//            Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null");
+//
+//            for (int i = 0; i < mapInfoMarkerOptionsList.size(); i++) {
+//                addMapInfoMarker(mapInfoMarkerOptionsList.get(i));
+//            }
+//
+//            addMapInfoPolyline(mapInfoPolylineOptions);
+//        } else {
+//            Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptionsList == null && mapInfoMarkerOptionsList.size() < 0 && mapInfoPolylineOptions == null");
+//        }
+    }
+
+    private void setMapInfo() {
         ArrayList<MarkerOptions> mapInfoMarkerOptionsList = MapInfoManager.getInstance().getMarkerOptionsInfo();
         PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
 
+        if (mapInfoMarker != null) {
+            mapInfoMarker.remove();
+        }
+
+        if (mapInfoPolyline != null) {
+            mapInfoPolyline.remove();
+        }
+
         if (mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.mapInfoMarkerOptions != null && mapInfoPolylineOptions != null");
+            Log.d(DEBUG_TAG, "StartNavigationActivity.setMapInfo.mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0 && mapInfoPolylineOptions != null");
 
             for (int i = 0; i < mapInfoMarkerOptionsList.size(); i++) {
                 addMapInfoMarker(mapInfoMarkerOptionsList.get(i));
             }
 
             addMapInfoPolyline(mapInfoPolylineOptions);
+        } else {
+            Log.d(DEBUG_TAG, "StartNavigationActivity.setMapInfo.mapInfoMarkerOptionsList == null && mapInfoMarkerOptionsList.size() < 0 && mapInfoPolylineOptions == null");
         }
     }
 
@@ -1107,51 +1113,51 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         return true;
     }
 
-    private void addGPPointMarker(int index) {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.addGPPointMarker.index : " + Integer.toString(index));
-
-        if (index == 1) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_1));
-        } else if (index == 2) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_2));
-        } else if (index == 3) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_3));
-        } else if (index == 4) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_4));
-        } else if (index == 5) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_5));
-        } else if (index == 6) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_6));
-        } else if (index == 7) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_7));
-        } else if (index == 8) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_8));
-        } else if (index == 9) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_9));
-        } else if (index == 10) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_10));
-        } else if (index == 11) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_11));
-        } else if (index == 12) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_12));
-        } else if (index == 13) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_13));
-        } else if (index == 14) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_14));
-        } else if (index == 15) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_15));
-        } else if (index == 16) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_16));
-        } else if (index == 17) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_17));
-        } else if (index == 18) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_18));
-        } else if (index == 19) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_19));
-        } else if (index == 20) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_20));
-        }
-    }
+//    private void addGPPointMarker(int index) {
+//        Log.d(DEBUG_TAG, "StartNavigationActivity.addGPPointMarker.index : " + Integer.toString(index));
+//
+//        if (index == 1) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_1));
+//        } else if (index == 2) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_2));
+//        } else if (index == 3) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_3));
+//        } else if (index == 4) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_4));
+//        } else if (index == 5) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_5));
+//        } else if (index == 6) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_6));
+//        } else if (index == 7) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_7));
+//        } else if (index == 8) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_8));
+//        } else if (index == 9) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_9));
+//        } else if (index == 10) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_10));
+//        } else if (index == 11) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_11));
+//        } else if (index == 12) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_12));
+//        } else if (index == 13) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_13));
+//        } else if (index == 14) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_14));
+//        } else if (index == 15) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_15));
+//        } else if (index == 16) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_16));
+//        } else if (index == 17) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_17));
+//        } else if (index == 18) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_18));
+//        } else if (index == 19) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_19));
+//        } else if (index == 20) {
+//            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_20));
+//        }
+//    }
 
     private void setFont() {
         tvMainTitle.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.BMJUA));
