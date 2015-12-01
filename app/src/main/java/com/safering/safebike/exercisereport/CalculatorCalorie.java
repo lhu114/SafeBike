@@ -1,5 +1,7 @@
 package com.safering.safebike.exercisereport;
 
+import android.util.Log;
+
 /**
  * Created by Tacademy on 2015-11-24.
  */
@@ -34,7 +36,13 @@ public class CalculatorCalorie {
                 index = i;
             }
         }
+        Log.i("km",khm + "");
+        Log.i("cofficient",coefficientArr[index][1] + "");
+        Log.i("interval",interval + "");
+
         float cal = coefficientArr[index][1] * weight * interval;
+        Log.i("cal",cal + "");
+
         return (int)cal;
 
 

@@ -108,6 +108,17 @@ public class SettingFragment extends Fragment {
             filters = new ArrayList<ScanFilter>();
         }
 
+        if(mGatt == null){
+            Log.i("~mGatt~","null");
+        }
+        else{
+            Log.i("~mGatt~","null not");
+
+        }
+        if(BluetoothConnection.getInstance().getGatt() != null){
+            mGatt = BluetoothConnection.getInstance().getGatt();
+        }
+
         /*tmpLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -363,10 +374,13 @@ public class SettingFragment extends Fragment {
     public void disconnectToDevice(BluetoothDevice device) {
 
         if (mGatt != null) {
+            Log.i("---mGatt--","not null");
             mGatt.disconnect();
             mGatt.close();
-
             mGatt = null;
+        }
+        else{
+            Log.i("--mGatt--","null");
         }
         BluetoothConnection.getInstance().setGatt(null);
         BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
