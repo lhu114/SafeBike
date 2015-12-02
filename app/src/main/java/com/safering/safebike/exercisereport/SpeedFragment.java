@@ -193,6 +193,39 @@ public class SpeedFragment extends Fragment {
         setFont();
         return view;
     }
+    public void setToday(){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        String email = PropertyManager.getInstance().getUserEmail();
+        //String date = distanceChart.getXValue(e.getXIndex());
+        String date = speedChart.getXValue(speedChart.getHighestVisibleXIndex());
+
+
+
+        NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
+            @Override
+            public void onSuccess(ExerciseDayResult result) {
+                if (result.workout.size() > 0) {
+                    NumberFormat nf = NumberFormat.getInstance();
+
+                    nf.setMaximumFractionDigits(2);//소수점 아래 최대자리수
+
+
+                    parentCal.setText(String.valueOf(Math.round(result.workout.get(0).calorie)) + " kcal");
+                    parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0)/1000)) + " km/h");
+                    parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road/1000.0)) + " km");
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
+
+    }
+
 
     private void requestData(String today) {
         int count = 0;
@@ -238,7 +271,7 @@ public class SpeedFragment extends Fragment {
                     }
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "speed");
-                    set.setBarSpacePercent(80f);
+                    set.setBarSpacePercent(45f);
 
                     set.setColor(Color.parseColor("#B6E2FF"));
                     dataSets = new ArrayList<BarDataSet>();
@@ -254,6 +287,7 @@ public class SpeedFragment extends Fragment {
                     speedChart.notifyDataSetChanged();
                     speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
                     speedChart.invalidate();
+                    setToday();
 
                 }
 

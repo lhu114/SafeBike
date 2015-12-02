@@ -138,12 +138,14 @@ public class MainFragment extends Fragment {
                 if (backlightStatus) {
                     btnBacklight.setSelected(false);
                     PropertyManager.getInstance().setBluetoothSetting(0);
+                    textBackLightOnOff.setText("후미등 꺼짐");
 
                     backlightStatus = false;
 
                 } else {
                     btnBacklight.setSelected(true);
                     PropertyManager.getInstance().setBluetoothSetting(1);
+                    textBackLightOnOff.setText("후미등 켜짐");
 
                     backlightStatus = true;
 
@@ -217,12 +219,13 @@ public class MainFragment extends Fragment {
         if (BluetoothConnection.getInstance().getIsConnect() == 1) {
             imageBacklightOut.setImageResource(R.drawable.on);
             imageBacklightIn.setImageResource(R.drawable.on);
-            textBackLightOnOff.setText("후미등 켜짐");
+            //textBackLightOnOff.setText("후미등 켜짐");
+
 
         } else if (BluetoothConnection.getInstance().getIsConnect() == 0) {
             imageBacklightOut.setImageResource(R.drawable.off);
             imageBacklightIn.setImageResource(R.drawable.off);
-            textBackLightOnOff.setText("후미등 꺼짐");
+            //textBackLightOnOff.setText("후미등 꺼짐");
 
 
 
@@ -232,6 +235,7 @@ public class MainFragment extends Fragment {
     public void setBluetooth() {
         if (PropertyManager.getInstance().getBluetoothSetting() == 0) {
             btnBacklight.setSelected(false);
+
 
         } else {
             btnBacklight.setSelected(true);

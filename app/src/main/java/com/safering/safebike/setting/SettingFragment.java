@@ -160,10 +160,10 @@ public class SettingFragment extends Fragment {
             public void onSwitchClick(BluetoothItemView view, BluetoothDeviceItem item, boolean isChecked) {
                 Log.i("deviceName", item.deviceName);
                 if (isChecked) {
-                    if (BluetoothConnection.getInstance().getConnectedValue(item.deviceAddress) == false) {
-                        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
-                        connectToDevice(device);
-                    }
+                   // if (BluetoothConnection.getInstance().getConnectedValue(item.deviceAddress) == false) {
+                    //    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
+                        connectToDeviceTemp(null);
+                    //}
                 } else {
                     BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
                     disconnectToDevice(device);
@@ -176,6 +176,10 @@ public class SettingFragment extends Fragment {
         textConnectDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                searchDevice.setVisibility(View.VISIBLE);
+                scanLeDevice(true);
+
+/*
                 if (isConn == false) {
 
 
@@ -188,11 +192,11 @@ public class SettingFragment extends Fragment {
                         Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
                     } else {
-                        searchDevice.setVisibility(View.VISIBLE);
+                       // searchDevice.setVisibility(View.VISIBLE);
                         scanLeDevice(true);
 
                     }
-                }
+                }*/
 
 
             }
@@ -269,10 +273,16 @@ public class SettingFragment extends Fragment {
     }
 
     private void scanLeDevice(final boolean enable) {
-        if (enable) {
+        /*for(int i = 0; i < 1000000000; i++);
+        for(int i = 0; i < 1000000000; i++);
+        for(int i = 0; i < 1000000000; i++);
+        for(int i = 0; i < 1000000000; i++);
+        */
 
+        if (enable) {
             if (Build.VERSION.SDK_INT < 21) {
-                mBluetoothAdapter.startLeScan(mLeScanCallback);
+                //mBluetoothAdapter.startLeScan(mLeScanCallback);
+                setTemp();
                 isConn = true;
             } else {
 
@@ -283,7 +293,7 @@ public class SettingFragment extends Fragment {
             }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
-                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+              //  mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else {
                 /*
@@ -343,6 +353,17 @@ public class SettingFragment extends Fragment {
 */
 
 
+    public void setTemp(){
+        searchDevice.setVisibility(View.GONE);
+
+        BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
+        deviceItem.deviceName = "SHV-E370L";
+        deviceItem.deviceAddress = "24:DB:ED:E6:B1:DC";
+        deviceAdapter.add(deviceItem, false);
+        /*BluetoothConnection.getInstance().addDevice(device);
+        BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
+        */
+    }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
@@ -376,6 +397,15 @@ public class SettingFragment extends Fragment {
     };
 
 
+    public void connectToDeviceTemp(BluetoothDevice device) {
+
+        BluetoothConnection.getInstance().setConnectedValue("24:DB:ED:E6:B1:DC", true);
+        BluetoothConnection.getInstance().setIsConnect(1);
+
+        //scanLeDevice(false);
+
+    }
+
     public void connectToDevice(BluetoothDevice device) {
         if (mGatt == null) {
             Log.i("---mGatt state---", "mGatt NULL");
@@ -383,6 +413,7 @@ public class SettingFragment extends Fragment {
         }
 
         scanLeDevice(false);
+
     }
 
     public void disconnectToDevice(BluetoothDevice device) {
