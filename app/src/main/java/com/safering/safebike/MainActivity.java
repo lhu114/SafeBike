@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         for (int i=0;i<m.size();i++) {
             MenuItem mi = m.getItem(i);
 
-            //for aapplying a font to subMenu ...
+            //for aapplying a font to subMenu ....
         /*    SubMenu subMenu = mi.getSubMenu();
             if (subMenu!=null && subMenu.size() >0 ) {
                 for (int j=0; j <subMenu.size();j++) {
