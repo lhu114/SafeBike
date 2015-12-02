@@ -52,17 +52,20 @@
             android:layout_height="wrap_content"
             android:text="@string/text_poi_name"
             android:textSize="16sp"
+            android:textColor="#000000"
             android:id="@+id/text_poi_name"
             android:layout_marginLeft="27dp"
-            android:layout_marginTop="19dp"/>
+            android:layout_marginTop="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_poi_address"
             android:textSize="12sp"
+            android:textColor="#9A9A9A"
             android:id="@+id/text_poi_address"
             android:layout_marginLeft="27dp"
+            android:layout_marginTop="1dp"
             />
 
     </LinearLayout>

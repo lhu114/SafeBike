@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
@@ -50,6 +51,8 @@ import java.util.concurrent.TimeUnit;
 
 public class RouteService extends Service {
     private static final String DEBUG_TAG = "safebike";
+
+    private static final String WAKE_LOCK_TAG = "routeservice";
 
     private static final String ANIMATE_CAMERA = "animatecamera";
 
@@ -120,6 +123,9 @@ public class RouteService extends Service {
 
     int gpIndex = 0;
 
+    PowerManager pm;
+    PowerManager.WakeLock wakeLock;
+
     public RouteService() {
     }
 
@@ -136,7 +142,10 @@ public class RouteService extends Service {
         mSpeedList = new ArrayList<Float>();
         mDistanceList = new ArrayList<Float>();
 
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
 
         tts = new SpeakVoice();
 
@@ -264,6 +273,12 @@ public class RouteService extends Service {
         tts.close();
 
         MapInfoManager.getInstance().ClearAllMapInfoData();
+
+        if (wakeLock.isHeld()) {
+            Log.d(DEBUG_TAG, "RouteService.onDestroy.wakeLock != null && wakeLock.isHeld().wakeLock.release()");
+
+            wakeLock.release();
+        }
     }
 
     boolean startRouting() {
@@ -281,6 +296,17 @@ public class RouteService extends Service {
 
                 mLM.requestLocationUpdates(mProvider, REQUEST_LOCATION_UPDATES_ITERATIVE_INTERVAL, 0, mIterativeListener);
                 mHandler.sendEmptyMessageDelayed(MESSAGE_ITERATIVE_LOCATION_TIMEOUT, LOCATION_TIMEOUT_INTERVAL);
+
+                if (wakeLock != null && !wakeLock.isHeld()) {
+                    Log.d(DEBUG_TAG, "RouteService.startRouting.wakeLock != null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
+
+                    wakeLock.acquire();
+                } else if (wakeLock == null && !wakeLock.isHeld()) {
+                    Log.d(DEBUG_TAG, "RouteService.startRouting.wakeLock == null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
+
+                    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
+                    wakeLock.acquire();
+                }
 
                 startTime = System.currentTimeMillis();
                 Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.startTime : " + Long.toString(startTime));
@@ -301,6 +327,19 @@ public class RouteService extends Service {
             Log.d(DEBUG_TAG, "RouteService.simulationStartRouting.isInitialServiceRunning");
 
             tts.translate("안내를 시작합니다.");
+
+            if (!wakeLock.isHeld()) {
+                if (wakeLock != null) {
+                    Log.d(DEBUG_TAG, "RouteService.startRouting.wakeLock != null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
+
+                    wakeLock.acquire();
+                } else if (wakeLock == null) {
+                    Log.d(DEBUG_TAG, "RouteService.startRouting.wakeLock == null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
+
+                    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
+                    wakeLock.acquire();
+                }
+            }
 
             startTime = System.currentTimeMillis();
             Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.startTime : " + Long.toString(startTime));

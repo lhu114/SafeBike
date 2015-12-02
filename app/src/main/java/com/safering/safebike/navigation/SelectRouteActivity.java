@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -500,10 +499,10 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                     }
                 });
 
-        tvLane.setPaintFlags(tvLane.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-        tvLaneTotalTime.setPaintFlags(tvLaneTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-        tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-        tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//        tvLane.setPaintFlags(tvLane.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//        tvLaneTotalTime.setPaintFlags(tvLaneTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//        tvLaneArvTime.setPaintFlags(tvLaneArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//        tvLaneTotalDistance.setPaintFlags(tvLaneTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 
         layoutLane.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1021,15 +1020,15 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             polylineList.add(polyline);
         }
 
-        boldText.setPaintFlags(boldText.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-        boldTotalTime.setPaintFlags(boldTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-        boldArvTime.setPaintFlags(boldArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-        boldTotalDistance.setPaintFlags(boldTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-
-        text.setPaintFlags(text.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
-        totalTime.setPaintFlags(totalTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
-        arvTime.setPaintFlags(arvTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
-        totalDistance.setPaintFlags(totalDistance.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+//        boldText.setPaintFlags(boldText.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//        boldTotalTime.setPaintFlags(boldTotalTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//        boldArvTime.setPaintFlags(boldArvTime.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//        boldTotalDistance.setPaintFlags(boldTotalDistance.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+//
+//        text.setPaintFlags(text.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+//        totalTime.setPaintFlags(totalTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+//        arvTime.setPaintFlags(arvTime.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
+//        totalDistance.setPaintFlags(totalDistance.getPaintFlags() & ~Paint.FAKE_BOLD_TEXT_FLAG);
     }
 
     private String getTotalTime(int time, TextView arvTime) {
@@ -1147,7 +1146,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             isActivateRouteWithinLimitDistanceNoti = true;
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setIcon(android.R.drawable.ic_dialog_info);
+            builder.setIcon(null);
             builder.setTitle("알림");
             builder.setMessage("목적지가 출발지와 근접합니다. 경로를 다시 선택해주세요.");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

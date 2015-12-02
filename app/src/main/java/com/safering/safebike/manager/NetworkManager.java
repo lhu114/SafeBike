@@ -16,7 +16,6 @@ import com.safering.safebike.friend.FriendDirectSearchResult;
 import com.safering.safebike.friend.FriendProfileResult;
 import com.safering.safebike.friend.FriendResult;
 import com.safering.safebike.friend.FriendSearchResult;
-import com.safering.safebike.login.LoginInputFragment;
 import com.safering.safebike.login.LoginResult;
 import com.safering.safebike.navigation.FavoriteResult;
 import com.safering.safebike.navigation.SearchPOIInfo;
@@ -102,7 +101,7 @@ public class NetworkManager {
     private static final String NAVIGATION_FAVORITE_URL = "http://52.69.133.212:3000";
     private static final String FAVORITE_NAME = "favoritesname";
     private static final String NAVIGATION_LATITUDE = "favoriteslatitude";
-    private static final String NAVIGATION_LONGITUDE = "favoriteslongtude";
+    private static final String NAVIGATION_LONGITUDE = "favoriteslongitude";
 
 
     private static final String NAVIGATION_SEND_EXCERCISE_URL = "https://apis.skplanetx.com/tmap/pois";

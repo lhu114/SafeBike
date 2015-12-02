@@ -31,6 +31,8 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
     POI poi;
 
+    RecentItem item;
+
     private static final String TAG_TAB_RECENT = "RECENT";
     private static final String TAG_TAB_FAVORITE = "FAVORITE";
     private static final String TAG_TAB_RECENT_NAME = "최근이용";
@@ -120,15 +122,9 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
 //                    검색어 RecentDb 에 저장 처리 필요
 
-                    RecentItem item = new RecentItem();
+                    item = new RecentItem();
                     item.rctPOIName = searchKeyword;
-
-                    RecentDataManager.getInstance().insertRecent(item);
-
-
-
 //                    ParentRctFvActivity 에 있는 setResult 처리
-
 
                     Log.d("safebike", "rctPoiName : " + searchKeyword);
                     NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
@@ -138,6 +134,8 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                             if (poi != null) {
 //                                String defineAddress = null;
+
+                                RecentDataManager.getInstance().insertRecent(item);
 
                                 Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 

@@ -44,6 +44,16 @@
                 android:layout_gravity="center"
                 android:text="@string/text_main_title"
                 android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/text_safebike_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/text_main_title"
+                android:textColor="@color/colorWhite"
                 android:textSize="20sp" />
         </FrameLayout>
         <!--app:popupTheme="@style/AppTheme.PopupOverlay"

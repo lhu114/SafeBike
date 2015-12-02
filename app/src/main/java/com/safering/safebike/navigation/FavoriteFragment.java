@@ -161,10 +161,14 @@ public class FavoriteFragment extends Fragment {
         NetworkManager.getInstance().getFavorite(getContext(), userEmail, new NetworkManager.OnResultListener<FavoriteResult>() {
             @Override
             public void onSuccess(FavoriteResult result) {
-                Log.d("safebike", "FavoriteFragment.initData.onSuccess.favoriteItemList.size : " + Integer.toString(result.favoriteItemList.size()));
+                if (result.favoriteItemList != null) {
+                    if (result.favoriteItemList.size() > 0) {
+                        Log.d("safebike", "FavoriteFragment.initData.onSuccess.favoriteItemList.size : " + Integer.toString(result.favoriteItemList.size()));
 
-                for (FavoriteItem item : result.favoriteItemList) {
-                    mAdapter.add(item);
+                        for (FavoriteItem item : result.favoriteItemList) {
+                            mAdapter.add(item);
+                        }
+                    }
                 }
 
                 if (mAdapter.getCount() > 0) {

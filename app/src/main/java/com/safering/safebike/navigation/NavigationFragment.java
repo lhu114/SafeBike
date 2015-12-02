@@ -128,7 +128,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //    private static final int CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP = 355;
     private static final int CHANGE_BUTTON_CURRENTLOC_MARGIN_BOTTOM = 147;
 
+    private static final int CHANGE_MAIN_TITLE_MARGIN_TOP = 21;
+
     int marginRight, marginBottom;
+    int marginTop;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -213,6 +216,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             } else if (View.VISIBLE == btnFindRoute.getVisibility()) {
                 MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
             }
+
+//            setMainTitleMarginChange(0, CHANGE_MAIN_TITLE_MARGIN_TOP);
 
             btnFwdSearch.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -973,7 +978,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         marginBottom = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginBottom, this.getResources().getDisplayMetrics());
 
         MarginLayoutParams margin = new MarginLayoutParams(btnCurrentLoc.getLayoutParams());
-        margin.setMargins(marginRight, marginBottom, marginRight, marginBottom);
+        margin.setMargins(0, 0, marginRight, marginBottom);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(margin);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -981,6 +986,16 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         btnCurrentLoc.setLayoutParams(params);
     }
+
+    /*private void setMainTitleMarginChange(int changeMarginLeft, int changeMarginTop) {
+//        marginLeft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginLeft, this.getResources().getDisplayMetrics());
+        marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginTop, this.getResources().getDisplayMetrics());
+
+        MarginLayoutParams margin = new MarginLayoutParams(textMainTitle.getLayoutParams());
+        margin.setMargins(0, marginTop, 0, 0);
+
+        textMainTitle.setLayoutParams(new FrameLayout.LayoutParams(margin));
+    }*/
 
     private void setFont() {
         tvPOIName.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));

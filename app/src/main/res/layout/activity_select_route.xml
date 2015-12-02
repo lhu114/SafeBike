@@ -73,7 +73,7 @@
                     android:textSize="16sp"
                     android:textColor="#92c9aa"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginTop="25dp"
                     android:id="@+id/text_bicyclelane" />
 
                 <LinearLayout
@@ -88,7 +88,7 @@
                     android:text="@string/text_bicyclelane_totaltime"
                     android:textSize="16sp"
                     android:textColor="#000000"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="13dp"
                     android:id="@+id/text_bicyclelane_totaltime" />
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:text="@string/text_bicyclelane_arrivetime"
                     android:textSize="12sp"
                     android:textColor="#9a9a9a"
-                    android:layout_marginTop="9dp"
+                    android:layout_marginTop="4dp"
                     android:id="@+id/text_bicyclelane_arrivetime" />
 
                 </LinearLayout>
@@ -114,7 +114,7 @@
                     android:textColor="#9a9a9a"
                     android:layout_gravity="right"
                     android:layout_marginRight="30dp"
-                    android:layout_marginTop="31dp"
+                    android:layout_marginTop="28dp"
                     android:textSize="12sp"
                     android:gravity="right" />
 
@@ -135,7 +135,7 @@
                     android:text="@string/text_minimumtime"
                     android:textColor="#f29b9e"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginTop="25dp"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/text_minimumtime_totaltime"
                         android:textColor="#000000"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="13dp"
                         android:textSize="16sp" />
 
                     <TextView
@@ -160,7 +160,7 @@
                         android:text="@string/text_minimumtime_arrivetime"
                         android:textColor="#9a9a9a"
                         android:textSize="12sp"
-                        android:layout_marginTop="9dp" />
+                        android:layout_marginTop="4dp" />
 
                 </LinearLayout>
 
@@ -176,7 +176,7 @@
                     android:textColor="#9a9a9a"
                     android:layout_gravity="right"
                     android:layout_marginRight="30dp"
-                    android:layout_marginTop="31dp"
+                    android:layout_marginTop="28dp"
                     android:textSize="12sp"
                     android:gravity="right" />
 
