@@ -24,7 +24,7 @@ public class MyYAxisValueFormatter implements YAxisValueFormatter {
             return mFormat.format(value) + " kcal";
         }
         else if(type == CHART_DISTANCE){
-            return mFormat.format(value) + " m";
+            return mFormat.format(Math.round(value)) + " m";
         }
         else {
             return mFormat.format(value) + " m/s";

@@ -199,8 +199,41 @@ public class DistanceFragment extends Fragment {
         String today = dateFormat.format(cal.getTime());
         requestData(today);
         setFont();
+        //setToday();
 
         return view;
+    }
+    public void setToday(){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        String email = PropertyManager.getInstance().getUserEmail();
+        //String date = distanceChart.getXValue(e.getXIndex());
+        String date = distanceChart.getXValue(distanceChart.getHighestVisibleXIndex());
+
+
+
+        NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
+            @Override
+            public void onSuccess(ExerciseDayResult result) {
+                if (result.workout.size() > 0) {
+                    NumberFormat nf = NumberFormat.getInstance();
+
+                    nf.setMaximumFractionDigits(2);//소수점 아래 최대자리수
+
+
+                    parentCal.setText(String.valueOf(Math.round(result.workout.get(0).calorie)) + " kcal");
+                    parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0)/1000)) + " km/h");
+                    parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road/1000.0)) + " km");
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
+
     }
 
     /*private void requestData() {
@@ -299,12 +332,13 @@ public class DistanceFragment extends Fragment {
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
                         xVals.add(result.workoutlist.get(i)._id);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).road, total+i));
+
+                        yVals.add(new BarEntry((result.workoutlist.get(i).road * 100)/100, total+i));
                     }
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "distance");
                     set.setColor(Color.parseColor("#B6E2FF"));
-                    set.setBarSpacePercent(80f);
+                    set.setBarSpacePercent(45f);
 
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
@@ -319,6 +353,7 @@ public class DistanceFragment extends Fragment {
                     distanceChart.notifyDataSetChanged();
                     distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
                     distanceChart.invalidate();
+                    setToday();
 
                 }
 
