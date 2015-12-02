@@ -88,6 +88,7 @@
     </style>
 
     <style name="CustomToolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:layout_height">52dp</item>
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
         <item name="android:paddingLeft">0dp</item>

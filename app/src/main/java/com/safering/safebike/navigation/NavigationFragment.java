@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -101,6 +102,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     View view;
     RelativeLayout relativeLayout;
     LinearLayout addressLayout;
+    FrameLayout frameLayout;
 
     TextView textMainTitle;
     TextView tvPOIAddress;
@@ -177,6 +179,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             mapFragment.getMapAsync(this);
 
             relativeLayout = (RelativeLayout) view.findViewById(R.id.layout_navigationfragment);
+            frameLayout = (FrameLayout) ((MainActivity) getActivity()).findViewById(R.id.framelayout_toolbar);
 
             textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
             btnFwdSearch = (ImageButton) ((MainActivity) getActivity()).findViewById(R.id.btn_fwd_search);
@@ -230,12 +233,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                     if (actionBar.isShowing()) {
                         actionBar.hide();
+                        frameLayout.setVisibility(View.GONE);
                         textMainTitle.setVisibility(View.GONE);
 
 
                         btnFullScreen.setSelected(true);
                     } else {
                         actionBar.show();
+                        frameLayout.setVisibility(View.VISIBLE);
                         textMainTitle.setVisibility(View.VISIBLE);
 
                         btnFullScreen.setSelected(false);
