@@ -62,9 +62,9 @@ public class SettingFragment extends Fragment {
     BluetoothDeviceAdapter deviceAdapter;
     ProgressBar searchDevice;
     ListView deviceList;
- /*   Button tmpLeft;
-    Button tmpRight;
-    Button tmpOff;*/
+    /*   Button tmpLeft;
+       Button tmpRight;
+       Button tmpOff;*/
     public int onServerResponse = 0;
 
     TextView textConnectDevice, textSafeBikeMainTitle, textMainTitle;
@@ -107,7 +107,7 @@ public class SettingFragment extends Fragment {
         deviceList.setAdapter(deviceAdapter);
         //       deviceList.addView(n);
         if (Build.VERSION.SDK_INT >= 21) {
-            Log.i("sdk>21","lescan");
+            Log.i("sdk>21", "lescan");
             mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
             settings = new ScanSettings.Builder()
@@ -116,14 +116,13 @@ public class SettingFragment extends Fragment {
             filters = new ArrayList<ScanFilter>();
         }
 
-        if(mGatt == null){
-            Log.i("~mGatt~","null");
-        }
-        else{
-            Log.i("~mGatt~","null not");
+        if (mGatt == null) {
+            Log.i("~mGatt~", "null");
+        } else {
+            Log.i("~mGatt~", "null not");
 
         }
-        if(BluetoothConnection.getInstance().getGatt() != null){
+        if (BluetoothConnection.getInstance().getGatt() != null) {
             mGatt = BluetoothConnection.getInstance().getGatt();
         }
 
@@ -160,10 +159,10 @@ public class SettingFragment extends Fragment {
             public void onSwitchClick(BluetoothItemView view, BluetoothDeviceItem item, boolean isChecked) {
                 Log.i("deviceName", item.deviceName);
                 if (isChecked) {
-                   // if (BluetoothConnection.getInstance().getConnectedValue(item.deviceAddress) == false) {
-                    //    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
-                        connectToDeviceTemp(null);
-                    //}
+                    if (BluetoothConnection.getInstance().getConnectedValue(item.deviceAddress) == false) {
+                        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
+                        connectToDevice(device);
+                    }
                 } else {
                     BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(item.deviceAddress);
                     disconnectToDevice(device);
@@ -281,8 +280,8 @@ public class SettingFragment extends Fragment {
 
         if (enable) {
             if (Build.VERSION.SDK_INT < 21) {
-                //mBluetoothAdapter.startLeScan(mLeScanCallback);
-                setTemp();
+                mBluetoothAdapter.startLeScan(mLeScanCallback);
+                //setTemp();
                 isConn = true;
             } else {
 
@@ -293,7 +292,7 @@ public class SettingFragment extends Fragment {
             }
         } else {
             if (Build.VERSION.SDK_INT < 21) {
-              //  mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                  mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else {
                 /*
@@ -353,7 +352,7 @@ public class SettingFragment extends Fragment {
 */
 
 
-    public void setTemp(){
+    public void setTemp() {
         searchDevice.setVisibility(View.GONE);
 
         BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
@@ -419,13 +418,12 @@ public class SettingFragment extends Fragment {
     public void disconnectToDevice(BluetoothDevice device) {
 
         if (mGatt != null) {
-            Log.i("---mGatt--","not null");
+            Log.i("---mGatt--", "not null");
             mGatt.disconnect();
             mGatt.close();
             mGatt = null;
-        }
-        else{
-            Log.i("--mGatt--","null");
+        } else {
+            Log.i("--mGatt--", "null");
         }
         BluetoothConnection.getInstance().setGatt(null);
         BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
