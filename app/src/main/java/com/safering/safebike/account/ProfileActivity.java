@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -112,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void setFont(){
-        textTitle.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this,FontManager.NOTOSANS_M));
+        textTitle.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this,FontManager.NOTOSANS));
         userJoin.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS));
         userEmail.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS));
         userId.setTypeface(FontManager.getInstance().getTypeface(ProfileActivity.this, FontManager.NOTOSANS));

@@ -16,7 +16,7 @@ public class FavoriteItem {
     @SerializedName("favoriteslatitude")
     public String fvPOILatitude;
 
-    @SerializedName("favoriteslongtude")
+    @SerializedName("favoriteslongitude")
     public String fvPOILongitude;
 
 //    public String favoritesname;

@@ -192,7 +192,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 builder.setIcon(android.R.drawable.ic_dialog_info);
                 builder.setTitle("내비게이션 안내종료");
                 builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                  /*
@@ -224,7 +224,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     }
                 });
 
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

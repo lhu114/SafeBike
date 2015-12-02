@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.widget.Toast;
 
 public class QnAEmailDialogFragment extends DialogFragment{
     @NonNull
@@ -17,9 +16,9 @@ public class QnAEmailDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("Dialog Fragment");
-        builder.setMessage("QnADialog");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setTitle("문의");
+        builder.setMessage("내용");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

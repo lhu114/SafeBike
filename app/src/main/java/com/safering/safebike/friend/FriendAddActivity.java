@@ -1,30 +1,21 @@
 package com.safering.safebike.friend;
 
-import android.media.Image;
-import android.support.v4.app.FragmentManager;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.safering.safebike.adapter.FriendItem;
-import com.safering.safebike.R;
-import com.safering.safebike.adapter.*;
-import com.safering.safebike.exercisereport.CalorieFragment;
-import com.safering.safebike.exercisereport.DistanceFragment;
-import com.safering.safebike.exercisereport.SpeedFragment;
-import com.safering.safebike.manager.FontManager;
 
-import org.w3c.dom.Text;
+import com.safering.safebike.R;
+import com.safering.safebike.adapter.FriendItem;
+import com.safering.safebike.manager.FontManager;
 
 public class FriendAddActivity extends AppCompatActivity {
     FragmentTabHost tabHost;
@@ -72,7 +63,7 @@ public class FriendAddActivity extends AppCompatActivity {
 
     public void setFont() {
         textTitle.setText(R.string.text_add_friend);
-        textTitle.setTypeface(FontManager.getInstance().getTypeface(FriendAddActivity.this, FontManager.NOTOSANS_M));
+        textTitle.setTypeface(FontManager.getInstance().getTypeface(FriendAddActivity.this, FontManager.NOTOSANS));
         textAddress.setTypeface(FontManager.getInstance().getTypeface(FriendAddActivity.this,FontManager.NOTOSANS));
         textDirect.setTypeface(FontManager.getInstance().getTypeface(FriendAddActivity.this,FontManager.NOTOSANS));
     }
