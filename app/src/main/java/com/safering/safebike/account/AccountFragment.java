@@ -43,7 +43,7 @@ public class AccountFragment extends Fragment {
     TextView textProfileName;
     TextView textProfileJoin;
     TextView textProfileEmail;
-    TextView textMainTitle;
+    TextView textSafeBikeMainTitle, textMainTitle;
     RelativeLayout userProfile;
     Button btnLogout;
 
@@ -65,11 +65,15 @@ public class AccountFragment extends Fragment {
         textProfileJoin = (TextView)view.findViewById(R.id.text_join_profile);
         textProfileEmail = (TextView)view.findViewById(R.id.text_email_profile);
         imageProfileUser = (ImageView)view.findViewById(R.id.image_user_profile_account);
+        textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
         textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
+
 //        Toast.makeText(getContext(),"AccountFragmentOncREATE",Toast.LENGTH_SHORT).show();
         setProfile();
         setFont();
 
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
 
         textLogout.setOnClickListener(new View.OnClickListener() {
 
@@ -199,5 +203,9 @@ public class AccountFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setProfile();
+
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
+
     }
 }

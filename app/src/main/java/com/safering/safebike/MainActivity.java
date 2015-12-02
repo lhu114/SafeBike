@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int NAVIGATION_DRAWER_MARGIN_LEFT = 0;
 
-    TextView textMainTitle;
+    TextView textSafeBikeMainTitle, textMainTitle;
     View naviHeaderView;
     ImageView imageAccountSetting;
     ImageView imageUserProfile;
@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView nav = (NavigationView)findViewById(R.id.nav_view);
 
-
         Menu m = nav.getMenu();
         for (int i=0;i<m.size();i++) {
             MenuItem mi = m.getItem(i);
@@ -143,7 +142,9 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().add(R.id.container, new MainFragment(), TAG_MAIN).commit();
         }
 
-        textMainTitle = (TextView)findViewById(R.id.text_main_title);
+        textSafeBikeMainTitle = (TextView) findViewById(R.id.text_safebike_main_title);
+        textMainTitle = (TextView) findViewById(R.id.text_main_title);
+
         naviHeaderView = LayoutInflater.from(MainActivity.this).inflate(R.layout.nav_header_main, nav);
         imageAccountSetting = (ImageView)naviHeaderView.findViewById(R.id.btn_account_setting);
 
@@ -152,7 +153,8 @@ public class MainActivity extends AppCompatActivity
         textUserId = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_id);
         textUserEmail = (TextView)naviHeaderView.findViewById(R.id.text_user_imform_email);
 
-
+        textSafeBikeMainTitle.setVisibility(View.VISIBLE);
+        textMainTitle.setVisibility(View.GONE);
 
         imageAccountSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,6 +209,9 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Log.d("safebike", "MainActivity.onResume");
+
+        textSafeBikeMainTitle.setVisibility(View.VISIBLE);
+        textMainTitle.setVisibility(View.GONE);
     }
 
     @Override
@@ -382,8 +387,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setFont(){
-        textMainTitle.setText("Safe Bike");
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.BMJUA));
+        textSafeBikeMainTitle.setText("Safe Bike");
+        textSafeBikeMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.BMJUA));
         textUserEmail.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.NOTOSANS));
         textUserId.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.NOTOSANS));
     }

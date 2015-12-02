@@ -108,6 +108,7 @@
     <string name="btn_full_screen" />
     <string name="text_navi_description">길안내</string>
     <string name="text_main_title">Safe Bike</string>
+    <string name="text_safebike_main_title">Safe Bike</string>
     <string name="text_tab_recent_title">최근검색</string>
     <string name="text_tab_favorite_title">즐겨찾기</string>
 

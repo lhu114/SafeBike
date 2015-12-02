@@ -13,17 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.safering.safebike.manager.FontManager;
-import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.BluetoothConnection;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 
 
 /**
@@ -44,13 +40,16 @@ public class MainFragment extends Fragment {
 
     //    String serviceCondition;
     Button fwdNavigation, startNavigation;
-    TextView textMainTitle;
-    TextView textBandOnOff;
-    TextView textBackLightOnOff;
-    ImageView imageBacklightIn;
-    ImageView imageBacklightOut;
     Button btnBacklight;
     Button btnBand;
+
+    TextView textSafeBikeMainTitle, textMainTitle;
+    TextView textBandOnOff;
+    TextView textBackLightOnOff;
+
+    ImageView imageBacklightIn;
+    ImageView imageBacklightOut;
+
     boolean backlightStatus = false;
     boolean bandStatus = false;
     int deviceStatus = 0;
@@ -100,6 +99,9 @@ public class MainFragment extends Fragment {
         final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
+        textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
+
         textBandOnOff = (TextView) view.findViewById(R.id.text_band_status);
         textBackLightOnOff = (TextView) view.findViewById(R.id.text_backlight_status);
         imageBacklightIn = (ImageView) view.findViewById(R.id.image_backlight_onoff_in);
@@ -107,114 +109,16 @@ public class MainFragment extends Fragment {
         btnBacklight = (Button) view.findViewById(R.id.btn_onoff_backlight);
         btnBand = (Button) view.findViewById(R.id.btn_onoff_band);
 
+        textSafeBikeMainTitle.setVisibility(View.VISIBLE);
+        textMainTitle.setVisibility(View.GONE);
      //   startActivityForResult();
 
         // btnBacklight.setSelected(true);
-
-
-
-
-    /*    Button favorite = (Button)view.findViewById(R.id.btn_favorite_list);
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NetworkManager.getInstance().getFavorite(getContext(), uEmail, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });
-
-            }
-        });*/
-
-       /* favorite = (Button)view.findViewById(R.id.btn_favorite_add);
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NetworkManager.getInstance().saveFavorite(getContext(), uEmail, "청담", 123.1, 121.2, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });
-
-            }
-        });
-*/
-       /* favorite = (Button)view.findViewById(R.id.btn_favorite_remove);
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NetworkManager.getInstance().removeFavorite(getContext(), uEmail, "청담", new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });
-
-            }
-        });*/
-/*
-        favorite = (Button)view.findViewById(R.id.btn_favorite_removeall);
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NetworkManager.getInstance().removeAllFavorite(getContext(), uEmail, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });
-
-            }
-        });*/
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
 
         final String date = dateFormat.format(cal.getTime());
-
-     /*   favorite = (Button)view.findViewById(R.id.btn_save_exercise);
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NetworkManager.getInstance().saveExercise(getContext(), uEmail, date, 120, 60, 100, new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });
-            }
-        });*/
-
-
-        textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
 
 
         // setBluetooth();
@@ -287,11 +191,13 @@ public class MainFragment extends Fragment {
         Log.d("safebike", "MainFragment.onResume");
         //setFont();
 
+        textSafeBikeMainTitle.setVisibility(View.VISIBLE);
+        textMainTitle.setVisibility(View.GONE);
     }
 
     public void setFont() {
-        textMainTitle.setText("Safe Bike");
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
+        textSafeBikeMainTitle.setText("Safe Bike");
+        textSafeBikeMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
         textBandOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textBackLightOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 

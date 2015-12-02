@@ -7,14 +7,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
@@ -23,8 +20,6 @@ import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,7 +34,7 @@ public class FriendFragment extends Fragment {
     //ArrayList<String> fEmailList;
     ListView listView;
     TextView textInvite;
-    TextView textMainTitle;
+    TextView textSafeBikeMainTitle, textMainTitle;
     FriendItem friendItem;
     View listFooter;
 
@@ -57,13 +52,19 @@ public class FriendFragment extends Fragment {
 
         fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
         //fEmailList = new ArrayList<String>();
-        textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
+
+        textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
+        textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
+
         listFooter = inflater.inflate(R.layout.custom_friend_view,null);
         textInvite = (TextView)listFooter.findViewById(R.id.text_invite_friend);
 
         listView = (ListView) view.findViewById(R.id.listview_myfriend);
         setFont();
         listView.addFooterView(listFooter);
+
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -117,7 +118,6 @@ public class FriendFragment extends Fragment {
 
         listView.setAdapter(fAdapter);
 
-
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +137,8 @@ public class FriendFragment extends Fragment {
         setFriendList();
         setTitleFont();
 
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
     }
 
     public void setFriendList() {

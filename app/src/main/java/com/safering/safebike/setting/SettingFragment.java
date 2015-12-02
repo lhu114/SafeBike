@@ -66,7 +66,9 @@ public class SettingFragment extends Fragment {
     Button tmpRight;
     Button tmpOff;*/
     public int onServerResponse = 0;
-    TextView textConnectDevice, textMainTitle;
+
+    TextView textConnectDevice, textSafeBikeMainTitle, textMainTitle;
+
     boolean isConn = false;
 
     MainFragment mainFragment;
@@ -84,13 +86,19 @@ public class SettingFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
+        textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
         textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
+
         textConnectDevice = (TextView) view.findViewById(R.id.btn_connect_device);
         deviceList = (ListView) view.findViewById(R.id.connective_device_list);
         searchDevice = (ProgressBar) view.findViewById(R.id.progressBar_search);
 //        tmpLeft = (Button) view.findViewById(R.id.btn_tmp_left);
 //        tmpRight = (Button) view.findViewById(R.id.btn_tmp_right);
 //        tmpOff = (Button) view.findViewById(R.id.btn_tmp_off);
+
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
+
         BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         isEnableBluetooth = false;
@@ -204,6 +212,9 @@ public class SettingFragment extends Fragment {
 
         } else {
         }
+
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
     }
 
 

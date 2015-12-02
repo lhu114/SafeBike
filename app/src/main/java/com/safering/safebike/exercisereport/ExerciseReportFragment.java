@@ -4,21 +4,14 @@ package com.safering.safebike.exercisereport;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
-import com.safering.safebike.manager.NetworkManager;
-import com.safering.safebike.property.PropertyManager;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +31,7 @@ public class ExerciseReportFragment extends Fragment {
     TextView textValueCalorie;
     TextView textValueSpeed;
     TextView textValueDistance;
-    TextView textMainTitle;
+    TextView textSafeBikeMainTitle, textMainTitle;
 
 
 
@@ -76,7 +69,13 @@ public class ExerciseReportFragment extends Fragment {
         textCalorie = (TextView)calorieView.findViewById(R.id.text_tab_calorie);
         textSpeed = (TextView)speedView.findViewById(R.id.text_tab_speed);
         textDistance = (TextView)distanceView.findViewById(R.id.text_tab_distance);
-        textMainTitle = (TextView)((MainActivity)getActivity()).findViewById(R.id.text_main_title);
+
+        textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
+        textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
+
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
+
         setFont();
         tabHost = (FragmentTabHost) view.findViewById(R.id.exercise_tabHost);
         tabHost.setup(getActivity(), getChildFragmentManager(), R.id.exercise_realtabcontent);
@@ -95,6 +94,9 @@ public class ExerciseReportFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setTitleFont();
+
+        textSafeBikeMainTitle.setVisibility(View.GONE);
+        textMainTitle.setVisibility(View.VISIBLE);
     }
 
     public void viewData(int calorie, int speed, int distance) {
