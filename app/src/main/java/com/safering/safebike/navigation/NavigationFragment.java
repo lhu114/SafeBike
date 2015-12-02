@@ -119,11 +119,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     boolean isCheckGetRecentLoc = false;
     boolean isFirst = true;
 
-    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT = 285;
-    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_TOP = 495;
-    private static final int CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP = 355;
+    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_RIGHT = 10;
+    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_BOTTOM = 12;
+//    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT = 285;
+//    private static final int BASIC_BUTTON_CURRENTLOC_MARGIN_TOP = 495;
+//    private static final int CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP = 355;
+    private static final int CHANGE_BUTTON_CURRENTLOC_MARGIN_BOTTOM = 147;
 
-    int marginLeft, marginTop;
+    int marginRight, marginBottom;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -158,7 +161,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         mLM = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.marginLeft : " + Integer.toString(marginLeft) + " | marginTop : " + marginTop);
+        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.marginRight : " + Integer.toString(marginRight) + " | marginBottom : " + marginBottom);
     }
 
     @Override
@@ -447,7 +450,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 //            activateDestination();
 
                 if (poi != null) {
-                    setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP);
+                    setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_RIGHT, CHANGE_BUTTON_CURRENTLOC_MARGIN_BOTTOM);
 
                     tvPOIName.setText(poi.name);
                     tvPOIAddress.setText(getDefinePOIAddress(poi));
@@ -684,7 +687,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
          */
         clearALLMarker();
 
-        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, BASIC_BUTTON_CURRENTLOC_MARGIN_TOP);
+        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_RIGHT, BASIC_BUTTON_CURRENTLOC_MARGIN_BOTTOM);
 
         addressLayout.setVisibility(View.GONE);
         btnFindRoute.setVisibility(View.GONE);
@@ -692,9 +695,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onMapLongClick(final LatLng latLng) {
-        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, CHANGE_BUTTON_CURRENTLOC_MARGIN_TOP);
+        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_RIGHT, CHANGE_BUTTON_CURRENTLOC_MARGIN_BOTTOM);
 
-        Log.d(DEBUG_TAG, "NavigationFragment.onMapLongClick.marginLeft : " + Integer.toString(marginLeft) + " | marginTop : " + marginTop);
+        Log.d(DEBUG_TAG, "NavigationFragment.onMapLongClick.marginRight : " + Integer.toString(marginRight) + " | marginBottom : " + marginBottom);
 
         if (latLng != null) {
             PropertyManager.getInstance().setDestinationLatitude(Double.toString(latLng.latitude));
@@ -830,7 +833,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     private void addPOIMarker(POI poi) {
         MarkerOptions options = new MarkerOptions();
         options.position(new LatLng(poi.noorLat, poi.noorLon));
-        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.arrival));
         options.anchor(0.5f, 1.0f);
         options.title(poi.name);
         options.draggable(false);
@@ -954,19 +957,24 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void setBtnFindRouteChange() {
         clearALLMarker();
 
-        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_LEFT, BASIC_BUTTON_CURRENTLOC_MARGIN_TOP);
+        setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_RIGHT, BASIC_BUTTON_CURRENTLOC_MARGIN_BOTTOM);
 
         addressLayout.setVisibility(View.GONE);
         btnFindRoute.setVisibility(View.GONE);
     }
 
-    private void setBtnCurrentLocMarginChange(int changeMarginLeft, int changeMarginTop) {
-        marginLeft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginLeft, this.getResources().getDisplayMetrics());
-        marginTop = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginTop, this.getResources().getDisplayMetrics());
+    private void setBtnCurrentLocMarginChange(int changeMarginRight, int changeMarginBottom) {
+        marginRight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginRight, this.getResources().getDisplayMetrics());
+        marginBottom = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, changeMarginBottom, this.getResources().getDisplayMetrics());
 
         MarginLayoutParams margin = new MarginLayoutParams(btnCurrentLoc.getLayoutParams());
-        margin.setMargins(marginLeft, marginTop, 0, 0);
-        btnCurrentLoc.setLayoutParams(new RelativeLayout.LayoutParams(margin));
+        margin.setMargins(marginRight, marginBottom, marginRight, marginBottom);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(margin);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+        btnCurrentLoc.setLayoutParams(params);
     }
 
     private void setFont() {

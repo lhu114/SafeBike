@@ -63,7 +63,7 @@
             android:textSize="12sp"
             android:id="@+id/text_poi_address"
             android:layout_marginLeft="27dp"
-            android:layout_marginTop="5dp"/>
+            />
 
     </LinearLayout>
 
@@ -72,17 +72,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_find_route"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:visibility="gone"
         android:background="@drawable/button_choice_selector"
-        android:layout_marginTop="425dp"
+        android:layout_marginBottom="77dp"
         android:layout_marginRight="10dp" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btn_crt_location"
-        android:layout_marginTop="495dp"
-        android:layout_marginLeft="285dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/button_basic_location_selector" />
 
 

@@ -48,6 +48,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorUserImform</item>
         <item name="colorPrimaryDark">@color/safeBikeColorPrimaryDark</item>
+        <item name="actionBarSize">52dp</item>
         <item name="android:windowActionBarOverlay">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionBarOverlay">@null</item>
@@ -82,6 +83,8 @@
         <item name="contentInsetEnd">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="CustomToolbar" parent="Widget.AppCompat.Toolbar">
@@ -89,6 +92,8 @@
         <item name="contentInsetEnd">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="CustomNavigationButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
@@ -96,6 +101,8 @@
         <item name="contentInsetEnd">0dp</item>
         <item name="android:paddingLeft">17dp</item>
         <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
 </resources>

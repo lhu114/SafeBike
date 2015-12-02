@@ -50,6 +50,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar_parent_rctfv);
         getSupportActionBar().setElevation(0);
+
         tabHost = (FragmentTabHost)findViewById(R.id.tabHost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         tabHost.getTabWidget().setDividerDrawable(null);
