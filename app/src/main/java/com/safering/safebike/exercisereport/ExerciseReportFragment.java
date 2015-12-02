@@ -164,7 +164,7 @@ public class ExerciseReportFragment extends Fragment {
 
     public void setTitleFont(){
         textMainTitle.setText("기록");
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
     }
 

@@ -264,7 +264,7 @@ public class SettingFragment extends Fragment {
 
     public void setFont() {
         textMainTitle.setText("설정");
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textConnectDevice.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
     }
 

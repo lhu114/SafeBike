@@ -184,7 +184,7 @@ public class FriendFragment extends Fragment {
 
     public void setTitleFont(){
         textMainTitle.setText("친구");
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
     }
 

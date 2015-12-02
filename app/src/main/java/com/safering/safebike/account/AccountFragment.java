@@ -157,7 +157,7 @@ public class AccountFragment extends Fragment {
 
     public void setFont(){
         textMainTitle.setText(R.string.text_account);
-        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
+        textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         textHelp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
         textLogout.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
         textProfileName.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
