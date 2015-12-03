@@ -1,6 +1,7 @@
 package com.safering.safebike.friend;
 
 
+import android.content.pm.FeatureGroupInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,15 +57,24 @@ public class FriendDirectFragment extends Fragment {
             public void onButtonClick(FriendItemView view, FriendItem data) {
 
                 String uEmail = PropertyManager.getInstance().getUserEmail();
-                String fEmail = data.pemail;
-                String fId = data.pname;
-                String fPhoto = data.photo;
-                if(UserFriendList.getInstance().isFriend(fEmail) == true){
-                }else {
+                final String fEmail = data.pemail;
+                final String fId = data.pname;
+                final String fPhoto = data.photo;
+                if (UserFriendList.getInstance().isFriend(fEmail) == true) {
+                } else {
                     NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
                         @Override
                         public void onSuccess(Object result) {
+                            FriendItem friend = new FriendItem();
+                            friend.pname = fId;
+                            friend.pemail = fEmail;
+                            friend.photo = fPhoto;
+                            fAdapter.add(friend);
+                            UserFriendList.getInstance().addFriend(friend);
+
                             fAdapter.clear();
+
+                            // Toast.makeText(getContext(),"add",Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -95,14 +105,17 @@ public class FriendDirectFragment extends Fragment {
             public void onSuccess(FriendDirectSearchResult result) {
                 if(result.usereserch != null){
                     if(!result.usereserch.uemail.equals(PropertyManager.getInstance().getUserEmail())) {
-                        fAdapter.clear();
-                        FriendItem friend = new FriendItem();
-                        friend.pemail = result.usereserch.uemail;
-                        friend.pname = result.usereserch.name;
-                        friend.photo = result.usereserch.photo;
-                        Log.i("friend pmail", result.usereserch.uemail);
-                        Log.i("friend pname",result.usereserch.name);
-                        Log.i("friend pphoto", result.usereserch.photo);
+                        if(!UserFriendList.getInstance().isFriend(result.usereserch.uemail)) {
+
+
+                            fAdapter.clear();
+                            FriendItem friend = new FriendItem();
+                            friend.pemail = result.usereserch.uemail;
+                            friend.pname = result.usereserch.name;
+                            friend.photo = result.usereserch.photo;
+                            Log.i("friend pmail", result.usereserch.uemail);
+                            Log.i("friend pname", result.usereserch.name);
+                            Log.i("friend pphoto", result.usereserch.photo);
 /*
                         for(int i = 0; i < UserFriendList.getInstance().getFriendList().size(); i++){
                             Log.i("isFriend",UserFriendList.getInstance().getFriendList().get(i).pemail);
@@ -113,8 +126,8 @@ public class FriendDirectFragment extends Fragment {
 */
 
 
-
-                        fAdapter.add(friend);
+                            fAdapter.add(friend);
+                        }
                     }
                     Log.i("friend pphoto", result.usereserch.photo);
 

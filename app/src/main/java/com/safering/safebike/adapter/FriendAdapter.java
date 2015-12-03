@@ -1,5 +1,6 @@
 package com.safering.safebike.adapter;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by Tacademy on 2015-10-30.
  */
 public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButtonClickListener,Serializable{
-    List<FriendItem> items = new ArrayList<FriendItem>();
+    ArrayList<FriendItem> items = new ArrayList<FriendItem>();
     int viewType = 0;
 
     public FriendAdapter(int viewType) {
@@ -74,14 +75,25 @@ public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButt
 
     }
 
-    public void remove(String email){
+    public void remove(String email) {
+
+        Log.i("Input Email",email);
+
         for(int i = 0; i < items.size(); i++){
+            Log.i("item Email",items.get(i).pemail);
+
+        }
+
+        for(int i = 0; i < items.size(); i++){
+
             if(items.get(i).pemail.equals(email)){
+                Log.i("removeIndex",i + "");
                 items.remove(i);
+                notifyDataSetChanged();
                 break;
             }
         }
-        notifyDataSetChanged();
+
     }
     FriendItemView.OnButtonClickListener bListener;
     public void setOnButtonClickListener(FriendItemView.OnButtonClickListener listener){
