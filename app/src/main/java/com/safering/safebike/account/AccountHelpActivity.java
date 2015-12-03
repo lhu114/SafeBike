@@ -106,7 +106,7 @@ public class AccountHelpActivity extends AppCompatActivity {
         textSafeTitle.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS));
         textSafeCopyright.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS));
         textSafeRight.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS));
-        textTitle.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
+        textTitle.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS));
 
     }
 }

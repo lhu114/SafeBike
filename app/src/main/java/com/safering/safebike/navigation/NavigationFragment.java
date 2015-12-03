@@ -104,7 +104,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     LinearLayout addressLayout;
     FrameLayout frameLayout;
 
-    TextView textMainTitle;
+    TextView textSafeBikeMainTitle;
     TextView tvPOIAddress;
     TextView tvPOIName;
     ImageButton btnBluetooth, btnFullScreen, btnFindRoute, btnFwdSearch, btnCurrentLoc;
@@ -184,7 +184,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             relativeLayout = (RelativeLayout) view.findViewById(R.id.layout_navigationfragment);
             frameLayout = (FrameLayout) ((MainActivity) getActivity()).findViewById(R.id.framelayout_toolbar);
 
-            textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
+            textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
             btnFwdSearch = (ImageButton) ((MainActivity) getActivity()).findViewById(R.id.btn_fwd_search);
 
             addressLayout = (LinearLayout) view.findViewById(R.id.layout_address);
@@ -239,14 +239,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     if (actionBar.isShowing()) {
                         actionBar.hide();
                         frameLayout.setVisibility(View.GONE);
-                        textMainTitle.setVisibility(View.GONE);
+                        textSafeBikeMainTitle.setVisibility(View.GONE);
 
 
                         btnFullScreen.setSelected(true);
                     } else {
                         actionBar.show();
                         frameLayout.setVisibility(View.VISIBLE);
-                        textMainTitle.setVisibility(View.VISIBLE);
+                        textSafeBikeMainTitle.setVisibility(View.VISIBLE);
 
                         btnFullScreen.setSelected(false);
                     }
