@@ -1,21 +1,20 @@
 package com.safering.safebike.login;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nostra13.universalimageloader.utils.L;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.InformDialogFragment;
@@ -115,6 +114,9 @@ public class SignUpFragment extends Fragment {
                             dialog.setContent("회원가입", "이미 존재하는 이메일입니다.");
                             dialog.show(getChildFragmentManager(), "fail");
                         } else {
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(inputPassword.getWindowToken(), 0);
+
                             ConfirmSignUpFragment confirmFragment = new ConfirmSignUpFragment();
                             Bundle signBundle = new Bundle();
                             signBundle.putString(SIGN_UP_ID, inputId.getText().toString());
