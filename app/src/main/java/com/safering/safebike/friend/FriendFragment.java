@@ -155,9 +155,6 @@ public class FriendFragment extends Fragment {
                     friendItem.pname = result.friendlist.get(i).pname;
                     friendItem.pemail = result.friendlist.get(i).pemail;
                     friendItem.photo = result.friendlist.get(i).photo;
-                    Log.i("friendPhoto",friendItem.photo);
-
-                    //fEmailList.add(friendItem.pemail);
                     UserFriendList.getInstance().addFriend(friendItem);
                     fAdapter.add(friendItem);
                 }

@@ -407,7 +407,7 @@ public class NetworkManager {
 
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
-        Log.i("myemail",email);
+        Log.i("myemail", email);
 
         client.get(context, FRIEND_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -525,7 +525,7 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
 
-                Log.i("searchResultSuccess",responseString);
+                Log.i("searchResultSuccess", responseString);
                 FriendSearchResult result = gson.fromJson(responseString, FriendSearchResult.class);
                 listener.onSuccess(result);
 
@@ -550,8 +550,10 @@ public class NetworkManager {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 Log.i("direct suc", responseString);
                // listener.onSuccess(ON_SUCCESS);
-                FriendDirectSearchResult result = gson.fromJson(responseString, FriendDirectSearchResult.class);
-                listener.onSuccess(result);
+                if(!responseString.equals("1")) {
+                    FriendDirectSearchResult result = gson.fromJson(responseString, FriendDirectSearchResult.class);
+                    listener.onSuccess(result);
+                }
 
             }
         });

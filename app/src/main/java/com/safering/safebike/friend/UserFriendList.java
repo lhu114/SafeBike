@@ -27,6 +27,11 @@ public class UserFriendList {
     }
 
     public void addFriend(FriendItem item){
+        for(int i = 0; i < items.size(); i++){
+            if(items.get(i).pemail.equals(item.pemail)){
+                return;
+            }
+        }
         items.add(item);
 
     }

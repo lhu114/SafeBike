@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
@@ -19,17 +21,21 @@ import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FriendAddressFragment extends Fragment {
     public static final int FRIEND_SELECT = 1;
+    int in = 0;
 
     ListView listView;
     FriendAdapter fAdapter;
     ArrayList<Contact> arContactList = new ArrayList<Contact>();
-    ArrayList<FriendItem> addressFriendList;
+   ArrayList<FriendItem> addressFriendList;
+    ArrayList position;
+
     public FriendAddressFragment() {
         // Required empty public constructor
     }
@@ -50,14 +56,24 @@ public class FriendAddressFragment extends Fragment {
             public void onButtonClick(FriendItemView view, FriendItem data) {
                 String uEmail = PropertyManager.getInstance().getUserEmail();
                 final String fEmail = data.pemail;
-                String fId = data.pname;
-                String fPhoto = data.photo;
+                final String fId = data.pname;
+                final String fPhoto = data.photo;
                 if(UserFriendList.getInstance().isFriend(fEmail) == true){
                 }else {
                     NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
                         @Override
                         public void onSuccess(Object result) {
+                           // Toast.makeText(getContext(),"ttt" + fEmail,Toast.LENGTH_SHORT).show();
+                            FriendItem friend = new FriendItem();
+                            friend.pname = fId;
+                            friend.pemail = fEmail;
+                            friend.photo = fPhoto;
+
+                            UserFriendList.getInstance().addFriend(friend);
                             fAdapter.remove(fEmail);
+
+
+
                         }
 
                         @Override
@@ -76,6 +92,8 @@ public class FriendAddressFragment extends Fragment {
     }
 
     public void setList() {
+        in = 0;
+        position = new ArrayList();
         addressFriendList = new ArrayList<FriendItem>();
         arContactList = getContactList();
         NetworkManager.getInstance().getUserFriendAddress(getContext(),arContactList, new NetworkManager.OnResultListener<FriendSearchResult>() {
@@ -90,6 +108,8 @@ public class FriendAddressFragment extends Fragment {
                             friend.pemail = result.userpserch.get(i).uemail;
                             friend.photo = result.userpserch.get(i).photo;
                             fAdapter.add(friend);
+                            in++;
+                            position.add(in++);
                             addressFriendList.add(friend);
                         }
                     }

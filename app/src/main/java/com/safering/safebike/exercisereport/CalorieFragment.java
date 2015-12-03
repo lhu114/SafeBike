@@ -300,6 +300,7 @@ public class CalorieFragment extends Fragment {
                     set.setColor(Color.parseColor("#B6E2FF"));
                     set.setBarSpacePercent(45f);
 
+
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
 
