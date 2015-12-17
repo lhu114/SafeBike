@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.InformDialogFragment;
 
 public class AccountHelpActivity extends AppCompatActivity {
     TextView textShow;
@@ -20,6 +20,7 @@ public class AccountHelpActivity extends AppCompatActivity {
     TextView textSafeCopyright;
     TextView textSafeRight;
     ImageView imageBackkey;
+    InformDialogFragment dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +43,15 @@ public class AccountHelpActivity extends AppCompatActivity {
         textPolicy = (TextView)findViewById(R.id.text_policy_profile);
         textLicense = (TextView)findViewById(R.id.text_license);
         imageBackkey = (ImageView)findViewById(R.id.image_backkey);
+        dialog = new InformDialogFragment();
 
         setFont();
 
         textShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UseDialogFragment useDialogFragment = new UseDialogFragment();
-                useDialogFragment.show(getSupportFragmentManager(), "Use");
+                dialog.setContent("사용법", "준비중입니다.");
+                dialog.show(getSupportFragmentManager(), "use");
             }
         });
         textQnA.setOnClickListener(new View.OnClickListener() {

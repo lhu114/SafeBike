@@ -5,22 +5,20 @@ package com.safering.safebike.login;
  */
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 
 public class AgreeDialogFragment extends DialogFragment{
 
-    private String title = "";
-    private String content = "";
+
     private TextView btnPositive;
     //개인정책동의 다이얼로그
 

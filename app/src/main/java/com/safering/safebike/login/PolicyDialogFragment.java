@@ -19,8 +19,7 @@ import com.safering.safebike.manager.FontManager;
 
 public class PolicyDialogFragment extends DialogFragment{
     //약관 동의 다이얼로그 프래그먼트
-    private String title = "";
-    private String content = "";
+
     private TextView btnPositive;
     @NonNull
     @Override

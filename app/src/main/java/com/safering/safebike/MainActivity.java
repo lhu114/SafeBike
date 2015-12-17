@@ -367,14 +367,14 @@ public class MainActivity extends AppCompatActivity
                 emptyBackStack();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new FriendFragment(), TAG_FRIEND).addToBackStack(null).commit();
             }
-        } else if (id == R.id.nav_setting) {
+        }/* else if (id == R.id.nav_setting) {
             Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_SETTING);
 
             if (old == null) {
                 emptyBackStack();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new SettingFragment(), TAG_SETTING).addToBackStack(null).commit();
             }
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
