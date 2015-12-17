@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/colorNaviHeader"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorNaviHeader"
+        >
+        <!--<ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/image_custom_safelogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_dialog_info"
+            />
+        -->
+        <TextView
+            android:id="@+id/text_custom_dialog_policy_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorBlack"
+            android:text="[사용약관]"
+
+            android:textSize="16sp"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorNaviHeader"
+        >
+
+        <TextView
+
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="제 1장 총칙"
+            android:layout_marginTop="20sp" />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="제 1조 (목적)"
+            />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="이 약관은 SafeBike가 제공하는 인터넷 서비스를 이용함에 있어 회원의 권리,의무 및 책임사항을 규정합니다."
+            />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="제 2조 (약관의 효력 및 변경)"
+            />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="이 약관은 앱을 통하여 공지함으로써 그 효력이 발생합니다."
+            />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="10dp"
+            android:text="제 3조 (용어의 정의)"
+            />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="이 약관에서 사용하는 주요한 용어의 정의는 다음과 같습니다."
+            />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="아이디(ID) : 회원의 식별과 회원의 서비스 이용을 위하여 회원이 선정한 문자나 숫자 혹은 그조합을 말합니다."
+            />
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="비밀번호 : 회원이 부여 받은 ID와 일치된 회원임을 확인하고, 회원 자신의 비밀을 보호하기 위해 회원이 선정한 문자나 숫자 혹은 그조합을 말합니다."
+            />
+
+        <TextView
+
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="제 2장 서비스 이용 계약"
+            android:layout_marginTop="20sp" />
+
+        <TextView
+
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="제 4조 (이용 계약의 성립)"
+            />
+
+        <TextView
+
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            android:text="서비스 가입 신청시 본 약관을 읽고 체크박스를 체크할경우 본약관을 동의하는것으로 간주됩니다."
+            />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="확인"
+        android:textColor="@color/colorUserImform"
+        android:id="@+id/btn_custom_dialog_policy"
+        android:layout_gravity="center_horizontal|right"
+        android:gravity="right"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        />
+
+
+
+
+</LinearLayout>

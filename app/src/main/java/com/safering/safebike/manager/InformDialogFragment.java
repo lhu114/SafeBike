@@ -2,6 +2,8 @@ package com.safering.safebike.manager;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -10,45 +12,54 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
+import com.safering.safebike.property.PropertyManager;
+import com.safering.safebike.service.RouteService;
 
 /**
  * Created by Tacademy on 2015-11-28.
  */
-public class InformDialogFragment extends DialogFragment{
+public class InformDialogFragment extends DialogFragment {
 
     private String title = "";
     private String content = "";
-    private Button btnPositive;
+    private TextView btnPositive;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+
         //LayoutInflater inflater = ((LoginActivity)getActivity()).getLayoutInflater();
         LayoutInflater inflater = (getActivity()).getLayoutInflater();
 
 
-        View contentView = inflater.inflate(R.layout.custom_dialog_content,null);
+        View contentView = inflater.inflate(R.layout.custom_dialog_content, null);
 
-        TextView textContent = (TextView)contentView.findViewById(R.id.text_custom_dialog_content);
+        TextView textContent = (TextView) contentView.findViewById(R.id.text_custom_dialog_content);
         textContent.setText(content);
         textContent.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
 
-        textContent = (TextView)contentView.findViewById(R.id.text_custom_dialog_title);
+        textContent = (TextView) contentView.findViewById(R.id.text_custom_dialog_title);
         textContent.setText(title);
-        textContent.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        textContent.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
         builder.setView(contentView);
-        btnPositive = (Button)contentView.findViewById(R.id.btn_custom_dialog_positive);
-        btnPositive.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
+
+        btnPositive = (TextView) contentView.findViewById(R.id.btn_custom_dialog_positive);
+        btnPositive.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+
 
         btnPositive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
-        });
 
+        });
 /*
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
@@ -61,7 +72,7 @@ public class InformDialogFragment extends DialogFragment{
         return builder.create();
     }
 
-    public void setContent(String title,String content){
+    public void setContent(String title, String content) {
         this.title = title;
         this.content = content;
 

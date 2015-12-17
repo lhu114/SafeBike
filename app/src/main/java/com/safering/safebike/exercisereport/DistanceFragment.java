@@ -66,7 +66,7 @@ public class DistanceFragment extends Fragment {
         YAxisValueFormatter custom = new MyYAxisValueFormatter(MyYAxisValueFormatter.CHART_DISTANCE);
 
         distanceChart = (BarChart) view.findViewById(R.id.chart_distance);
-        distanceChart.setVerticalScrollBarEnabled(true);
+        distanceChart.setVerticalScrollBarEnabled(false);
         distanceChart.setDrawBarShadow(false);
         distanceChart.setDrawGridBackground(false);
         distanceChart.setDrawHighlightArrow(false);
@@ -76,15 +76,6 @@ public class DistanceFragment extends Fragment {
         distanceChart.getAxisLeft().setValueFormatter(custom);
         distanceChart.getAxisRight().setDrawGridLines(false);
         distanceChart.getAxisRight().setDrawLabels(false);
-/*
-        setFont();
-
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String today = dateFormat.format(cal.getTime());
-
-        requestData(today);*/
-
 
         distanceChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
@@ -149,8 +140,6 @@ public class DistanceFragment extends Fragment {
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cal = Calendar.getInstance();
                 String email = PropertyManager.getInstance().getUserEmail();
                 String date = distanceChart.getXValue(e.getXIndex());
 
@@ -182,14 +171,6 @@ public class DistanceFragment extends Fragment {
 
             }
         });
-/*
-        moveRecent = (Button)view.findViewById(R.id.btn_move_distance);
-        moveRecent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
-            }
-        });*/
 
         total = 0;
         xVals = new ArrayList<String>();
@@ -199,7 +180,6 @@ public class DistanceFragment extends Fragment {
         String today = dateFormat.format(cal.getTime());
         requestData(today);
         setFont();
-        //setToday();
 
         return view;
     }
@@ -235,66 +215,8 @@ public class DistanceFragment extends Fragment {
         });
 
     }
-
-    /*private void requestData() {
-        int count = 0;
-        int range = 0;
-        ArrayList<String> dateList = new ArrayList<String>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //2015-12-23
-        final Calendar cal = Calendar.getInstance();
-        for(int i = 0; i < 10; i++){
-            cal.add(Calendar.DATE,-1);
-            String date = dateFormat.format(cal.getTime());
-            dateList.add(date);
-            Log.i("date : ",date);
-        }
-
-
-        String email = PropertyManager.getInstance().getUserEmail();
-        NetworkManager.getInstance().getExerciseRecord(getContext(), email, dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
-            @Override
-            public void onSuccess(ExcerciseResult result) {
-
-                ArrayList<ExerciseItem> values = result.workoutlist;
-
-                BarData data;
-                int count = result.workoutlist.size();
-                if (count > 0) {
-                    for (int i = 0; i < count; i++) {
-                        xVals.add(result.workoutlist.get(i)._id);
-                        yVals.add(new BarEntry(result.workoutlist.get(i).road, total+i));
-                    }
-                    total += count;
-                    BarDataSet set = new BarDataSet(yVals, "Distance");
-                    dataSets = new ArrayList<BarDataSet>();
-                    dataSets.add(set);
-                    data = new BarData(xVals, dataSets);
-                    data.setValueTextSize(10f);
-                    distanceChart.setData(data);
-
-
-                    distanceChart.notifyDataSetChanged();
-                    distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
-                    distanceChart.invalidate();
-                }
-
-
-
-            }
-
-            @Override
-            public void onFail(int code) {
-
-            }
-        });
-
-
-
-    }*/
     private void requestData(String today) {
-        int count = 0;
-        int range = 0;
+
         ArrayList<String> dateList = new ArrayList<String>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -331,7 +253,7 @@ public class DistanceFragment extends Fragment {
                 int count = result.workoutlist.size();
                 if (count > 0) {
                     for (int i = 0; i < count; i++) {
-                        xVals.add(result.workoutlist.get(i)._id);
+                        xVals.add(i,result.workoutlist.get(i)._id);
 
                         yVals.add(new BarEntry((result.workoutlist.get(i).road * 100)/100, total+i));
                     }

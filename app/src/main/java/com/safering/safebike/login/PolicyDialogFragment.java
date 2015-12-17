@@ -9,23 +9,43 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 
 public class PolicyDialogFragment extends DialogFragment{
     //약관 동의 다이얼로그 프래그먼트
-
+    private String title = "";
+    private String content = "";
+    private TextView btnPositive;
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setTitle("Dialog Fragment");
-        builder.setMessage("PolicyDialog");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        LayoutInflater inflater = (getActivity()).getLayoutInflater();
+
+
+        View contentView = inflater.inflate(R.layout.custom_dialog_private, null);
+
+
+        builder.setView(contentView);
+
+
+        btnPositive = (TextView) contentView.findViewById(R.id.btn_custom_dialog_private);
+        btnPositive.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        btnPositive.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(View v) {
+                dismiss();
             }
+
         });
+
+
         return builder.create();
     }
 }
