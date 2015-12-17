@@ -14,7 +14,7 @@
         android:src="@drawable/safebike_logo_s" />
 
     <TextView
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_rct_poi_name"
         android:textSize="16sp"
