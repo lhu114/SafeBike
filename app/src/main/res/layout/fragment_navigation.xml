@@ -39,7 +39,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
+        android:layout_height="68dp"
         android:background="@drawable/white_box_and_shadow"
         android:id="@+id/layout_address"
         android:layout_alignParentBottom="true"
