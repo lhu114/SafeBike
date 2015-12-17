@@ -20,6 +20,8 @@
         android:textSize="16sp"
         android:textColor="#000000"
         android:id="@+id/text_fv_poi_name"
+        android:maxLength="14"
+        android:singleLine="true"
         android:ellipsize="end"
         android:layout_marginTop="21dp"
         android:layout_marginLeft="76dp"
