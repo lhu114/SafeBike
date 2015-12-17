@@ -43,11 +43,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.safering.safebike.MainActivity;
-import com.safering.safebike.MainFragment;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
-import com.safering.safebike.setting.BluetoothConnection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,9 +105,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     TextView textSafeBikeMainTitle;
     TextView tvPOIAddress;
     TextView tvPOIName;
-    ImageButton btnBluetooth, btnFullScreen, btnFindRoute, btnFwdSearch, btnCurrentLoc;
-
-    MainFragment mainFragment;
+    ImageButton btnFullScreen, btnFindRoute, btnFwdSearch, btnCurrentLoc;
 
     String definePOIName = null;
 
@@ -194,16 +190,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             tvPOIName = (TextView) view.findViewById(R.id.text_poi_name);
 
             btnFullScreen = (ImageButton) view.findViewById(R.id.btn_full_screen);
-            btnBluetooth = (ImageButton)view.findViewById(R.id.btn_status_bluetooth);
-
-            mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
-
-            if (BluetoothConnection.getInstance().getIsConnect() == 1) {
-                btnBluetooth.setSelected(true);
-            } else {
-                btnBluetooth.setSelected(false);
-            }
-///d
             btnFindRoute = (ImageButton) view.findViewById(R.id.btn_find_route);
             btnFindRoute.setVisibility(View.GONE);
             btnFindRoute.setEnabled(false);

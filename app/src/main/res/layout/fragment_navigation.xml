@@ -19,15 +19,6 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_status_bluetooth"
-        android:layout_gravity="left|top"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/button_bluetooth_selector"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:background="@drawable/button_full_screen_selector"
         android:id="@+id/btn_full_screen"
         android:layout_gravity="right|top"

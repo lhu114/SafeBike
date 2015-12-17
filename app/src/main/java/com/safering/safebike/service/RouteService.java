@@ -19,6 +19,8 @@ import android.os.PowerManager;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.support.v4.content.ContextCompat;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -56,8 +58,9 @@ import java.util.concurrent.TimeUnit;
 
 public class RouteService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String DEBUG_TAG = "safebike";
-
     private static final String WAKE_LOCK_TAG = "routeservice";
+
+    private static final String SERVICE_RUNNING = "running";
 
     private static final String ANIMATE_CAMERA = "animatecamera";
 
@@ -137,7 +140,12 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     PowerManager pm;
     PowerManager.WakeLock wakeLock;
 
+    TelephonyManager mTelephonyManager;
     AudioManager mAudioManager;
+
+    CallStateListener callStateListener;
+
+    boolean isCalling = false;
 
     enum PlayState {
         IDLE,
@@ -185,6 +193,16 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             createLocationRequest();
         }
 
+        //        mSimulationHandler = new Handler(Looper.getMainLooper());
+        mMediaHandler = new Handler(Looper.getMainLooper());
+
+        orthogonalLoc = new Location(mProvider);
+        pointLoc = new Location(mProvider);
+        locationA = new Location(mProvider);
+        locationB = new Location(mProvider);
+        lastLocation = new Location(mProvider);
+        simulationLoc = new Location(mProvider);
+
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
@@ -213,15 +231,10 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             }
         };
 
-        //        mSimulationHandler = new Handler(Looper.getMainLooper());
-        mMediaHandler = new Handler(Looper.getMainLooper());
+        callStateListener = new CallStateListener();
 
-        orthogonalLoc = new Location(mProvider);
-        pointLoc = new Location(mProvider);
-        locationA = new Location(mProvider);
-        locationB = new Location(mProvider);
-        lastLocation = new Location(mProvider);
-        simulationLoc = new Location(mProvider);
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     @Override
@@ -272,10 +285,17 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(DEBUG_TAG, "RouteService.onStartCommand.");
+        Log.d(DEBUG_TAG, "RouteService.onStartCommand");
 
         if (intent == null) {
+            Log.d(DEBUG_TAG, "RouteService.onStartCommand.intent == null");
+            if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
+                Log.d(DEBUG_TAG, "RouteService.onStartCommand.intent == null.SERVICE_RUNNING");
 
+                restartRouting();
+            }
+        } else {
+            Log.d(DEBUG_TAG, "RouteService.onStartCommand.intent != null");
         }
 
         if (!mResolvingError) {  // more about this later
@@ -336,6 +356,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
             wakeLock.release();
         }
+
+        mTelephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
     protected void createLocationRequest() {
@@ -407,7 +429,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         if (isInitialServiceRunning) {
             Log.d(DEBUG_TAG, "RouteService.startRouting.isInitialServiceRunning");
             if (mLM != null && mLM.isProviderEnabled(mProvider) && isStartNavigation == true) {
-                tts.translate("안내를 시작합니다.");
+                if (!isCalling) {
+                    tts.translate("안내를 시작합니다.");
+                }
 
                 if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -513,7 +537,49 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void restartRouting() {
+        Log.d(DEBUG_TAG, "RouteService.restartRouting");
 
+//        Log.d(DEBUG_TAG, "RouteService.restartRouting.isInitialServiceRunning");
+        if (mLM != null && mLM.isProviderEnabled(mProvider) && isStartNavigation == true) {
+            if (!isCalling) {
+                tts.translate("안내를 시작합니다.");
+            }
+
+            if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                return;
+            }
+
+            Log.d(DEBUG_TAG, "RouteService.restartRouting.requestLocationUpdates");
+
+//                mLM.requestLocationUpdates(mProvider, REQUEST_LOCATION_UPDATES_ITERATIVE_INTERVAL, 0, mIterativeListener);
+            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                starIterativeLocationUpdates();
+            }
+
+            if (!wakeLock.isHeld()) {
+                if (wakeLock != null) {
+                    Log.d(DEBUG_TAG, "RouteService.restartRouting.wakeLock != null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
+
+                    wakeLock.acquire();
+                } else if (wakeLock == null) {
+                    Log.d(DEBUG_TAG, "RouteService.restartRouting.wakeLock == null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
+
+//                        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKE_LOCK_TAG);
+                    wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, WAKE_LOCK_TAG);
+                    wakeLock.acquire();
+                }
+            }
+
+            startTime = System.currentTimeMillis();
+            Log.d(DEBUG_TAG, "RouteService.restartRouting.startTime : " + Long.toString(startTime));
+
+            findRoute();
+
+            isInitialServiceRunning = false;
+
+//                int result = mAudioManager.requestAudioFocus(mFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+        }
     }
 
     /*int simulationLatLngIndex = 0;
@@ -854,7 +920,10 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                             if (!isActivateRouteWithinLimitDistanceNoti) {
                                 Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.", Toast.LENGTH_SHORT).show();
-//                                tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+
+                                /*if (!isCalling) {
+                                 tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+                                }*/
 
                                 findRoute();
                             }
@@ -954,7 +1023,10 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                                 if (!isActivateRouteWithinLimitDistanceNoti) {
                                     Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.", Toast.LENGTH_SHORT).show();
-//                                    tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+
+                                    /*if (!isCalling) {
+                                        tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
+                                    }*/
 
                                     findRoute();
                                 }
@@ -995,6 +1067,38 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
         }
     };
+
+    private class CallStateListener extends PhoneStateListener {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            switch (state) {
+                /*
+                 * 통화 종료 구현
+                 */
+                case TelephonyManager.CALL_STATE_IDLE :
+                    isCalling = false;
+
+                    break;
+
+                /*
+                 * 통화 중 상태 구현
+                 */
+                case TelephonyManager.CALL_STATE_OFFHOOK :
+                    isCalling = true;
+
+                    break;
+
+                /*
+                 * 통화 벨 울릴 시 구현
+                 */
+                case TelephonyManager.CALL_STATE_RINGING :
+                    isCalling = true;
+
+                    break;
+
+            }
+        }
+    }
 
     boolean isTemporaryPause = false;
     boolean isTemporaryMute = false;
@@ -1251,8 +1355,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 pointInfo = mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex));
                 pointInfoDistance = Math.round(tempDistance);
 
-                tts.translate(Integer.toString(pointInfoDistance) + "m 이후 " + pointInfo.properties.description);
-
+                if (!isCalling) {
+                    tts.translate(Integer.toString(pointInfoDistance) + "m 이후 " + pointInfo.properties.description);
+                }
 
                 if (pointInfo.properties.turnType == LEFT_SIDE) {
                     setImageDescription(LEFT_SIDE);
@@ -1293,7 +1398,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 if (pointInfoDistance >= LIMIT_DISTANCE_NOTIFICATION) {
                     Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.pointInfoDistance >= 300");
 
-                    tts.translate("잠시후 " + mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex)));
+                    if (!isCalling) {
+                        tts.translate("잠시후 " + mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex)));
+                    }
                 } else {
                     Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.pointInfoDistance < 300");
                 }
@@ -1789,7 +1896,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         Log.d(DEBUG_TAG, "RouteService.withinRouteLimitDistanceDialog");
 
         if (isFirstFinishDialog) {
-            tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+            if (!isCalling) {
+                tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+            }
 
 //            sendExerciseReport(mSpeedList, mDistanceList);
 
@@ -1841,7 +1950,10 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         Log.d(DEBUG_TAG, "RouteService.autoFinishNavigationDialog");
 
         if (isFirstFinishDialog == true) {
-            tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+            if (!isCalling) {
+                tts.translate("목적지에 도착했습니다. 내비게이션 안내를 종료합니다.");
+            }
+
             /*
              * 시연 후 삭제
              */

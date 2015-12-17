@@ -59,7 +59,6 @@ import com.safering.safebike.manager.MapInfoManager;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.property.SpeakVoice;
 import com.safering.safebike.service.RouteService;
-import com.safering.safebike.setting.BluetoothConnection;
 
 import java.util.ArrayList;
 
@@ -137,7 +136,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 //    int gpIndex = 0;
 
     TextView tvNaviDescription, tvMainTitle;
-    ImageButton btnBluetooth, btnFullScreen, btnBackKey, btnFinishNavi;
+    ImageButton btnFullScreen, btnBackKey, btnFinishNavi;
     ImageView imageDescription;
 
     boolean isFirst = true;
@@ -165,13 +164,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         imageDescription = (ImageView) findViewById(R.id.image_description);
         tvNaviDescription = (TextView) findViewById(R.id.text_navi_description);
 
-        btnBluetooth = (ImageButton) findViewById(R.id.btn_status_bluetooth);
+        /*btnBluetooth = (ImageButton) findViewById(R.id.btn_status_bluetooth);
 
         if (BluetoothConnection.getInstance().getIsConnect() == 1) {
             btnBluetooth.setSelected(true);
         } else {
             btnBluetooth.setSelected(false);
-        }
+        }*/
 
         btnFullScreen = (ImageButton) findViewById(R.id.btn_full_screen);
         btnFullScreen.setOnClickListener(new View.OnClickListener() {
