@@ -57,6 +57,8 @@ public class FriendFragment extends Fragment {
         textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
 
         listFooter = inflater.inflate(R.layout.custom_friend_view,null);
+
+        listFooter.setClickable(false);
         textInvite = (TextView)listFooter.findViewById(R.id.text_invite_friend);
 
         listView = (ListView) view.findViewById(R.id.listview_myfriend);
