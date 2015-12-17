@@ -6,7 +6,8 @@
             <item android:id="@+id/nav_safebike" android:icon="@mipmap/safebike" android:title="@string/nav_safebike"/>
             <item android:id="@+id/nav_exercise_report" android:icon="@mipmap/record" android:title="@string/nav_exercise_report" />
             <item android:id="@+id/nav_friend" android:icon="@mipmap/friends" android:title="@string/nav_friend" />
-            <item android:id="@+id/nav_setting" android:icon="@mipmap/setting" android:title="@string/nav_setting" />
+            <!--<item android:id="@+id/nav_setting" android:icon="@mipmap/setting" android:title="@string/nav_setting" />
+            -->
         </group>
 
 
