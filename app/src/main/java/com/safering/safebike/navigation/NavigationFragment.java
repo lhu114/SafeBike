@@ -289,6 +289,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     } else if (isCurrentLocBtnOn) {
                         Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.true");
 
+                        if (mRotationSensor != null) {
+                            mSM.registerListener(mSensorListener, mRotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                        }
+
                         isCurrentLocBtnOn = false;
                         isActivateRotation = true;
                         isChangeLocBtnOn = true;
@@ -296,6 +300,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         btnCurrentLoc.setBackgroundResource(R.drawable.button_change_direction_selector);
                     } else if (isChangeLocBtnOn) {
                         Log.d("safebike", "NavigationFragment.btnCurrentLoc.isBasicLocBtnOn.true");
+
+                        if (mRotationSensor != null) {
+                            mSM.unregisterListener(mSensorListener);
+                        }
 
                         isChangeLocBtnOn = false;
                         isActivateRotation = false;
@@ -358,9 +366,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             return;
         }
 
-        if (mRotationSensor != null) {
-            mSM.registerListener(mSensorListener, mRotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        }
+//        if (mRotationSensor != null) {
+//            mSM.registerListener(mSensorListener, mRotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
+//        }
     }
 
     /*
@@ -380,9 +388,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect");
         }
 
-        if (mRotationSensor != null) {
+        /*if (mRotationSensor != null) {
             mSM.unregisterListener(mSensorListener);
-        }
+        }*/
 
         btnFwdSearch.setVisibility(View.GONE);
     }
@@ -554,37 +562,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-    SensorEventListener mSensorListener = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            switch (event.sensor.getType()) {
-                case Sensor.TYPE_ROTATION_VECTOR:
-                    SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
-                    SensorManager.getOrientation(mRotationMatrix, orientation);
-
-                    mAngle = (float) Math.toDegrees(orientation[0]);
-
-                    if (mAngle < 0) {
-                        mAngle += 360;
-                    }
-
-                    if (isActivateRotation) {
-                        setBearingMoveMap(mAngle);
-                    }
-
-//                    Log.d(DEBUG_TAG, "NavigationFragment.btnCurrentLoc.mSensorListener.onSensorChanged.mAngle : " + mAngle);
-
-                    break;
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
-
-
     protected void createLocationRequest() {
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
 
@@ -687,6 +664,36 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap == null");
                 mCacheLocation = location;
             }
+        }
+    };
+
+    SensorEventListener mSensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_ROTATION_VECTOR:
+                    SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
+                    SensorManager.getOrientation(mRotationMatrix, orientation);
+
+                    mAngle = (float) Math.toDegrees(orientation[0]);
+
+                    if (mAngle < 0) {
+                        mAngle += 360;
+                    }
+
+                    if (isActivateRotation) {
+                        setBearingMoveMap(mAngle);
+                    }
+
+//                    Log.d(DEBUG_TAG, "NavigationFragment.btnCurrentLoc.mSensorListener.onSensorChanged.mAngle : " + mAngle);
+
+                    break;
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
         }
     };
 
@@ -1030,9 +1037,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             float distance = oldLocation.distanceTo(newLocation);
 
             if (distance > 100) {
-                Log.d("safebike", "onCameraChange.outOfCameraPosition.distance : " + Float.toString(distance));
+//                Log.d("safebike", "onCameraChange.outOfCameraPosition.distance : " + Float.toString(distance));
             } else {
-                Log.d("safebike", "onCameraChange.withinCameraPosition.distance : "+ Float.toString(distance));
+//                Log.d("safebike", "onCameraChange.withinCameraPosition.distance : "+ Float.toString(distance));
             }
        /* if (oldLatLng.equals(newLatLng)) {
             Log.d("safebike", "onCameraChange.same");

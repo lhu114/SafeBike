@@ -271,7 +271,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                         @Override
                         public void onSuccess(BicycleRouteInfo result) {
                             if (result.features != null && result.features.size() > 0) {
-                                btnStartNavi.setEnabled(true);
+//                                btnStartNavi.setEnabled(true);
 
                                 clearAllLaneMarker();
 
@@ -383,7 +383,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                     public void onSuccess(BicycleRouteInfo result) {
                         Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.onSuccess");
                         if (result.features != null && result.features.size() > 0) {
-                            btnStartNavi.setEnabled(true);
+//                            btnStartNavi.setEnabled(true);
 
                             clearAllMinMarker();
 
@@ -943,9 +943,11 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     private void addPolyline(PolylineOptions minOptions, PolylineOptions laneOptions) {
         if (minOptions != null && laneOptions != null) {
+            btnStartNavi.setEnabled(true);
+
             minOptions.color(0x383498db);
             minOptions.width(10);
-            minOptions.geodesic(true);
+//            minOptions.geodesic(true);
 
             polyline = mMap.addPolyline(minOptions);
 
@@ -953,7 +955,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
             laneOptions.color(0xba3498db);
             laneOptions.width(10);
-            minOptions.geodesic(true);
+//            minOptions.geodesic(true);
 
             polyline = mMap.addPolyline(laneOptions);
 

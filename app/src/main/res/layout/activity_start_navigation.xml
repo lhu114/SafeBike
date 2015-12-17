@@ -44,10 +44,9 @@
         android:layout_alignParentBottom="true">
 
         <RelativeLayout
-
             android:layout_width="match_parent"
             android:layout_height="68dp"
-            android:background="#ffffff">
+            android:background="@drawable/white_box_and_shadow">
 
             <ImageView
                 android:layout_width="wrap_content"
