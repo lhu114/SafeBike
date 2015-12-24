@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -47,26 +48,10 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-/*
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2;
-        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.activity_splash,options);
-*/
-
-        /*splashImage = (ImageView)findViewById(R.id.image_splash);
-        splashImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        splashImage.setImageBitmap(bm);
-        */
-
-        splashImage = (ImageView)findViewById(R.id.image_splash);
-        splashImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
 
         userEmail = PropertyManager.getInstance().getUserEmail();
         userPassword = PropertyManager.getInstance().getUserPassword();
-        Log.i("Userid", PropertyManager.getInstance().getUserId());
-        Log.i("UserPass", PropertyManager.getInstance().getUserPassword());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -74,17 +59,16 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 .addOnConnectionFailedListener(this).build();
 
         if (PropertyManager.getInstance().getRecentLatitude().equals("") && PropertyManager.getInstance().getRecentLongitude().equals("")) {
-            /*
-             * default 위치 TMAP 기준 : POI 서울 검색 위도 경도 값
-             *
-             *      "noorLat":"37.5670652",
-                    "noorLon":"126.9772433"
-             */
+
             PropertyManager.getInstance().setRecentLatitude(DEFAULT_LATITUDE);
             PropertyManager.getInstance().setRecentLongitude(DEFAULT_LONGITUDE);
 
             Log.d("safebike", "SplashActivity.onCreate.setDefaultLocation");
+
         }
+
+
+
 
         /*
          * 비정상적으로 종료했을 때 시나리오 처리
@@ -105,26 +89,31 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         finish();
     }
 
-    Handler mHandler = new Handler(Looper.getMainLooper());
+    Handler mHandler = new Handler(
+            /*Looper.getMainLooper()
+            */
+
+    );
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("safebike", "SplashActivity.onConnected");
+
         if(TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)){
 
             mHandler.postDelayed(new Runnable() {
                 @Override
-                public void run() {goLogin();}
-            },1000);
+                public void run() {
+                    goLogin();
+                }
+            },2000);
         }
-        /*else if(TextUtils.equals(userEmail,"@EMAIL")){
+        else{
             mHandler.postDelayed(new Runnable() {
                 @Override
-                public void run() {goLogin();}
-            },1000);
-        }*/
-        else{
-            goMain();
+                public void run() {
+                    goMain();
+                }
+            },2000);
         }
     }
 

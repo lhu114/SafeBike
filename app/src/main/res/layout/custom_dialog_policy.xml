@@ -33,6 +33,11 @@
             />
 
     </RelativeLayout>
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        >
 
     <LinearLayout
         android:layout_marginLeft="10dp"
@@ -155,7 +160,18 @@
 
 
 
+        <TextView
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="확인"
+            android:textColor="@color/colorUserImform"
+            android:id="@+id/btn_custom_dialog_policy"
+            android:layout_gravity="center_horizontal|right"
+            android:gravity="right"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            />
 
 
 
@@ -163,20 +179,9 @@
 
     </LinearLayout>
 
-    <TextView
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="확인"
-        android:textColor="@color/colorUserImform"
-        android:id="@+id/btn_custom_dialog_policy"
-        android:layout_gravity="center_horizontal|right"
-        android:gravity="right"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        />
 
 
+</ScrollView>
 
 
 </LinearLayout>

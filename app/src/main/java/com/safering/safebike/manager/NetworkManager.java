@@ -11,6 +11,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.safering.safebike.exercisereport.ExcerciseResult;
 import com.safering.safebike.exercisereport.ExerciseDayResult;
+import com.safering.safebike.exercisereport.ExerciseRecentResult;
 import com.safering.safebike.friend.FriendAddressFragment;
 import com.safering.safebike.friend.FriendDirectSearchResult;
 import com.safering.safebike.friend.FriendProfileResult;
@@ -69,13 +70,15 @@ public class NetworkManager {
     private static final String NAVIGATION_SAVE_EXCERCISE_URL = "http://52.69.133.212:3000/workout/add";
     private static final String EXCERCISE_URL = "http://52.69.133.212:3000/workout/list";//서버 URL
     private static final String EXCERCISE_DAY_URL = "http://52.69.133.212:3000/workout/";//서버 URL
-    private static final String EXERCISE_REQUEST_TYPE = "EXERCISE_TYPE";
+
     private static final String EXCERCISE_REQUEST_DATE = "date";
-    private static final String EXCERCISE_REQUEST_NUMBER = "REQUEST_NUMBER";
+    private static final String EXCERCISE_RECENT_URL = "http://52.69.133.212:3000/workout/one";
+    private static final String LOGOUT_URL = "http://52.69.133.212:3000/user/logout";
 
     /**
      * 친구
      */
+
     private static final String FRIEND_URL = "http://52.69.133.212:3000/user/friend";//서버 URL
     private static final String FRIEND_ADDRESS_URL = "http://52.69.133.212:3000/user/psearch";//서버 URL
     private static final String FRIEND_ADD_URL = "http://52.69.133.212:3000/user/friend/add";//서버 URL
@@ -371,6 +374,47 @@ public class NetworkManager {
         });
     }
 
+    public void getRecentExerciseDate(Context context,String email,final OnResultListener<ExerciseRecentResult> listener){
+        //PARAMETER : 유저 이메일,종류,날짜
+        //결과값 : JSON(칼로리,속력,거리)
+
+        RequestParams params = new RequestParams();
+
+        params.put(USER_EAMIL, email);
+        client.get(context, EXCERCISE_RECENT_URL, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("recentdataFail", responseString + "");
+                listener.onFail(statusCode);
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("recentdataSuccess",responseString + "");
+                ExerciseRecentResult result = gson.fromJson(responseString, ExerciseRecentResult.class);
+                listener.onSuccess(result);
+            }
+        });
+
+    }
+    public void logout(Context context,final OnResultListener listener){
+
+        client.get(context, LOGOUT_URL,new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("logoutfail",responseString + "");
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("logoutsuc",responseString + "");
+
+            }
+        });
+
+    }
 
     public void getDayExerciseRecord(Context context, String email, String date, final OnResultListener<ExerciseDayResult> listener) {
         //PARAMETER : 유저 이메일,종류,날짜

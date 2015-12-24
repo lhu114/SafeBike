@@ -17,6 +17,7 @@ import com.safering.safebike.R;
 import com.safering.safebike.adapter.FriendAdapter;
 import com.safering.safebike.adapter.FriendItem;
 import com.safering.safebike.adapter.FriendItemView;
+import com.safering.safebike.manager.InformDialogFragment;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
@@ -119,6 +120,9 @@ public class FriendAddressFragment extends Fragment {
 
             @Override
             public void onFail(int code) {
+                InformDialogFragment dialog = new InformDialogFragment();
+                dialog.setContent("네트워크 실패","네트워크 연결에 실패했습니다. 다시 시도해주세요");
+                dialog.show(getChildFragmentManager(),"network");
 
             }
         });

@@ -23,6 +23,7 @@ import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.login.LoginActivity;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.service.RouteService;
@@ -134,6 +135,17 @@ public class AccountFragment extends Fragment {
                     startActivity(intent);
                     ((MainActivity) getActivity()).finish();
                 }
+                NetworkManager.getInstance().logout(getContext(), new NetworkManager.OnResultListener() {
+                    @Override
+                    public void onSuccess(Object result) {
+                        
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+
+                    }
+                });
             }
         });
 

@@ -24,6 +24,7 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.InformDialogFragment;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
@@ -161,6 +162,9 @@ public class SpeedFragment extends Fragment {
 
                     @Override
                     public void onFail(int code) {
+                        InformDialogFragment dialog = new InformDialogFragment();
+                        dialog.setContent("네트워크 실패","네트워크 연결에 실패했습니다. 다시 시도해주세요");
+                        dialog.show(getChildFragmentManager(),"network");
 
                     }
                 });
@@ -210,6 +214,10 @@ public class SpeedFragment extends Fragment {
 
             @Override
             public void onFail(int code) {
+                InformDialogFragment dialog = new InformDialogFragment();
+                dialog.setContent("네트워크 실패","네트워크 연결에 실패했습니다. 다시 시도해주세요");
+                dialog.show(getChildFragmentManager(),"network");
+
 
             }
         });

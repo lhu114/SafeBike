@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -24,6 +26,7 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.InformDialogFragment;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.property.PropertyManager;
 
@@ -32,6 +35,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -43,12 +47,18 @@ public class CalorieFragment extends Fragment {
     TextView parentCal;
     TextView parentSpeed;
     TextView parentDistance;
-
+    int isDate = 0;
     ArrayList<String> xVals;
     ArrayList<BarEntry> yVals;
     ArrayList<BarDataSet> dataSets;
+    ArrayList<String> values;
+    ArrayList<ExerciseItem> workresults;
+    ArrayList<ExerciseItem> collections;
+    int collectCount;
     int total;
-
+    int yTotal;
+    int index;
+    private int READ_SIZE = 5;
     public CalorieFragment() {
         // Required empty public constructor
     }
@@ -76,6 +86,17 @@ public class CalorieFragment extends Fragment {
         calorieChart.getAxisLeft().setValueFormatter(custom);
         calorieChart.getAxisRight().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawLabels(false);
+        NetworkManager.getInstance().getRecentExerciseDate(getContext(), PropertyManager.getInstance().getUserEmail(), new NetworkManager.OnResultListener<ExerciseRecentResult>() {
+            @Override
+            public void onSuccess(ExerciseRecentResult result) {
+                Log.i("recentdate",result.workoutone.get(0).date);
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
 
         calorieChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
@@ -101,7 +122,14 @@ public class CalorieFragment extends Fragment {
                         e.printStackTrace();
                     }
                     Log.i("requestDate", dateFormat.format(cal.getTime()));
-                    requestData(dateFormat.format(cal.getTime()));
+                   // requestData(dateFormat.format(cal.getTime()));
+                    if(collections.size() < READ_SIZE) {
+                        updateData(collections.size());
+                    }
+                    else{
+                        updateData(READ_SIZE);
+                        READ_SIZE += 5;
+                    }
                 }
             }
 
@@ -161,6 +189,9 @@ public class CalorieFragment extends Fragment {
 
                     @Override
                     public void onFail(int code) {
+                        InformDialogFragment dialog = new InformDialogFragment();
+                        dialog.setContent("네트워크 실패", "네트워크 연결에 실패했습니다. 다시 시도해주세요");
+                        dialog.show(getChildFragmentManager(), "network");
 
                     }
                 });
@@ -173,12 +204,20 @@ public class CalorieFragment extends Fragment {
         });
 
         total = 0;
+        yTotal = 0;
+        index = 0;
+        collectCount = 0;
         xVals = new ArrayList<String>();
         yVals = new ArrayList<BarEntry>();
+        values = new ArrayList<String>();
+        workresults = new ArrayList<ExerciseItem>();
+        collections = new ArrayList<ExerciseItem>();
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String today = dateFormat.format(cal.getTime());
-        requestData(today);
+       // requestData(today);
+        collectDate(today);
+
         setFont();
 
         return view;
@@ -203,8 +242,83 @@ public class CalorieFragment extends Fragment {
 
 
                     parentCal.setText(String.valueOf(Math.round(result.workout.get(0).calorie)) + " kcal");
-                    parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0)/1000)) + " km/h");
-                    parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road/1000.0)) + " km");
+                    parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0) / 1000)) + " km/h");
+                    parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road / 1000.0)) + " km");
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+                InformDialogFragment dialog = new InformDialogFragment();
+                dialog.setContent("네트워크 실패", "네트워크 연결에 실패했습니다. 다시 시도해주세요");
+                dialog.show(getChildFragmentManager(), "network");
+
+            }
+        });
+
+    }
+    private void collectDate(String today){
+        final ArrayList<String> dateList = new ArrayList<String>();
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final Calendar cal = Calendar.getInstance();
+
+        dateList.add(today);
+
+        for(int i = 0; i < 9; i++){
+            try {
+                Date d = dateFormat.parse(today);
+                cal.setTime(d);
+                cal.add(Calendar.DATE, -1);
+                String date = dateFormat.format(cal.getTime());
+                dateList.add(date);
+
+                today = date;
+                Log.i("date : ",date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+
+
+        }
+        String email = PropertyManager.getInstance().getUserEmail();
+
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
+            @Override
+            public void onSuccess(ExcerciseResult result) {
+                collectCount = result.workoutlist.size();
+                if (collectCount > 0) {
+                    for (int i = 0; i < result.workoutlist.size(); i++) {
+                        collections.add(i, result.workoutlist.get(i));
+                    }
+                    try {
+                        Date d = dateFormat.parse(dateList.get(dateList.size() - 1));
+                        cal.setTime(d);
+                        cal.add(Calendar.DATE, -1);
+                        String date = dateFormat.format(cal.getTime());
+                        collectDate(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i("collectionsSize", collections.size() + "");
+
+                    for (int i = 0; i < collections.size(); i++) {
+                        Log.i("collectionsItem", collections.get(i)._id + "");
+                    }
+
+                }else {
+                /*if(collections.size() > 0) {
+                    updateData(collections.get(collections.size() - 1)._id,5);
+                }*/
+                    if(collections.size() < READ_SIZE) {
+                        updateData(collections.size());
+                    }
+                    else{
+                        updateData(READ_SIZE);
+                        READ_SIZE += 5;
+                    }
+
                 }
             }
 
@@ -215,10 +329,39 @@ public class CalorieFragment extends Fragment {
         });
 
     }
+    private void updateData(int readSize) {
+
+        BarData data;
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<BarEntry>();
+
+        for(int i = 0; i < readSize; i++){
+            xVals.add(i,collections.get(collections.size() - readSize + i)._id);
+
+            yVals.add(new BarEntry((collections.get(collections.size() - readSize + i).calorie * 100) / 100, i));
+
+        }
+        BarDataSet set = new BarDataSet(yVals, "calorie");
+        set.setColor(Color.parseColor("#B6E2FF"));
+        //set.setBarSpacePercent(70f);
+
+        dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set);
+
+        data = new BarData(xVals, dataSets);
+        data.setValueTextSize(0f);
+
+        calorieChart.setData(data);
+
+        calorieChart.notifyDataSetChanged();
+        calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
+        calorieChart.invalidate();
+
+    }
     private void requestData(String today) {
 
-        ArrayList<String> dateList = new ArrayList<String>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final ArrayList<String> dateList = new ArrayList<String>();
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         Calendar cal = Calendar.getInstance();
 
@@ -243,42 +386,70 @@ public class CalorieFragment extends Fragment {
         }
 
         String email = PropertyManager.getInstance().getUserEmail();
-        NetworkManager.getInstance().getExerciseRecord(getContext(), email,dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
 
-                ArrayList<ExerciseItem> values = result.workoutlist;
-
                 BarData data;
                 int count = result.workoutlist.size();
-                if (count > 0) {
-                    for (int i = 0; i < count; i++) {
-                        xVals.add(i,result.workoutlist.get(i)._id);
+                for (int i = 0; i < result.workoutlist.size(); i++) {
+                    workresults.add(i, result.workoutlist.get(i));
+                }
+                Log.i("counter", count + "");
+                Log.i("workresults ", workresults.size() + "");
 
-                        yVals.add(new BarEntry((result.workoutlist.get(i).calorie * 100)/100, total+i));
+                xVals = new ArrayList<String>();
+                yVals = new ArrayList<BarEntry>();
+                if (count > 0) {
+
+
+                    Collections.sort(dateList);
+
+
+                    for (int i = 0; i < workresults.size(); i++) {
+
+                        xVals.add(i,workresults.get(i)._id);
+                        yVals.add(new BarEntry((workresults.get(i).calorie * 100) / 100, i));
+
                     }
+
+                    yTotal += dateList.size();
+
+
+
+                    /*
+                    for(int i = 0; i < count)
+                        */
+
+
+                    /*for (int i = 0; i < count; i++) {
+                        xVals.add(i,result.workoutlist.get(i)._id);
+                        //new BarEntry();
+                        yVals.add(new BarEntry((result.workoutlist.get(i).calorie * 100) / 100, i));
+
+                    }*/
+
+
                     total += count;
                     BarDataSet set = new BarDataSet(yVals, "calorie");
                     set.setColor(Color.parseColor("#B6E2FF"));
-                    set.setBarSpacePercent(70f);
+                    //set.setBarSpacePercent(70f);
 
                     dataSets = new ArrayList<BarDataSet>();
                     dataSets.add(set);
 
                     data = new BarData(xVals, dataSets);
-                    data.setValueTextSize(10f);
-                    calorieChart.setData(data);
-   /*                 calorieChart.getXValue(0);
-   */
+                    data.setValueTextSize(0f);
 
+                    calorieChart.setData(data);
 
                     calorieChart.notifyDataSetChanged();
                     calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
                     calorieChart.invalidate();
+
                     setToday();
 
                 }
-
 
 
             }

@@ -71,7 +71,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         userPassConfirm = (TextView) findViewById(R.id.text_edit_profilepasscon);
 
         imageBack = (ImageView) findViewById(R.id.image_backkey);
-        imageBack.setVisibility(View.GONE);
+        //imageBack.setVisibility(View.GONE);
 
         textTitle = (TextView) findViewById(R.id.text_custom_title);
 
@@ -130,7 +130,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         PropertyManager.getInstance().setUserPassword(password);
 
                         if (success.toString().contains("https")) {
-                            PropertyManager.getInstance().setUserImagePath(success.toString().substring(1,success.toString().length()-1));
+                            PropertyManager.getInstance().setUserImagePath(success.toString().substring(1, success.toString().length() - 1));
 
 
                         }
@@ -143,10 +143,20 @@ public class ProfileEditActivity extends AppCompatActivity {
 
                     @Override
                     public void onFail(int code) {
+                        InformDialogFragment dialog = new InformDialogFragment();
+                        dialog.setContent("네트워크 실패","네트워크 연결에 실패했습니다. 다시 시도해주세요");
+                        dialog.show(getSupportFragmentManager(),"network");
 
                     }
                 });
 
+
+            }
+        });
+        imageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
 
             }
         });

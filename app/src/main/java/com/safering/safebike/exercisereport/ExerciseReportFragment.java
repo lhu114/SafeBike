@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
+import com.safering.safebike.manager.NetworkManager;
+import com.safering.safebike.property.PropertyManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,6 +89,7 @@ public class ExerciseReportFragment extends Fragment {
 
 
         tabHost.getTabWidget().setDividerDrawable(null);
+
         return view;
     }
 
