@@ -82,9 +82,10 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setIcon(android.R.drawable.ic_dialog_info);
+
+                    builder.setIcon(null);
                     builder.setTitle("내비게이션 안내종료");
-                    builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
+                    builder.setMessage("현재 내비게이션 안내 중입니다." + "\n" + "정말로 종료하시겠습니까");
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
