@@ -23,14 +23,8 @@ public class LicenseDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = (getActivity()).getLayoutInflater();
-
-
         View contentView = inflater.inflate(R.layout.custom_dialog_license, null);
-
-
         builder.setView(contentView);
-
-
         btnPositive = (TextView) contentView.findViewById(R.id.btn_custom_dialog_license);
         btnPositive.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         btnPositive.setOnClickListener(new View.OnClickListener() {
@@ -40,8 +34,6 @@ public class LicenseDialogFragment extends DialogFragment{
             }
 
         });
-
-
         return builder.create();
     }
 }

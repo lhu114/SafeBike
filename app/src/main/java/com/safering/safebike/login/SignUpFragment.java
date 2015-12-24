@@ -38,7 +38,6 @@ public class SignUpFragment extends Fragment {
     EditText inputId;
     EditText inputEmail;
     EditText inputPassword;
-    //   EditText inputPasswordConfirm;
     TextView signupFail;
     TextView signupDuple;
     TextView signupPolicy;
@@ -47,12 +46,11 @@ public class SignUpFragment extends Fragment {
     TextView textSignupMain;
     CheckBox checkPolicy;
     Button btnMakeAccount;
-    int signUpMessage = SIGN_UP_OK;
-
     TextView textTempLine1;
     TextView textTempLine2;
     TextView textTempLine3;
     TextView textTempLine4;
+    int signUpMessage = SIGN_UP_OK;
     boolean nextPage = true;
     boolean checkDuple = false;
 

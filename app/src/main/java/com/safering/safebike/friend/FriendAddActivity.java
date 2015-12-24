@@ -75,30 +75,20 @@ public class FriendAddActivity extends AppCompatActivity {
         textTitle = (TextView) findViewById(R.id.text_custom_title_friend);
         imageBack = (ImageView) findViewById(R.id.image_backkey_friend);
         imageSearch = (ImageView) findViewById(R.id.image_search_friend);
-
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
         imageSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.i("search", "click");
 
                 if (tabHost.getCurrentTabTag() == TAG_ADDRESS) {
-
-
                     addressFragment = (FriendAddressFragment) getSupportFragmentManager().findFragmentByTag(TAG_ADDRESS);
-                    //addrFragment.setList();
-
-
                     getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_address);
                     ImageView imageBackAddress = (ImageView)findViewById(R.id.image_backkey_friend_address);
-
-
                     EditText editTextAddress = (EditText)findViewById(R.id.edit_friend_search_address);
                     imageBackAddress.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -114,7 +104,6 @@ public class FriendAddActivity extends AppCompatActivity {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            Log.i("textChange",s.toString() + "");
                             if(TextUtils.isEmpty(s.toString())){
                                 addressFragment.fAdapter.clear();
                                 addressFragment.setList();
@@ -122,13 +111,9 @@ public class FriendAddActivity extends AppCompatActivity {
                             else{
                                 addressFragment.fAdapter.clear();
                                 for(int i = 0; i < addressFragment.addressFriendList.size(); i++){
-                                 //   Log.i("UserFriendList",UserFriendList.getInstance().items.get(i).pemail);
-
                                     if(addressFragment.addressFriendList.get(i).pname.contains(s.toString())){
-                                       // FriendItem friend = UserFriendList.getInstance().items.get(i);
                                         FriendItem friend = addressFragment.addressFriendList.get(i);
                                         addressFragment.fAdapter.add(friend);
-                                        Log.i("textFriend",friend.pemail);
                                     }
                                 }
 
@@ -146,12 +131,7 @@ public class FriendAddActivity extends AppCompatActivity {
                 if(tabHost.getCurrentTabTag() == TAG_DIRECT){
                     directFragment = (FriendDirectFragment) getSupportFragmentManager().findFragmentByTag(TAG_DIRECT);
                     if(directFragment.SEARCH_ONOFF == 1) {
-
-                        //directFragment.SEARCH_ONOFF = 2;
                         getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
-//                        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_directoff);
-
-
                         ImageView imageBackDirect = (ImageView) findViewById(R.id.image_backkey_friend_directOff);
                         ImageView imageSearch = (ImageView)findViewById(R.id.image_search_friend_directOff);
                         ImageView imageCancel = (ImageView)findViewById(R.id.image_cancel_friend_directOff);
@@ -182,34 +162,6 @@ public class FriendAddActivity extends AppCompatActivity {
                         });
 
                     }
-                 /*   else if(directFragment.SEARCH_ONOFF == 2){
-                        Toast.makeText(FriendAddActivity.this,"SEARCH_ON = 2",Toast.LENGTH_SHORT).show();
-                        getSupportActionBar().setCustomView(R.layout.custom_actionbar_friend_direct);
-                        directFragment.SEARCH_ONOFF = 1;
-
-                        ImageView imageBackDirect = (ImageView) findViewById(R.id.image_backkey_friend_directOn);
-
-                        imageBackDirect.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                finish();
-                            }
-                        });
-
-                    }*/
-/*
-                    imageSearchDirect.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.i("friendSearch","searchsearch");
-
-
-
-                        }
-                    });*/
-
-
-
                 }
 
 

@@ -58,12 +58,7 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp" />
         </FrameLayout>
-        <!--app:popupTheme="@style/AppTheme.PopupOverlay"
-        -->
 
-        <!--
-        //android:background="?attr/colorPrimary"
-        -->
 
     </android.support.design.widget.AppBarLayout>
 

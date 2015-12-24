@@ -43,33 +43,25 @@ import com.safering.safebike.setting.CustomTypefaceSpan;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String DEBUG_TAG = "safebike";
 
     public static final String TAG_MAIN = "main";
     private static final String TAG_NAVIGATION = "navigation";
     private static final String TAG_EXERCISEREPORT = "exercisereport";
     private static final String TAG_FRIEND = "friend";
-    public static final String TAG_SETTING = "setting";
-
     private static final String SERVICE_FINISH = "finish";
     private static final String SERVICE_RUNNING = "running";
-
-    public static final int MESSAGE_BACK_KEY = 1;
-    public static final int TIME_BACK_TIMEOUT = 2000;
-    private boolean isBackPressed = false;
-
     private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
     private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
     private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
-    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
 
+    public static final int MESSAGE_BACK_KEY = 1;
+    public static final int TIME_BACK_TIMEOUT = 2000;
+    private boolean isBackPressed = false;
+    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
     public static String FABFINDROUTE_ONOFF_FLAG = "off";
     private static String ON = "on";
     private static String OFF = "off";
-
-    private static final int NAVIGATION_DRAWER_MARGIN_LEFT = 0;
-
     TextView textSafeBikeMainTitle, textMainTitle;
     View naviHeaderView;
     ImageView imageAccountSetting;
@@ -80,16 +72,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("safebike", "MainActivity.onCreate");
-
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Log.d("safebike", Integer.toString(toolbar.getContentInsetLeft()));
-
-        /*int marginLeft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, NAVIGATION_DRAWER_MARGIN_LEFT, this.getResources().getDisplayMetrics());
-        toolbar.setContentInsetsRelative(marginLeft, 0);*/
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
@@ -107,7 +91,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(GravityCompat.START);
-               // Toast.makeText(MainActivity.this,"drawerOopen",Toast.LENGTH_SHORT).show();
                 setProfile();
             }
         });
@@ -122,17 +105,6 @@ public class MainActivity extends AppCompatActivity
         Menu m = nav.getMenu();
         for (int i=0;i<m.size();i++) {
             MenuItem mi = m.getItem(i);
-
-            //for aapplying a font to subMenu ....
-        /*    SubMenu subMenu = mi.getSubMenu();
-            if (subMenu!=null && subMenu.size() >0 ) {
-                for (int j=0; j <subMenu.size();j++) {
-                    MenuItem subMenuItem = subMenu.getItem(j);
-                    applyFontToMenuItem(subMenuItem);
-                }
-            }
-*/
-            //the method we have create in activity
             applyFontToMenuItem(mi);
         }
 
@@ -245,7 +217,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-//        Toast.makeText(this, "MainActivity.onBackPressed", Toast.LENGTH_SHORT).show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -256,11 +227,7 @@ public class MainActivity extends AppCompatActivity
 
                 Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + FABFINDROUTE_ONOFF_FLAG);
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(ON)) {
-//                NavigationFragment naviFragment = new NavigationFragment();
-//                naviFragment.setBtnFindRouteChange();
-
                 FABFINDROUTE_ONOFF_FLAG = OFF;
-
                 NavigationFragment old = (NavigationFragment) getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
                 if (old != null) {
@@ -306,12 +273,6 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            /*    try {
-                    mRouteService.sendExerciseReport();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                */
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                 PropertyManager.getInstance().setDestinationLatitude(null);
                 PropertyManager.getInstance().setDestinationLongitude(null);
@@ -321,16 +282,9 @@ public class MainActivity extends AppCompatActivity
                 stopService(serviceIntent);
 
                 Log.d("safebike", "Replace.MainFragment");
-                /*
-                 *   오늘 아침에 처리할 부분(UI 변경 위해 replace 맞는지 여쭤보기
-                 */
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
 
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.detach(mainFragment);
-//                ft.attach(mainFragment);
-//                ft.commit();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -339,7 +293,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-//        builder.setCancelable(false);
 
         builder.create().show();
     }

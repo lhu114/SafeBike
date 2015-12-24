@@ -11,16 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorNaviHeader"
         >
-        <!--<ImageView
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:id="@+id/image_custom_safelogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_dialog_info"
-            />
-        -->
+
         <TextView
             android:id="@+id/text_custom_dialog_policy_title"
             android:layout_width="wrap_content"
@@ -29,7 +20,6 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/colorBlack"
             android:text="[이메일 문의]"
-
             android:textSize="16sp"
             />
 

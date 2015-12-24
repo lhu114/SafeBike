@@ -65,6 +65,7 @@ import java.util.ArrayList;
 
 public class StartNavigationActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    //최초 위치 받아오고 현재위치 한번 뿌려주는 메소드
     private static final String DEBUG_TAG = "safebike";
 
     private static final String SERVICE_FINISH = "finish";
@@ -991,6 +992,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     }
 
     LocationListener mInitialListener = new LocationListener() {
+
         @Override
         public void onLocationChanged(Location location) {
 //            Toast.makeText(getContext(), "NavigationFragment.onLocationChanged", Toast.LENGTH_SHORT).show();
@@ -1008,7 +1010,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
 //                    starIterativeLocationUpdates();
                     try {
-                        boolean success = mRouteService.initialStartRouting();
+
+                        boolean success = mRouteService.initialStartRouting();//최초 위치 받아오면 네비게이션서비스요청
+
 
                         if (success) {
                             PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));

@@ -16,17 +16,6 @@
         android:layout_alignParentTop="true"
         android:divider="#ffffff"
         android:visibility="gone"/>
-
-  <!--  <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_delete_favorite"
-        android:layout_below="@+id/listView_favorite"
-        android:background="@drawable/button_delete_favorite_selector"
-        android:layout_marginTop="18dp"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone" />
--->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

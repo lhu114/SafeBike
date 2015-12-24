@@ -28,11 +28,9 @@ import com.safering.safebike.property.PropertyManager;
 public class FriendFragment extends Fragment {
     public static final int FRIEND_NO_SELECT = 0;
     public static final String FRIEND_INFORM = "friendInform";
-    public static final String USER_FRIEND = "friendList";
     public static final String FRIEND_ADAPTER = "friendAdapter";
     public static final String FRIEND_POSITION = "friendPosition";
     FriendAdapter fAdapter;
-    //ArrayList<String> fEmailList;
     ListView listView;
     TextView textInvite;
     TextView textSafeBikeMainTitle, textMainTitle;
@@ -48,22 +46,15 @@ public class FriendFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend, container, false);
 
         fAdapter = new FriendAdapter(FRIEND_NO_SELECT);
-        //fEmailList = new ArrayList<String>();
-
         textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
         textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
-
         listFooter = inflater.inflate(R.layout.custom_friend_view,null);
-
         listFooter.setClickable(false);
         textInvite = (TextView)listFooter.findViewById(R.id.text_invite_friend);
-
         listView = (ListView) view.findViewById(R.id.listview_myfriend);
-        setFont();
         listView.addFooterView(listFooter);
 
         textSafeBikeMainTitle.setVisibility(View.GONE);
@@ -78,59 +69,22 @@ public class FriendFragment extends Fragment {
                 intent.putExtra(FRIEND_ADAPTER,fAdapter);
                 intent.putExtra(FRIEND_POSITION,position);
                 startActivity(intent);
-/*
-                PopupMenu popupMenu = new PopupMenu(getContext(), view);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_popup_friend, popupMenu.getMenu());
-                popupMenu.getMenu().getItem(0).setTitle(friendItem.pname);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals(friendItem.pname)) {
-                            Intent intent = new Intent(getContext(), FriendProfileActivity.class);
-                            intent.putExtra(FRIEND_INFORM, friendItem);
-                            startActivity(intent);
-                            return true;
-                        } else {
-                            String uEmail = PropertyManager.getInstance().getUserEmail();
-                            String fEmail = friendItem.pemail;
-
-                            NetworkManager.getInstance().removeUserFriend(getContext(), uEmail, fEmail, new NetworkManager.OnResultListener() {
-                                @Override
-                                public void onSuccess(Object success) {
-
-                                    fAdapter.remove(position);
-
-                                }
-
-                                @Override
-                                public void onFail(int code) {
-
-                                }
-                            });
-
-                            //친구삭제 -- 서버에 전송
-                            fAdapter.remove(position);
-                            return true;
-                        }
-
-                    }
-                });
-                popupMenu.show();*/
             }
         });
 
         listView.setAdapter(fAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity) getActivity(), FriendAddActivity.class);
-                //intent.putStringArrayListExtra(USER_FRIEND,fEmailList);
                 startActivity(intent);
             }
         });
+
+        setFont();
+
         return view;
     }
 
@@ -147,7 +101,7 @@ public class FriendFragment extends Fragment {
     public void setFriendList() {
         fAdapter.clear();
         UserFriendList.getInstance().removeAll();
-        //fEmailList.clear();
+
         String email = PropertyManager.getInstance().getUserEmail();
         NetworkManager.getInstance().getUserFriends(getContext(), email, new NetworkManager.OnResultListener<FriendResult>() {
             @Override
@@ -174,21 +128,14 @@ public class FriendFragment extends Fragment {
         });
     }
 
-/*
-    public ArrayList<String> getFriendEmail(){
-        return fEmailList;
-    }
-*/
 
     public void setFont(){
         textInvite.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS_M));
-
     }
 
     public void setTitleFont(){
         textMainTitle.setText("친구");
         textMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
-
     }
 
 

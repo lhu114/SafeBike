@@ -48,18 +48,10 @@ public class ConfirmSignUpFragment extends Fragment {
         textCompleteSign1 = (TextView) view.findViewById(R.id.text_complete_sign_s);
         btnCompleteSign = (Button) view.findViewById(R.id.btn_go_main);
 
-        setFont();
-        sendUserInform();
-
 
         btnCompleteSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                /*
-                 * 최초 가입 시 서비스 컨디션 상태 Finish
-                 */
                 if (isSignup) {
                     PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                     Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
@@ -69,6 +61,10 @@ public class ConfirmSignUpFragment extends Fragment {
 
             }
         });
+        setFont();
+        sendUserInform();
+
+
         return view;
     }
 

@@ -39,14 +39,12 @@ public class AccountFragment extends Fragment {
     private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
     TextView textHelp;
     TextView textLogout;
-
-    ImageView imageProfileUser;
     TextView textProfileName;
     TextView textProfileJoin;
     TextView textProfileEmail;
     TextView textSafeBikeMainTitle, textMainTitle;
+    ImageView imageProfileUser;
     RelativeLayout userProfile;
-    Button btnLogout;
 
 
     public AccountFragment() {
@@ -68,11 +66,6 @@ public class AccountFragment extends Fragment {
         imageProfileUser = (ImageView)view.findViewById(R.id.image_user_profile_account);
         textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
         textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
-
-//        Toast.makeText(getContext(),"AccountFragmentOncREATE",Toast.LENGTH_SHORT).show();
-        setProfile();
-        setFont();
-
         textSafeBikeMainTitle.setVisibility(View.GONE);
         textMainTitle.setVisibility(View.VISIBLE);
 
@@ -89,15 +82,7 @@ public class AccountFragment extends Fragment {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                        /*
-                         *  목적지 위도, 경도, searchoption 날리기
-                         */
-                            /*    try {
-                    mRouteService.sendExerciseReport();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                */
+
                             PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                             PropertyManager.getInstance().setDestinationLatitude(null);
                             PropertyManager.getInstance().setDestinationLongitude(null);
@@ -136,7 +121,7 @@ public class AccountFragment extends Fragment {
                     startActivity(intent);
                     ((MainActivity) getActivity()).finish();
                 }
-                NetworkManager.getInstance().logout(getContext(), new NetworkManager.OnResultListener() {
+                /*NetworkManager.getInstance().logout(getContext(), new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object result) {
                         
@@ -146,7 +131,7 @@ public class AccountFragment extends Fragment {
                     public void onFail(int code) {
 
                     }
-                });
+                });*/
             }
         });
 
@@ -165,6 +150,10 @@ public class AccountFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        setProfile();
+        setFont();
+
         return view;
     }
 
@@ -180,7 +169,6 @@ public class AccountFragment extends Fragment {
 
 
     public String getDateFormat(String date){
-        Log.i("date",date);
         String resultDate = "";
         StringTokenizer tokenizer = new StringTokenizer(date,"-");
         resultDate += tokenizer.nextToken() + "년 ";
@@ -192,8 +180,7 @@ public class AccountFragment extends Fragment {
     public void setProfile(){
         textProfileName.setText(PropertyManager.getInstance().getUserId());
         textProfileEmail.setText(PropertyManager.getInstance().getUserEmail());
-       //getDateFormat(PropertyManager.getInstance().getUserJoin());
-       textProfileJoin.setText(getDateFormat((PropertyManager.getInstance().getUserJoin())));
+        textProfileJoin.setText(getDateFormat((PropertyManager.getInstance().getUserJoin())));
         if(!PropertyManager.getInstance().getUserImagePath().equals("")){
             DisplayImageOptions options;
             options = new DisplayImageOptions.Builder()
@@ -201,8 +188,6 @@ public class AccountFragment extends Fragment {
                     .cacheOnDisc(true)
                     .showImageOnLoading(R.mipmap.profile_img)
                     .showImageForEmptyUri(R.mipmap.profile_img)
-
-
                     .considerExifParams(true)
                     .displayer(new RoundedBitmapDisplayer(1000))
                     .build();
@@ -216,7 +201,6 @@ public class AccountFragment extends Fragment {
     public void onResume() {
         super.onResume();
         setProfile();
-
         textSafeBikeMainTitle.setVisibility(View.GONE);
         textMainTitle.setVisibility(View.VISIBLE);
 

@@ -9,8 +9,17 @@ import android.graphics.Typeface;
 public class FontManager {
 
     private static FontManager instance;
-
     private static Object obj = new Object();
+    public static final String BMJUA = "nanum";
+    public static final String NOTOSANS = "noto";
+    public static final String NOTOSANS_M = "noto_m";
+    public static final String NOTOSANS_S = "noto_s";
+    public static final String NOTOSANS_R = "noto_r";
+    Typeface nanum, noto, noto_m,noto_s,noto_r;
+
+    private FontManager() {
+
+    }
 
     public static FontManager getInstance() {
         synchronized (obj) {
@@ -20,21 +29,6 @@ public class FontManager {
         }
         return instance;
     }
-
-    Typeface nanum, noto, noto_m,noto_s,noto_r;
-
-    public static final String BMJUA = "nanum";
-    public static final String NOTOSANS = "noto";
-    public static final String NOTOSANS_M = "noto_m";
-    public static final String NOTOSANS_S = "noto_s";
-    public static final String NOTOSANS_R = "noto_r";
-
-
-
-    private FontManager() {
-
-    }
-
     public Typeface getTypeface(Context context, String fontName) {
         if (BMJUA.equals(fontName)) {
             if (nanum == null) {

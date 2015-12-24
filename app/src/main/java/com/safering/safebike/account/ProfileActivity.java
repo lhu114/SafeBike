@@ -33,11 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-
-       // getSupportActionBar().
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
 
         textTitle = (TextView)findViewById(R.id.text_custom_title);
@@ -63,8 +59,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(ProfileActivity.this));
 
-        setProfile();
-        setFont();
 
         textEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,18 +75,12 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+
+        setProfile();
+        setFont();
     }
 
 
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 
 
     public void setProfile(){
@@ -100,12 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         userEmail.setText(PropertyManager.getInstance().getUserEmail());
         userJoin.setText(getDateFormat(PropertyManager.getInstance().getUserJoin()));
         if(!PropertyManager.getInstance().getUserImagePath().equals("")){
-
-
-            //Log.i("ProfileActivity", PropertyManager.getInstance().getUserImagePath());
             String imagePath = PropertyManager.getInstance().getUserImagePath();
-            Log.i("ProfileActivity", "dddd");
-
             ImageLoader.getInstance().displayImage(imagePath, imageProfileUser, options);
         }
     }

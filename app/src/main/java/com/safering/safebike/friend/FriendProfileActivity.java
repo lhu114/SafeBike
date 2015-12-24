@@ -171,7 +171,6 @@ public class FriendProfileActivity extends AppCompatActivity {
     }
 
     public String getDateFormat(String date) {
-        Log.i("date", date);
         String resultDate = "";
         StringTokenizer tokenizer = new StringTokenizer(date, "-");
         resultDate += tokenizer.nextToken() + "년 ";
@@ -179,17 +178,4 @@ public class FriendProfileActivity extends AppCompatActivity {
         resultDate += tokenizer.nextToken() + "일 가입";
         return resultDate;
     }
-
-
-
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
 }

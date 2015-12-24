@@ -9,16 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorNaviHeader"
         >
-        <!--<ImageView
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:id="@+id/image_custom_safelogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_dialog_info"
-            />
-        -->
+
         <TextView
             android:id="@+id/text_custom_dialog_private_title"
             android:layout_width="wrap_content"

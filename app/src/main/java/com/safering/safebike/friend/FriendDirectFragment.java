@@ -33,11 +33,11 @@ import java.util.ArrayList;
  */
 public class FriendDirectFragment extends Fragment {
     public static int SEARCH_ONOFF = 1;
-    private static int FRIEND_SELECT_IMAGE = 2;
+    private static final int FRIEND_SELECT_IMAGE = 2;
     ListView listView;
     FriendAdapter fAdapter;
     EditText inputEmail = null;
-    Button searchDirect;
+
     public FriendDirectFragment() {
         // Required empty public constructor
     }
@@ -61,8 +61,7 @@ public class FriendDirectFragment extends Fragment {
                 final String fEmail = data.pemail;
                 final String fId = data.pname;
                 final String fPhoto = data.photo;
-                if (UserFriendList.getInstance().isFriend(fEmail) == true) {
-                } else {
+                if (!UserFriendList.getInstance().isFriend(fEmail)) {
                     NetworkManager.getInstance().addUserFriend(getContext(), uEmail, fEmail, fId, fPhoto, new NetworkManager.OnResultListener() {
                         @Override
                         public void onSuccess(Object result) {
@@ -72,10 +71,7 @@ public class FriendDirectFragment extends Fragment {
                             friend.photo = fPhoto;
                             fAdapter.add(friend);
                             UserFriendList.getInstance().addFriend(friend);
-
                             fAdapter.clear();
-
-                            // Toast.makeText(getContext(),"add",Toast.LENGTH_SHORT).show();
 
                         }
 

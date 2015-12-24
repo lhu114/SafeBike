@@ -43,15 +43,11 @@ public class ProfileEditActivity extends AppCompatActivity {
     EditText changeId;
     EditText changePassword;
     EditText changePasswordConfirm;
-    TextView textCompelte;
-    ImageView imageProfileUser;
     File file;
     ImageView userProfileImage;
     DisplayImageOptions options;
     ImageView imageBack;
     InformDialogFragment dialog;
-
-    Uri uri = null;
     public static final int GET_USER_IMAGE = 11;
     public static final int EDIT_SUCCESS = 1;
     public static final int EDIT_FAIL = -1;
@@ -64,36 +60,26 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
-        //  ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
         dialog = new InformDialogFragment();
         userName = (TextView) findViewById(R.id.text_edit_profilename);
         userPass = (TextView) findViewById(R.id.text_edit_profilepass);
         userPassConfirm = (TextView) findViewById(R.id.text_edit_profilepasscon);
 
         imageBack = (ImageView) findViewById(R.id.image_backkey);
-        //imageBack.setVisibility(View.GONE);
 
         textTitle = (TextView) findViewById(R.id.text_custom_title);
-
-
         textEditPhoto = (TextView) findViewById(R.id.text_editphoto_profile);
 
         userProfileImage = (ImageView) findViewById(R.id.image_edit_user_profile);
         userId = (TextView) findViewById(R.id.text_id_profile);
         userEmail = (TextView) findViewById(R.id.text_email_profile);
         userJoin = (TextView) findViewById(R.id.text_join_profile);
-        //imageProfileUser = (ImageView)findViewById(R.id.image_edit_user_profile);
 
         changeId = (EditText) findViewById(R.id.edit_change_id);
         changePassword = (EditText) findViewById(R.id.edit_change_password);
         changePasswordConfirm = (EditText) findViewById(R.id.edit_change_password_confirm);
 
         textCompelete = (TextView) findViewById(R.id.btn_edit_compelete);
-
-
-
-
-
         textEditPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +103,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                 final String password = changePassword.getText().toString();
                 String passwordConfirm = changePasswordConfirm.getText().toString();
                 if (checkEditForm() == EDIT_FAIL) {
-                    //에디트 텍스트 밑에 텍스트 띄우기
                     dialog.setContent("프로필 편집","프로필 정보를 확인해주세요.");
                     dialog.show(getSupportFragmentManager(), "profile");
                     return;
@@ -128,7 +113,6 @@ public class ProfileEditActivity extends AppCompatActivity {
 
                         PropertyManager.getInstance().setUserId(id);
                         PropertyManager.getInstance().setUserPassword(password);
-
                         if (success.toString().contains("https")) {
                             PropertyManager.getInstance().setUserImagePath(success.toString().substring(1, success.toString().length() - 1));
 

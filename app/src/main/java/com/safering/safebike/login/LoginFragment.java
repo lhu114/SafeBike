@@ -20,8 +20,6 @@ public class LoginFragment extends Fragment {
 
     TextView textLoginMain ;
     TextView textWarning;
-
-
     Button btnLogin;
     Button btnSignUp;
 
@@ -36,11 +34,8 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         textLoginMain = (TextView)view.findViewById(R.id.text_login_main);
         textWarning = (TextView)view.findViewById(R.id.text_login_warning);
-
         btnLogin = (Button)view.findViewById(R.id.btn_login);
         btnSignUp = (Button)view.findViewById(R.id.btn_login_sign);
-        setFont();
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +47,6 @@ public class LoginFragment extends Fragment {
                 ft.commit();
             }
         });
-
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +59,8 @@ public class LoginFragment extends Fragment {
 
             }
         });
+        setFont();
+
         return view;
     }
 
@@ -73,8 +69,6 @@ public class LoginFragment extends Fragment {
         textWarning.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
         btnLogin.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
         btnSignUp.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_M));
-
-
     }
 
 

@@ -405,7 +405,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     public void onConnected(Bundle bundle) {
         Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected");
         starIterativeLocationUpdates();
-
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mLocation != null) {
@@ -1283,6 +1282,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         if (((latLngB.latitude - orthogonalLocC.getLatitude()) * (latLngA.latitude - orthogonalLocC.getLatitude()) <= 0) &&
                 ((latLngB.longitude - orthogonalLocC.getLongitude()) * (latLngA.longitude - orthogonalLocC.getLongitude()) <= 0)) {
             return true;
+
         } else {
             return false;
         }
@@ -1901,7 +1901,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         Log.d(DEBUG_TAG, "RouteService.clearMarkerAndPolyline");
 
         MapInfoManager.getInstance().clearAllMapInfoData();
-//        MapInfoManager.getInstance().removeMapInfoMarkerAndPolyline();
+//        MapInfoManager.getInstance().removeMapInfoMarkerAndPolylforthine();
 
         gpIndex = 0;
 

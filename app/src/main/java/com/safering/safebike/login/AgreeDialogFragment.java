@@ -20,7 +20,6 @@ public class AgreeDialogFragment extends DialogFragment{
 
 
     private TextView btnPositive;
-    //개인정책동의 다이얼로그
 
     @NonNull
     @Override

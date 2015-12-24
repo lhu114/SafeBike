@@ -23,9 +23,4 @@
         app:itemTextColor="@color/colorUserImform"
 
         />
-<!--
-    app:itemBackground="@drawable/menuitem_background_layer"
--->
-
-
 </android.support.v4.widget.DrawerLayout>

@@ -146,25 +146,8 @@
 
                     android:layout_below="@+id/text_temp_line1"
                     android:layout_alignStart="@+id/text_temp_line1" />
-
-
-
-
-
-
-
-
         </RelativeLayout>
-<!--
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_temp_line"
-            android:text="동의합니다."
-            android:layout_gravity="center_horizontal" />
-        -->
-
-        <TextView
+    <TextView
             android:layout_gravity="center_horizontal"
             android:id="@+id/text_signup_fail"
             android:layout_width="wrap_content"
@@ -194,17 +177,7 @@
             android:textColor="@color/colorWhite"
 
             android:visibility="gone" />
-
-        <!--
-                <TextView
-                    android:id="@+id/text_confirm_fail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/signup_duple_message"
-                    android:visibility="gone" />
-                -->
-
-        <Button
+    <Button
             android:layout_marginTop="265dp"
             android:id="@+id/btn_go_next"
 
@@ -215,78 +188,6 @@
             android:textSize="16sp"
             android:layout_marginLeft="24dp"
             android:text="@string/btn_go_next" />
-
-
-
-        <!--
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="약관동의"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginBottom="5dp"
-
-
-                    android:textSize="20sp"
-                    />
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <CheckBox
-                        android:id="@+id/check_policy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/check_policy" />
-
-                    <Button
-                        android:id="@+id/btn_display_policy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignRight="@id/check_policy"
-                        android:text="@string/btn_display_policy" />
-
-                    <CheckBox
-                        android:id="@+id/check_agree"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@id/check_policy"
-                        android:hint="@string/check_agree" />
-
-                    <Button
-                        android:id="@+id/btn_display_agree"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/check_policy"
-
-                        android:text="@string/btn_display_agree" />
-
-                    <TextView
-                        android:id="@+id/text_signup_policy_fail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/signup_policy_fail_message"
-                        android:layout_below="@id/check_agree"
-                        android:layout_alignStart="@id/check_agree"
-                        android:layout_alignLeft="@id/check_agree"
-                        android:visibility="gone"
-                        />
-                </RelativeLayout>
-        -->
-        <!--
-                <Button
-                    android:id="@+id/btn_go_next"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/btn_go_next" />
-
-                    -->
 
 
 

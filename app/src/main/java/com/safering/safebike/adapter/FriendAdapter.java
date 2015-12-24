@@ -39,7 +39,6 @@ public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButt
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //뷰 타입에 따라 추가버튼 visible 결정
         FriendItemView view;
         if(convertView == null){
             view = new FriendItemView(parent.getContext());
@@ -76,18 +75,8 @@ public class FriendAdapter extends BaseAdapter  implements FriendItemView.OnButt
     }
 
     public void remove(String email) {
-
-        Log.i("Input Email",email);
-
         for(int i = 0; i < items.size(); i++){
-            Log.i("item Email",items.get(i).pemail);
-
-        }
-
-        for(int i = 0; i < items.size(); i++){
-
             if(items.get(i).pemail.equals(email)){
-                Log.i("removeIndex",i + "");
                 items.remove(i);
                 notifyDataSetChanged();
                 break;

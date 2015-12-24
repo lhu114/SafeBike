@@ -57,15 +57,10 @@ public class FriendItemView extends RelativeLayout {
                 .cacheOnDisc(true)
                 .showImageOnLoading(R.mipmap.profile_img)
                 .showImageForEmptyUri(R.mipmap.profile_img)
-
-
                 .considerExifParams(true)
                 .displayer(new RoundedBitmapDisplayer(1000))
                 .build();
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
-
-
-        setFont();
 
 
         imagePlus.setOnClickListener(new OnClickListener() {
@@ -74,24 +69,15 @@ public class FriendItemView extends RelativeLayout {
                 mListener.onButtonClick(FriendItemView.this, fData);
             }
         });
-
-
+        setFont();
     }
 
     public void setFriendData(FriendItem data) {
         fData = data;
         friendId.setText(data.pname);
         friendEmail.setText(data.pemail);
-        if(data.photo.equals("null")) {
-            Log.i("friend photo", data.photo + "");
-        }else {
-
+        if(!data.photo.equals("null")) {
             ImageLoader.getInstance().displayImage(data.photo,friendImage, options);
-            Log.i("setData",data.photo);
-        /*if(!data.photo.equals("null") && !TextUtils.isEmpty(data.photo)){
-            Toast.makeText(getContext(), "photo url : " + data.photo, Toast.LENGTH_SHORT).show();
-            ImageLoader.getInstance().displayImage(data.photo,friendImage, options);
-        }*/
         }
     }
 

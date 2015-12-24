@@ -45,7 +45,6 @@ public class AccountHelpActivity extends AppCompatActivity {
         imageBackkey = (ImageView)findViewById(R.id.image_backkey);
         dialog = new InformDialogFragment();
 
-        setFont();
 
         textShow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,27 +83,18 @@ public class AccountHelpActivity extends AppCompatActivity {
             }
         });
 
+        setFont();
+
+
 
 
     }
 
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    */
     public void setFont(){
         textShow.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
         textQnA.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
         textPolicy.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
         textLicense.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
-
         textSafeTitle.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS));
         textSafeCopyright.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS));
         textSafeRight.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS));

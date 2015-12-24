@@ -14,8 +14,7 @@ import com.safering.safebike.R;
 import com.safering.safebike.property.PropertyManager;
 
 public class LoginActivity extends AppCompatActivity {
-    //private static final String FRAGMENT_LOGIN_TAG = "login_fragment";
-    //2015/11/02
+
     private Fragment loginFragment;
     private static final String SERVICE_FINISH = "finish";
 
@@ -44,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //Toast.makeText(LoginActivity.this,"Stack Count : " + getSupportFragmentManager().getBackStackEntryCount(),Toast.LENGTH_SHORT).show();
 
     }
 
@@ -78,16 +76,5 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /*public interface onBackPressedListener{
-        public void onBackPressed();
-    }
-
-    onBackPressedListener mOnBackPressedListener;
-
-    public void setmOnBackPressedListener(onBackPressedListener mListener){
-        mOnBackPressedListener = mListener;
-    }
-
-    */
 
 }

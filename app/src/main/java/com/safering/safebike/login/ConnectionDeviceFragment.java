@@ -50,15 +50,10 @@ public class ConnectionDeviceFragment extends Fragment {
 
                 ConfirmSignUpFragment confirmSignUpFragment = new ConfirmSignUpFragment();
                 Bundle signBundle = getArguments();
-                Log.i("singId", signBundle.getString(SignUpFragment.SIGN_UP_ID));
-                Log.i("singPass",signBundle.getString(SignUpFragment.SIGN_UP_EMAIL));
-                Log.i("singEmail",signBundle.getString(SignUpFragment.SIGN_UP_PASSWORD));
-
                 confirmSignUpFragment.setArguments(signBundle);
                 FragmentTransaction ft = ((LoginActivity) getActivity()).getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.login_container, confirmSignUpFragment);
                 ft.addToBackStack(null);
-
                 ft.commit();
             }
         });

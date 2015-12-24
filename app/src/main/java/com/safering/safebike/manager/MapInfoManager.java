@@ -20,21 +20,11 @@ public class MapInfoManager {
     ArrayList<MarkerOptions> markerOptionsList = new ArrayList<MarkerOptions>();
     ArrayList<PolylineOptions> polylineOptionsList = new ArrayList<PolylineOptions>();
 
-//    final Map<LatLng, Marker> mMarkerResolver = new HashMap<LatLng, Marker>();
-//    ArrayList<Polyline> polylineList = new ArrayList<Polyline>();
-//
-//    ArrayList<LatLng> mPointLatLngList = new ArrayList<LatLng>();
 
     String updateTextDescription = null;
     int updateImageDescription = -1;
 
-//    boolean isActivateFindRoute = false;
-
-//    Marker mapInfoMarker = null;
-//    Polyline mapInfoPolyline = null;
-
     public static MapInfoManager getInstance() {
-//        Log.d("safebike", "MapInfoManager.getInstance");
 
         if (instance == null) {
             instance = new MapInfoManager();
@@ -45,11 +35,6 @@ public class MapInfoManager {
 
     public void setMarkerOptionsInfo(MarkerOptions markerOptions) {
         Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo");
-
-//        if(markerOptionsList.size() > 0) {
-//            Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo.markerOptionsList.size() > 0");
-//            markerOptionsList.clear();
-//        }
 
         markerOptionsList.add(markerOptions);
     }

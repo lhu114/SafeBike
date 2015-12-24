@@ -40,41 +40,29 @@ public class FindPasswordFragment extends Fragment {
         textEmailFail = (TextView)view.findViewById(R.id.text_email_fail);
         textFindPassword = (TextView)view.findViewById(R.id.text_find_pass_main);
         dialog = new InformDialogFragment();
-        setFont();
         btnSendTemp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = editTempEmail.getText().toString();
                 if (TextUtils.isEmpty(email)) {
-                    //textEmailFail.setVisibility(View.VISIBLE);
                     dialog.setContent("로그인","이메일을 확인해주세요.");
                     dialog.show(getChildFragmentManager(), "login");
                 } else {
-
-                NetworkManager.getInstance().sendTempPassword(getContext(), email, new NetworkManager.OnResultListener() {
-
-                    @Override
+                    NetworkManager.getInstance().sendTempPassword(getContext(), email, new NetworkManager.OnResultListener() {
+                        @Override
                     public void onSuccess(Object success) {
                         if(success.toString().equals("201")) {
                             dialog.setContent("로그인", "존재하지 않는 이메일입니다.");
-                            dialog.show(getChildFragmentManager(), "login");
-
-
-                        }
+                            dialog.show(getChildFragmentManager(), "login");}
                         else{
                             dialog.setContent("로그인", "임시 비밀번호를 보냈습니다.");
-                            dialog.show(getChildFragmentManager(), "login");
-
+                            dialog.show(getChildFragmentManager(), "login");}
                         }
-
-
-                    }
 
                     @Override
                     public void onFail(int code) {
                         dialog.setContent("로그인","존재하지 않는 이메일입니다.");
                         dialog.show(getChildFragmentManager(), "login");
-
                     }
                 });
 
@@ -84,6 +72,8 @@ public class FindPasswordFragment extends Fragment {
 
             }
         });
+        setFont();
+
         return view;
     }
 

@@ -55,17 +55,10 @@ import java.util.Map;
 public class NavigationFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraChangeListener {
     private static final String DEBUG_TAG = "safebike";
-
     private static final int REQUEST_SEARCH_POI = 1002;
     private static final String KEY_POI_OBJECT = "poiobject";
-//    private static final String KEY_POI_NAME = "poiName";
-//    private static final String KEY_POI_LATITUDE = "poiLatitude";
-//    private static final String KEY_POI_LONGITUDE = "poiLongitude";
-//    private static final String KEY_POI_ADDRESS = "poiAddress";
-
     private boolean mResolvingError = false;
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
-
     private static final String MOVE_CAMERA = "movecamera";
     private static final String ANIMATE_CAMERA = "animatecamera";
     private static String LOCATION_CHANGE_FLAG = "on";
@@ -77,12 +70,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     private GoogleMap mMap;
     String mProvider;
-
     GoogleApiClient mGoogleApiClient;
     Location mLocation, mCacheLocation;
     LocationRequest mLocationRequest;
     LocationManager mLM;
-
     Sensor mRotationSensor;
     SensorManager mSM;
 
@@ -141,6 +132,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate");
 
         if (mGoogleApiClient == null) {
+            //mGoogleApiClient -> 구글에서 제공하는 서비스 처리 변수
             Log.d(DEBUG_TAG, "NavigationFragment.onCreate.new mGoogleApiClient");
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .addApi(LocationServices.API)
@@ -326,11 +318,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         if (!mResolvingError) {  // more about this later
             if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
                 Log.d(DEBUG_TAG, "NavigationFragment.onStart.mGoogleApiClient.connect");
-                mGoogleApiClient.connect();
+                mGoogleApiClient.connect();//에러가 아니면 onConnected 호출
             }
         }
 
         if (!mLM.isProviderEnabled(mProvider)) {
+            //gps설정 안했을때 인텐트 띄우기
             if (isFirst) {
                 Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -518,7 +511,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-//        Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
+        //호출되면 맵받아와서 세팅
         Log.d(DEBUG_TAG, "NavigationFragment.onMapReady");
         mMap = googleMap;
 
@@ -533,16 +526,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mMap.getUiSettings().setZoomGesturesEnabled(true);
 
         if (mCacheLocation != null) {
-//            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
             Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.mCacheLocation.moveMap");
             moveMap(mCacheLocation.getLatitude(), mCacheLocation.getLongitude(), MOVE_CAMERA);
-//            addCurrentMarker(mCacheLocation);
-
             mCacheLocation = null;
         } else {
+            //가장 최근에 저장된곳으로 이동
             double recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
             double recentLongitude = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
-
             Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.recent.moveMap");
             moveMap(recentLatitude, recentLongitude, MOVE_CAMERA);
         }
@@ -550,7 +540,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     protected void createLocationRequest() {
         Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
-
+        //현재 위치 한번만 받아오는 메소드
         if (mLocationRequest == null) {
             mLocationRequest = new LocationRequest();
             mLocationRequest.setNumUpdates(1);
@@ -561,6 +551,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     protected void startLocationUpdates() {
+
+        //현재 위치를 요청하기 위한 함수등록
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mListener);
 
         Log.d(DEBUG_TAG, "NavigationFragment.startLocationUpdates");
@@ -577,10 +569,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void onConnected(Bundle bundle) {
+
         Log.d(DEBUG_TAG, "NavigationFragment.onConnected");
         startLocationUpdates();
+        //mLocation  - > 현재 위치 저장 ( 구글로케이션 )
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
         if (mLocation != null) {
             Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
          /*   Toast.makeText(((MainActivity)getContext()), "NavigationFragment.onConnected : " +Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()),
@@ -710,13 +703,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
             addLongClickMarker(latLng);
             mLcMarkerList.add(latLng);
-
+            //롱클릭하면 위치 받아오기
             NavigationNetworkManager.getInstance().searchReverseGeo(getContext(), latLng, new NavigationNetworkManager.OnResultListener<AddressInfo>() {
                 @Override
                 public void onSuccess(AddressInfo result) {
                     if (result != null) {
                         Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.result != nul" );
-
                         String defineAddress = getDefineRvsGeoAddress(result);
 
                         /*
@@ -815,6 +807,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
     //    private void addLongClickMarker(LatLng latLng, AddressInfo addressInfo) {
     private void addLongClickMarker(LatLng latLng) {
+        //화면에 마커 보여주기
         MarkerOptions options = new MarkerOptions();
         /*
          * 어떤 값으로 위도 경도 넘길지는 고민

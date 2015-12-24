@@ -33,23 +33,25 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SpeedFragment extends Fragment {
+public class SpeedFragment extends Fragment  implements OnChartGestureListener,OnChartValueSelectedListener{
 
     protected BarChart speedChart;
     TextView parentCal;
     TextView parentSpeed;
     TextView parentDistance;
-
     ArrayList<String> xVals;
     ArrayList<BarEntry> yVals;
     ArrayList<BarDataSet> dataSets;
-    int total;
-
+    ArrayList<ExerciseItem> collections;
+    String recentDate;
+    int collectCount;
+    int readSize ;
     public SpeedFragment() {
         // Required empty public constructor
     }
@@ -60,6 +62,13 @@ public class SpeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_speed, container, false);
+
+        collectCount = 0;
+        recentDate = null;
+        readSize = 5;
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<BarEntry>();
+        collections = new ArrayList<ExerciseItem>();
 
         parentCal = (TextView) getParentFragment().getView().findViewById(R.id.text_value_calorie);
         parentSpeed = (TextView) getParentFragment().getView().findViewById(R.id.text_value_speed);
@@ -77,126 +86,15 @@ public class SpeedFragment extends Fragment {
         speedChart.getAxisLeft().setValueFormatter(custom);
         speedChart.getAxisRight().setDrawGridLines(false);
         speedChart.getAxisRight().setDrawLabels(false);
+        speedChart.setOnChartGestureListener(this);
+        speedChart.setOnChartValueSelectedListener(this);
 
-        speedChart.setOnChartGestureListener(new OnChartGestureListener() {
-            @Override
-            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-
-            }
-
-            @Override
-            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                if (speedChart.getLowestVisibleXIndex() == 0) {
-                    speedChart.animateXY(3000, 3000);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    Calendar cal = Calendar.getInstance();
-                    String getDate = speedChart.getXValue(speedChart.getLowestVisibleXIndex());
-                    try {
-                        Date d = dateFormat.parse(getDate);
-                        cal.setTime(d);
-                        cal.add(Calendar.DATE, -1);
-
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Log.i("requestDate", dateFormat.format(cal.getTime()));
-                    requestData(dateFormat.format(cal.getTime()));
-                }
-            }
-
-            @Override
-            public void onChartLongPressed(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartDoubleTapped(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartSingleTapped(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-            }
-
-            @Override
-            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-            }
-
-            @Override
-            public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-            }
-        });
-        speedChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
-
-                String email = PropertyManager.getInstance().getUserEmail();
-                String date = speedChart.getXValue(e.getXIndex());
-
-
-                NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
-                    @Override
-                    public void onSuccess(ExerciseDayResult result) {
-                        if (result.workout.size() > 0) {
-                            NumberFormat nf = NumberFormat.getInstance();
-
-                            nf.setMaximumFractionDigits(2);//소수점 아래 최대자리수
-
-
-                            parentCal.setText(String.valueOf(Math.round(result.workout.get(0).calorie)) + " kcal");
-                            parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0) / 1000)) + " km/h");
-                            parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road / 1000.0)) + " km");
-                        }
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-                        InformDialogFragment dialog = new InformDialogFragment();
-                        dialog.setContent("네트워크 실패","네트워크 연결에 실패했습니다. 다시 시도해주세요");
-                        dialog.show(getChildFragmentManager(),"network");
-
-                    }
-                });
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-
-        total = 0;
-        xVals = new ArrayList<String>();
-        yVals = new ArrayList<BarEntry>();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String today = dateFormat.format(cal.getTime());
-        requestData(today);
         setFont();
-
+        getExerciseDatas();
+        setRecentData();
         return view;
     }
-    public void setToday(){
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        String email = PropertyManager.getInstance().getUserEmail();
-        //String date = distanceChart.getXValue(e.getXIndex());
-        String date = speedChart.getXValue(speedChart.getHighestVisibleXIndex());
-
-
-
+    public void displayClickData(String email,String date){
         NetworkManager.getInstance().getDayExerciseRecord(getContext(), email, date, new NetworkManager.OnResultListener<ExerciseDayResult>() {
             @Override
             public void onSuccess(ExerciseDayResult result) {
@@ -207,31 +105,75 @@ public class SpeedFragment extends Fragment {
 
 
                     parentCal.setText(String.valueOf(Math.round(result.workout.get(0).calorie)) + " kcal");
-                    parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0)/1000)) + " km/h");
-                    parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road/1000.0)) + " km");
+                    parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0) / 1000)) + " km/h");
+                    parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road / 1000.0)) + " km");
                 }
             }
 
             @Override
             public void onFail(int code) {
                 InformDialogFragment dialog = new InformDialogFragment();
-                dialog.setContent("네트워크 실패","네트워크 연결에 실패했습니다. 다시 시도해주세요");
-                dialog.show(getChildFragmentManager(),"network");
+                dialog.setContent("네트워크 실패", "네트워크 연결에 실패했습니다. 다시 시도해주세요");
+                dialog.show(getChildFragmentManager(), "network");
 
+            }
+        });
+    }
+    public void setRecentData(){
+
+        NetworkManager.getInstance().getRecentExerciseDate(getContext(), PropertyManager.getInstance().getUserEmail(), new NetworkManager.OnResultListener<ExerciseRecentResult>() {
+            @Override
+            public void onSuccess(ExerciseRecentResult result) {
+
+                if (result.workoutone.size() > 0) {
+                    recentDate = result.workoutone.get(0).date;
+
+                    String email = PropertyManager.getInstance().getUserEmail();
+                    displayClickData(email,recentDate);
+
+
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
 
             }
         });
 
     }
-    private void requestData(String today) {
 
-        ArrayList<String> dateList = new ArrayList<String>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public void getExerciseDatas(){
 
-        Calendar cal = Calendar.getInstance();
+        NetworkManager.getInstance().getRecentExerciseDate(getContext(), PropertyManager.getInstance().getUserEmail(), new NetworkManager.OnResultListener<ExerciseRecentResult>() {
+            @Override
+            public void onSuccess(ExerciseRecentResult result) {
+
+                if (result.workoutone.size() > 0) {
+                    recentDate = result.workoutone.get(0).date;
+
+                    collectDate(recentDate);
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
+
+
+    }
+
+
+    private void collectDate(String today){
+        String email = PropertyManager.getInstance().getUserEmail();
+
+        final ArrayList<String> dateList = new ArrayList<String>();
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final Calendar cal = Calendar.getInstance();
 
         dateList.add(today);
-
 
         for(int i = 0; i < 9; i++){
             try {
@@ -241,54 +183,38 @@ public class SpeedFragment extends Fragment {
                 String date = dateFormat.format(cal.getTime());
                 dateList.add(date);
                 today = date;
-                Log.i("date : ",date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-
-
         }
 
-        String email = PropertyManager.getInstance().getUserEmail();
-        NetworkManager.getInstance().getExerciseRecord(getContext(), email,dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
+        NetworkManager.getInstance().getExerciseRecord(getContext(), email, dateList, new NetworkManager.OnResultListener<ExcerciseResult>() {
             @Override
             public void onSuccess(ExcerciseResult result) {
-
-                ArrayList<ExerciseItem> values = result.workoutlist;
-
-                BarData data;
-                int count = result.workoutlist.size();
-                if (count > 0) {
-                    for (int i = 0; i < count; i++) {
-                        xVals.add(i,result.workoutlist.get(i)._id);
-
-                        yVals.add(new BarEntry((result.workoutlist.get(i).speed * 100)/100, total+i));
+                collectCount = result.workoutlist.size();
+                if (collectCount > 0) {
+                    for (int i = 0; i < result.workoutlist.size(); i++) {
+                        collections.add(i, result.workoutlist.get(i));
                     }
-                    total += count;
-                    BarDataSet set = new BarDataSet(yVals, "speed");
-                    set.setColor(Color.parseColor("#B6E2FF"));
-                    set.setBarSpacePercent(70f);
-
-                    dataSets = new ArrayList<BarDataSet>();
-                    dataSets.add(set);
-
-                    data = new BarData(xVals, dataSets);
-                    data.setValueTextSize(10f);
-                    speedChart.setData(data);
-   /*                 calorieChart.getXValue(0);
-   */
-
-
-                    speedChart.notifyDataSetChanged();
-                    speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
-                    speedChart.invalidate();
-                    setToday();
+                    try {
+                        Date d = dateFormat.parse(dateList.get(dateList.size() - 1));
+                        cal.setTime(d);
+                        cal.add(Calendar.DATE, -1);
+                        String date = dateFormat.format(cal.getTime());
+                        collectDate(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    if(collections.size() < readSize) {
+                        updateData(collections.size());
+                    }
+                    else{
+                        updateData(readSize);
+                        readSize += 5;
+                    }
 
                 }
-
-
-
             }
 
             @Override
@@ -298,6 +224,32 @@ public class SpeedFragment extends Fragment {
         });
 
     }
+    private void updateData(int readSize) {
+
+        BarData data;
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<BarEntry>();
+
+        for(int i = 0; i < readSize; i++){
+            xVals.add(i,collections.get(collections.size() - readSize + i)._id);
+            yVals.add(new BarEntry((collections.get(collections.size() - readSize + i).speed * 100) / 100, i));
+
+        }
+        BarDataSet set = new BarDataSet(yVals, "거리");
+        set.setColor(Color.parseColor("#B6E2FF"));
+        set.setBarSpacePercent(70f);
+
+        dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set);
+        data = new BarData(xVals, dataSets);
+        data.setValueTextSize(0f);
+        speedChart.setData(data);
+        speedChart.notifyDataSetChanged();
+        speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
+        speedChart.invalidate();
+
+    }
+
 
     @Override
     public void onPause() {
@@ -314,4 +266,80 @@ public class SpeedFragment extends Fragment {
         parentDistance.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS));
     }
 
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+        if (speedChart.getLowestVisibleXIndex() == 0) {
+            try {
+                speedChart.animateXY(3000, 3000);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cal = Calendar.getInstance();
+                String getDate = speedChart.getXValue(speedChart.getLowestVisibleXIndex());
+                Date d = dateFormat.parse(getDate);
+                cal.setTime(d);
+                cal.add(Calendar.DATE, -1);
+                if(collections.size() < readSize) {
+                    updateData(collections.size());
+                }
+                else{
+                    updateData(readSize);
+                    readSize += 5;
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+        String email = PropertyManager.getInstance().getUserEmail();
+        String date = speedChart.getXValue(e.getXIndex());
+        displayClickData(email,date);
+
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
 }
