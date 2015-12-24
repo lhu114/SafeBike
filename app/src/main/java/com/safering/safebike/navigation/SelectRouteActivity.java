@@ -647,9 +647,18 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SelectRouteActivity.this);
-                builder.setIcon(android.R.drawable.ic_dialog_info);
-                builder.setTitle("자전거 길안내에 대한 한계 및 책임");
-                builder.setMessage("내용");
+
+                builder.setIcon(null);
+                builder.setTitle("자전거 내비게이션 사용 시 주의사항");
+                builder.setMessage("자전거 내비게이션 서비스는 T map의 자전거 경로안내 정보를 바탕으로 제공합니다.\n" +
+                        "\n" +
+                        "자전거 경로안내의 경우 자전거 전용도로를 최우선순위로 안내해드리며 전용도로가 존재하지 않을 경우 일반도로 정보를 제공해드리고 있습니다.\n" +
+                        "자동차 전용도로(고속도로 등)는 포함되지 않으며 유턴구간의 경우 횡단보도로 안내해드리고 있으니 반드시 참고 자료로만 활용하시기 바랍니다.\n" +
+                        "\n" +
+                        "안전을 위해 주행 중 스마트폰 조작은 위험하오니 법규에 준수하여 안전한 라이딩을 하시기 바랍니다.\n" +
+                        "\n" +
+                        "Safe Bike의 자전거 내비게이션 서비스를 사용 중에 발생하는 사고 등에 관하여 당사는 법적 책임을 지지 않습니다.");
+
                 builder.setPositiveButton("동의", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

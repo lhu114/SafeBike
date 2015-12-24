@@ -1,6 +1,9 @@
 package com.safering.safebike.service;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +21,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -45,6 +49,7 @@ import com.safering.safebike.navigation.BicycleNavigationInfo;
 import com.safering.safebike.navigation.BicycleProperties;
 import com.safering.safebike.navigation.BicycleRouteInfo;
 import com.safering.safebike.navigation.NavigationNetworkManager;
+import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.property.SpeakVoice;
 import com.safering.safebike.setting.BluetoothConnection;
@@ -84,12 +89,14 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     public static final int LOCATION_TIMEOUT_INTERVAL = 60000;
     public static final int REROUTE_NAVIGATION_TIMEOUT_INTERVAL = 15000;
     private static final int REQUEST_LOCATION_REQUEST_ITERATIVE_INTERVAL = 1000;
-    private static final float LIMIT_DISTANCE = 25;
+    private static final float LIMIT_DISTANCE = 30;
     private static final int LIMIT_DISTANCE_NOTIFICATION = 200;
 
     private static final int ERROR_CODE_ACTIVATE_ROUTE_LIMIT_DISTANCE = 3209;
 
     private static final int SUCCESS = 200;
+
+    private static final int NOTIFICATION_ID = 1000;
 
     public SpeakVoice tts;
 
@@ -130,6 +137,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     boolean isInitialServiceRunning = true;
     boolean isActivateWithinRouteLimitDistance = false;
     boolean isActivateAutoFinishNavigation = false;
+    boolean isFirstRepeatPointInfoNoti = true;
+    boolean isCalling = false;
 
     long startTime = 0;
     long endTime = 0;
@@ -145,7 +154,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
     CallStateListener callStateListener;
 
-    boolean isCalling = false;
+    NotificationManager mNm;
 
     enum PlayState {
         IDLE,
@@ -235,6 +244,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
         mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+
+        mNm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -358,6 +369,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         }
 
         mTelephonyManager.listen(callStateListener, PhoneStateListener.LISTEN_NONE);
+
+        mNm.cancel(NOTIFICATION_ID);
+//        mNm.cancelAll();
     }
 
     protected void createLocationRequest() {
@@ -432,6 +446,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 if (!isCalling) {
                     tts.translate("안내를 시작합니다.");
                 }
+
+                sendNotification();
 
                 if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -544,6 +560,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             if (!isCalling) {
                 tts.translate("안내를 시작합니다.");
             }
+
+            sendNotification();
 
             if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -1346,6 +1364,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                 mPointLatLngIndex++;
 
+                isFirstRepeatPointInfoNoti = true;
+
                 for (int i = currentLatLngIndex; i <= mPointLatLngIndexList.get(mPointLatLngIndex); i++) {
                     pointInfo = mBicycleNaviInfoList.get(i);
 
@@ -1356,6 +1376,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 pointInfoDistance = Math.round(tempDistance);
 
                 if (!isCalling) {
+                    Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex).!isCalling.tts");
+
                     tts.translate(Integer.toString(pointInfoDistance) + "m 이후 " + pointInfo.properties.description);
                 }
 
@@ -1398,8 +1420,13 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 if (pointInfoDistance >= LIMIT_DISTANCE_NOTIFICATION) {
                     Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.pointInfoDistance >= 300");
 
-                    if (!isCalling) {
-                        tts.translate("잠시후 " + mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex)));
+                    if (!isCalling && isFirstRepeatPointInfoNoti) {
+                        BicycleNavigationInfo pointInfo;
+                        pointInfo = mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex));
+
+                        tts.translate("잠시후 " + pointInfo.properties.description);
+
+                        isFirstRepeatPointInfoNoti = false;
                     }
                 } else {
                     Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.pointInfoDistance < 300");
@@ -1599,21 +1626,21 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                                             if (mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description != null)
 //                                                Log.d(DEBUG_TAG, "mBicycleNaviInfoList.size : " + Integer.toString(mBicycleNaviInfoList.size() - 1) + ", description : " + mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description);
 
-                                            if (feature.properties.pointType.equals(POINTTYPE_SP)) {
+                                                if (feature.properties.pointType.equals(POINTTYPE_SP)) {
 //                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
-                                                addPointMarker(latLngA, POINTTYPE_SP, gpIndexSize);
-                                            } else if ((feature.properties.pointType.equals(POINTTYPE_GP))) {
+                                                    addPointMarker(latLngA, POINTTYPE_SP, gpIndexSize);
+                                                } else if ((feature.properties.pointType.equals(POINTTYPE_GP))) {
 //                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
-                                                addPointMarker(latLngA, POINTTYPE_GP, gpIndexSize);
-                                            } else if (feature.properties.pointType.equals(POINTTYPE_EP)) {
+                                                    addPointMarker(latLngA, POINTTYPE_GP, gpIndexSize);
+                                                } else if (feature.properties.pointType.equals(POINTTYPE_EP)) {
 //                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
-                                                addPointMarker(latLngA, POINTTYPE_EP, gpIndexSize);
+                                                    addPointMarker(latLngA, POINTTYPE_EP, gpIndexSize);
 
-                                                endPointLatLng = latLngA;
-                                            }
+                                                    endPointLatLng = latLngA;
+                                                }
                                         } else if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING)) {
                                             BicycleNavigationInfo bicycleNaviInfo = new BicycleNavigationInfo();
                                             bicycleNaviInfo.latLng = latLngA;
@@ -2003,5 +2030,27 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
 //            stopSelf();
         }
+    }
+
+    private void sendNotification() {
+        Log.d("safebike", "RouteService.sendNotification");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        builder.setSmallIcon(R.drawable.safebike_logo_s);
+        builder.setContentTitle("Safe Bike");
+        builder.setContentText("자전거 내비게이션 동작 중...");
+
+        builder.setAutoCancel(false);
+
+        Intent intent = new Intent(RouteService.this, StartNavigationActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+
+        builder.setContentIntent(pi);
+
+        Notification notification = builder.build();
+        notification.flags = Notification.FLAG_ONGOING_EVENT;
+
+        mNm.notify(NOTIFICATION_ID, notification);
     }
 }

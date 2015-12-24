@@ -40,7 +40,6 @@ import com.safering.safebike.property.MyApplication;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.service.RouteService;
 import com.safering.safebike.setting.CustomTypefaceSpan;
-import com.safering.safebike.setting.SettingFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -300,9 +299,10 @@ public class MainActivity extends AppCompatActivity
 
     public void onMainFinishNavigationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(android.R.drawable.ic_dialog_info);
+
+        builder.setIcon(null);
         builder.setTitle("내비게이션 안내종료");
-        builder.setMessage("현재 내비게이션 안내 중입니다. 정말로 종료하시겠습니까");
+        builder.setMessage("현재 내비게이션 안내 중입니다." + "\n" + "정말로 종료하시겠습니까");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
