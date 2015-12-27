@@ -6,9 +6,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +22,8 @@ import com.safering.safebike.manager.FontManager;
  */
 public class RecentFragment extends Fragment {
     private static final String KEY_POI_OBJECT = "poiobject";
-//    private static final String KEY_POI_NAME = "poiName";
-//    private static final String KEY_POI_LATITUDE = "poiLatitude";
-//    private static final String KEY_POI_LONGITUDE = "poiLongitude";
-//    private static final String KEY_POI_ADDRESS = "poiAddress";
-    private static final String TAG_TAB_RECENT = "RECENT";
 
-    FragmentTabHost tabHost;
+    private static final String TAG_TAB_RECENT = "RECENT";
 
     ListView listView;
     SimpleCursorAdapter mAdapter;
@@ -41,7 +34,6 @@ public class RecentFragment extends Fragment {
     int dateColumnIndex = -1;
 
     public RecentFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -53,13 +45,12 @@ public class RecentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
 //        Toast.makeText(getContext(), "RecentFragment.onCreateView", Toast.LENGTH_SHORT).show();
         View view = inflater.inflate(R.layout.fragment_recent, container, false);
 
         messageView = (TextView) view.findViewById(R.id.text_messag_recent);
         listView = (ListView) view.findViewById(R.id.listView_recent);
-//        deleteRctBtn = (ImageButton) view.findViewById(R.id.btn_delete_recent);
 
         String[] from = {RecentDB.RecentTable.COLUMN_POI_NAME, RecentDB.RecentTable.COLUMN_SEARCH_DATE};
         int[] to = {R.id.text_rct_poi_name, R.id.text_rct_search_date};
@@ -93,17 +84,11 @@ public class RecentFragment extends Fragment {
                 return false;
             }
         });
-        //View vv = getLayoutInflater(savedInstanceState).inflate(R.layout.delete_recent_view,null);
 
         deleteRctBtn = inflater.inflate(R.layout.delete_recent_view, null);
         listView.addFooterView(deleteRctBtn);
 
-        // listView.addFooterView(deleteRctBtn);
-
         listView.setAdapter(mAdapter);
-//        listView.addFooterView(deleteRctBtn);
-
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -115,7 +100,7 @@ public class RecentFragment extends Fragment {
                  * ParentRctFvActivity 에 있는 setResult 처리
                  */
 
-                Log.d("safebike", "rctPoiName : " + rctPoiName);
+//                Log.d("safebike", "rctPoiName : " + rctPoiName);
 
                 NavigationNetworkManager.getInstance().searchPOI(getContext(), rctPoiName, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
                     @Override
@@ -123,12 +108,12 @@ public class RecentFragment extends Fragment {
                         POI poi = result.pois.poiList.get(0);
 
                         if (poi != null) {
-                            Log.d("safebike", "poi.secondNo : " + poi.secondNo);
+//                            Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
                             if (getActivity() != null) {
                                 ((ParentRctFvActivity) getActivity()).sendPOI(poi);
 
-                                Log.d("safebike", "RecentFragment.onCreateView.onSuccess.sendPOI.getActivity != null | ((ParentRctFvActivity) getActivity()).sendPOI(poi)");
+//                                Log.d("safebike", "RecentFragment.onCreateView.onSuccess.sendPOI.getActivity != null | ((ParentRctFvActivity) getActivity()).sendPOI(poi)");
 
                             }
 //                            sendPOI(poi);
@@ -188,8 +173,6 @@ public class RecentFragment extends Fragment {
             messageView.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
             deleteRctBtn.setVisibility(View.VISIBLE);
-
-
         } else {
 
         }

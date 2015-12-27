@@ -14,5 +14,4 @@ public class RecentItem implements Serializable {
     String rctPOIName;
     String searchDate;
     long timeStamp;
-
 }

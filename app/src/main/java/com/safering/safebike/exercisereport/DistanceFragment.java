@@ -300,28 +300,30 @@ public class DistanceFragment extends Fragment  implements OnChartValueSelectedL
     }
 
     public float getBarSpacePercent(int displaySize){
-        float barSpacePercent = 0f;
+        float barSpacePercent = 50f;
+
         switch (displaySize){
             case 1:
-                barSpacePercent = 85f;
+                barSpacePercent = 92f;
                 break;
             case 2:
-                barSpacePercent = 80f;
+                barSpacePercent = 87f;
                 break;
             case 3:
-                barSpacePercent = 75f;
+                barSpacePercent = 82f;
                 break;
             case 4:
-                barSpacePercent = 70f;
+                barSpacePercent = 77f;
                 break;
-
             case 5:
-                barSpacePercent = 65f;
+                barSpacePercent = 72f;
                 break;
             case 6:
-                barSpacePercent = 60f;
+                barSpacePercent = 67f;
                 break;
-
+            case 7:
+                barSpacePercent = 62f;
+                break;
             default:
                 barSpacePercent = 50f;
 

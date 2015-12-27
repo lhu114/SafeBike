@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,19 +50,15 @@ public class FavoriteFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.listView_favorite);
         mAdapter = new FavoriteAdapter();
 
-//
-
         /*
          *  네트워크 요청 이메일 서버에 보내서 즐겨찾기 항목 가져오기
          */
-
 
         deleteBtn = inflater.inflate(R.layout.delete_favorite_view, null);
         listView.addFooterView(deleteBtn);
         listView.setAdapter(mAdapter);
 
         initData();
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -95,17 +90,17 @@ public class FavoriteFragment extends Fragment {
                          *
                          * Visibility Gone 처리
                          */
-                        Log.d("safebike", "FavoriteFragment.initData");
+//                        Log.d("safebike", "FavoriteFragment.initData");
 
                         final String userEmail = PropertyManager.getInstance().getUserEmail();
 
                         NetworkManager.getInstance().removeAllFavorite(getContext(), userEmail, new NetworkManager.OnResultListener() {
                             @Override
                             public void onSuccess(Object result) {
-                                Log.d("safebike", "FavoriteFragment.removeAllFavorite.onSuccess");
+//                                Log.d("safebike", "FavoriteFragment.removeAllFavorite.onSuccess");
 
                                 if ((int) result == SUCCESS) {
-                                    Log.d("safebike", "FavoriteFragment.removeAllFavorite.onSuccess.200");
+//                                    Log.d("safebike", "FavoriteFragment.removeAllFavorite.onSuccess.200");
 
                                     mAdapter.remove();
 
@@ -117,7 +112,7 @@ public class FavoriteFragment extends Fragment {
 
                             @Override
                             public void onFail(int code) {
-                                Log.d("safebike", "FavoriteFragment.removeAllFavorite.onFail");
+//                                Log.d("safebike", "FavoriteFragment.removeAllFavorite.onFail");
                             }
                         });
 
@@ -154,7 +149,7 @@ public class FavoriteFragment extends Fragment {
         /*
          * 네트워크 요청해서 즐겨찾기 데이터 가져오기
          */
-        Log.d("safebike", "FavoriteFragment.initData");
+//        Log.d("safebike", "FavoriteFragment.initData");
 
         final String userEmail = PropertyManager.getInstance().getUserEmail();
 
@@ -163,7 +158,7 @@ public class FavoriteFragment extends Fragment {
             public void onSuccess(FavoriteResult result) {
                 if (result.favoriteItemList != null) {
                     if (result.favoriteItemList.size() > 0) {
-                        Log.d("safebike", "FavoriteFragment.initData.onSuccess.favoriteItemList.size : " + Integer.toString(result.favoriteItemList.size()));
+//                        Log.d("safebike", "FavoriteFragment.initData.onSuccess.favoriteItemList.size : " + Integer.toString(result.favoriteItemList.size()));
 
                         for (FavoriteItem item : result.favoriteItemList) {
                             mAdapter.add(item);
@@ -181,16 +176,10 @@ public class FavoriteFragment extends Fragment {
 
             @Override
             public void onFail(int code) {
-                Log.d("safebike", "FavoriteFragment.initData.onFail");
+//                Log.d("safebike", "FavoriteFragment.initData.onFail");
 
                 messageView.setVisibility(View.VISIBLE);
             }
         });
-
-//        for (int i = 0; i < 10; i++) {
-//            FavoriteItem itemData = new FavoriteItem();
-//            itemData.fvPOIName = "즐겨찾기 목적지";
-//            mAdapter.add(itemData);
-//        }
     }
 }

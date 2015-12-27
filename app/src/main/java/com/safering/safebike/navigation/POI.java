@@ -43,29 +43,4 @@ public class POI implements Serializable {
     public String getDetailAddress() {
         return firstNo + "-" + secondNo;
     }
-
-//    public String getAddress() {
-//        return upperAddrName + " " + middleAddrName + " " + lowerAddrName + " " + detailAddrName;
-//    }
-
-    //    @Override
-//    public String toString() {
-//        return name;
-//    }
-//
-//    public double getLatitude() {
-//        return (Double.parseDouble(frontLat) + Double.parseDouble(noorLat)) / 2;
-//    }
-//
-//    public double getLongitude() {
-//        return (Double.parseDouble(frontLon) + Double.parseDouble(noorLon)) / 2;
-//    }
-//
-//    public String getAddress() {
-//        return upperAddrName + " " + middleAddrName + " " + lowerAddrName + " " + detailAddrName;
-//    }
-//
-//    public double getLatitudeL1() {
-//        return 0;
-//    }
 }

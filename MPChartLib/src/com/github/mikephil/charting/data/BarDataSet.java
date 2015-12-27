@@ -38,6 +38,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> {
     public BarDataSet(List<BarEntry> yVals, String label) {
         super(yVals, label);
 
+
         mHighLightColor = Color.rgb(0, 0, 0);
 
         calcStackSize(yVals);

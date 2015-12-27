@@ -68,6 +68,8 @@ public class BarEntry extends Entry {
 		super(val, xIndex, data);
 	}
 
+
+
 	/**
 	 * Returns an exact copy of the BarEntry.
 	 */

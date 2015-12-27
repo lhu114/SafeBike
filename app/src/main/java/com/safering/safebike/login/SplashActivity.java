@@ -4,17 +4,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -26,12 +22,19 @@ import com.safering.safebike.property.PropertyManager;
 
 public class SplashActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     GoogleApiClient mGoogleApiClient;
+    // Request code to use when launching the resolution activity
     private static final int REQUEST_RESOLVE_ERROR = 1001;
+    // Unique tag for the error dialog fragment
     private static final String DIALOG_ERROR = "dialog_error";
+    // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
+
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
+
     private static final String DEFAULT_LATITUDE = "37.5670652";
     private static final String DEFAULT_LONGITUDE = "126.9772433";
+
+    ImageView splashImage;
     String userEmail = null;
     String userPassword = null;
 
@@ -53,7 +56,15 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
             PropertyManager.getInstance().setRecentLatitude(DEFAULT_LATITUDE);
             PropertyManager.getInstance().setRecentLongitude(DEFAULT_LONGITUDE);
+
+            Log.d("safebike", "SplashActivity.onCreate.setDefaultLocation");
+
         }
+
+        /*
+         * 비정상적으로 종료했을 때 시나리오 처리
+         */
+//
     }
 
     public void goMain(){
@@ -69,7 +80,11 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         finish();
     }
 
-    Handler mHandler = new Handler();
+    Handler mHandler = new Handler(
+            /*Looper.getMainLooper()
+            */
+
+    );
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -94,39 +109,50 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     @Override
-    public void onConnectionSuspended(int i) {}
+    public void onConnectionSuspended(int i) {
+//        Log.d("safebike", "SplashActivity.onConnectionSuspended");
+    }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
+//        Log.d("safebike", "SplashActivity.onConnectionFailed");
         if (mResolvingError) {
+            // Already attempting to resolve an error.
             return;
         } else if (result.hasResolution()) {
             try {
                 mResolvingError = true;
                 result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
             } catch (IntentSender.SendIntentException e) {
+                // There was an error with the resolution intent. Try again.
                 mGoogleApiClient.connect();
             }
         } else {
+            // Show dialog using GoogleApiAvailability.getErrorDialog()
             showErrorDialog(result.getErrorCode());
             mResolvingError = true;
         }
     }
 
+    // The rest of this code is all about building the error dialog
 
+    /* Creates a dialog for an error message */
     private void showErrorDialog(int errorCode) {
+        // Create a fragment for the error dialog
         ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
+        // Pass the error that should be displayed
         Bundle args = new Bundle();
         args.putInt(DIALOG_ERROR, errorCode);
         dialogFragment.setArguments(args);
         dialogFragment.show(getSupportFragmentManager(), "errordialog");
     }
 
-
+    /* Called from ErrorDialogFragment when the dialog is dismissed. */
     public void onDialogDismissed() {
         mResolvingError = false;
     }
 
+    /* A fragment to display an error dialog */
     public static class ErrorDialogFragment extends DialogFragment {
         public ErrorDialogFragment() {
         }

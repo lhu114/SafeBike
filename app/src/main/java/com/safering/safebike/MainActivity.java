@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,25 +42,31 @@ import com.safering.safebike.setting.CustomTypefaceSpan;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String DEBUG_TAG = "safebike";
 
     public static final String TAG_MAIN = "main";
     private static final String TAG_NAVIGATION = "navigation";
     private static final String TAG_EXERCISEREPORT = "exercisereport";
     private static final String TAG_FRIEND = "friend";
+    public static final String TAG_SETTING = "setting";
+
     private static final String SERVICE_FINISH = "finish";
     private static final String SERVICE_RUNNING = "running";
-    private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
-    private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
-    private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
-    private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
 
     public static final int MESSAGE_BACK_KEY = 1;
     public static final int TIME_BACK_TIMEOUT = 2000;
     private boolean isBackPressed = false;
+
+    private static final String KEY_POP_NAVIGATION_FRAGMENT = "popNavigation";
+    private static final String VALUE_POP_NAVIGATION_FRAGMENT = "popNavigation";
+    private static final String KEY_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
+    private static final String VALUE_REPLACE_MAIN_FRAGMENT = "replaceMainFragment";
     private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
+
     public static String FABFINDROUTE_ONOFF_FLAG = "off";
     private static String ON = "on";
     private static String OFF = "off";
+
     TextView textSafeBikeMainTitle, textMainTitle;
     View naviHeaderView;
     ImageView imageAccountSetting;
@@ -72,8 +77,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        Log.d("safebike", "MainActivity.onCreate");
+
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        Log.d("safebike", Integer.toString(toolbar.getContentInsetLeft()));
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
@@ -91,6 +101,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(GravityCompat.START);
+               // Toast.makeText(MainActivity.this,"drawerOopen",Toast.LENGTH_SHORT).show();
                 setProfile();
             }
         });
@@ -105,6 +116,17 @@ public class MainActivity extends AppCompatActivity
         Menu m = nav.getMenu();
         for (int i=0;i<m.size();i++) {
             MenuItem mi = m.getItem(i);
+
+            //for aapplying a font to subMenu ....
+        /*    SubMenu subMenu = mi.getSubMenu();
+            if (subMenu!=null && subMenu.size() >0 ) {
+                for (int j=0; j <subMenu.size();j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    applyFontToMenuItem(subMenuItem);
+                }
+            }
+*/
+            //the method we have create in activity
             applyFontToMenuItem(mi);
         }
 
@@ -147,23 +169,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("safebike", "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition());
+//        Log.d("safebike", "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition());
 
         if (intent != null) {
             String popMsg = intent.getStringExtra(KEY_POP_NAVIGATION_FRAGMENT);
             String replaceMsg = intent.getStringExtra(KEY_REPLACE_MAIN_FRAGMENT);
 
-            Log.d("safebike", "MainActivity.onNewIntent.replaceMsg : " + replaceMsg);
+//            Log.d("safebike", "MainActivity.onNewIntent.replaceMsg : " + replaceMsg);
             if (popMsg != null && popMsg.equals(VALUE_POP_NAVIGATION_FRAGMENT)) {
                 Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
                 if (old != null) {
-                    Log.d("safebike", "MainActivity.onNewIntent.popBackStack");
+//                    Log.d("safebike", "MainActivity.onNewIntent.popBackStack");
                     getSupportFragmentManager().popBackStack();
                 }
 
                 if (replaceMsg != null && replaceMsg.equals(VALUE_REPLACE_MAIN_FRAGMENT)) {
-                    Log.d("safebike", "MainActivity.onNewIntent.Replace.MainFragment");
+//                    Log.d("safebike", "MainActivity.onNewIntent.Replace.MainFragment");
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
                 }
             }
@@ -173,13 +195,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("safebike",  "MainActivity.onPause");
+//        Log.d("safebike",  "MainActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("safebike", "MainActivity.onResume");
+//        Log.d("safebike", "MainActivity.onResume");
 
         textSafeBikeMainTitle.setVisibility(View.VISIBLE);
         textMainTitle.setVisibility(View.GONE);
@@ -217,6 +239,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+//        Toast.makeText(this, "MainActivity.onBackPressed", Toast.LENGTH_SHORT).show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -225,9 +248,10 @@ public class MainActivity extends AppCompatActivity
             if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(OFF)) {
                 getSupportFragmentManager().popBackStack();
 
-                Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + FABFINDROUTE_ONOFF_FLAG);
+//                Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + FABFINDROUTE_ONOFF_FLAG);
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(ON)) {
                 FABFINDROUTE_ONOFF_FLAG = OFF;
+
                 NavigationFragment old = (NavigationFragment) getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
                 if (old != null) {
@@ -250,17 +274,10 @@ public class MainActivity extends AppCompatActivity
                 onMainFinishNavigationDialog();
             }
         }
-
-        /*
-         *  SharedPreferences Service Condition 값이 Running 이면 네비게이션 안내를 종료하겠습니까? 다이얼로그 나오고 예 누르면 Service Condition -> finish ,
-         *  SharedPreferences 값 다 날리기
-         *
-         *  SharedPreferences Service Condition 값이 finish 이면 두번 눌렀을 때 종료
-         */
     }
 
     public void onFabFindRouteOnOffFlag(String flag) {
-        Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + flag);
+//        Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + flag);
         FABFINDROUTE_ONOFF_FLAG = flag;
     }
 
@@ -281,10 +298,9 @@ public class MainActivity extends AppCompatActivity
                 Intent serviceIntent = new Intent(MainActivity.this, RouteService.class);
                 stopService(serviceIntent);
 
-                Log.d("safebike", "Replace.MainFragment");
+//                Log.d("safebike", "Replace.MainFragment");
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
-
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -363,8 +379,5 @@ public class MainActivity extends AppCompatActivity
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
             ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(), imageUserProfile, options);
         }
-
     }
-
-
 }

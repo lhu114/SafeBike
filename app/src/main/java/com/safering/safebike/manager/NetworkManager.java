@@ -42,6 +42,8 @@ import java.util.ArrayList;
  */
 public class NetworkManager {
 
+    private static final String SERVER = "http:...";
+
     /**
      * 계정
      */
@@ -54,6 +56,11 @@ public class NetworkManager {
     private static final String USER_IMAGE = "photo";
     private static final String USER_PHONE = "phone";
 
+/*
+    params.put(USER_ID, id);
+    params.put(USER_EAMIL, email);
+    params.put(JOIN_DATE, date);
+    params.put(USER_PASSWORD, password);*/
 
     /**
      * 운동
@@ -91,9 +98,10 @@ public class NetworkManager {
     /**
      * 네비게이션
      */
+
     private static final String NAVIGATION_LATITUDE = "favoriteslatitude";
     private static final String NAVIGATION_LONGITUDE = "favoriteslongitude";
-    private static final String NAVIGATION_SEARCH_POI_URL = "https://apis.skplanetx.com/tmap/pois";
+
     private static final String NAVIGATION_ADD_FAVORITE_URL = "http://52.69.133.212:3000/favorites/add";
     private static final String NAVIGATION_REMOVE_FAVORITE_URL = "http://52.69.133.212:3000/favorites/delete";
     private static final String NAVIGATION_REMOVEALL_FAVORITE_URL = "http://52.69.133.212:3000/favorites/alldelete";
@@ -107,11 +115,12 @@ public class NetworkManager {
     private static final String NAVIGATION_KEY_POI_VERSION = "version";
     private static final String NAVIGATION_KEY_POI_SEARCH_KEYWORD = "searchKeyword";
     private static final String NAVIGATION_KEY_POI_RESCOORDTYPE = "resCoordType";
+
     private static final String NAVIGATION_DESTINATION = "favoritesname";
     private static final String NAVIGATION_CALORIE = "calorie";
     private static final String NAVIGATION_SPEED = "speed";
     private static final String NAVIGATION_DISTANCE = "road";
-    private static final int NAVIGATION_VALUE_POI_VERSION = 1;
+
     private static final int ON_FAIL = -1;
     private static final int ON_SUCCESS = 1;
 
@@ -515,56 +524,44 @@ public class NetworkManager {
 
     }
 
-    /**
-     * 네비게이션
-     */
-    public void searchPOI(Context context, String keyword, final OnResultListener<SearchPOIInfo> listener) {
-        RequestParams params = new RequestParams();
-        Header[] headers = null;
-
-        headers = new Header[2];
-        headers[0] = new BasicHeader(NAVIGATION_KEY_HEADERS_ACCEPT, NAVIGATION_VALUE_HEADERS_ACCEPT);
-        headers[1] = new BasicHeader(NAVIGATION_KEY_HEADERS_APPKEY, NAVIGATION_VALUE_HEADERS_APPKEY);
-        params.put(NAVIGATION_KEY_POI_VERSION, NAVIGATION_VALUE_POI_VERSION);
-        params.put(NAVIGATION_KEY_POI_SEARCH_KEYWORD, keyword);
-        params.put(NAVIGATION_KEY_POI_RESCOORDTYPE, NAVIGATION_VALUE_POI_RESCOORDTYPE);
-
-        client.get(context, NAVIGATION_SEARCH_POI_URL, headers, params, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                listener.onFail(statusCode);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-
-                SearchPOIInfoResult result = gson.fromJson(responseString, SearchPOIInfoResult.class);
-                listener.onSuccess(result.searchPoiInfo);
-            }
-        });
-    }
 
     public void getFavorite(Context context, String email, final OnResultListener<FavoriteResult> listener) {
+        //PARAMETER : 유저 이메일
+        //결과값 : INT
 
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
+
         client.get(context, NAVIGATION_GET_FAVORITE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("safebike", "NetworkManager.getFavorite.onFailure : " + statusCode + "");
+//                Log.d("safebike", "NetworkManager.getFavorite.onFailure : " + statusCode + "");
+
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.d("safebike", "NetworkManager.getFavorite.onSuccess.responseString : " + responseString + "");
+//                Log.d("safebike", "NetworkManager.getFavorite.onSuccess.responseString : " + responseString + "");
                 FavoriteResult result = gson.fromJson(responseString, FavoriteResult.class);
+
                 listener.onSuccess(result);
+
+                if (headers != null) {
+                    int count = headers.length;
+
+                    for(int i = 0; i < count; i++) {
+//                        Log.d("safebike", "headers : " + headers[i]);
+                    }
+                }
             }
         });
     }
 
     public void getMatchFavorite(Context context, String email, String destination, double latitude, double longitude, final OnResultListener listener) {
+        //PARAMETER : 유저 이메일
+        //결과값 : INT
+
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
         params.put(NAVIGATION_DESTINATION, destination);
@@ -574,17 +571,24 @@ public class NetworkManager {
         client.get(context, NAVIGATION_GET_MATCH_FAVORITE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                Log.d("safebike", "NetworkManager.getMatchFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
+
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+//                Log.d("safebike", "NetworkManager.getMatchFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
+
                 listener.onSuccess(responseString);
             }
         });
     }
 
     public void saveFavorite(Context context, String email, String destination, double latitude, double longitude, final OnResultListener listener) {
+        //PARAMETER : 유저 이메일,목적지
+        //결과값 : INT
+
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
         params.put(NAVIGATION_DESTINATION, destination);
@@ -594,16 +598,14 @@ public class NetworkManager {
         client.post(context, NAVIGATION_ADD_FAVORITE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("safebike", "NetworkManager.saveFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
-                Log.i("saveFavoriteFail", statusCode + "");
+//                Log.d("safebike", "NetworkManager.saveFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.d("safebike", "NetworkManager.saveFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
-                Log.i("saveFavoriteSuccess", statusCode + " / " + responseString);
+//                Log.d("safebike", "NetworkManager.saveFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onSuccess(statusCode);
             }
@@ -625,14 +627,14 @@ public class NetworkManager {
         client.delete(context, NAVIGATION_REMOVE_FAVORITE_URL, header, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("safebike", "NetworkManager.removeFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
+//                Log.d("safebike", "NetworkManager.removeFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.d("safebike", "NetworkManager.removeFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
+//                Log.d("safebike", "NetworkManager.removeFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onSuccess(statusCode);
             }
@@ -641,22 +643,25 @@ public class NetworkManager {
 
 
     public void removeAllFavorite(Context context, String email, final OnResultListener listener) {
+        //PARAMETER : 유저 이메일,목적지
+        //결과값 : INT
 
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
+
         Header[] header = null;
 
         client.delete(context, NAVIGATION_REMOVEALL_FAVORITE_URL, header, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("safebike", "NetworkManager.removeAllFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
+//                Log.d("safebike", "NetworkManager.removeAllFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                  listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.d("safebike", "NetworkManager.removeAllFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
+//                Log.d("safebike", "NetworkManager.removeAllFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                  listener.onSuccess(statusCode);
             }
@@ -680,14 +685,14 @@ public class NetworkManager {
         client.post(context, NAVIGATION_SAVE_EXCERCISE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("safebike", "NetworkManager.saveExercise.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
+//                Log.d("safebike", "NetworkManager.saveExercise.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.d("safebike", "NetworkManager.saveExercise.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
+//                Log.d("safebike", "NetworkManager.saveExercise.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onSuccess(statusCode);
             }
