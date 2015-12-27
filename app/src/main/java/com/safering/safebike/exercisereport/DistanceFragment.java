@@ -39,9 +39,9 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DistanceFragment extends Fragment  implements OnChartGestureListener,OnChartValueSelectedListener{
+public class DistanceFragment extends Fragment  implements OnChartValueSelectedListener,View.OnTouchListener{
 
-    protected BarChart distanceChart;
+    BarChart distanceChart;
     TextView parentCal;
     TextView parentSpeed;
     TextView parentDistance;
@@ -50,8 +50,15 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
     ArrayList<BarDataSet> dataSets;
     ArrayList<ExerciseItem> collections;
     String recentDate;
+    static final int READ_DES = 0;
+    static final int READ_ASC = 1;
+    float xbefore;
+    float xafter;
     int collectCount;
     int readSize ;
+    int lastReadIndex;
+    int firstReadIndex;
+
     public DistanceFragment() {
     }
 
@@ -63,7 +70,9 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
 
         collectCount = 0;
         recentDate = null;
-        readSize = 5;
+        readSize = 8;
+        firstReadIndex = 0;
+        lastReadIndex = 0;
         xVals = new ArrayList<String>();
         yVals = new ArrayList<BarEntry>();
         collections = new ArrayList<ExerciseItem>();
@@ -84,9 +93,8 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
         distanceChart.getAxisLeft().setValueFormatter(custom);
         distanceChart.getAxisRight().setDrawGridLines(false);
         distanceChart.getAxisRight().setDrawLabels(false);
-        distanceChart.setOnChartGestureListener(this);
         distanceChart.setOnChartValueSelectedListener(this);
-
+        distanceChart.setOnTouchListener(this);
         setFont();
         getExerciseDatas();
         setRecentData();
@@ -126,7 +134,7 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
                 if (result.workoutone.size() > 0) {
                     recentDate = result.workoutone.get(0).date;
                     String email = PropertyManager.getInstance().getUserEmail();
-                    displayClickData(email,recentDate);
+                    displayClickData(email, recentDate);
 
 
                 }
@@ -160,7 +168,6 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
 
 
     }
-
 
     private void collectDate(String today){
         String email = PropertyManager.getInstance().getUserEmail();
@@ -201,13 +208,12 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                }else {
-                    if(collections.size() < readSize) {
-                        updateData(collections.size());
-                    }
-                    else{
-                        updateData(readSize);
-                        readSize += 5;
+                } else {
+                    if (collections.size() < readSize) {
+                        initData(collections.size());
+                    } else {
+                        initData(readSize);
+
                     }
 
                 }
@@ -220,21 +226,28 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
         });
 
     }
-    private void updateData(int readSize) {
+
+    private void initData(int readSize){
+
+        int readIndex = 0;
+        int maxSize = 8;
 
         BarData data;
         xVals = new ArrayList<String>();
         yVals = new ArrayList<BarEntry>();
 
-        for(int i = 0; i < readSize; i++){
-            xVals.add(i,collections.get(collections.size() - readSize + i)._id);
-
-            yVals.add(new BarEntry((collections.get(collections.size() - readSize + i).road * 100) / 100, i));
-
+        for (readIndex = 0; readIndex < maxSize; readIndex++) {
+            if (readIndex == collections.size())
+                break;
+            xVals.add(readIndex, collections.get(collections.size() - readSize + readIndex)._id);
+            yVals.add(new BarEntry((collections.get(collections.size() - readSize + readIndex).road * 100) / 100, readIndex));
+            lastReadIndex = collections.size() - readSize + readIndex;
+            firstReadIndex = collections.size() - readSize;
         }
+
         BarDataSet set = new BarDataSet(yVals, "거리");
         set.setColor(Color.parseColor("#B6E2FF"));
-        set.setBarSpacePercent(70f);
+        set.setBarSpacePercent(getBarSpacePercent(readIndex));
 
         dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set);
@@ -244,7 +257,76 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
         distanceChart.notifyDataSetChanged();
         distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
         distanceChart.invalidate();
+    }
 
+    private void updateData(int readSize,int type) {
+        int readIndex = 0;
+
+        BarData data;
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<BarEntry>();
+        if(type == READ_DES) {
+            firstReadIndex = firstReadIndex - readSize;
+            for (readIndex = 0; readIndex < readSize; readIndex++) {
+                xVals.add(readIndex, collections.get(firstReadIndex + readIndex)._id);
+                yVals.add(new BarEntry((collections.get(firstReadIndex  + readIndex).calorie * 100) / 100, readIndex));
+                lastReadIndex = firstReadIndex + readIndex;
+
+            }
+        }
+        else if(type == READ_ASC){
+            firstReadIndex = lastReadIndex + 1;
+            for(readIndex = 0; readIndex < readSize; readIndex++){
+                lastReadIndex++;
+                xVals.add(readIndex, collections.get(lastReadIndex)._id);
+                yVals.add(new BarEntry((collections.get(lastReadIndex).road * 100) / 100, readIndex));
+            }
+        }
+        BarDataSet set = new BarDataSet(yVals, "칼로리");
+        set.setColor(Color.parseColor("#B6E2FF"));
+        set.setBarSpacePercent(getBarSpacePercent(readIndex));
+
+        dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set);
+        data = new BarData(xVals, dataSets);
+        data.setValueTextSize(0f);
+
+
+        distanceChart.setData(data);
+        distanceChart.notifyDataSetChanged();
+        distanceChart.moveViewToX(distanceChart.getData().getXVals().size() - 1);
+        distanceChart.invalidate();
+
+    }
+
+    public float getBarSpacePercent(int displaySize){
+        float barSpacePercent = 0f;
+        switch (displaySize){
+            case 1:
+                barSpacePercent = 85f;
+                break;
+            case 2:
+                barSpacePercent = 80f;
+                break;
+            case 3:
+                barSpacePercent = 75f;
+                break;
+            case 4:
+                barSpacePercent = 70f;
+                break;
+
+            case 5:
+                barSpacePercent = 65f;
+                break;
+            case 6:
+                barSpacePercent = 60f;
+                break;
+
+            default:
+                barSpacePercent = 50f;
+
+        }
+        return barSpacePercent;
     }
 
 
@@ -264,68 +346,6 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
     }
 
     @Override
-    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-    }
-
-    @Override
-    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-        if (distanceChart.getLowestVisibleXIndex() == 0) {
-            try {
-                distanceChart.animateXY(3000, 3000);
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cal = Calendar.getInstance();
-                String getDate = distanceChart.getXValue(distanceChart.getLowestVisibleXIndex());
-                Date d = dateFormat.parse(getDate);
-                cal.setTime(d);
-                cal.add(Calendar.DATE, -1);
-                if(collections.size() < readSize) {
-                    updateData(collections.size());
-                }
-                else{
-                    updateData(readSize);
-                    readSize += 5;
-                }
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    @Override
-    public void onChartLongPressed(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartDoubleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartSingleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-    }
-
-    @Override
-    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-    }
-
-    @Override
-    public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-    }
-
-    @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
         String email = PropertyManager.getInstance().getUserEmail();
@@ -338,6 +358,41 @@ public class DistanceFragment extends Fragment  implements OnChartGestureListene
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            xbefore = event.getX();
+        }
+        else if(event.getAction() == MotionEvent.ACTION_UP){
+            xafter = event.getX();
+            if(xbefore < xafter){
+                if (distanceChart.getLowestVisibleXIndex() == 0) {
+                    distanceChart.animateXY(3000, 3000);
+
+                    if(firstReadIndex > 0) {
+                        if (firstReadIndex - readSize < 0) {
+                            updateData(firstReadIndex, READ_DES);
+                        } else {
+                            updateData(readSize, READ_DES);
+                        }
+                    }
+
+                }
+            }
+            else if(xbefore > xafter){
+                if(distanceChart.getHighestVisibleXIndex() == xVals.size() - 1){
+                    distanceChart.animateXY(3000, 3000);
+
+                    if(lastReadIndex < collections.size() - 1) {
+                        updateData(readSize, READ_ASC);
+                    }
+
+                }
+            }
+        }
+        return false;
     }
 }
 

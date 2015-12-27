@@ -25,7 +25,11 @@ public class MyYAxisValueFormatter implements YAxisValueFormatter {
         }
         else if(type == CHART_DISTANCE){
 
-            return mFormat.format(Math.round(value / 1000.0)) + " km";
+            if(Math.round(value / 1000.0) < 1)
+                return mFormat.format(Math.round(value)) + "m";
+            else {
+                return mFormat.format(Math.round(value / 1000.0)) + " km";
+            }
         }
         else {
 

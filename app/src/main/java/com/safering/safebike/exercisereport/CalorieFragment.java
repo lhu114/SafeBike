@@ -17,11 +17,13 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.InformDialogFragment;
@@ -39,7 +41,7 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CalorieFragment extends Fragment  implements OnChartGestureListener,OnChartValueSelectedListener{
+public class CalorieFragment extends Fragment  implements OnChartValueSelectedListener,View.OnTouchListener{
 
     BarChart calorieChart;
     TextView parentCal;
@@ -50,8 +52,15 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
     ArrayList<BarDataSet> dataSets;
     ArrayList<ExerciseItem> collections;
     String recentDate;
+    static final int READ_DES = 0;
+    static final int READ_ASC = 1;
+    float xbefore;
+    float xafter;
+
     int collectCount;
     int readSize ;
+    int lastReadIndex;
+    int firstReadIndex;
 
     public CalorieFragment() {
         // Required empty public constructor
@@ -66,7 +75,9 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
 
         collectCount = 0;
         recentDate = null;
-        readSize = 10;
+        readSize = 8;
+        firstReadIndex = 0;
+        lastReadIndex = 0;
         xVals = new ArrayList<String>();
         yVals = new ArrayList<BarEntry>();
         collections = new ArrayList<ExerciseItem>();
@@ -87,8 +98,8 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
         calorieChart.getAxisLeft().setValueFormatter(custom);
         calorieChart.getAxisRight().setDrawGridLines(false);
         calorieChart.getAxisRight().setDrawLabels(false);
-        calorieChart.setOnChartGestureListener(this);
         calorieChart.setOnChartValueSelectedListener(this);
+        calorieChart.setOnTouchListener(this);
 
         setFont();
         getExerciseDatas();
@@ -129,7 +140,7 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
                 if (result.workoutone.size() > 0) {
                     recentDate = result.workoutone.get(0).date;
                     String email = PropertyManager.getInstance().getUserEmail();
-                    displayClickData(email,recentDate);
+                    displayClickData(email, recentDate);
                 }
             }
 
@@ -201,13 +212,12 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                }else {
-                    if(collections.size() < readSize) {
-                        updateData(collections.size());
-                    }
-                    else{
-                        updateData(readSize);
-                        readSize += 5;
+                } else {
+                    if (collections.size() < readSize) {
+                        initData(collections.size());
+                    } else {
+                        initData(readSize);
+
                     }
 
                 }
@@ -220,21 +230,28 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
         });
 
     }
-    private void updateData(int readSize) {
+
+    private void initData(int readSize){
+
+        int readIndex = 0;
+        int maxSize = 8;
 
         BarData data;
         xVals = new ArrayList<String>();
         yVals = new ArrayList<BarEntry>();
 
-        for(int i = 0; i < readSize; i++){
-            xVals.add(i,collections.get(collections.size() - readSize + i)._id);
+            for (readIndex = 0; readIndex < maxSize; readIndex++) {
+                if (readIndex == collections.size())
+                    break;
+                xVals.add(readIndex, collections.get(collections.size() - readSize + readIndex)._id);
+                yVals.add(new BarEntry((collections.get(collections.size() - readSize + readIndex).calorie * 100) / 100, readIndex));
+                lastReadIndex = collections.size() - readSize + readIndex;
+                firstReadIndex = collections.size() - readSize;
+            }
 
-            yVals.add(new BarEntry((collections.get(collections.size() - readSize + i).calorie * 100) / 100, i));
-
-        }
         BarDataSet set = new BarDataSet(yVals, "칼로리");
         set.setColor(Color.parseColor("#B6E2FF"));
-        set.setBarSpacePercent(70f);
+        set.setBarSpacePercent(getBarSpacePercent(readIndex));
 
         dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set);
@@ -244,7 +261,77 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
         calorieChart.notifyDataSetChanged();
         calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
         calorieChart.invalidate();
+    }
+    private void updateData(int readSize,int type) {
+        int readIndex = 0;
 
+        BarData data;
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<BarEntry>();
+        if(type == READ_DES) {
+            firstReadIndex = firstReadIndex - readSize;
+            for (readIndex = 0; readIndex < readSize; readIndex++) {
+                xVals.add(readIndex, collections.get(firstReadIndex + readIndex)._id);
+                yVals.add(new BarEntry((collections.get(firstReadIndex  + readIndex).calorie * 100) / 100, readIndex));
+                lastReadIndex = firstReadIndex + readIndex;
+
+            }
+        }
+        else if(type == READ_ASC){
+            firstReadIndex = lastReadIndex + 1;
+            for(readIndex = 0; readIndex < readSize; readIndex++){
+                lastReadIndex++;
+                xVals.add(readIndex, collections.get(lastReadIndex)._id);
+                yVals.add(new BarEntry((collections.get(lastReadIndex).calorie * 100) / 100, readIndex));
+            }
+        }
+        BarDataSet set = new BarDataSet(yVals, "칼로리");
+        set.setColor(Color.parseColor("#B6E2FF"));
+        set.setBarSpacePercent(getBarSpacePercent(readIndex));
+
+        dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set);
+        data = new BarData(xVals, dataSets);
+        data.setValueTextSize(0f);
+
+
+        calorieChart.setData(data);
+        calorieChart.notifyDataSetChanged();
+        calorieChart.moveViewToX(calorieChart.getData().getXVals().size() - 1);
+        calorieChart.invalidate();
+
+    }
+
+    public float getBarSpacePercent(int displaySize){
+        float barSpacePercent = 50f;
+
+        switch (displaySize){
+            case 1:
+                barSpacePercent = 92f;
+                break;
+            case 2:
+                barSpacePercent = 87f;
+                break;
+            case 3:
+                barSpacePercent = 82f;
+                break;
+            case 4:
+                barSpacePercent = 77f;
+                break;
+            case 5:
+                barSpacePercent = 72f;
+                break;
+            case 6:
+                barSpacePercent = 67f;
+                break;
+            case 7:
+                barSpacePercent = 62f;
+                break;
+            default:
+                barSpacePercent = 50f;
+
+        }
+        return barSpacePercent;
     }
 
 
@@ -264,68 +351,6 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
     }
 
     @Override
-    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-    }
-
-    @Override
-    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-        if (calorieChart.getLowestVisibleXIndex() == 0) {
-            try {
-                calorieChart.animateXY(3000, 3000);
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cal = Calendar.getInstance();
-                String getDate = calorieChart.getXValue(calorieChart.getLowestVisibleXIndex());
-                Date d = dateFormat.parse(getDate);
-                cal.setTime(d);
-                cal.add(Calendar.DATE, -1);
-                if(collections.size() < readSize) {
-                    updateData(collections.size());
-                }
-                else{
-                    updateData(readSize);
-                    readSize += 5;
-                }
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    @Override
-    public void onChartLongPressed(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartDoubleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartSingleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-    }
-
-    @Override
-    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-    }
-
-    @Override
-    public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-    }
-
-    @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
         String email = PropertyManager.getInstance().getUserEmail();
@@ -338,5 +363,40 @@ public class CalorieFragment extends Fragment  implements OnChartGestureListener
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            xbefore = event.getX();
+        }
+        else if(event.getAction() == MotionEvent.ACTION_UP){
+            xafter = event.getX();
+            if(xbefore < xafter){
+                if (calorieChart.getLowestVisibleXIndex() == 0) {
+                    calorieChart.animateXY(3000, 3000);
+
+                    if(firstReadIndex > 0) {
+                        if (firstReadIndex - readSize < 0) {
+                            updateData(firstReadIndex, READ_DES);
+                        } else {
+                            updateData(readSize, READ_DES);
+                        }
+                    }
+
+                }
+            }
+            else if(xbefore > xafter){
+                if(calorieChart.getHighestVisibleXIndex() == xVals.size() - 1){
+                    calorieChart.animateXY(3000, 3000);
+
+                    if(lastReadIndex < collections.size() - 1) {
+                        updateData(readSize, READ_ASC);
+                    }
+
+                }
+            }
+        }
+        return false;
     }
 }

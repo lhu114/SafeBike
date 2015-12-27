@@ -39,9 +39,9 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SpeedFragment extends Fragment  implements OnChartGestureListener,OnChartValueSelectedListener{
+public class SpeedFragment extends Fragment  implements View.OnTouchListener,OnChartValueSelectedListener{
 
-    protected BarChart speedChart;
+    BarChart speedChart;
     TextView parentCal;
     TextView parentSpeed;
     TextView parentDistance;
@@ -50,8 +50,15 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
     ArrayList<BarDataSet> dataSets;
     ArrayList<ExerciseItem> collections;
     String recentDate;
+    static final int READ_DES = 0;
+    static final int READ_ASC = 1;
+    float xbefore;
+    float xafter;
     int collectCount;
     int readSize ;
+    int lastReadIndex;
+    int firstReadIndex;
+
     public SpeedFragment() {
         // Required empty public constructor
     }
@@ -62,10 +69,11 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_speed, container, false);
-
         collectCount = 0;
         recentDate = null;
-        readSize = 5;
+        readSize = 8;
+        firstReadIndex = 0;
+        lastReadIndex = 0;
         xVals = new ArrayList<String>();
         yVals = new ArrayList<BarEntry>();
         collections = new ArrayList<ExerciseItem>();
@@ -86,7 +94,7 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
         speedChart.getAxisLeft().setValueFormatter(custom);
         speedChart.getAxisRight().setDrawGridLines(false);
         speedChart.getAxisRight().setDrawLabels(false);
-        speedChart.setOnChartGestureListener(this);
+        speedChart.setOnTouchListener(this);
         speedChart.setOnChartValueSelectedListener(this);
 
         setFont();
@@ -129,7 +137,7 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
                     recentDate = result.workoutone.get(0).date;
 
                     String email = PropertyManager.getInstance().getUserEmail();
-                    displayClickData(email,recentDate);
+                    displayClickData(email, recentDate);
 
 
                 }
@@ -164,6 +172,7 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
 
 
     }
+
 
 
     private void collectDate(String today){
@@ -205,13 +214,12 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                }else {
-                    if(collections.size() < readSize) {
-                        updateData(collections.size());
-                    }
-                    else{
-                        updateData(readSize);
-                        readSize += 5;
+                } else {
+                    if (collections.size() < readSize) {
+                        initData(collections.size());
+                    } else {
+                        initData(readSize);
+
                     }
 
                 }
@@ -224,20 +232,28 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
         });
 
     }
-    private void updateData(int readSize) {
+
+    private void initData(int readSize){
+
+        int readIndex = 0;
+        int maxSize = 8;
 
         BarData data;
         xVals = new ArrayList<String>();
         yVals = new ArrayList<BarEntry>();
 
-        for(int i = 0; i < readSize; i++){
-            xVals.add(i,collections.get(collections.size() - readSize + i)._id);
-            yVals.add(new BarEntry((collections.get(collections.size() - readSize + i).speed * 100) / 100, i));
-
+        for (readIndex = 0; readIndex < maxSize; readIndex++) {
+            if (readIndex == collections.size())
+                break;
+            xVals.add(readIndex, collections.get(collections.size() - readSize + readIndex)._id);
+            yVals.add(new BarEntry((collections.get(collections.size() - readSize + readIndex).speed * 100) / 100, readIndex));
+            lastReadIndex = collections.size() - readSize + readIndex;
+            firstReadIndex = collections.size() - readSize;
         }
-        BarDataSet set = new BarDataSet(yVals, "거리");
+
+        BarDataSet set = new BarDataSet(yVals, "속력");
         set.setColor(Color.parseColor("#B6E2FF"));
-        set.setBarSpacePercent(70f);
+        set.setBarSpacePercent(getBarSpacePercent(readIndex));
 
         dataSets = new ArrayList<BarDataSet>();
         dataSets.add(set);
@@ -247,10 +263,80 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
         speedChart.notifyDataSetChanged();
         speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
         speedChart.invalidate();
-
     }
 
 
+    private void updateData(int readSize,int type) {
+        int readIndex = 0;
+
+        BarData data;
+        xVals = new ArrayList<String>();
+        yVals = new ArrayList<BarEntry>();
+        if(type == READ_DES) {
+            firstReadIndex = firstReadIndex - readSize;
+            for (readIndex = 0; readIndex < readSize; readIndex++) {
+                xVals.add(readIndex, collections.get(firstReadIndex + readIndex)._id);
+                yVals.add(new BarEntry((collections.get(firstReadIndex  + readIndex).calorie * 100) / 100, readIndex));
+                lastReadIndex = firstReadIndex + readIndex;
+
+            }
+        }
+        else if(type == READ_ASC){
+            firstReadIndex = lastReadIndex + 1;
+            for(readIndex = 0; readIndex < readSize; readIndex++){
+                lastReadIndex++;
+                xVals.add(readIndex, collections.get(lastReadIndex)._id);
+                yVals.add(new BarEntry((collections.get(lastReadIndex).calorie * 100) / 100, readIndex));
+            }
+        }
+        BarDataSet set = new BarDataSet(yVals, "칼로리");
+        set.setColor(Color.parseColor("#B6E2FF"));
+        set.setBarSpacePercent(getBarSpacePercent(readIndex));
+
+        dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set);
+        data = new BarData(xVals, dataSets);
+        data.setValueTextSize(0f);
+
+
+        speedChart.setData(data);
+        speedChart.notifyDataSetChanged();
+        speedChart.moveViewToX(speedChart.getData().getXVals().size() - 1);
+        speedChart.invalidate();
+
+    }
+
+    public float getBarSpacePercent(int displaySize){
+        float barSpacePercent = 50f;
+
+        switch (displaySize){
+            case 1:
+                barSpacePercent = 92f;
+                break;
+            case 2:
+                barSpacePercent = 87f;
+                break;
+            case 3:
+                barSpacePercent = 82f;
+                break;
+            case 4:
+                barSpacePercent = 77f;
+                break;
+            case 5:
+                barSpacePercent = 72f;
+                break;
+            case 6:
+                barSpacePercent = 67f;
+                break;
+            case 7:
+                barSpacePercent = 62f;
+                break;
+            default:
+                barSpacePercent = 50f;
+
+        }
+        return barSpacePercent;
+    }
     @Override
     public void onPause() {
         super.onPause();
@@ -267,68 +353,6 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
     }
 
     @Override
-    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-    }
-
-    @Override
-    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-        if (speedChart.getLowestVisibleXIndex() == 0) {
-            try {
-                speedChart.animateXY(3000, 3000);
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar cal = Calendar.getInstance();
-                String getDate = speedChart.getXValue(speedChart.getLowestVisibleXIndex());
-                Date d = dateFormat.parse(getDate);
-                cal.setTime(d);
-                cal.add(Calendar.DATE, -1);
-                if(collections.size() < readSize) {
-                    updateData(collections.size());
-                }
-                else{
-                    updateData(readSize);
-                    readSize += 5;
-                }
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    @Override
-    public void onChartLongPressed(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartDoubleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartSingleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-    }
-
-    @Override
-    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-    }
-
-    @Override
-    public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-    }
-
-    @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
         String email = PropertyManager.getInstance().getUserEmail();
@@ -341,5 +365,40 @@ public class SpeedFragment extends Fragment  implements OnChartGestureListener,O
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            xbefore = event.getX();
+        }
+        else if(event.getAction() == MotionEvent.ACTION_UP){
+            xafter = event.getX();
+            if(xbefore < xafter){
+                if (speedChart.getLowestVisibleXIndex() == 0) {
+                    speedChart.animateXY(3000, 3000);
+
+                    if(firstReadIndex > 0) {
+                        if (firstReadIndex - readSize < 0) {
+                            updateData(firstReadIndex, READ_DES);
+                        } else {
+                            updateData(readSize, READ_DES);
+                        }
+                    }
+
+                }
+            }
+            else if(xbefore > xafter){
+                if(speedChart.getHighestVisibleXIndex() == xVals.size() - 1){
+                    speedChart.animateXY(3000, 3000);
+
+                    if(lastReadIndex < collections.size() - 1) {
+                        updateData(readSize, READ_ASC);
+                    }
+
+                }
+            }
+        }
+        return false;
     }
 }
