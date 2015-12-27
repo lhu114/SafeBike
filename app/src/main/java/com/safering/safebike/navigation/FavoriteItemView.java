@@ -39,10 +39,6 @@ public class FavoriteItemView extends RelativeLayout {
 
     public void setItemData(FavoriteItem itemData) {
         mItemData = itemData;
-//iconView.setImageDrawable(R.drawable.);
-//        if (mItemData.poiIcon != null) {
-//            iconView.setImageDrawable(mItemData.poiIcon);
-//        }
 
         fvPOINameVIew.setText(mItemData.fvPOIName);
     }

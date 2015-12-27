@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,8 +67,6 @@ public class MainActivity extends AppCompatActivity
     private static String ON = "on";
     private static String OFF = "off";
 
-    private static final int NAVIGATION_DRAWER_MARGIN_LEFT = 0;
-
     TextView textSafeBikeMainTitle, textMainTitle;
     View naviHeaderView;
     ImageView imageAccountSetting;
@@ -80,15 +77,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("safebike", "MainActivity.onCreate");
+//        Log.d("safebike", "MainActivity.onCreate");
 
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Log.d("safebike", Integer.toString(toolbar.getContentInsetLeft()));
-
-        /*int marginLeft = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, NAVIGATION_DRAWER_MARGIN_LEFT, this.getResources().getDisplayMetrics());
-        toolbar.setContentInsetsRelative(marginLeft, 0);*/
+//        Log.d("safebike", Integer.toString(toolbar.getContentInsetLeft()));
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
@@ -175,23 +169,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("safebike", "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition());
+//        Log.d("safebike", "MainActivity.onNewIntent : " + PropertyManager.getInstance().getServiceCondition());
 
         if (intent != null) {
             String popMsg = intent.getStringExtra(KEY_POP_NAVIGATION_FRAGMENT);
             String replaceMsg = intent.getStringExtra(KEY_REPLACE_MAIN_FRAGMENT);
 
-            Log.d("safebike", "MainActivity.onNewIntent.replaceMsg : " + replaceMsg);
+//            Log.d("safebike", "MainActivity.onNewIntent.replaceMsg : " + replaceMsg);
             if (popMsg != null && popMsg.equals(VALUE_POP_NAVIGATION_FRAGMENT)) {
                 Fragment old = getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
 
                 if (old != null) {
-                    Log.d("safebike", "MainActivity.onNewIntent.popBackStack");
+//                    Log.d("safebike", "MainActivity.onNewIntent.popBackStack");
                     getSupportFragmentManager().popBackStack();
                 }
 
                 if (replaceMsg != null && replaceMsg.equals(VALUE_REPLACE_MAIN_FRAGMENT)) {
-                    Log.d("safebike", "MainActivity.onNewIntent.Replace.MainFragment");
+//                    Log.d("safebike", "MainActivity.onNewIntent.Replace.MainFragment");
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
                 }
             }
@@ -201,13 +195,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("safebike",  "MainActivity.onPause");
+//        Log.d("safebike",  "MainActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("safebike", "MainActivity.onResume");
+//        Log.d("safebike", "MainActivity.onResume");
 
         textSafeBikeMainTitle.setVisibility(View.VISIBLE);
         textMainTitle.setVisibility(View.GONE);
@@ -254,11 +248,8 @@ public class MainActivity extends AppCompatActivity
             if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(OFF)) {
                 getSupportFragmentManager().popBackStack();
 
-                Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + FABFINDROUTE_ONOFF_FLAG);
+//                Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + FABFINDROUTE_ONOFF_FLAG);
             } else if (getSupportFragmentManager().getBackStackEntryCount() > 0 && FABFINDROUTE_ONOFF_FLAG.equals(ON)) {
-//                NavigationFragment naviFragment = new NavigationFragment();
-//                naviFragment.setBtnFindRouteChange();
-
                 FABFINDROUTE_ONOFF_FLAG = OFF;
 
                 NavigationFragment old = (NavigationFragment) getSupportFragmentManager().findFragmentByTag(TAG_NAVIGATION);
@@ -283,17 +274,10 @@ public class MainActivity extends AppCompatActivity
                 onMainFinishNavigationDialog();
             }
         }
-
-        /*
-         *  SharedPreferences Service Condition 값이 Running 이면 네비게이션 안내를 종료하겠습니까? 다이얼로그 나오고 예 누르면 Service Condition -> finish ,
-         *  SharedPreferences 값 다 날리기
-         *
-         *  SharedPreferences Service Condition 값이 finish 이면 두번 눌렀을 때 종료
-         */
     }
 
     public void onFabFindRouteOnOffFlag(String flag) {
-        Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + flag);
+//        Log.d("safebike", "MainActivity.onFabFindRouteOnOffFlag : " + flag);
         FABFINDROUTE_ONOFF_FLAG = flag;
     }
 
@@ -306,12 +290,6 @@ public class MainActivity extends AppCompatActivity
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            /*    try {
-                    mRouteService.sendExerciseReport();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                */
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                 PropertyManager.getInstance().setDestinationLatitude(null);
                 PropertyManager.getInstance().setDestinationLongitude(null);
@@ -320,17 +298,9 @@ public class MainActivity extends AppCompatActivity
                 Intent serviceIntent = new Intent(MainActivity.this, RouteService.class);
                 stopService(serviceIntent);
 
-                Log.d("safebike", "Replace.MainFragment");
-                /*
-                 *   오늘 아침에 처리할 부분(UI 변경 위해 replace 맞는지 여쭤보기
-                 */
+//                Log.d("safebike", "Replace.MainFragment");
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment(), TAG_MAIN).commit();
-
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.detach(mainFragment);
-//                ft.attach(mainFragment);
-//                ft.commit();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -339,7 +309,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-//        builder.setCancelable(false);
 
         builder.create().show();
     }
@@ -410,8 +379,5 @@ public class MainActivity extends AppCompatActivity
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(MyApplication.getContext()));
             ImageLoader.getInstance().displayImage(PropertyManager.getInstance().getUserImagePath(), imageUserProfile, options);
         }
-
     }
-
-
 }

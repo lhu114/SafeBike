@@ -1,7 +1,6 @@
 package com.safering.safebike.navigation;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -101,7 +100,7 @@ public class NavigationNetworkManager {
     private static final String VALUE_POI_RESCOORDTYPE = "WGS84GEO";
 
     public void searchPOI(Context context, String keyword, final OnResultListener<SearchPOIInfo> listener) {
-        Log.d("safebike", "NavigationNetworkManager.searchPOI");
+//        Log.d("safebike", "NavigationNetworkManager.searchPOI");
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
         headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
@@ -112,16 +111,16 @@ public class NavigationNetworkManager {
         params.put(KEY_POI_SEARCH_KEYWORD, keyword);
         params.put(KEY_POI_RESCOORDTYPE, VALUE_POI_RESCOORDTYPE);
 
-        Log.d("safebike", "keyword : " + keyword);
+//        Log.d("safebike", "keyword : " + keyword);
         if (headers != null) {
             int count = headers.length;
 
             for(int i = 0; i < count; i++) {
-                Log.d("safebike", "headers : " + headers[i]);
+//                Log.d("safebike", "headers : " + headers[i]);
             }
         }
 
-        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
+//        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
         client.get(context, SEARCH_POI_URL, headers, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -131,13 +130,13 @@ public class NavigationNetworkManager {
                 listener.onFail(statusCode);
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+//                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
                 if (headers != null) {
                     int count = headers.length;
 
                     for(int i = 0; i < count; i++) {
-                        Log.d("safebike", "headers : " + headers[i]);
+//                        Log.d("safebike", "headers : " + headers[i]);
                     }
                 }
             }
@@ -151,8 +150,8 @@ public class NavigationNetworkManager {
                 listener.onSuccess(result.searchPoiInfo);
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
-                Log.d("safebike", "headers : " + headers);
+//                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+//                Log.d("safebike", "headers : " + headers);
             }
         });
     }
@@ -170,7 +169,7 @@ public class NavigationNetworkManager {
     private static final String VALUE_REVERSEGEOCODING_ADDRESSTYPE = "A02";
 
     public void searchReverseGeo(Context context, LatLng latLng, final OnResultListener<AddressInfo> listener) {
-        Log.d("safebike", "NavigationNetworkManager.searchReverseGeo");
+//        Log.d("safebike", "NavigationNetworkManager.searchReverseGeo");
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
         headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
@@ -185,14 +184,14 @@ public class NavigationNetworkManager {
         params.put(KEY_REVERSEGEOCODING_COORDTYPE, VALUE_REVERSEGEOCODING_COORDTYPE);
         params.put(KEY_REVERSEGEOCODING_ADDRESSTYPE, VALUE_REVERSEGEOCODING_ADDRESSTYPE);
 
-        Log.d("safebike", "lntLng : " + latitude + ", " + longitude);
+//        Log.d("safebike", "lntLng : " + latitude + ", " + longitude);
 
         int count = headers.length;
         for(int i = 0; i < count; i++) {
-            Log.d("safebike", "headers : " + headers[i]);
+//            Log.d("safebike", "headers : " + headers[i]);
         }
 
-        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
+//        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
         client.get(context, SEARCH_REVERSEGEOCODING_URL, headers, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -202,13 +201,13 @@ public class NavigationNetworkManager {
                 listener.onFail(statusCode);
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+//                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
                 if (headers != null) {
                     int count = headers.length;
 
                     for(int i = 0; i < count; i++) {
-                        Log.d("safebike", "headers : " + headers[i]);
+//                        Log.d("safebike", "headers : " + headers[i]);
                     }
                 }
             }
@@ -220,8 +219,8 @@ public class NavigationNetworkManager {
                  */
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
-                Log.d("safebike", "headers : " + headers);
+//                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+//                Log.d("safebike", "headers : " + headers);
 
 
                 AddressInfoResult result = poiGson.fromJson(responseString, AddressInfoResult.class);
@@ -249,7 +248,7 @@ public class NavigationNetworkManager {
     private static final String POINTTYPE_CI = "CI";
 
     public void findRoute(Context context, double startX, double startY, double endX, double endY, int searchOption, final OnResultListener<BicycleRouteInfo> listener) {
-        Log.d("safebike", "NavigationNetworkManager.findRoute");
+//        Log.d("safebike", "NavigationNetworkManager.findRoute");
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(KEY_TMAP_HEADERS_ACCEPT, VALUE_TMAP_HEADERS_ACCEPT);
         headers[1] = new BasicHeader(KEY_TMAP_HEADERS_APPKEY, VALUE_TMAP_HEADERS_APPKEY);
@@ -263,23 +262,23 @@ public class NavigationNetworkManager {
         params.put(KEY_BICYCLE_ROUTE_SEARCHOPTION, searchOption);
         params.put(KEY_BICYCLE_ROUTE_RESCOORDTYPE, VALUE_BICYCLE_ROUTE_RESCOORDTYPE);
 
-        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
+//        Log.d("safebike", "----------------------------------------------------------------------------------------------------------------------------");
 
         client.post(context, BICYCLE_ROUTE_UTL, headers, params, null, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 listener.onFail(statusCode);
 
-                Log.d("safebike", "onFailure");
+//                Log.d("safebike", "onFailure");
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+//                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
                 if (headers != null) {
                     int count = headers.length;
 
                     for(int i = 0; i < count; i++) {
-                        Log.d("safebike", "headers : " + headers[i]);
+//                        Log.d("safebike", "headers : " + headers[i]);
                     }
                 }
 
@@ -292,16 +291,16 @@ public class NavigationNetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.d("safebike", "onSuccess");
+//                Log.d("safebike", "onSuccess");
 
                 String code = Integer.toString(statusCode);
-                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
+//                Log.d("safebike", "code : " + code + " / responseString : " + responseString);
 
                 if (headers != null) {
                     int count = headers.length;
 
                     for(int i = 0; i < count; i++) {
-                        Log.d("safebike", "headers : " + headers[i]);
+//                        Log.d("safebike", "headers : " + headers[i]);
                     }
                 }
 
@@ -322,33 +321,4 @@ public class NavigationNetworkManager {
         });
 
     }
-    /*
-    * saveFavorite(){
-    * 즐겨찾기 추가 지점 저장
-    * //PARAMETER : 유저 이메일,목적지
-    * //결과값 : INT
-    * }
-    *
-    * */
-
-    /*
-    * saveExercise(){
-    * 운동기록들 저장
-    * //PARAMETER : 유저 이메일,칼로리,거리,속력
-    * //결과값 : INT
-    * }
-    *
-    * */
-
-    /*
-    * getFavorite(){
-    * 즐겨찾기 추가 지점 가져오기
-    * //PARAMETER : 유저 이메일,구분값
-    * //결과값 : JSON(즐겨찾기 지점들)
-    * }
-    *
-    * */
-
-
-
 }

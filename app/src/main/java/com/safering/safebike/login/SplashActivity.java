@@ -4,17 +4,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -38,8 +34,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     private static final String DEFAULT_LATITUDE = "37.5670652";
     private static final String DEFAULT_LONGITUDE = "126.9772433";
 
-//    private static final String SERVICE_FINISH = "finish";
-//    private static final int BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION = 3;
     ImageView splashImage;
     String userEmail = null;
     String userPassword = null;
@@ -66,9 +60,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             Log.d("safebike", "SplashActivity.onCreate.setDefaultLocation");
 
         }
-
-
-
 
         /*
          * 비정상적으로 종료했을 때 시나리오 처리
@@ -119,12 +110,12 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d("safebike", "SplashActivity.onConnectionSuspended");
+//        Log.d("safebike", "SplashActivity.onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.d("safebike", "SplashActivity.onConnectionFailed");
+//        Log.d("safebike", "SplashActivity.onConnectionFailed");
         if (mResolvingError) {
             // Already attempting to resolve an error.
             return;

@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,15 +34,10 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
     private static final String TAG_TAB_RECENT = "RECENT";
     private static final String TAG_TAB_FAVORITE = "FAVORITE";
-    private static final String TAG_TAB_RECENT_NAME = "최근이용";
-    private static final String TAG_TAB_FAVORITE_NAME = "즐겨찾기";
 
     private static final String KEY_POI_OBJECT = "poiobject";
     private static final String KEY_DESTINATION_POI_NAME = "destinationpoiname";
-//    private static final String KEY_POI_NAME = "poiName";
-//    private static final String KEY_POI_LATITUDE = "poiLatitude";
-//    private static final String KEY_POI_LONGITUDE = "poiLongitude";
-//    private static final String KEY_POI_ADDRESS = "poiAddress";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,9 +79,7 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                     RecentDataManager.getInstance().insertRecent(item);
 
-//                    String defineAddress = null;
-
-                    Log.d("safebike", "poi.secondNo : " + poi.secondNo);
+//                    Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
                     sendPOI(poi);
                 }
@@ -126,18 +118,16 @@ public class ParentRctFvActivity extends AppCompatActivity {
                     item.rctPOIName = searchKeyword;
 //                    ParentRctFvActivity 에 있는 setResult 처리
 
-                    Log.d("safebike", "rctPoiName : " + searchKeyword);
+//                    Log.d("safebike", "rctPoiName : " + searchKeyword);
                     NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
                         @Override
                         public void onSuccess(SearchPOIInfo result) {
                             POI poi = result.pois.poiList.get(0);
 
                             if (poi != null) {
-//                                String defineAddress = null;
-
                                 RecentDataManager.getInstance().insertRecent(item);
 
-                                Log.d("safebike", "poi.secondNo : " + poi.secondNo);
+//                                Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
                                 sendPOI(poi);
                             }
@@ -161,99 +151,12 @@ public class ParentRctFvActivity extends AppCompatActivity {
         });
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_parent_rctfv, menu);
-
-        MenuItem item = menu.findItem(R.id.menu_search);
-        View menuView = MenuItemCompat.getActionView(item);
-
-        keywordView = (EditText) menuView.findViewById(R.id.edit_keyword);
-        keywordView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchPOI(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        ImageButton btn = (ImageButton) menuView.findViewById(R.id.btn_menu_search);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String searchKeyword = keywordView.getText().toString();
-
-                if (!TextUtils.isEmpty(searchKeyword)) {
-
-                 *  검색어 RecentDb 에 저장 처리 필요
-
-                    RecentItem item = new RecentItem();
-                    item.rctPOIName = searchKeyword;
-
-                    RecentDataManager.getInstance().insertRecent(item);
-
-
-
-                 * ParentRctFvActivity 에 있는 setResult 처리
-
-
-                    Log.d("safebike", "rctPoiName : " + searchKeyword);
-                    NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
-                        @Override
-                        public void onSuccess(SearchPOIInfo result) {
-                            POI poi = result.pois.poiList.get(0);
-
-                            if (poi != null) {
-//                                String defineAddress = null;
-
-                                Log.d("safebike", "poi.secondNo : " + poi.secondNo);
-
-                                sendPOI(poi);
-                            }
-                        }
-
-                        @Override
-                        public void onFail(int code) {
-
-                        }
-                    });
-                }
-            }
-        });
-
-        btn = (ImageButton) menuView.findViewById(R.id.btn_menu_cancel);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        return true;
-    }*/
-//                }
-
     private void searchPOI(final String keyword) {
         if (!TextUtils.isEmpty(keyword)) {
             tabHost.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
 
-            Log.d("safebike", keyword);
-//            poi = new POI();
-//            poi.name = keyword;
-//
-//            mAdapter.add(poi);
-
+//            Log.d("safebike", keyword);
 
             NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, keyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
                 @Override
@@ -277,46 +180,9 @@ public class ParentRctFvActivity extends AppCompatActivity {
     }
 
     public void sendPOI(POI poi) {
-//        String defineAddress = null;
-//
-//        if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " "+ poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 1");
-//        } else if (!poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " " + poi.firstNo;
-//
-//            Log.d("safebike", "defineAddress 2");
-//        } else if (!poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress();
-//
-//            Log.d("safebike", "defineAddress 3");
-//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName + " " + poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 4");
-//        } else if (poi.detailAddrName.equals("") && !poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.getAddress() + " " + poi.firstNo;
-//
-//            Log.d("safebike", "defineAddress 5");
-//        } else if (poi.detailAddrName.equals("") && poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            defineAddress = poi.middleAddrName + " " + poi.lowerAddrName;
-//
-//            Log.d("safebike", "defineAddress 6");
-//        } else {
-//            defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
-//
-//            Log.d("safebike", "defineAddress 7");
-//        }
-
-//        Intent intent = new Intent(ParentRctFvActivity.this, NavigationFragment.class);
-
         Intent intent = new Intent();
         intent.putExtra(KEY_POI_OBJECT, poi);
-//        intent.putExtra(KEY_POI_LATITUDE, poi.getLatitude());
-//        intent.putExtra(KEY_POI_LONGITUDE, poi.getLongitude());
-//        intent.putExtra(KEY_POI_NAME, poi.name);
-//        intent.putExtra(KEY_POI_ADDRESS, defineAddress);
+
         setResult(RESULT_OK, intent);
 
         finish();

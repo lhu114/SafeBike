@@ -89,15 +89,7 @@ public class AccountFragment extends Fragment {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                        /*
-                         *  목적지 위도, 경도, searchoption 날리기
-                         */
-                            /*    try {
-                    mRouteService.sendExerciseReport();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                */
+
                             PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                             PropertyManager.getInstance().setDestinationLatitude(null);
                             PropertyManager.getInstance().setDestinationLongitude(null);

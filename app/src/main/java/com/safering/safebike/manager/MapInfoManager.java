@@ -1,7 +1,5 @@
 package com.safering.safebike.manager;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -20,18 +18,8 @@ public class MapInfoManager {
     ArrayList<MarkerOptions> markerOptionsList = new ArrayList<MarkerOptions>();
     ArrayList<PolylineOptions> polylineOptionsList = new ArrayList<PolylineOptions>();
 
-//    final Map<LatLng, Marker> mMarkerResolver = new HashMap<LatLng, Marker>();
-//    ArrayList<Polyline> polylineList = new ArrayList<Polyline>();
-//
-//    ArrayList<LatLng> mPointLatLngList = new ArrayList<LatLng>();
-
     String updateTextDescription = null;
     int updateImageDescription = -1;
-
-//    boolean isActivateFindRoute = false;
-
-//    Marker mapInfoMarker = null;
-//    Polyline mapInfoPolyline = null;
 
     public static MapInfoManager getInstance() {
 //        Log.d("safebike", "MapInfoManager.getInstance");
@@ -44,39 +32,28 @@ public class MapInfoManager {
     }
 
     public void setMarkerOptionsInfo(MarkerOptions markerOptions) {
-        Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo");
-
-//        if(markerOptionsList.size() > 0) {
-//            Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo.markerOptionsList.size() > 0");
-//            markerOptionsList.clear();
-//        }
+//        Log.d("safebike", "MapInfoManager.setMarkerOptionsInfo");
 
         markerOptionsList.add(markerOptions);
     }
 
     public ArrayList<MarkerOptions> getMarkerOptionsInfo() {
-        Log.d("safebike", "MapInfoManager.getMarkerOptionsInfo");
+//        Log.d("safebike", "MapInfoManager.getMarkerOptionsInfo");
 
         return markerOptionsList;
     }
 
     public void setPolylineOptionsInfo(PolylineOptions polylineOptions) {
-        Log.d("safebike", "MapInfoManager.setPolylineOptionsInfo");
-
-//        if (polylineOptionsList.size() > 0) {
-//            Log.d("safebike", "MapInfoManager.setPolylineOptionsInfo.polylineOptionsList.size() > 0");
-//
-//            polylineOptionsList.clear();
-//        }
+//        Log.d("safebike", "MapInfoManager.setPolylineOptionsInfo");
 
         polylineOptionsList.add(polylineOptions);
     }
 
     public PolylineOptions getPolylineOptionsInfo() {
-        Log.d("safebike", "MapInfoManager.getPolylineOptionsInfo");
+//        Log.d("safebike", "MapInfoManager.getPolylineOptionsInfo");
 
         if (polylineOptionsList.size() > 0) {
-            Log.d("safebike", "MapInfoManager.polylineOptionsList.size() > 0");
+//            Log.d("safebike", "MapInfoManager.polylineOptionsList.size() > 0");
 
             return polylineOptionsList.get(0);
         }
@@ -104,42 +81,6 @@ public class MapInfoManager {
         return updateImageDescription;
     }
 
-   /* public void setMapInfoMarker(LatLng latLng, Marker marker) {
-        Log.d("safebike", "MapInfoManager.setMapInfoMarker");
-
-        mMarkerResolver.put(latLng, marker);
-    }
-
-    public Map<LatLng, Marker> getMapInfoMarker() {
-        Log.d("safebike", "MapInfoManager.getMapInfoMarker");
-
-        return mMarkerResolver;
-    }
-
-    public void setMapInfoPolyline(Polyline polyline) {
-        Log.d("safebike", "MapInfoManager.setMapInfoPolyline");
-
-        polylineList.add(polyline);
-    }
-
-    public ArrayList<Polyline> getMapInfoPolyline() {
-        Log.d("safebike", "MapInfoManager.getMapInfoPolyline");
-
-        return polylineList;
-    }
-
-    public void setMapInfoPointLatLngList(LatLng latLng) {
-        Log.d("safebike", "MapInfoManager.setMapInfoPointLatLngList");
-
-        mPointLatLngList.add(latLng);
-    }
-
-    public ArrayList<LatLng> getMapInfoPointLatLngList() {
-        Log.d("safebike", "MapInfoManager.getMapInfoPointLatLngList");
-
-        return mPointLatLngList;
-    }*/
-
     public void setMapInfoGoogleMap(GoogleMap googleMap) {
         mMap = googleMap;
     }
@@ -164,29 +105,17 @@ public class MapInfoManager {
         return mInitialMap;
     }
 
-   /* public void setActivateFindRoute(boolean isActivate) {
-        Log.d("safebike", "MapInfoManager.setActivateFindRoute");
-
-        isActivateFindRoute = isActivate;
-    }*/
-
-/*    public boolean getActivateFindRoute() {
-        Log.d("safebike", "MapInfoManager.getActivateFindRoute");
-
-        return isActivateFindRoute;
-    }*/
-
     public void clearAllMapInfoData() {
-        Log.d("safebike", "MapInfoManager.clearAllMapInfoData");
+//        Log.d("safebike", "MapInfoManager.clearAllMapInfoData");
 
         if(markerOptionsList.size() > 0) {
-            Log.d("safebike", "MapInfoManager.clearAllMapInfoData.markerOptionsList.size() > 0");
+//            Log.d("safebike", "MapInfoManager.clearAllMapInfoData.markerOptionsList.size() > 0");
 
             markerOptionsList.clear();
         }
 
         if (polylineOptionsList.size() > 0) {
-            Log.d("safebike", "MapInfoManager.clearAllMapInfoData.polylineOptionsList.size() > 0");
+//            Log.d("safebike", "MapInfoManager.clearAllMapInfoData.polylineOptionsList.size() > 0");
 
             polylineOptionsList.clear();
         }
@@ -194,24 +123,6 @@ public class MapInfoManager {
         updateTextDescription = null;
         updateImageDescription = -1;
     }
-
-    /*public void removeMapInfoMarkerAndPolyline() {
-        if (mMarkerResolver != null && mMarkerResolver.size() > 0) {
-            Log.d("safebike", "MapInfoManager.removeMapInfoMarkerAndPolyline.mapInfoMarker.remove");
-
-            mMarkerResolver.clear();
-        }
-
-        if (polylineList != null && polylineList.size() > 0) {
-            Log.d("safebike", "MapInfoManager.removeMapInfoMarkerAndPolyline.mapInfoPolyline.remove");
-
-            polylineList.clear();
-        }
-
-        if (mPointLatLngList != null && mPointLatLngList.size() > 0) {
-            mPointLatLngList.clear();
-        }
-    }*/
 
     public void removeMapInfoGoogleMap() {
         if (mMap != null) {
@@ -224,39 +135,4 @@ public class MapInfoManager {
             mInitialMap.clear();
         }
     }
-    /*public void clearMarkerAndPolyline() {
-        Log.d("safebike", "StartNavigationActivity.clearMarkerAndPolyline");
-
-        for (int i = 0; i < mPointLatLngList.size(); i++) {
-            LatLng latLng = mPointLatLngList.get(i);
-
-            if (mMarkerResolver.size() > 0) {
-                Marker m = mMarkerResolver.get(latLng);
-                String bitmapFlag = mBitmapResolver.get(latLng);
-
-                mMarkerResolver.remove(m);
-                mBitmapResolver.remove(bitmapFlag);
-
-                m.remove();
-            }
-        }
-
-        mPointLatLngList.clear();
-        gpIndex = 0;
-
-        for (Polyline line : polylineList) {
-            line.remove();
-        }
-
-        polylineOptions = new PolylineOptions();
-        polylineList.clear();
-
-        if (tempM != null) {
-            tempM.remove();
-        }
-
-        if (markerOptionsList.size() > 0) {
-            markerOptionsList.clear();
-        }
-    }*/
 }

@@ -4,7 +4,6 @@ package com.safering.safebike;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,32 +57,11 @@ public class MainFragment extends Fragment {
         // Required empty public constructor
     }
 
-//    public static MainFragment newInstance(String name) {
-//        MainFragment fragment = new MainFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_NAME, name);
-//        fragment.setArguments(args);
-//
-//        return fragment;
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("safebike", "MainFragment.onCreate");
-//        if (getArguments() != null) {
-//            serviceCondition = getArguments().getString(ARG_NAME);
-//        }
-
-
-
-        /*
-         * SharedPreferences Service Condition 불러오기 String 에 저장
-         */
-//        serviceCondition = PropertyManager.getInstance().getServiceCondition();
-
-//        Toast.makeText(getContext(), "MainFragment.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
+//        Log.d("safebike", "MainFragment.onCreate");
     }
 
     @Override
@@ -91,7 +69,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        Log.d("safebike", "MainFragment.onCreateView");
+//        Log.d("safebike", "MainFragment.onCreateView");
         // Inflate the layout for this fragment
 
 //        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
@@ -111,7 +89,6 @@ public class MainFragment extends Fragment {
 
         textSafeBikeMainTitle.setVisibility(View.VISIBLE);
         textMainTitle.setVisibility(View.GONE);
-     //   startActivityForResult();
 
         // btnBacklight.setSelected(true);
 
@@ -119,7 +96,6 @@ public class MainFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
 
         final String date = dateFormat.format(cal.getTime());
-
 
         // setBluetooth();
 
@@ -190,7 +166,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("safebike", "MainFragment.onResume");
+//        Log.d("safebike", "MainFragment.onResume");
         //setFont();
 
         textSafeBikeMainTitle.setVisibility(View.VISIBLE);
@@ -202,8 +178,6 @@ public class MainFragment extends Fragment {
         textSafeBikeMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
         textBandOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
         textBackLightOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
-
-
     }
 
     /*public void setConnectionOnOff(int status) {
@@ -226,16 +200,12 @@ public class MainFragment extends Fragment {
             imageBacklightOut.setImageResource(R.drawable.off);
             imageBacklightIn.setImageResource(R.drawable.off);
             //textBackLightOnOff.setText("후미등 꺼짐");
-
-
-
         }
     }
 
     public void setBluetooth() {
         if (PropertyManager.getInstance().getBluetoothSetting() == 0) {
             btnBacklight.setSelected(false);
-
 
         } else {
             btnBacklight.setSelected(true);
