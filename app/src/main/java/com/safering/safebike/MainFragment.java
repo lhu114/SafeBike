@@ -17,6 +17,8 @@ import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.setting.BluetoothConnection;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -37,21 +39,10 @@ public class MainFragment extends Fragment {
     private static final String ARG_NAME = "name";
     private static final String SERVICE_RUNNING = "running";
 
-    //    String serviceCondition;
     Button fwdNavigation, startNavigation;
-    Button btnBacklight;
-    Button btnBand;
-
     TextView textSafeBikeMainTitle, textMainTitle;
-    TextView textBandOnOff;
-    TextView textBackLightOnOff;
-
-    ImageView imageBacklightIn;
-    ImageView imageBacklightOut;
-
-    boolean backlightStatus = false;
-    boolean bandStatus = false;
-    int deviceStatus = 0;
+    TextView textMainMesage;
+    TextView textRunningMesage;
 
     public MainFragment() {
         // Required empty public constructor
@@ -69,66 +60,20 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-//        Log.d("safebike", "MainFragment.onCreateView");
-        // Inflate the layout for this fragment
-
-//        Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
-
         final String uEmail = PropertyManager.getInstance().getUserEmail();
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         textSafeBikeMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_safebike_main_title);
         textMainTitle = (TextView) ((MainActivity) getActivity()).findViewById(R.id.text_main_title);
-
-        textBandOnOff = (TextView) view.findViewById(R.id.text_band_status);
-        textBackLightOnOff = (TextView) view.findViewById(R.id.text_backlight_status);
-        imageBacklightIn = (ImageView) view.findViewById(R.id.image_backlight_onoff_in);
-        imageBacklightOut = (ImageView) view.findViewById(R.id.image_backlight_onoff_out);
-        btnBacklight = (Button) view.findViewById(R.id.btn_onoff_backlight);
-        btnBand = (Button) view.findViewById(R.id.btn_onoff_band);
-
+        textMainMesage = (TextView)view.findViewById(R.id.text_main_message);
+        textRunningMesage = (TextView)view.findViewById(R.id.text_running_message);
         textSafeBikeMainTitle.setVisibility(View.VISIBLE);
         textMainTitle.setVisibility(View.GONE);
-
-        // btnBacklight.setSelected(true);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
 
-        final String date = dateFormat.format(cal.getTime());
 
-        // setBluetooth();
-
-        //  Button btn = (Button) view.findViewById(R.id.btn_onoff_band);
-        btnBand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btnBacklight = (Button) view.findViewById(R.id.btn_onoff_backlight);
-        btnBacklight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (backlightStatus) {
-                    btnBacklight.setSelected(false);
-                    PropertyManager.getInstance().setBluetoothSetting(0);
-                    textBackLightOnOff.setText("후미등 꺼짐");
-
-                    backlightStatus = false;
-
-                } else {
-                    btnBacklight.setSelected(true);
-                    PropertyManager.getInstance().setBluetoothSetting(1);
-                    textBackLightOnOff.setText("후미등 켜짐");
-
-                    backlightStatus = true;
-
-                }
-
-            }
-        });
 
         fwdNavigation = (Button) view.findViewById(R.id.btn_fwd_navigation);
         fwdNavigation.setOnClickListener(new View.OnClickListener() {
@@ -140,11 +85,10 @@ public class MainFragment extends Fragment {
         });
 
 
-//        if (serviceCondition != null && serviceCondition.equals(SERVICE_RUNNING)) {
         if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
-//            Toast.makeText(getContext(), "MainFragment.onCreateView : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
             fwdNavigation.setVisibility(View.GONE);
+            textRunningMesage.setVisibility(View.VISIBLE);
 
             startNavigation = (Button) view.findViewById(R.id.btn_fwd_start_navigation);
             startNavigation.setVisibility(View.VISIBLE);
@@ -153,21 +97,18 @@ public class MainFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), StartNavigationActivity.class);
                     startActivity(intent);
-//                    getActivity().finish();
+
                 }
             });
         }
         setFont();
-        setBluetooth();
-        checkConnection();
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d("safebike", "MainFragment.onResume");
-        //setFont();
 
         textSafeBikeMainTitle.setVisibility(View.VISIBLE);
         textMainTitle.setVisibility(View.GONE);
@@ -176,39 +117,9 @@ public class MainFragment extends Fragment {
     public void setFont() {
         textSafeBikeMainTitle.setText("Safe Bike");
         textSafeBikeMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
-        textBandOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
-        textBackLightOnOff.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTOSANS));
+        textMainMesage.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_R));
+        textRunningMesage.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_R));
     }
 
-    /*public void setConnectionOnOff(int status) {
-        deviceStatus = status;
 
-    }
-
-    public int getConnectionOnOff(){
-        return deviceStatus;
-    }
-*/
-    public void checkConnection() {
-        if (BluetoothConnection.getInstance().getIsConnect() == 1) {
-            imageBacklightOut.setImageResource(R.drawable.on);
-            imageBacklightIn.setImageResource(R.drawable.on);
-            //textBackLightOnOff.setText("후미등 켜짐");
-
-
-        } else if (BluetoothConnection.getInstance().getIsConnect() == 0) {
-            imageBacklightOut.setImageResource(R.drawable.off);
-            imageBacklightIn.setImageResource(R.drawable.off);
-            //textBackLightOnOff.setText("후미등 꺼짐");
-        }
-    }
-
-    public void setBluetooth() {
-        if (PropertyManager.getInstance().getBluetoothSetting() == 0) {
-            btnBacklight.setSelected(false);
-
-        } else {
-            btnBacklight.setSelected(true);
-        }
-    }
 }

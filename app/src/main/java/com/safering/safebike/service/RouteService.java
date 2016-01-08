@@ -1523,7 +1523,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
-        builder.setSmallIcon(R.drawable.safebike_logo_s);
+        builder.setSmallIcon(R.drawable.noti);
         builder.setContentTitle("Safe Bike");
         builder.setContentText("자전거 내비게이션 동작 중...");
         builder.setAutoCancel(false);

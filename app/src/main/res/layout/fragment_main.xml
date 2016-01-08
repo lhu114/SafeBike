@@ -7,142 +7,62 @@
 
 
 
+
     <Button
         android:id="@+id/btn_fwd_navigation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="210dp"
 
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="183dp"
+
+        android:layout_centerHorizontal="true"
         android:background="@drawable/findway_selector"
 
         />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-
-        android:background="@drawable/bg" />
-
-
-    <Button
-        android:id="@+id/btn_onoff_band"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="54dp"
-        android:layout_marginTop="47dp"
-
-        android:background="@drawable/band_selector"
-        />
-
-    <Button
-
-        android:id="@+id/btn_onoff_backlight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="230dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/backlight_selector"
-
-
-        />
-
-    <!--
-            android:background="@drawable/backlight_selector"
-    -->
-
-    <TextView
-        android:id="@+id/text_backlight_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:text="@string/btn_backlight_status"
-        android:textColor="@color/colorDeviceStatus"
-        android:layout_marginLeft="234dp"
-
-        android:layout_marginTop="120dp"
-
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/text_band_status"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-
-        android:text="@string/btn_band_status"
-        android:textColor="@color/colorDeviceStatus"
-        android:layout_marginLeft="54dp"
-
-        android:layout_marginTop="120dp"
-
-        android:textSize="16sp"
-
-        />
-
-    <ImageView
-        android:id="@+id/image_band_onoff_out"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="78dp"
-
-        android:layout_marginTop="148dp"
-
-        android:src="@drawable/off" />
-
-    <ImageView
-        android:id="@+id/image_band_onoff_in"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="108dp"
-
-        android:layout_marginTop="148dp"
-
-        android:src="@drawable/off" />
-
-
-    <ImageView
-        android:id="@+id/image_backlight_onoff_out"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="250dp"
-
-        android:layout_marginTop="148dp"
-        android:src="@drawable/off" />
-
-
-    <ImageView
-        android:id="@+id/image_backlight_onoff_in"
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="280dp"
-
-        android:layout_marginTop="148dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/off" />
-
-
     <Button
         android:id="@+id/btn_fwd_start_navigation"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="210dp"
-        android:background="@drawable/findway_selector"
-        android:visibility="gone" />
 
+        android:layout_marginBottom="183dp"
+
+        android:background="@drawable/findway_selector"
+        android:visibility="gone"
+
+        />
     <TextView
-        android:id="@+id/temp"
+        android:id="@+id/text_main_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:layout_alignParentBottom="true"
+        android:text="@string/main_message"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:visibility="invisible" />
+
+        android:textSize="16sp"
+        android:textColor="@color/colorMainMessage"
+        android:layout_marginBottom="127dp"
+
+
+        />
+
+    <TextView
+        android:id="@+id/text_running_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/running_message"
+        android:layout_centerHorizontal="true"
+
+        android:textSize="20sp"
+        android:textColor="@color/colorRunningMessage"
+        android:layout_marginBottom="91dp"
+        android:visibility="gone"
+
+        />
 
 
 </RelativeLayout>

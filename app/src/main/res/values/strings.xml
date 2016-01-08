@@ -46,6 +46,8 @@
     <string name="text_private_policy"><u>개인보호정책</u></string>
     <string name="edit_profile_title">프로필 편집</string>
     <string name="account_help">도움말</string>
+    <string name="main_message">SafeBike 와 함께하는 안전한 주행</string>
+    <string name="running_message">운행중입니다</string>
 
 
     <string name="signup_confirm_message">비밀번호를 확인해주세요</string>

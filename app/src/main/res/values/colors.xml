@@ -23,6 +23,8 @@
     <!--<color name="colorMainBackground">#F2F2F2</color>
     -->
     <color name="colorMainBackground">#FFFFFF</color>
+    <color name="colorMainMessage">#8d8d8d</color>
+    <color name="colorRunningMessage">#42a4e5</color>
 
     <color name="colorDeviceStatus">#2779B0</color>
     <color name="colorTabText">#B1D5F2</color>
