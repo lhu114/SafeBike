@@ -79,7 +79,6 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                     RecentDataManager.getInstance().insertRecent(item);
 
-//                    Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
                     sendPOI(poi);
                 }
@@ -112,13 +111,10 @@ public class ParentRctFvActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(searchKeyword)) {
 
-//                    검색어 RecentDb 에 저장 처리 필요
 
                     item = new RecentItem();
                     item.rctPOIName = searchKeyword;
-//                    ParentRctFvActivity 에 있는 setResult 처리
 
-//                    Log.d("safebike", "rctPoiName : " + searchKeyword);
                     NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, searchKeyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
                         @Override
                         public void onSuccess(SearchPOIInfo result) {
@@ -127,7 +123,6 @@ public class ParentRctFvActivity extends AppCompatActivity {
                             if (poi != null) {
                                 RecentDataManager.getInstance().insertRecent(item);
 
-//                                Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
                                 sendPOI(poi);
                             }
@@ -156,7 +151,6 @@ public class ParentRctFvActivity extends AppCompatActivity {
             tabHost.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
 
-//            Log.d("safebike", keyword);
 
             NavigationNetworkManager.getInstance().searchPOI(ParentRctFvActivity.this, keyword, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
                 @Override

@@ -161,7 +161,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(DEBUG_TAG, "RouteService.onCreate");
 
         polylineList = new ArrayList<Polyline>();
         mOrthogonalDistanceList = new ArrayList<Float>();
@@ -184,7 +183,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         }
 
         if (mGoogleApiClient == null) {
-         Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.new mGoogleApiClient");
 
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
@@ -209,13 +207,11 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case MESSAGE_ITERATIVE_LOCATION_TIMEOUT:
-                        Log.d(DEBUG_TAG, "RouteService.onCreate.handleMessage.MESSAGE_ITERATIVE_LOCATION_TIMEOUT");
                         Toast.makeText(RouteService.this, "LOCATION TIMEOUT", Toast.LENGTH_SHORT).show();
 
                         break;
 
                     case MESSAGE_REROUTE_NAVIGATION:
-                        Log.d(DEBUG_TAG, "RouteService.onCreate.handleMessage.MESSAGE_REROUTE_NAVIGATION");
                         Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.(Time Out)", Toast.LENGTH_SHORT).show();
 
                         findRoute();
@@ -235,7 +231,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(DEBUG_TAG, "RouteService.onBind");
 
         return mBinder;
     }
@@ -276,22 +271,16 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-       Log.d(DEBUG_TAG, "RouteService.onStartCommand");
 
         if (intent == null) {
-            Log.d(DEBUG_TAG, "RouteService.onStartCommand.intent == null");
             if (PropertyManager.getInstance().getServiceCondition().equals(SERVICE_RUNNING)) {
-                Log.d(DEBUG_TAG, "RouteService.onStartCommand.intent == null.SERVICE_RUNNING");
 
                 restartRouting();
             }
-        } else {
-            Log.d(DEBUG_TAG, "RouteService.onStartCommand.intent != null");
         }
 
         if (!mResolvingError) {  // more about this later
             if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
-                Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.mGoogleApiClient.connect");
 
                 mGoogleApiClient.connect();
             }
@@ -303,15 +292,12 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(DEBUG_TAG, "RouteService.onDestroy");
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
 
             mGoogleApiClient.disconnect();
 
-//            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onStop.mGoogleApiClient.disconnect");
         }
 
         sendExerciseReport(mSpeedList, mDistanceList);
@@ -323,7 +309,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         MapInfoManager.getInstance().removeMapInfoInitialGoogleMap();
 
         if (wakeLock.isHeld()) {
-            Log.d(DEBUG_TAG, "RouteService.onDestroy.wakeLock != null && wakeLock.isHeld().wakeLock.release()");
 
             wakeLock.release();
         }
@@ -334,7 +319,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     protected void createLocationRequest() {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.createLocationRequest");
 
         if (mIterativeLocReq == null) {
             mIterativeLocReq = new LocationRequest();
@@ -345,7 +329,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
     protected void starIterativeLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mIterativeLocReq, mIterativeListener);
-        Log.d(DEBUG_TAG, "StartNavigationActivity.starIterativeLocationUpdates");
 
         mHandler.sendEmptyMessageDelayed(MESSAGE_ITERATIVE_LOCATION_TIMEOUT, LOCATION_TIMEOUT_INTERVAL);
     }
@@ -354,7 +337,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
      */
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mIterativeListener);
-        Log.d(DEBUG_TAG, "StartNavigationActivity.stopLocationUpdates");
 
         mHandler.removeMessages(MESSAGE_ITERATIVE_LOCATION_TIMEOUT);
         mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
@@ -362,20 +344,14 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected");
         starIterativeLocationUpdates();
 
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mLocation != null) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
-//            Toast.makeText(this, "StartNavigationActivity.onConnected.mLocation" + " : " + mLocation.getLatitude() + ", " + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
 
             PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
             PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected.setRecentLocation");
-        } else {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected.mLocation null");
         }
 
 
@@ -383,24 +359,18 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
     @Override
     public void onConnectionSuspended(int i) {
-//        Toast.makeText(getContext(), "NavigationFragment.onConnectionSuspended", Toast.LENGTH_SHORT).show();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         if (mResolvingError) {
-            // Already attempting to resolve an error.
             return;
         }
 
-//        Toast.makeText(getContext(), "NavigationFragment.onConnectionFailed", Toast.LENGTH_SHORT).show();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onConnectionFailed");
     }
 
     boolean startRouting() {
         if (isInitialServiceRunning) {
-            Log.d(DEBUG_TAG, "RouteService.startRouting.isInitialServiceRunning");
             if (mLM != null && mLM.isProviderEnabled(mProvider) && isStartNavigation == true) {
                 if (!isCalling) {
                     tts.translate("안내를 시작합니다.");
@@ -410,10 +380,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                 if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                return;
                 }
 
-                Log.d(DEBUG_TAG, "RouteService.startRouting.requestLocationUpdates");
 
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                     starIterativeLocationUpdates();
@@ -421,11 +389,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                 if (!wakeLock.isHeld()) {
                     if (wakeLock != null) {
-                        Log.d(DEBUG_TAG, "RouteService.startRouting.wakeLock != null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
 
                         wakeLock.acquire();
                     } else if (wakeLock == null) {
-                        Log.d(DEBUG_TAG, "RouteService.startRouting.wakeLock == null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
 
                         wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, WAKE_LOCK_TAG);
                         wakeLock.acquire();
@@ -433,7 +399,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 }
 
                 startTime = System.currentTimeMillis();
-                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.startTime : " + Long.toString(startTime));
 
                 findRoute();
 
@@ -471,9 +436,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void restartRouting() {
-        Log.d(DEBUG_TAG, "RouteService.restartRouting");
 
-        Log.d(DEBUG_TAG, "RouteService.restartRouting.isInitialServiceRunning");
         if (mLM != null && mLM.isProviderEnabled(mProvider) && isStartNavigation == true) {
             if (!isCalling) {
                 tts.translate("안내를 시작합니다.");
@@ -483,10 +446,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
             if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(RouteService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                return;
             }
 
-            Log.d(DEBUG_TAG, "RouteService.restartRouting.requestLocationUpdates");
 
             if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                 starIterativeLocationUpdates();
@@ -494,11 +455,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
             if (!wakeLock.isHeld()) {
                 if (wakeLock != null) {
-                    Log.d(DEBUG_TAG, "RouteService.restartRouting.wakeLock != null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
 
                     wakeLock.acquire();
                 } else if (wakeLock == null) {
-                    Log.d(DEBUG_TAG, "RouteService.restartRouting.wakeLock == null && !wakeLock.isHeld().wakeLock.wakeLock.acquire()");
 
                     wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, WAKE_LOCK_TAG);
                     wakeLock.acquire();
@@ -506,7 +465,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             }
 
             startTime = System.currentTimeMillis();
-            Log.d(DEBUG_TAG, "RouteService.restartRouting.startTime : " + Long.toString(startTime));
 
             findRoute();
 
@@ -517,14 +475,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     LocationListener mIterativeListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            //위치가 바꼇을 경우 호출
-            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged");
             mHandler.removeMessages(MESSAGE_ITERATIVE_LOCATION_TIMEOUT);
 
             if (location != null) {
-                //로케이션 객체가 널값이 아닐경우
-                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.location.getLatitude, location.getLongitude : " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()));
-                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.bearing,speed +: " + Float.toString(location.getBearing()) + ", " + Float.toString(location.getSpeed()));
 
                 lastLocation.setLatitude(Double.parseDouble(PropertyManager.getInstance().getRecentLatitude()));
                 lastLocation.setLongitude(Double.parseDouble(PropertyManager.getInstance().getRecentLongitude()));
@@ -537,14 +490,10 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                 //구글 맵 이동
                 moveMap(location.getLatitude(), location.getLongitude(), ANIMATE_CAMERA);
-                Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.moveMap");
 
                 if (mBicycleNaviInfoList.size() > 0) {
 
-                    //자전거 정보의 사이즈가 0보다 큰경우
                     int maxNaviLatLngIndex = mBicycleNaviInfoList.size() - 1;
-                    //가장 마지막 인덱스 구하기
-                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.maxNaviLatLngIndex : " + maxNaviLatLngIndex);
                     for(int x = 0; x <maxNaviLatLngIndex; x++){
                         Log.i("index COunt", "" + x);
 
@@ -556,32 +505,22 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                             }
                         }
                     }
-                    //수선의 발 리스트 초기화
                     clearAllOrthogonalDistanceList();
 
-                    Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : " + naviLatLngIndex + "(비교 전 인덱스)");
                     if (naviLatLngIndex + 3 <= maxNaviLatLngIndex) {
-                        //수선의 발 3개를 내릴수 있는 경우
-                        Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 3개 index 비교");
                         getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex);
                         getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, location, naviLatLngIndex + 1);
                         getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 3).latLng, location, naviLatLngIndex + 2);
 
                     } else if (naviLatLngIndex + 2 <= maxNaviLatLngIndex && naviLatLngIndex + 3 > maxNaviLatLngIndex) {
-                        //수선의 발  2개를 내릴수 있는 경우
-                        Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 2개 index 비교");
                         getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex);
                         getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, location, naviLatLngIndex + 1);
 
                     } else if (naviLatLngIndex + 1 <= maxNaviLatLngIndex && naviLatLngIndex + 2 > maxNaviLatLngIndex) {
-                        //수선의 발 1개를 내릴수 있는경우
-                        Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 1개 index 비교");
                         getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex);
                     }
 
                     if (mOrthogonalDistanceList.size() > 0) {
-                        //구해진 수선의발이 사이즈가 0보다 큰경우
-                        Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.mOrthogonalDistanceList(distance 비교 개수) : " + Integer.toString(mOrthogonalDistanceList.size()));
 
                         mHandler.removeMessages(MESSAGE_REROUTE_NAVIGATION);
 
@@ -600,7 +539,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                                 if (naviLatLngIndex != newNaviLatLngIndex) {
                                     //새로운 인덱스와 이전 인덱스가 다를경우
                                     for (int j = naviLatLngIndex; j < newNaviLatLngIndex; j++) {
-                                        Log.d(DEBUG_TAG, "(수선의 발 있는 경우 지나친 인덱스 검색) naviLatLngIndex : " + j + " | newNaviLatLngIndex 까지 : " + newNaviLatLngIndex);
 
                                         getPointInfoNotifications(j);
                                             /*
@@ -616,19 +554,11 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                         }
 
                         if (minDistance >= LIMIT_DISTANCE) {
-//                            Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.", Toast.LENGTH_SHORT).show();
-                            Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
                             if (!isActivateRouteWithinLimitDistanceNoti) {
                                 Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.", Toast.LENGTH_SHORT).show();
-
-                                /*if (!isCalling) {
-                                 tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
-                                }*/
-
                                 findRoute();
                             }
-                                Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(경로 재탐색 직전 인덱스) : " + Integer.toString(naviLatLngIndex));
                         } else {
                                 /*
                                  *  TextView에 정보 보여주기 처리
@@ -637,13 +567,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                             getPointInfoNotifications(naviLatLngIndex);
 
-                            if (info.properties != null) {
-//                                Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
-                                Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
-                            } else {
-//                                Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
-                                Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(비교 후 현재 인덱스) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
-                            }
+
                                 /*
                                  *  종료 처리
                                  */
@@ -651,38 +575,31 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                         }
                     } else {
                         mHandler.sendEmptyMessageDelayed(MESSAGE_REROUTE_NAVIGATION, REROUTE_NAVIGATION_TIMEOUT_INTERVAL);
-                        Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.수선의 발 없는 경우");
 
                         clearAllPointDistanceList();
                         if (naviLatLngIndex + 3 <= maxNaviLatLngIndex) {
-                            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 3개 index 비교");
                             getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex);
                             getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, location, naviLatLngIndex + 1);
                             getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 3).latLng, location, naviLatLngIndex + 2);
 
                         } else if (naviLatLngIndex + 2 <= maxNaviLatLngIndex && naviLatLngIndex + 3 > maxNaviLatLngIndex) {
-                            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 2개 index 비교");
                             getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex);
                             getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, location, naviLatLngIndex + 1);
 
                         } else if (naviLatLngIndex + 1 <= maxNaviLatLngIndex && naviLatLngIndex + 2 > maxNaviLatLngIndex) {
-                            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex : 1개 index 비교");
                             getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex);
                         }
 
                         if (naviLatLngIndex + 2 <= maxNaviLatLngIndex) {
-                            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(수선의 발 없는 경우) : 3개 index 비교");
 
                             getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, location, naviLatLngIndex);
                             getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex + 1);
                             getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 2).latLng, location, naviLatLngIndex + 2);
                         } else if (naviLatLngIndex + 1 <= maxNaviLatLngIndex && naviLatLngIndex + 2 > maxNaviLatLngIndex) {
-                            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(수선의 발 없는 경우) : 2개 index 비교");
 
                             getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, location, naviLatLngIndex);
                             getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex + 1);
                         } else if (naviLatLngIndex <= maxNaviLatLngIndex && naviLatLngIndex + 1 > maxNaviLatLngIndex) {
-                            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(수선의 발 없는 경우) : 1개 index 비교");
 
                             getPointDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, location, naviLatLngIndex);
                         }
@@ -702,7 +619,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                                     if (naviLatLngIndex != newNaviLatLngIndex) {
                                         for (int j = naviLatLngIndex; j < newNaviLatLngIndex; j++) {
-                                           Log.d(DEBUG_TAG, "(수선의 발 없는 경우 지나친 인덱스 검색) naviLatLngIndex : " + j + " | newNaviLatLngIndex 까지 : " + newNaviLatLngIndex);
 
                                             getPointInfoNotifications(j);
                                                 /*
@@ -717,20 +633,13 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                             }
 
                             if (minDistance >= LIMIT_DISTANCE) {
-//                                Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.", Toast.LENGTH_SHORT).show();
-                               Log.d(DEBUG_TAG, "minDistance >= " + LIMIT_DISTANCE + ": 경로 재탐색");
 
                                 if (!isActivateRouteWithinLimitDistanceNoti) {
                                     Toast.makeText(RouteService.this, "경로에서 벗어났습니다. 경로를 재탐색합니다.", Toast.LENGTH_SHORT).show();
 
-                                    /*if (!isCalling) {
-                                        tts.translate("경로에서 벗어났습니다. 경로를 재탐색합니다.");
-                                    }*/
-
                                     findRoute();
                                 }
 
-                                    Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우) : " + Integer.toString(naviLatLngIndex));
                             } else {
                                     /*
                                      *  TextView에 정보 보여주기 처리
@@ -739,27 +648,14 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                                 getPointInfoNotifications(naviLatLngIndex);
 
-                                if (info.properties != null) {
-//                                    Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description, Toast.LENGTH_SHORT).show();
-                                    Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance) + " | description : " + info.properties.description);
-                                } else {
-//                                    Toast.makeText(RouteService.this, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance), Toast.LENGTH_SHORT).show();
-                                    Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우|(비교 후 현재 인덱스)) : " + Integer.toString(naviLatLngIndex) + " | minDistance : " + Float.toString(minDistance));
-                                }
-
-                                    /*
-                                     *  종료 처리
-                                     */
                                 checkFinishNavigation(naviLatLngIndex, maxNaviLatLngIndex, location);
 
                             }
                         } else {
                             mHandler.sendEmptyMessageDelayed(MESSAGE_REROUTE_NAVIGATION, REROUTE_NAVIGATION_TIMEOUT_INTERVAL);
 
-                            Log.d(DEBUG_TAG, "RouteService.mIterativeListener.onLocationChanged.naviLatLngIndex(둘 다 없는 경우)");
                         }
 
-                           Log.d(DEBUG_TAG, "maxNaviLatLngIndex : " + maxNaviLatLngIndex + " | " + "naviLatLngIndex(수선의 발 없는 경우) : " + Integer.toString(naviLatLngIndex));
                     }
                 }
             }
@@ -826,10 +722,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             mPointLatLngIndex = 0;
         }
     }
-//getOrthogonalDistance(mBicycleNaviInfoList.get(naviLatLngIndex).latLng, mBicycleNaviInfoList.get(naviLatLngIndex + 1).latLng, location, naviLatLngIndex);
 
     private void getOrthogonalDistance(LatLng latLngA, LatLng latLngB, Location currentLocC, int index) {
-        //수선의 발 구하는 공식
         double findLatitude, findLongitude;
         float distance;
 
@@ -860,12 +754,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             if (distance != -1 && distance >= 0) {
                 mOrthogonalDistanceList.add(distance);
             }
-            Log.d(DEBUG_TAG, "RouteService.getOrthogonalDistance.index : " + Integer.toString(index) + " | distance : " + Float.toString(distance));
         } else {
             distance = -1;
         }
-
-//        Toast.makeText(StartNavigationActivity.this, "findLatitude, findLongitude " + findLatitude + ", " + findLongitude + " | " + distance + " | " + currentLocC.getBearing() + " | " + currentLocC.getSpeed(), Toast.LENGTH_SHORT).show();
     }
 
     private void getPointDistance(LatLng latLngA, Location currentLocB, int index) {
@@ -880,7 +771,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             mPointDistanceResolver.put(distance, index);
             mPointDistanceList.add(distance);
 
-            Log.d(DEBUG_TAG, "RouteService.getPointDistance.index : " + Integer.toString(index) + " | distance : " + Float.toString(distance));
         }
 
     }
@@ -912,13 +802,11 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         if (info.latLng.equals(endPointLatLng)) {
             info = mBicycleNaviInfoList.get( mBicycleNaviInfoList.size() - 1);
 
-          Log.d("safebike", "RouteService.checkFinishNavigation.endPointIndex(마지막 인덱스 LatLng 값이 endPoint LatLng 과 같을 때)");
         } else {
             for (int i = 0; i < mBicycleNaviInfoList.size(); i++) {
                 if (mBicycleNaviInfoList.get(i).latLng.equals(endPointLatLng)) {
                     info = mBicycleNaviInfoList.get(i);
 
-                   Log.d("safebike", "RouteService.checkFinishNavigation.endPointIndex((마지막 인덱스 LatLng 값이 endPoint LatLng 과 다를 때) : " + Integer.toString(i));
                 }
             }
         }
@@ -948,11 +836,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void getPointInfoNotifications(int currentLatLngIndex) {
-        Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.currentLatLngIndex : " + currentLatLngIndex);
 
         if (mPointLatLngIndex + 1 < mPointLatLngIndexList.size()) {
             if (currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex)) {
-                Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex)");
                 BicycleNavigationInfo pointInfo;
 
                 float tempDistance = 0;
@@ -972,7 +858,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 pointInfoDistance = Math.round(tempDistance);
 
                 if (!isCalling) {
-                    Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.currentLatLngIndex == mPointLatLngIndexList.get(mPointLatLngIndex).!isCalling.tts");
 
                     tts.translate(Integer.toString(pointInfoDistance) + "m 이후 " + pointInfo.properties.description);
                 }
@@ -1010,10 +895,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 setTextDescription(Integer.toString(mPointLatLngIndex) + ". " + pointInfo.properties.description, pointInfoDistance);
 
             } else if (currentLatLngIndex == (mPointLatLngIndexList.get(mPointLatLngIndex) - 2) && mPointLatLngIndex > 0) {
-                Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.currentLatLngIndex : " + currentLatLngIndex + " | pointIndex : " + Integer.toString((mPointLatLngIndexList.get(mPointLatLngIndex) - 2)));
 
                 if (pointInfoDistance >= LIMIT_DISTANCE_NOTIFICATION) {
-                    Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.pointInfoDistance >= 300");
 
                     if (!isCalling && isFirstRepeatPointInfoNoti) {
                         BicycleNavigationInfo pointInfo;
@@ -1024,51 +907,39 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                         isFirstRepeatPointInfoNoti = false;
                     }
                 } else {
-                    Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.pointInfoDistance < 300");
                 }
             } else {
-                Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.currentLatLngIndex != mPointLatLngIndexList.get(mPointLatLngIndex)");
             }
         } else if (mPointLatLngIndex + 1 == mPointLatLngIndexList.size()) {
-            Log.d(DEBUG_TAG, "RouteService.getPointInfoNotifications.mPointLatLngIndex + 1 == mPointLatLngIndexList.size()");
 
             BicycleNavigationInfo pointInfo = mBicycleNaviInfoList.get(mPointLatLngIndexList.get(mPointLatLngIndex));
 
-            Log.d(DEBUG_TAG, pointInfo.properties.description + " | pointLatLngIndex : " + currentLatLngIndex);
         }
     }
 
     private void sendExerciseReport(ArrayList<Float> speedList, final ArrayList<Float> distanceList) {
-        Log.d(DEBUG_TAG, "RouteService.sendExerciseReport");
 
         if (distanceList.size() > 0) {
-            Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.distanceList > 0");
 
             endTime = System.currentTimeMillis();
-            Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.endTime : " + Long.toString(endTime));
             int totalTime = 0;
             float totalSpeed = 0;
             float totalDistance = 0;
 //            int second = (int) ((endTime - startTime / 1000) % 60);
             int second = (int) TimeUnit.MILLISECONDS.toSeconds(endTime - startTime);
 
-            Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.second : " + Integer.toString(second));
 
             if (second >= 0 && second < 60) {
-                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.second.second >= 0 && second < 60 : ");
                 totalTime = 1;
             } else if (second >= 60){
-                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.second.second >= 60 : ");
                 totalTime = (int) TimeUnit.MILLISECONDS.toMinutes(endTime - startTime);
             }
 
             for (int i = 0; i < speedList.size(); i++) {
-                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.speedList : " + Float.toString(speedList.get(i)));
                 totalSpeed += speedList.get(i);
             }
 
             for (int i = 0; i < distanceList.size(); i++) {
-                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.distanceList : " + Float.toString(distanceList.get(i)));
                 totalDistance += distanceList.get(i);
             }
 
@@ -1081,26 +952,18 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             final int speed = Math.round(totalSpeed / speedList.size());
             final int distance = Math.round(totalDistance);
 
-//            Toast.makeText(RouteService.this, "RouteService.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + Integer.toString(calorie) + " | speed : " + Integer.toString(speed) + " | distance : " + Integer.toString(distance) + " | time : " + totalTime, Toast.LENGTH_LONG).show();
 
             if(speed > 0) {
-                Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.userEmail : " + userEmail + " | date : " + date + " | calorie : " + calorie + " | speed : " + speed + " | distance : " + distance + " | time : " + totalTime);
 
                 NetworkManager.getInstance().saveExercise(RouteService.this, userEmail, date, calorie, speed, distance, new NetworkManager.OnResultListener() {
                     @Override
                     public void onSuccess(Object result) {
-//                    Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.saveExercise.onSuccess.result : " + result);
 
                         if ((int) result == SUCCESS) {
-//                        Log.d("safebike", "RouteService.removeFavorite.onSuccess.200");
-//                        Toast.makeText(RouteService.this, "saveExercise.SUCCESS.200", Toast.LENGTH_SHORT).show();
 
                             mSpeedList.clear();
                             mDistanceList.clear();
 
-                        } else {
-//                        Log.d("safebike", "RouteService.removeFavorite.onSuccess.else");
-//                        Toast.makeText(RouteService.this, "saveExercise.SUCCESS.200.else", Toast.LENGTH_SHORT).show();
                         }
                     /*
                      *  비정상 종료 처리 시에 기존 데이터(칼로리, 스피드, 거리 리스트 저장해 두었다가 onCreate 에서 저장) bundle 이용
@@ -1111,21 +974,10 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                     @Override
                     public void onFail(int code) {
-//                    Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.saveExercise.onFail.result : " + Integer.toString(code));
-//                    Toast.makeText(RouteService.this, "saveExercise.FAIL", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
-            else{
-                Log.d(DEBUG_TAG,"speed is null");
-            }
-
-
-
-        } else {
-            Log.d(DEBUG_TAG, "RouteService.sendExerciseReport.distanceList < 0");
-//            Toast.makeText(RouteService.this, "RouteService.sendExerciseReport.distanceList < 0", Toast.LENGTH_SHORT).show();
-        }
+     }
 
     }
 
@@ -1136,14 +988,12 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         final double endY = Double.parseDouble(PropertyManager.getInstance().getDestinationLatitude());
         final int searchOption = PropertyManager.getInstance().getFindRouteSearchOption();
 
-       Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.출발지, 목적지 위도 경도 : " + startY + ", " + startX + " | " + endY + ", " + endX);
 
         if (startX != 0 && startY != 0 && endX != 0 && endY != 0) {
             NavigationNetworkManager.getInstance().findRoute(RouteService.this, startX, startY, endX, endY, searchOption,
                     new NavigationNetworkManager.OnResultListener<BicycleRouteInfo>() {
                         @Override
                         public void onSuccess(BicycleRouteInfo result) {
-                           Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess");
                             if (result.features != null && result.features.size() > 0) {
                                 clearMarkerAndPolyline();
                                 clearAllmBicycleNaviInfoList();
@@ -1152,13 +1002,11 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                                 for (BicycleFeature feature : result.features) {
                                     if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_EP)) {
                                         gpIndexSize = (feature.properties.index - 2) / 2;
-                                       Log.d(DEBUG_TAG, "RouteService.findRoute.POINTTYPE_GP.minGPIndexSize : " + Integer.toString(gpIndexSize));
                                     }
                                 }
 
                                 polylineOptions = new PolylineOptions();
 
-                                Log.d(DEBUG_TAG, "result.features.size() : " + result.features.size());
 
                                 for (int i = 0; i < result.features.size(); i++) {
                                     BicycleFeature feature = result.features.get(i);
@@ -1172,7 +1020,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                                         LatLng latLngB;
 
 
-                                       // Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.BicycleProperties.mAllPropertiesResolver : " + properties.description);
 
                                         if (j <= coordForNavi.length - 4) {
                                             latLngB = new LatLng(coordForNavi[j + 3], coordForNavi[j + 2]);
@@ -1185,10 +1032,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                                             distance = locationA.distanceTo(locationB);
 
-                                            Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막 아닐 때) : " + mBicycleNaviInfoList.size() + " | " + distance);
                                         } else {
                                             if (i + 1 < result.features.size()) {
-                                                Log.d(DEBUG_TAG, "인덱스 마지막 아닐 때 다음 좌표와 거리 계산");
                                                 BicycleFeature tempFeature = result.features.get(i + 1);
                                                 double[] tempCoordForNavi = tempFeature.geometry.coordinates;
                                                 latLngB = new LatLng(tempCoordForNavi[1], tempCoordForNavi[0]);
@@ -1201,11 +1046,9 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                                                 distance = locationA.distanceTo(locationB);
 
-                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막 아닐 때 다음 좌표와 거리 계산) : " + mBicycleNaviInfoList.size() + " | " + distance);
                                             } else {
                                                 distance = 0;
 
-                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.distance(coordForNavi 인덱스 마지막) : " + mBicycleNaviInfoList.size() + " | " + distance);
                                             }
                                         }
 
@@ -1223,18 +1066,14 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
 
                                             if(mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description != null)
-                                                Log.d(DEBUG_TAG, "mBicycleNaviInfoList.size : " + Integer.toString(mBicycleNaviInfoList.size() - 1) + ", description : " + mBicycleNaviInfoList.get(mBicycleNaviInfoList.size() - 1).properties.description);
 
                                                 if (feature.properties.pointType.equals(POINTTYPE_SP)) {
-                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
                                                     addPointMarker(latLngA, POINTTYPE_SP, gpIndexSize);
                                                 } else if ((feature.properties.pointType.equals(POINTTYPE_GP))) {
-                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
                                                     addPointMarker(latLngA, POINTTYPE_GP, gpIndexSize);
                                                 } else if (feature.properties.pointType.equals(POINTTYPE_EP)) {
-                                                Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.bicycleNaviInfo.properties : " + bicycleNaviInfo.properties.description);
 
                                                     addPointMarker(latLngA, POINTTYPE_EP, gpIndexSize);
 
@@ -1248,13 +1087,10 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                                             mBicycleNaviInfoList.add(bicycleNaviInfo);
 
-                                            Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.BICYCLE_ROUTE_GEOMETRY_TYPE_LINESTRING | LataLng : " + bicycleNaviInfo.latLng.latitude +
-                                                    ", " + bicycleNaviInfo.latLng.longitude + " | distance : " + bicycleNaviInfo.distance);
 
                                             polylineOptions.add(latLngA);
                                         }
 
-                                        Log.d(DEBUG_TAG, "RouteService.mInitialListener.onLocationChanged.findRoute.onSuccess.mBicycleNaviInfoList : " + mBicycleNaviInfoList.size());
                                     }
                                 }
 
@@ -1284,7 +1120,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void moveMap(double latitude, double longitude, String moveAction) {
-        Log.d(DEBUG_TAG, "RouteService.moveMap");
 
         int count = mCallbacks.beginBroadcast();
 
@@ -1301,7 +1136,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void setImageDescription(int direction) {
-        Log.d(DEBUG_TAG, "RouteService.setImageDescription");
 
         int count = mCallbacks.beginBroadcast();
 
@@ -1320,7 +1154,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void setTextDescription(String description, int distance) {
-        Log.d(DEBUG_TAG, "RouteService.setTextDescription");
 
         int count = mCallbacks.beginBroadcast();
 
@@ -1341,10 +1174,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void addPointMarker(LatLng latLng, String bitmapFlag, int gpIndexSize) {
-        Log.d(DEBUG_TAG, "RouteService.addPointMarker");
 
-        /*Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.latitude : " + Double.toString(latLng.latitude) + " | longitude : " + Double.toString(latLng.longitude) +
-                " | bitmapFlag : " + bitmapFlag);*/
 
         if (bitmapFlag.equals(POINTTYPE_SP) || (bitmapFlag.equals(POINTTYPE_EP))) {
             markerOptions = new MarkerOptions();
@@ -1360,10 +1190,8 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         } else if (bitmapFlag.equals(POINTTYPE_GP)) {
             gpIndex++;
 
-            Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(gpIndex));
 
             if (gpIndexSize > 0 && gpIndexSize <= 20) {
-                Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : (gpIndexSize > 0 && gpIndexSize <= 20)");
                 markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
                 markerOptions.anchor(0.5f, 1.0f);
@@ -1392,7 +1220,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void addPolyline(PolylineOptions polylineOptions) {
-       Log.d(DEBUG_TAG, "RouteService.addPolyline");
 
         if (polylineOptions != null) {
             polylineOptions.color(0xba3498db);
@@ -1460,7 +1287,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void clearMarkerAndPolyline() {
-        Log.d(DEBUG_TAG, "RouteService.clearMarkerAndPolyline");
 
         MapInfoManager.getInstance().clearAllMapInfoData();
 
@@ -1481,7 +1307,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void withinRouteLimitDistanceDialog() {
-        Log.d(DEBUG_TAG, "RouteService.withinRouteLimitDistanceDialog");
 
         if (isFirstFinishDialog) {
             if (!isCalling) {
@@ -1493,8 +1318,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                 mGoogleApiClient.disconnect();
 
-//            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
-                Log.d(DEBUG_TAG, "StartNavigationActivity.onStop.mGoogleApiClient.disconnect");
             }
 
             int count = mCallbacks.beginBroadcast();
@@ -1516,7 +1339,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void autoFinishNavigationDialog() {
-        Log.d(DEBUG_TAG, "RouteService.autoFinishNavigationDialog");
 
         if (isFirstFinishDialog == true) {
             if (!isCalling) {
@@ -1528,8 +1350,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
 
                 mGoogleApiClient.disconnect();
 
-//            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
-                Log.d(DEBUG_TAG, "StartNavigationActivity.onStop.mGoogleApiClient.disconnect");
             }
 
             int count = mCallbacks.beginBroadcast();
@@ -1551,7 +1371,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
     }
 
     private void sendNotification() {
-        Log.d("safebike", "RouteService.sendNotification");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 

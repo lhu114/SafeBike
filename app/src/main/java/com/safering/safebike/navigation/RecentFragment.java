@@ -100,7 +100,6 @@ public class RecentFragment extends Fragment {
                  * ParentRctFvActivity 에 있는 setResult 처리
                  */
 
-//                Log.d("safebike", "rctPoiName : " + rctPoiName);
 
                 NavigationNetworkManager.getInstance().searchPOI(getContext(), rctPoiName, new NavigationNetworkManager.OnResultListener<SearchPOIInfo>() {
                     @Override
@@ -108,15 +107,12 @@ public class RecentFragment extends Fragment {
                         POI poi = result.pois.poiList.get(0);
 
                         if (poi != null) {
-//                            Log.d("safebike", "poi.secondNo : " + poi.secondNo);
 
                             if (getActivity() != null) {
                                 ((ParentRctFvActivity) getActivity()).sendPOI(poi);
 
-//                                Log.d("safebike", "RecentFragment.onCreateView.onSuccess.sendPOI.getActivity != null | ((ParentRctFvActivity) getActivity()).sendPOI(poi)");
 
                             }
-//                            sendPOI(poi);
                         }
                     }
 
@@ -133,7 +129,6 @@ public class RecentFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setIcon(android.R.drawable.ic_dialog_info);
-//        builder.setTitle("전체 항목 삭제");
                 builder.setMessage("전체 항목을 삭제하시겠습니까");
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
@@ -157,7 +152,6 @@ public class RecentFragment extends Fragment {
 
                     }
                 });
-//        builder.setCancelable(false);
 
                 builder.create().show();
             }
@@ -185,7 +179,6 @@ public class RecentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Toast.makeText(getContext(), "RecentFragment.onResume", Toast.LENGTH_SHORT).show();
         Cursor c = RecentDataManager.getInstance().getRecentCursor(null);
         nameColumnIndex = c.getColumnIndex(RecentDB.RecentTable.COLUMN_POI_NAME);
         dateColumnIndex = c.getColumnIndex(RecentDB.RecentTable.COLUMN_SEARCH_DATE);
@@ -198,7 +191,6 @@ public class RecentFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        Toast.makeText(getContext(), "RecentFragment.onDestroy", Toast.LENGTH_SHORT).show();
         mAdapter.changeCursor(null);
     }
 }

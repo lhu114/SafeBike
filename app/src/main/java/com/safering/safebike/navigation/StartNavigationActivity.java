@@ -127,7 +127,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate");
 
         setContentView(R.layout.activity_start_navigation);
 
@@ -229,7 +228,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         }
 
         if (mGoogleApiClient == null) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.new mGoogleApiClient");
 
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
@@ -242,7 +240,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         mSM = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mRotationSensor = mSM.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.mProvider : " + mProvider);
 
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -250,7 +247,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case MESSAGE_INITIAL_LOCATION_TIMEOUT:
-                      Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.handleMessage.MESSAGE_INITIAL_LOCATION_TIMEOUT");
                         Toast.makeText(StartNavigationActivity.this, "MESSAGE LOCATION TIMEOUT", Toast.LENGTH_SHORT).show();
 
                         break;
@@ -263,36 +259,27 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-//        Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onNewIntent", Toast.LENGTH_SHORT).show();
     }
 
     IRouteCallback.Stub callback = new IRouteCallback.Stub() {
 
         @Override
         public void moveMap(double latitude, double longitude, String moveAction) throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.moveMap");
-
             onMoveMap(latitude, longitude, mAngle, moveAction);
         }
 
         @Override
         public void setImageDescription(int direction) throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.setImageDescription.direction : " + Integer.toString(direction));
-
             onSetUpdateImageDescription(direction);
         }
 
         @Override
         public void setTextDescription(String description, int distance) throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.setTextDescription.description : " + description + " | distance : " + Integer.toString(distance));
-
-//            tvNaviDescription.setText(Integer.toString(distance) + "m 이후 " + description);
             tvNaviDescription.setText(description);
         }
 
         @Override
         public void addPointMarker(double latitude, double longitude) throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.addPointMarker.latitude : " + Double.toString(latitude) + " | longitude : " + Double.toString(longitude));
 
             LatLng latLng = new LatLng(latitude, longitude);
 
@@ -316,7 +303,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         @Override
         public void addPolyline() throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.addPolyline");
 
             PolylineOptions addPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
 
@@ -327,7 +313,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         @Override
         public void clearMarkerAndPolyline() throws RemoteException {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.clearMarkerAndPolyline");
 
             mMap = MapInfoManager.getInstance().getMapInfoGoogleMap();
 
@@ -358,7 +343,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     };
 
     private void addMapInfoMarker(MarkerOptions markerOptions) {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoMarker");
 
         if (mMap != null && markerOptions != null) {
             mapInfoMarker = mMap.addMarker(markerOptions);
@@ -368,7 +352,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     }
 
     private void addMapInfoPolyline(PolylineOptions polylineOptions) {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.addMapInfoPolyline");
 
         if (mMap != null && polylineOptions != null) {
             mapInfoPolyline = mMap.addPolyline(polylineOptions);
@@ -380,7 +363,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     ServiceConnection mConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onServiceConnected");
 
             if (mRouteService != null) {
                 try {
@@ -396,7 +378,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 mRouteService = IRouteService.Stub.asInterface(service);
 
                 try {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.onServiceConnected.mRouteService.registerCallback(callback)");
                     mRouteService.registerCallback(callback);
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -406,7 +387,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onServiceDisconnected");
 
             mRouteService = null;
         }
@@ -415,11 +395,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onStart");
 
         if (!mLM.isProviderEnabled(mProvider)) {
             if (isFirst) {
-                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
 
@@ -427,15 +405,7 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                 Toast.makeText(StartNavigationActivity.this, "GPS를 설정해주세요.", Toast.LENGTH_SHORT).show();
             } else {
-                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).!isFirst");
-                /*
-                 * 확인 후 처리
-                 */
                 Toast.makeText(StartNavigationActivity.this, "GPS 설정이 필요합니다.", Toast.LENGTH_SHORT).show();
-
-                /*
-                 *  sharedPreferences 값 다 날리는 처리
-                 */
                 PropertyManager.getInstance().setServiceCondition(SERVICE_FINISH);
                 PropertyManager.getInstance().setFindRouteSearchOption(BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION);
 
@@ -449,11 +419,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 return;
             }
 
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.requestSingleUpdate");
 
             if (!mResolvingError) {  // more about this later
                 if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.onStart.mGoogleApiClient.connect");
 
                     mGoogleApiClient.connect();
                 }
@@ -475,16 +443,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onStop() {
         super.onStop();
-//        Toast.makeText(getContext(), "NavigationFragment.onStop", Toast.LENGTH_SHORT).show();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onStop");
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
 
             mGoogleApiClient.disconnect();
 
-//            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onStop.mGoogleApiClient.disconnect");
         }
 
         if (mRotationSensor != null) {
@@ -505,19 +469,15 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onResume");
 
         if (mRouteService != null && isFirstFinishDialog) {
             try {
                 boolean success = mRouteService.activateWithinRouteLimitDistance();
 
                 if (success) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.activateWithinRouteLimitDistance.success");
                     onWithinRouteLimitDistanceDialog();
 
                     isFirstFinishDialog = false;
-                } else {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.activateWithinRouteLimitDistance.fail");
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -527,12 +487,9 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 boolean success = mRouteService.activateAutoFinishNavigation();
 
                 if (success) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.activateAutoFinishNavigation.success");
                     onAutoFinishNavigationDialog();
 
                     isFirstFinishDialog = false;
-                } else {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.onResume.activateAutoFinishNavigation.fail");
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -557,38 +514,30 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onPause");
     }
 
         @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
-
             tts.close();
         }
 
         @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onDestroy");
-
             super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
     public void onBackPressed() {
-//        Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onBackPressed : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
         intent.putExtra(KEY_POP_NAVIGATION_FRAGMENT, VALUE_POP_NAVIGATION_FRAGMENT);
         startActivity(intent);
 
-//        finish();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onMapReady");
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -602,7 +551,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         double recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
         double recentLongitude = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
 
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onMapReady.recent.onMoveMap");
         onMoveMap(recentLatitude, recentLongitude, 0, MOVE_CAMERA);
 
         setMapInfo();
@@ -621,21 +569,13 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         PolylineOptions mapInfoPolylineOptions = MapInfoManager.getInstance().getPolylineOptionsInfo();
 
         if (mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.setMapInfo.mapInfoMarkerOptionsList != null && mapInfoMarkerOptionsList.size() > 0");
 
             for (int i = 0; i < mapInfoMarkerOptionsList.size(); i++) {
                 addMapInfoMarker(mapInfoMarkerOptionsList.get(i));
             }
-        } else {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.setMapInfo.mapInfoMarkerOptionsList == null && mapInfoMarkerOptionsList.size() < 0");
         }
-
         if (mapInfoPolylineOptions != null) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.setMapInfo.mapInfoPolylineOptions != null");
-
             addMapInfoPolyline(mapInfoPolylineOptions);
-        } else {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.setMapInfo.mapInfoPolylineOptions == null");
         }
     }
 
@@ -683,7 +623,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     }
 
     protected void createLocationRequest() {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onCreate.createLocationRequest");
 
         if (mInitialLocReq == null) {
             mInitialLocReq = new LocationRequest();
@@ -696,8 +635,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
     protected void startInitialLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mInitialLocReq, mInitialListener);
-        Log.d(DEBUG_TAG, "StartNavigationActivity.startInitialLocationUpdates");
-
         mHandler.sendEmptyMessageDelayed(MESSAGE_INITIAL_LOCATION_TIMEOUT, LOCATION_TIMEOUT_INTERVAL);
     }
 
@@ -706,34 +643,23 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
      */
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mInitialListener);
-        Log.d(DEBUG_TAG, "StartNavigationActivity.stopLocationUpdates");
-
         mHandler.removeMessages(MESSAGE_INITIAL_LOCATION_TIMEOUT);
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected");
         startInitialLocationUpdates();
 
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mLocation != null) {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
-//            Toast.makeText(this, "StartNavigationActivity.onConnected.mLocation" + " : " + mLocation.getLatitude() + ", " + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
-
             PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
             PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected.setRecentLocation");
-        } else {
-            Log.d(DEBUG_TAG, "StartNavigationActivity.onConnected.mLocation null");
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-////        Toast.makeText(getContext(), "NavigationFragment.onConnectionSuspended", Toast.LENGTH_SHORT).show();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onConnectionSuspended");
     }
 
     @Override
@@ -741,9 +667,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         if (mResolvingError) {
             return;
         }
-
-//        Toast.makeText(getContext(), "NavigationFragment.onConnectionFailed", Toast.LENGTH_SHORT).show();
-        Log.d(DEBUG_TAG, "StartNavigationActivity.onConnectionFailed");
     }
 
     @Override
@@ -756,16 +679,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
         @Override
         public void onLocationChanged(Location location) {
-//            Toast.makeText(getContext(), "NavigationFragment.onLocationChanged", Toast.LENGTH_SHORT).show();
-            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged");
 
             mHandler.removeMessages(MESSAGE_INITIAL_LOCATION_TIMEOUT);
 
             if (mMap != null) {
-                Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.mMap != null");
 
                 if (location != null) {
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.location != null");
 
                     try {
 
@@ -776,10 +695,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                             PropertyManager.getInstance().setRecentLatitude(Double.toString(location.getLatitude()));
                             PropertyManager.getInstance().setRecentLongitude(Double.toString(location.getLongitude()));
 
-//                            Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.mInitialListener.initialStartRouting : true", Toast.LENGTH_SHORT).show();
-                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.initialStartRouting : true");
-                        } else {
-                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.initialStartRouting : false");
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -787,25 +702,12 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                     try {
                         boolean success = mRouteService.startRouting();
-
-                        if (!success) {
-                            Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.another routing running");
-
-//                            Toast.makeText(StartNavigationActivity.this, "another routing running....", Toast.LENGTH_SHORT).show();
-                        }
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-
-//                    Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.mInitialListener.onLocationChanged +: " + location.getLatitude() + ", " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-                    Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged +: " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()));
-
-
                     onMoveMap(location.getLatitude(), location.getLongitude(), mAngle, ANIMATE_CAMERA);
-                   Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.onMoveMap");
                 }
             } else {
-              Log.d(DEBUG_TAG, "StartNavigationActivity.mInitialListener.onLocationChanged.mMap == null");
             }
         }
     };
@@ -823,9 +725,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                     if (mAngle < 0) {
                         mAngle += 360;
                     }
-//
-                 // Log.d(DEBUG_TAG, "StartNavigationActivity.mSensorListener.onSensorChanged.mAngle : " + mAngle);
-
                     break;
             }
         }
@@ -837,7 +736,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     };
 
     private void onWithinRouteLimitDistanceDialog() {
-      Log.d(DEBUG_TAG, "StartNavigationActivity.onWithinRouteLimitDistanceDialog");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
@@ -853,7 +751,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
                 Intent serviceIntent = new Intent(StartNavigationActivity.this, RouteService.class);
                 stopService(serviceIntent);
-//                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -869,7 +766,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
     }
 
     private void onAutoFinishNavigationDialog() {
-      Log.d(DEBUG_TAG, "StartNavigationActivity.onAutoFinishNavigationDialog");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -887,7 +783,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
                 Intent serviceIntent = new Intent(StartNavigationActivity.this, RouteService.class);
                 stopService(serviceIntent);
 
-//                Toast.makeText(StartNavigationActivity.this, "StartNavigationActivity.onCreate : " + PropertyManager.getInstance().getServiceCondition(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(StartNavigationActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -911,7 +806,6 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
 
     private void setFont() {
         tvMainTitle.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.BMJUA));
-//        tvNaviDescription.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.NOTOSANS_M));
     }
 }
 /*    private void checkOrthogonalPoint(double x1, double y1, double x2, double y2, double x3, double y3) {
