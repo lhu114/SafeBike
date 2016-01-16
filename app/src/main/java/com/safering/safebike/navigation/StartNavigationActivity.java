@@ -808,36 +808,3 @@ public class StartNavigationActivity extends AppCompatActivity implements OnMapR
         tvMainTitle.setTypeface(FontManager.getInstance().getTypeface(StartNavigationActivity.this, FontManager.BMJUA));
     }
 }
-/*    private void checkOrthogonalPoint(double x1, double y1, double x2, double y2, double x3, double y3) {
-        double findX, findY;
-
-        if (x1 == x2) {
-            findX = x1;
-            findY = y3;
-        } else if (y1 == y2) {
-            findX = x3;
-            findY = y1;
-        } else {
-
-            double m1 = (y2 - y1) / (x2 - x1);
-
-            double k1 = -m1 * x1 + y1;
-
-            double m2 = -1 / m1;
-
-            double k2 = -m2 * x3 + y3;
-
-            findX = (k2 - k1) / (m1 - m2);
-            findY = m1 * findX + k1;
-        }
-
-        Toast.makeText(StartNavigationActivity.this, "findX, findY " + findX + ", " + findY, Toast.LENGTH_SHORT).show();
-    }*/
-
-    /* private boolean checkIncludeLine(double x1, double y1, double x2, double y2, double xC, double yC) {
-        if (((x2 - xC) * (x1 - xC) <= 0) && ((y2 - yC) * (y1 - yC) <= 0)) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
