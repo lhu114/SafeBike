@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/register_bg"
+    android:background="@drawable/register_bg"
     tools:context="com.safering.safebike.login.LoginInputFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="75dp"
-        android:background="@mipmap/rectangle"
+        android:background="@drawable/rectangle"
         android:hint="@string/edit_user_email"
         android:lines="1"
         android:paddingBottom="5dp"
@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
-        android:background="@mipmap/rectangle"
+        android:background="@drawable/rectangle"
         android:hint="@string/edit_user_password"
         android:inputType="textPassword"
         android:lines="1"

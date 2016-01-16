@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -113,7 +114,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate");
+       Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate");
 
         setContentView(R.layout.activity_select_route);
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -172,9 +173,9 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         if (intent != null) {
             favoritePOIName = intent.getStringExtra(KEY_DESTINATION_POI_NAME);
 
-//            Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getIntent.favoritePOIName : " + favoritePOIName);
+           Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getIntent.favoritePOIName : " + favoritePOIName);
         } else {
-//            Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getIntent : null");
+            Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getIntent : null");
         }
 
         recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
@@ -200,19 +201,19 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
             NetworkManager.getInstance().getMatchFavorite(this, userEmail, favoritePOIName, destinationLatitude, destinationLongitude, new NetworkManager.OnResultListener() {
                 @Override
                 public void onSuccess(Object result) {
-//                    Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.result : " + result);
+                    Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.result : " + result);
 
                     /*
                      * 일치하는거 있으면  or 성공 200 은 왔지만 없는 경우
                      */
 
                     if (result.equals(EXIST)) {
-//                        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.EXIST");
+                       Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.EXIST");
                         btnFavorite.setSelected(true);
                         isFavoriteBtnOn = true;
                         btnFavorite.setEnabled(true);
                     } else if (result.equals(NOT_EXIST)) {
-//                        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.NOT_EXIST");
+                       Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onSuccess.NOT_EXIST");
                         btnFavorite.setSelected(false);
                         isFavoriteBtnOn = false;
                         btnFavorite.setEnabled(true);
@@ -221,15 +222,15 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                 @Override
                 public void onFail(int code) {
-//                    Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.code : " + Integer.toString(code));
+                   Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.code : " + Integer.toString(code));
 
                     if (code == BAD_REQUEST) {
-//                        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.BAD_REQUEST");
+                        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.BAD_REQUEST");
                         btnFavorite.setEnabled(false);
                         isFavoriteBtnOn = false;
                         btnFavorite.setSelected(false);
                     } else {
-//                        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.else");
+                        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.getMatchFavorite.onFail.else");
                         btnFavorite.setEnabled(false);
                         isFavoriteBtnOn = false;
                         btnFavorite.setSelected(false);
@@ -243,7 +244,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         final double endX = destinationLongitude;
         final double endY = destinationLatitude;
 
-//        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.출발지, 목적지 위도 경도 : " + recentLatitude + ", " + recentLongitude + " | " + destinationLatitude + ", " + destinationLongitude);
+        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.출발지, 목적지 위도 경도 : " + recentLatitude + ", " + recentLongitude + " | " + destinationLatitude + ", " + destinationLongitude);
 
         if (startX != 0 && startY != 0 && endX != 0 && endY != 0) {
             NavigationNetworkManager.getInstance().findRoute(SelectRouteActivity.this, startX, startY, endX, endY, BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION,
@@ -261,12 +262,12 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                                 expireDate.setTimeInMillis(System.currentTimeMillis() + expireMillis);
 
-//                                Log.d(DEBUG_TAG, "SelectRouteActivity.findRoute.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.laneGPIndexSize : " + Integer.toString(laneGPIndexSize));
+                                Log.d(DEBUG_TAG, "SelectRouteActivity.findRoute.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.laneGPIndexSize : " + Integer.toString(laneGPIndexSize));
 
                                 for (BicycleFeature feature : result.features) {
                                     if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_EP)) {
                                         laneGPIndexSize = (feature.properties.index - 2) / 2;
-//                                        Log.d(DEBUG_TAG, "SelectRouteActivity.findRoute.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.laneGPIndexSize : " + Integer.toString(laneGPIndexSize));
+                                        Log.d(DEBUG_TAG, "SelectRouteActivity.findRoute.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.laneGPIndexSize : " + Integer.toString(laneGPIndexSize));
                                     }
                                 }
 
@@ -344,7 +345,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 new NavigationNetworkManager.OnResultListener<BicycleRouteInfo>() {
                     @Override
                     public void onSuccess(BicycleRouteInfo result) {
-//                        Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.onSuccess");
+                       Log.d(DEBUG_TAG, "SelectRouteActivity.onCreate.onSuccess");
                         if (result.features != null && result.features.size() > 0) {
                             clearAllMinMarker();
 
@@ -354,7 +355,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                             for (BicycleFeature feature : result.features) {
                                 if (feature.geometry.type.equals(BICYCLE_ROUTE_GEOMETRY_TYPE_POINT) && feature.properties.pointType.equals(POINTTYPE_EP)) {
                                     minGPIndexSize = (feature.properties.index - 2) / 2;
-//                                    Log.d(DEBUG_TAG, "SelectRouteActivity.findRoute.BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION.POINTTYPE_GP.minGPIndexSize : " + Integer.toString(minGPIndexSize));
+                                   Log.d(DEBUG_TAG, "SelectRouteActivity.findRoute.BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION.POINTTYPE_GP.minGPIndexSize : " + Integer.toString(minGPIndexSize));
                                 }
                             }
 
@@ -480,7 +481,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         btnFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.d("safebike", "SelectRouteActivity.btnFavorite.setOnClickListener");
+                Log.d("safebike", "SelectRouteActivity.btnFavorite.setOnClickListener");
                 /*
                  *    이메일, favoritePOIName, destination latitude, longitude 서버로 보냄
                  *    flag 바탕으로 한번 누르면 update 다시 한번 누르면 delete
@@ -491,17 +492,17 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
                 final double fvLongitude = destinationLongitude;
 
                 if (fvName != null && !fvName.equals("")) {
-//                    Log.d("safebike", "SelectRouteActivity.btnFavorite.fvName != null && !fvName.equals(\"\")");
+                    Log.d("safebike", "SelectRouteActivity.btnFavorite.fvName != null && !fvName.equals(\"\")");
                     if (!isFavoriteBtnOn) {
-//                        Log.d("safebike", "SelectRouteActivity.saveFavorite.isFavoriteBtnOn.false");
+                       Log.d("safebike", "SelectRouteActivity.saveFavorite.isFavoriteBtnOn.false");
 
                         NetworkManager.getInstance().saveFavorite(SelectRouteActivity.this, userEmail, fvName, fvLatitude, fvLongitude, new NetworkManager.OnResultListener() {
                             @Override
                             public void onSuccess(Object result) {
-//                                Log.d("safebike", "SelectRouteActivity.saveFavorite.onSuccess");
+                                Log.d("safebike", "SelectRouteActivity.saveFavorite.onSuccess");
 
                                 if ((int) result == SUCCESS) {
-//                                    Log.d("safebike", "SelectRouteActivity.saveFavorite.onSuccess.200");
+                                    Log.d("safebike", "SelectRouteActivity.saveFavorite.onSuccess.200");
 
                                     isFavoriteBtnOn = true;
                                     btnFavorite.setSelected(true);
@@ -510,22 +511,22 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                             @Override
                             public void onFail(int code) {
-//                                Log.d("safebike", "SelectRouteActivity.saveFavorite.onFail");
+                                Log.d("safebike", "SelectRouteActivity.saveFavorite.onFail");
 
                                 isFavoriteBtnOn = false;
                                 btnFavorite.setSelected(false);
                             }
                         });
                     } else if (isFavoriteBtnOn) {
-//                        Log.d("safebike", "SelectRouteActivity.saveFavorite.isFavoriteBtnOn.true");
+                        Log.d("safebike", "SelectRouteActivity.saveFavorite.isFavoriteBtnOn.true");
 
                         NetworkManager.getInstance().removeFavorite(SelectRouteActivity.this, userEmail, fvName, fvLatitude, fvLongitude, new NetworkManager.OnResultListener() {
                             @Override
                             public void onSuccess(Object result) {
-//                                Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess");
+                                Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess");
 
                                 if ((int) result == SUCCESS) {
-//                                    Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess.200");
+                                    Log.d("safebike", "SelectRouteActivity.removeFavorite.onSuccess.200");
                                 }
 
                                 isFavoriteBtnOn = false;
@@ -534,7 +535,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                             @Override
                             public void onFail(int code) {
-//                                Log.d("safebike", "SelectRouteActivity.removeFavorite.onFail");
+                                Log.d("safebike", "SelectRouteActivity.removeFavorite.onFail");
 
                                 isFavoriteBtnOn = true;
                                 btnFavorite.setSelected(true);
@@ -595,12 +596,12 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     protected void onStart() {
-//        Log.d(DEBUG_TAG, "SelectRouteActivity.onStart");
+        Log.d(DEBUG_TAG, "SelectRouteActivity.onStart");
         super.onStart();
 
         if (!mLM.isProviderEnabled(mProvider)) {
             if (isFirst) {
-//                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
+                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
 
@@ -608,7 +609,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
                 Toast.makeText(SelectRouteActivity.this, "GPS를 설정해주세요.", Toast.LENGTH_SHORT).show();
             } else {
-//                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).!isFirst");
+                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).!isFirst");
                 /*
                  * 확인 후 처리
                  */
@@ -623,14 +624,14 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     protected void onStop() {
-//        Log.d(DEBUG_TAG, "SelectRouteActivity.onStop");
+      Log.d(DEBUG_TAG, "SelectRouteActivity.onStop");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        Log.d(DEBUG_TAG, "SelectRouteActivity.onDestroy");
+        Log.d(DEBUG_TAG, "SelectRouteActivity.onDestroy");
 
         mLaneMarkerResolver.clear();
         mMinMarkerResolver.clear();
@@ -643,14 +644,14 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-//        Log.d(DEBUG_TAG, "SelectRouteActivity.onMapReady");
+        Log.d(DEBUG_TAG, "SelectRouteActivity.onMapReady");
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setCompassEnabled(false);
 
-//        Log.d(DEBUG_TAG, "SelectRouteActivity.onMapReady.center.moveMap");
+        Log.d(DEBUG_TAG, "SelectRouteActivity.onMapReady.center.moveMap");
 
         moveMap(centerLatitude, centerLongitude, 10, MOVE_CAMERA);
     }
@@ -688,7 +689,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         } else if (searchOption == BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION && bitmapFlag.equals(POINTTYPE_GP)) {
             laneGPIndex++;
 
-//            Log.d(DEBUG_TAG, "SelectRouteActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(laneGPIndex));
+           Log.d(DEBUG_TAG, "SelectRouteActivity.addPointMarker.BICYCLE_ROUTE_BICYCLELANE_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(laneGPIndex));
 
             if (laneGPIndexSize > 0 && laneGPIndexSize <= 20) {
                 markerOptions = new MarkerOptions();
@@ -701,7 +702,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
         } else if (searchOption == BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION && bitmapFlag.equals(POINTTYPE_GP)) {
             minGPIndex++;
 
-//            Log.d(DEBUG_TAG, "SelectRouteActivity.addPointMarker.BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(minGPIndex));
+            Log.d(DEBUG_TAG, "SelectRouteActivity.addPointMarker.BICYCLE_ROUTE_MINIMUMTIME_SEARCHOPTION.POINTTYPE_GP.index : " + Integer.toString(minGPIndex));
 
             if (minGPIndexSize > 0 && minGPIndexSize <= 20) {
                 markerOptions = new MarkerOptions();
@@ -949,7 +950,7 @@ public class SelectRouteActivity extends AppCompatActivity implements OnMapReady
 
     private void withinRouteLimitDistanceDialog() {
         if (!isActivateRouteWithinLimitDistanceNoti) {
-//            Log.d(DEBUG_TAG, "StartNavigationActivity.onWithinRouteLimitDistanceDialog");
+            Log.d(DEBUG_TAG, "StartNavigationActivity.onWithinRouteLimitDistanceDialog");
 
             /*
              * 다이얼로그가 두번 불리지는 않는지 QA 필요

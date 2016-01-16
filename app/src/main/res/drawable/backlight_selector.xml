@@ -8,8 +8,8 @@
 
 
 
-    <item android:state_selected="true" android:drawable="@mipmap/backlight_on"/>
-    <item android:state_selected="false" android:drawable="@mipmap/backlight_off"/>
+    <item android:state_selected="true" android:drawable="@drawable/backlight_on"/>
+    <item android:state_selected="false" android:drawable="@drawable/backlight_off"/>
 
 
 

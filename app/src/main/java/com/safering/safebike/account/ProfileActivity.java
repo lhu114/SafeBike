@@ -48,8 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .showImageOnLoading(R.mipmap.profile_img)
-                .showImageForEmptyUri(R.mipmap.profile_img)
+                .showImageOnLoading(R.drawable.profile_img)
+                .showImageForEmptyUri(R.drawable.profile_img)
 
 
                 .considerExifParams(true)

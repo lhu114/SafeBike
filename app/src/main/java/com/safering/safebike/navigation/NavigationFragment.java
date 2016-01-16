@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -125,10 +126,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Log.d(DEBUG_TAG, "NavigationFragment.onCreate");
-
+        Log.d(DEBUG_TAG, "NavigationFragment.onCreate");
+        Log.d(DEBUG_TAG,"recent lati : " +PropertyManager.getInstance().getRecentLatitude() + ", recent longi" + PropertyManager.getInstance().getRecentLongitude());
         if (mGoogleApiClient == null) {
-//            Log.d(DEBUG_TAG, "NavigationFragment.onCreate.new mGoogleApiClient");
+            Log.d(DEBUG_TAG, "NavigationFragment.onCreate.new mGoogleApiClient");
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .addApi(LocationServices.API)
                     .addConnectionCallbacks(this)
@@ -144,18 +145,20 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         mLcMarkerList = new ArrayList<LatLng>();
 
         if (mProvider == null) {
+
             mProvider = LocationManager.GPS_PROVIDER;
+
         }
 
         mLM = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-//        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.marginRight : " + Integer.toString(marginRight) + " | marginBottom : " + marginBottom);
+        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.marginRight : " + Integer.toString(marginRight) + " | marginBottom : " + marginBottom);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Log.d(DEBUG_TAG, "NavigationFragment.onCreateView");
+        Log.d(DEBUG_TAG, "NavigationFragment.onCreateView");
 
         try {
             view = inflater.inflate(R.layout.fragment_navigation, container, false);
@@ -182,7 +185,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
             if (View.GONE == btnFindRoute.getVisibility()) {
                 LOCATION_CHANGE_FLAG = ON;
-//                Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.ON");
+                Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.ON");
 
                 MainActivity.FABFINDROUTE_ONOFF_FLAG = OFF;
             } else if (View.VISIBLE == btnFindRoute.getVisibility()) {
@@ -192,12 +195,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             btnFwdSearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Log.d(DEBUG_TAG, "NavigationFragment.onOptionsItemSelected.menu_fwd_search");
+                    Log.d(DEBUG_TAG, "NavigationFragment.onOptionsItemSelected.menu_fwd_search");
                     Intent intent = new Intent(getContext(), ParentRctFvActivity.class);
                     startActivityForResult(intent, REQUEST_SEARCH_POI);
 
                     LOCATION_CHANGE_FLAG = OFF;
-//                    Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
+                   Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
                 }
             });
 
@@ -233,19 +236,19 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
                     if (isBasicLocBtnOn) {
-//                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.false");
+                       Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.false");
 
                         if (mLocation != null) {
-//                            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
+                           Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
 
                             moveMap(mLocation.getLatitude(), mLocation.getLongitude(), ANIMATE_CAMERA);
 
                             PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
                             PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
-//                            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
+                            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
 
                         } else {
-//                            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
+                            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
                         }
 
                         isBasicLocBtnOn = false;
@@ -254,7 +257,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                         btnCurrentLoc.setBackgroundResource(R.drawable.button_my_location_selector);
                     } else if (isCurrentLocBtnOn) {
-//                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.true");
+                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isCurrentLocBtnOn.true");
 
                         if (mRotationSensor != null) {
                             mSM.registerListener(mSensorListener, mRotationSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -266,7 +269,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                         btnCurrentLoc.setBackgroundResource(R.drawable.button_change_direction_selector);
                     } else if (isChangeLocBtnOn) {
-//                        Log.d("safebike", "NavigationFragment.btnCurrentLoc.isBasicLocBtnOn.true");
+                       Log.d("safebike", "NavigationFragment.btnCurrentLoc.isBasicLocBtnOn.true");
 
                         if (mRotationSensor != null) {
                             mSM.unregisterListener(mSensorListener);
@@ -303,17 +306,17 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onStart() {
         super.onStart();
 //        Toast.makeText(getContext(), "NavigationFragment.onStart", Toast.LENGTH_SHORT).show();
-//        Log.d(DEBUG_TAG, "NavigationFragment.onStart");
+        Log.d(DEBUG_TAG, "NavigationFragment.onStart");
         if (!mResolvingError) {  // more about this later
             if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
-//                Log.d(DEBUG_TAG, "NavigationFragment.onStart.mGoogleApiClient.connect");
+                Log.d(DEBUG_TAG, "NavigationFragment.onStart.mGoogleApiClient.connect");
                 mGoogleApiClient.connect();
             }
         }
 
         if (!mLM.isProviderEnabled(mProvider)) {
             if (isFirst) {
-//                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
+               Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).isFirst");
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
 
@@ -321,7 +324,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                 Toast.makeText(getContext(), "GPS를 설정해주세요.", Toast.LENGTH_SHORT).show();
             } else {
-//                Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).!isFirst");
+               Log.d(DEBUG_TAG, "StartNavigationActivity.!mLM.isProviderEnabled(mProvider).!isFirst");
                 /*
                  * 확인 후 처리
                  */
@@ -345,14 +348,14 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onStop() {
         super.onStop();
 //        Toast.makeText(getContext(), "NavigationFragment.onStop", Toast.LENGTH_SHORT).show();
-//        Log.d(DEBUG_TAG, "NavigationFragment.onStop");
+        Log.d(DEBUG_TAG, "NavigationFragment.onStop");
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             stopLocationUpdates();
 
             mGoogleApiClient.disconnect();
 //            Toast.makeText(getContext(), "NavigationFragment.onStop.mGoogleApiClient.disconnect", Toast.LENGTH_SHORT).show();
-//            Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect");
+            Log.d(DEBUG_TAG, "NavigationFragment.onStop.mGoogleApiClient.disconnect");
         }
 
         /*if (mRotationSensor != null) {
@@ -369,7 +372,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onDestroyView() {
         super.onDestroyView();
 
-//        Log.d(DEBUG_TAG, "NavigationFragment.onDestroyView");
+        Log.d(DEBUG_TAG, "NavigationFragment.onDestroyView");
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
 
@@ -383,23 +386,23 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onDestroy() {
         super.onDestroy();
 
-//        Log.d(DEBUG_TAG, "NavigationFragment.onDestroy");
+        Log.d(DEBUG_TAG, "NavigationFragment.onDestroy");
 
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult");
+        Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult");
         if (requestCode == REQUEST_SEARCH_POI) {
             if (resultCode == Activity.RESULT_OK) {
-//                Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.REQUEST_SEARCH_POI.RESULT_OK");
+                Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.REQUEST_SEARCH_POI.RESULT_OK");
 
                 POI poi = (POI) data.getSerializableExtra(KEY_POI_OBJECT);
 
 //                Toast.makeText(getContext(), "NavigationFragment.onActivityResult.poiName : " + poi.name, Toast.LENGTH_SHORT).show();
-//                Log.d("safebike", "poiLatitude : " + Double.toString(poi.getLatitude()) + " poiLongitude : " + Double.toString(poi.getLongitude()));
-//                Log.d("safebike", "poiName : " + poi.name + " poiAddress : " + poi.getAddress());
+               Log.d("safebike", "poiLatitude : " + Double.toString(poi.getLatitude()) + " poiLongitude : " + Double.toString(poi.getLongitude()));
+                Log.d("safebike", "poiName : " + poi.name + " poiAddress : " + poi.getAddress());
 //            activateDestination();
 
                 if (poi != null) {
@@ -413,7 +416,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     /*
                      * 맵 이동하면서 poi 마커 찍기
                      */
-//                    Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.poi.moveMap");
+                   Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.poi.moveMap");
 
 //                    stopLocationUpdates();
 
@@ -432,7 +435,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                     if (View.VISIBLE == btnFindRoute.getVisibility()) {
                         LOCATION_CHANGE_FLAG = OFF;
-//                        Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
+                       Log.d(DEBUG_TAG, "NavigationFragment.LOCATION_CHANGE_FLAG.OFF");
 
                         MainActivity.FABFINDROUTE_ONOFF_FLAG = ON;
                     }
@@ -457,7 +460,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                     definePOIName = null;
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-//                Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.REQUEST_SEARCH_POI.RESULT_CANCELED");
+                Log.d(DEBUG_TAG, "NavigationFragment.onActivityResult.REQUEST_SEARCH_POI.RESULT_CANCELED");
             }
         }
     }
@@ -465,7 +468,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 //        Toast.makeText(getContext(), "NavigationFragment.onMapReady", Toast.LENGTH_SHORT).show();
-//        Log.d(DEBUG_TAG, "NavigationFragment.onMapReady");
+        Log.d(DEBUG_TAG, "NavigationFragment.onMapReady");
         mMap = googleMap;
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -480,7 +483,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
         if (mCacheLocation != null) {
 //            Toast.makeText(getContext(), "NavigationFragment.onMapReady.mCacheLocation.moveMap", Toast.LENGTH_SHORT).show();
-//            Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.mCacheLocation.moveMap");
+            Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.mCacheLocation.moveMap");
             moveMap(mCacheLocation.getLatitude(), mCacheLocation.getLongitude(), MOVE_CAMERA);
 //            addCurrentMarker(mCacheLocation);
 
@@ -489,13 +492,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             double recentLatitude = Double.parseDouble(PropertyManager.getInstance().getRecentLatitude());
             double recentLongitude = Double.parseDouble(PropertyManager.getInstance().getRecentLongitude());
 
-//            Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.recent.moveMap");
+            Log.d(DEBUG_TAG, "NavigationFragment.onMapReady.recent.moveMap");
             moveMap(recentLatitude, recentLongitude, MOVE_CAMERA);
         }
     }
 
     protected void createLocationRequest() {
-//        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
+        Log.d(DEBUG_TAG, "NavigationFragment.onCreate.createLocationRequest");
 
         if (mLocationRequest == null) {
             mLocationRequest = new LocationRequest();
@@ -509,7 +512,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     protected void startLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mListener);
 
-//        Log.d(DEBUG_TAG, "NavigationFragment.startLocationUpdates");
+        Log.d(DEBUG_TAG, "NavigationFragment.startLocationUpdates");
     }
 
     /*
@@ -518,25 +521,25 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     protected void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mListener);
 
-//        Log.d(DEBUG_TAG, "NavigationFragment.stopLocationUpdates");
+        Log.d(DEBUG_TAG, "NavigationFragment.stopLocationUpdates");
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-//        Log.d(DEBUG_TAG, "NavigationFragment.onConnected");
+        Log.d(DEBUG_TAG, "NavigationFragment.onConnected");
         startLocationUpdates();
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mLocation != null) {
-//            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
+            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation" + " : " + Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()));
          /*   Toast.makeText(((MainActivity)getContext()), "NavigationFragment.onConnected : " +Double.toString(mLocation.getLatitude()) + ", " + Double.toString(mLocation.getLongitude()),
                     Toast.LENGTH_SHORT).show();*/
 
             PropertyManager.getInstance().setRecentLatitude(Double.toString(mLocation.getLatitude()));
             PropertyManager.getInstance().setRecentLongitude(Double.toString(mLocation.getLongitude()));
-//            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.setRecentLocation");
+            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.setRecentLocation");
         } else {
-//            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
+            Log.d(DEBUG_TAG, "NavigationFragment.onConnected.mLocation null");
         }
 //        Toast.makeText(getContext(), "NavigationFragment.onConnected.mLocation" + " : " + mLocation.getLatitude() + ", " + mLocation.getLongitude(), Toast.LENGTH_SHORT).show();
 
@@ -545,7 +548,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onConnectionSuspended(int i) {
 //        Toast.makeText(getContext(), "NavigationFragment.onConnectionSuspended", Toast.LENGTH_SHORT).show();
-//        Log.d(DEBUG_TAG, "NavigationFragment.onConnectionSuspended");
+        Log.d(DEBUG_TAG, "NavigationFragment.onConnectionSuspended");
     }
 
     @Override
@@ -556,7 +559,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         }
 
 //        Toast.makeText(getContext(), "NavigationFragment.onConnectionFailed", Toast.LENGTH_SHORT).show();
-//        Log.d(DEBUG_TAG, "NavigationFragment.onConnectionFailed");
+        Log.d(DEBUG_TAG, "NavigationFragment.onConnectionFailed");
     }
 
     @Override
@@ -569,10 +572,10 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         @Override
         public void onLocationChanged(Location location) {
 //            Toast.makeText(getContext(), "NavigationFragment.onLocationChanged", Toast.LENGTH_SHORT).show();
-//            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged");
-//            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.flag : " + LOCATION_CHANGE_FLAG);
+            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged");
+            Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.flag : " + LOCATION_CHANGE_FLAG);
             if (mMap != null) {
-//                Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap != null");
+                Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap != null");
 
                 if (location != null) {
                     if (LOCATION_CHANGE_FLAG.equals(ON)) {
@@ -587,13 +590,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
 
                         isCheckGetRecentLoc = true;
 
-//                        Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
+                        Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.setRecentLocation");
                         /*Toast.makeText(getContext(), "NavigationFragment.onLocationChanged : " + Double.toString(location.getLatitude()) + ", " + Double.toString(location.getLongitude()),
                                 Toast.LENGTH_SHORT).show();*/
                     }
                 }
             } else {
-//                Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap == null");
+                Log.d(DEBUG_TAG, "NavigationFragment.onLocationChanged.mMap == null");
                 mCacheLocation = location;
             }
         }
@@ -617,7 +620,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                         setBearingMoveMap(mAngle);
                     }
 
-//                    Log.d(DEBUG_TAG, "NavigationFragment.btnCurrentLoc.mSensorListener.onSensorChanged.mAngle : " + mAngle);
+                    Log.d(DEBUG_TAG, "NavigationFragment.btnCurrentLoc.mSensorListener.onSensorChanged.mAngle : " + mAngle);
 
                     break;
             }
@@ -646,7 +649,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
     public void onMapLongClick(final LatLng latLng) {
         setBtnCurrentLocMarginChange(BASIC_BUTTON_CURRENTLOC_MARGIN_RIGHT, CHANGE_BUTTON_CURRENTLOC_MARGIN_BOTTOM);
 
-//        Log.d(DEBUG_TAG, "NavigationFragment.onMapLongClick.marginRight : " + Integer.toString(marginRight) + " | marginBottom : " + marginBottom);
+       Log.d(DEBUG_TAG, "NavigationFragment.onMapLongClick.marginRight : " + Integer.toString(marginRight) + " | marginBottom : " + marginBottom);
 
         if (latLng != null) {
             PropertyManager.getInstance().setDestinationLatitude(Double.toString(latLng.latitude));
@@ -661,7 +664,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                 @Override
                 public void onSuccess(AddressInfo result) {
                     if (result != null) {
-//                        Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.result != nul" );
+                        Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.result != nul" );
 
                         String defineAddress = getDefineRvsGeoAddress(result);
 
@@ -686,13 +689,13 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
                             btnFindRoute.setEnabled(true);
                         }
 //
-//                        Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
+                       Log.d(DEBUG_TAG, "searchReverseGeo.onSuccess.fullAddress : " + result.fullAddress);
                     }
                 }
 
                 @Override
                 public void onFail(int code) {
-//                    Log.d(DEBUG_TAG, "searchReverseGeo.onFail");
+                    Log.d(DEBUG_TAG, "searchReverseGeo.onFail");
 
                     tvPOIName.setText("");
                     tvPOIAddress.setText("");
@@ -804,15 +807,15 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
         String defineAddress = null;
 
         if (!poi.firstNo.equals("") && !poi.secondNo.equals("")) {
-//            Log.d("safebike", "defineAddress 1");
+            Log.d("safebike", "defineAddress 1");
 
             defineAddress = poi.getAddress() + " " + poi.getDetailAddress();
         } else if (!poi.firstNo.equals("") && poi.secondNo.equals("")) {
-//            Log.d("safebike", "defineAddress 2");
+           Log.d("safebike", "defineAddress 2");
 
             defineAddress = poi.getAddress() + " " + poi.firstNo;
         } else {
-//            Log.d("safebike", "defineAddress 3");
+           Log.d("safebike", "defineAddress 3");
 
             defineAddress = poi.getAddress();
         }
@@ -888,9 +891,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback, 
             float distance = oldLocation.distanceTo(newLocation);
 
             if (distance > 100) {
-//                Log.d("safebike", "onCameraChange.outOfCameraPosition.distance : " + Float.toString(distance));
+                Log.d("safebike", "onCameraChange.outOfCameraPosition.distance : " + Float.toString(distance));
             } else {
-//                Log.d("safebike", "onCameraChange.withinCameraPosition.distance : "+ Float.toString(distance));
+                Log.d("safebike", "onCameraChange.withinCameraPosition.distance : "+ Float.toString(distance));
             }
         }
     }

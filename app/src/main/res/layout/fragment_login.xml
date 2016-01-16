@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@mipmap/register_bg"
+    android:background="@drawable/register_bg"
     tools:context="com.safering.safebike.login.LoginFragment">
 
 
@@ -12,7 +12,7 @@
             android:id="@+id/text_login_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/safebike_small_withe"
+            android:src="@drawable/safebike_small_withe"
             android:layout_marginLeft="151dp"
             android:layout_marginTop="40dp"
             android:text="@string/text_login_main"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:src="@mipmap/safebike_small_withe"
+            android:src="@drawable/safebike_small_withe"
             android:layout_marginLeft="115dp"
             android:layout_marginTop="33dp"
             android:layout_gravity="center_horizontal" />
@@ -36,7 +36,7 @@
             android:id="@+id/image_logo_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/logo_start"
+            android:src="@drawable/logo_start"
             android:layout_marginLeft="102dp"
             android:layout_marginTop="142dp"
             />
@@ -44,7 +44,7 @@
             android:id="@+id/text_login_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/safebike_small_withe"
+            android:src="@drawable/safebike_small_withe"
             android:layout_marginTop="326dp"
             android:layout_marginLeft="94dp"
             android:text="@string/text_login_warning"

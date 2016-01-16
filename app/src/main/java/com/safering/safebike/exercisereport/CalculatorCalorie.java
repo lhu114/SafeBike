@@ -26,9 +26,11 @@ public class CalculatorCalorie {
     }
 
     public int getCalorie(float vel, float weight, int interval){
+
         int khm = (int)((vel * 3600.0f)/1000.0f);
         int min = (int)Math.abs(khm - coefficientArr[0][0]);
         int index = 0;
+
         for(int i = 0; i < coefficientArr.length; i++){
             int diff = (int)Math.abs(khm - coefficientArr[i][0]);
             if(diff < min){
@@ -36,6 +38,7 @@ public class CalculatorCalorie {
                 index = i;
             }
         }
+        Log.i("vel ",vel +"");
         Log.i("km",khm + "");
         Log.i("cofficient",coefficientArr[index][1] + "");
         Log.i("interval",interval + "");

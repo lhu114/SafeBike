@@ -16,8 +16,8 @@
 -->
 
 
-    <item android:state_selected="true" android:drawable="@mipmap/band_on"/>
-    <item android:state_selected="false" android:drawable="@mipmap/band_off"/>
+    <item android:state_selected="true" android:drawable="@drawable/band_on"/>
+    <item android:state_selected="false" android:drawable="@drawable/band_off"/>
 
 
 

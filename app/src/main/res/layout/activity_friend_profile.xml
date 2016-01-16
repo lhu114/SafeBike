@@ -20,7 +20,7 @@
             android:layout_height="75dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/profile_img" />
+            android:src="@drawable/profile_img" />
 
         <TextView
             android:id="@+id/text_friendid_profile"

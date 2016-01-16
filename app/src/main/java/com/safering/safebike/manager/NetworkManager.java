@@ -675,6 +675,7 @@ public class NetworkManager {
     public void saveExercise(Context context, String email, String date, int calorie, int speed, int distance, final OnResultListener listener) {
         //PARAMETER : 유저 이메일,칼로리,속력,거리
         //결과값 : INT
+
         RequestParams params = new RequestParams();
         params.put(USER_EAMIL, email);
         params.put(EXCERCISE_REQUEST_DATE, date);
