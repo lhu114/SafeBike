@@ -240,6 +240,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.i("responseString",responseString);
                 ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
                 listener.onSuccess(result);
 
@@ -466,7 +467,7 @@ public class NetworkManager {
         client.post(context, LOGIN_AUTHOR_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
+                listener.onFail(statusCode);
             }
 
             @Override

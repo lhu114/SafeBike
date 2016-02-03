@@ -191,6 +191,7 @@ public class CalorieFragment extends Fragment  implements OnChartValueSelectedLi
                 String date = dateFormat.format(cal.getTime());
                 dateList.add(date);
                 today = date;
+                Log.i("today",today);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

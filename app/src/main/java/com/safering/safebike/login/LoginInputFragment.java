@@ -81,6 +81,8 @@ public class LoginInputFragment extends Fragment {
 
                         @Override
                         public void onFail(int code) {
+                            dialog.setContent("로그인","로그인에 실패했습니다. 로그인정보를 확인해주세요.");
+                            dialog.show(getChildFragmentManager(), "loginfail");
 
 
                         }
