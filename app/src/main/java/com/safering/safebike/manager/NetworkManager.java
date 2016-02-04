@@ -17,14 +17,11 @@ import com.safering.safebike.friend.FriendDirectSearchResult;
 import com.safering.safebike.friend.FriendProfileResult;
 import com.safering.safebike.friend.FriendResult;
 import com.safering.safebike.friend.FriendSearchResult;
-import com.safering.safebike.login.LoginResult;
+import com.safering.safebike.login.UserLoginResult;
 import com.safering.safebike.navigation.FavoriteResult;
-import com.safering.safebike.navigation.SearchPOIInfo;
-import com.safering.safebike.navigation.SearchPOIInfoResult;
 import com.safering.safebike.property.MyApplication;
 
 import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -458,7 +455,7 @@ public class NetworkManager {
         });
     }
 
-    public void userAuthorization(Context context, String email, String password, final OnResultListener<LoginResult> listener) {
+    public void userAuthorization(Context context, String email, String password, final OnResultListener<UserLoginResult> listener) {
 
         RequestParams params = new RequestParams();
 
@@ -473,15 +470,15 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 if (responseString.equals("1")){
-                    LoginResult result = null;
+                    UserLoginResult result = null;
                     listener.onSuccess(result);
                 }
                 else if (responseString.equals("2")){
-                    LoginResult result = null;
+                    UserLoginResult result = null;
                     listener.onSuccess(result);
                 }
                 else {
-                    LoginResult result = gson.fromJson(responseString, LoginResult.class);
+                    UserLoginResult result = gson.fromJson(responseString, UserLoginResult.class);
                     listener.onSuccess(result);
                 }
             }

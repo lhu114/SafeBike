@@ -2,6 +2,9 @@ package com.safering.safebike.login;
 
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,12 +18,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.loopj.android.http.Base64;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
 import com.safering.safebike.manager.InformDialogFragment;
 import com.safering.safebike.manager.NetworkManager;
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +57,7 @@ public class LoginInputFragment extends Fragment {
         btnLogin = (Button) view.findViewById(R.id.btn_login_input);
         dialog = new InformDialogFragment();
 
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,19 +68,21 @@ public class LoginInputFragment extends Fragment {
                     dialog.setContent("로그인","아이디 또는 비밀번호를 확인해주세요.");
                     dialog.show(getChildFragmentManager(), "loginfail");
                 } else {
-                    NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<LoginResult>() {
+                    NetworkManager.getInstance().userAuthorization(getContext(), email, password, new NetworkManager.OnResultListener<UserLoginResult>() {
                         @Override
-                        public void onSuccess(LoginResult logResult) {
+                        public void onSuccess(UserLoginResult logResult) {
                             if(logResult != null){
                                 LoginItem userInform = logResult.userlogin;
                                 PropertyManager.getInstance().setUserEmail(email);
-                                PropertyManager.getInstance().setUserPassword(password);
                                 PropertyManager.getInstance().setUserId(userInform.id);
                                 PropertyManager.getInstance().setUserJoin(userInform.join);
                                 PropertyManager.getInstance().setUserImagePath(userInform.photo);
+                                PropertyManager.getInstance().setFacebookUser(0);
                                 Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
                                 startActivity(intent);
                                 ((LoginActivity) getActivity()).finish();
+
+
                             }
                             else{
                                 dialog.setContent("로그인","로그인에 실패했습니다. 로그인정보를 확인해주세요.");

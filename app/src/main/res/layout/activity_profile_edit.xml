@@ -77,8 +77,28 @@
 
 
     </RelativeLayout>
+  <LinearLayout
+        android:id="@+id/profile_edit_facebook_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/text_facebook_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:text="페이스북으로 로그인시 편집하실수 없습니다."
+            android:layout_gravity="center_horizontal"
+            android:textSize="16sp"
+            android:textColor="@color/colorBlack"
+            />
 
+    </LinearLayout>
     <LinearLayout
+
+        android:id="@+id/profile_edit_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginLeft="30dp"

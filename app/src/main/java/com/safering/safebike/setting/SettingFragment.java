@@ -46,7 +46,7 @@ import static com.google.android.gms.internal.zzid.runOnUiThread;
  * A simple {@link Fragment} subclass.
  */
 public class SettingFragment extends Fragment {
-    public static UUID SERVICE_UUID = UUID.fromString("1706BBC0-88AB-4B8D-877E-2237916EE929");
+   /* public static UUID SERVICE_UUID = UUID.fromString("1706BBC0-88AB-4B8D-877E-2237916EE929");
     private static UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
     private static String BACKLIGHT_ADDRESS = "E4:96:03:27:F6:4B";
     private static final int REQUEST_ENABLE_BT = 3;
@@ -62,9 +62,9 @@ public class SettingFragment extends Fragment {
     BluetoothDeviceAdapter deviceAdapter;
     ProgressBar searchDevice;
     ListView deviceList;
-    /*   Button tmpLeft;
+    *//*   Button tmpLeft;
        Button tmpRight;
-       Button tmpOff;*/
+       Button tmpOff;*//*
     public int onServerResponse = 0;
 
     TextView textConnectDevice, textSafeBikeMainTitle, textMainTitle;
@@ -122,11 +122,11 @@ public class SettingFragment extends Fragment {
             Log.i("~mGatt~", "null not");
 
         }
-        if (BluetoothConnection.getInstance().getGatt() != null) {
+        *//*if (BluetoothConnection.getInstance().getGatt() != null) {
             mGatt = BluetoothConnection.getInstance().getGatt();
-        }
+        }*//*
 
-        /*tmpLeft.setOnClickListener(new View.OnClickListener() {
+        *//*tmpLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (BluetoothConnection.getInstance() == null) {
@@ -153,7 +153,7 @@ public class SettingFragment extends Fragment {
             public void onClick(View v) {
                 BluetoothConnection.getInstance().writeOffValue();
             }
-        });*/
+        });*//*
         deviceAdapter.setOnSwitchClickListener(new BluetoothItemView.OnSwitchClickListener() {
             @Override
             public void onSwitchClick(BluetoothItemView view, BluetoothDeviceItem item, boolean isChecked) {
@@ -178,7 +178,7 @@ public class SettingFragment extends Fragment {
                 searchDevice.setVisibility(View.VISIBLE);
                 scanLeDevice(true);
 
-/*
+*//*
                 if (isConn == false) {
 
 
@@ -195,7 +195,7 @@ public class SettingFragment extends Fragment {
                         scanLeDevice(true);
 
                     }
-                }*/
+                }*//*
 
 
             }
@@ -272,11 +272,11 @@ public class SettingFragment extends Fragment {
     }
 
     private void scanLeDevice(final boolean enable) {
-        /*for(int i = 0; i < 1000000000; i++);
+        *//*for(int i = 0; i < 1000000000; i++);
         for(int i = 0; i < 1000000000; i++);
         for(int i = 0; i < 1000000000; i++);
         for(int i = 0; i < 1000000000; i++);
-        */
+        *//*
 
         if (enable) {
             if (Build.VERSION.SDK_INT < 21) {
@@ -285,9 +285,9 @@ public class SettingFragment extends Fragment {
                 isConn = true;
             } else {
 
-             /*   mLEScanner.startScan(filters, settings, mScanCallback);
+             *//*   mLEScanner.startScan(filters, settings, mScanCallback);
                 isConn = true;
-*/
+*//*
 
             }
         } else {
@@ -295,10 +295,10 @@ public class SettingFragment extends Fragment {
                   mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 isConn = false;
             } else {
-                /*
+                *//*
                 mLEScanner.stopScan(mScanCallback);
                 isConn = false;
-*/
+*//*
 
             }
         }
@@ -306,7 +306,7 @@ public class SettingFragment extends Fragment {
     }
 
 
-/*
+*//*
 
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
@@ -349,7 +349,7 @@ public class SettingFragment extends Fragment {
         }
     };
 
-*/
+*//*
 
 
     public void setTemp() {
@@ -359,9 +359,9 @@ public class SettingFragment extends Fragment {
         deviceItem.deviceName = "SHV-E370L";
         deviceItem.deviceAddress = "24:DB:ED:E6:B1:DC";
         deviceAdapter.add(deviceItem, false);
-        /*BluetoothConnection.getInstance().addDevice(device);
+        *//*BluetoothConnection.getInstance().addDevice(device);
         BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
-        */
+        *//*
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -428,9 +428,9 @@ public class SettingFragment extends Fragment {
         BluetoothConnection.getInstance().setGatt(null);
         BluetoothConnection.getInstance().setConnectedValue(device.getAddress(), false);
         BluetoothConnection.getInstance().setIsConnect(0);
-        /*mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+        *//*mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
         mainFragment.setConnectionOnOff(0);
-        */
+        *//*
 
 
         isConn = false;
@@ -443,14 +443,14 @@ public class SettingFragment extends Fragment {
             Log.i("onConnectionStateChange", "Status: " + status);
             switch (newState) {
                 case BluetoothProfile.STATE_CONNECTED:
-                    /*Log.e("gattCallback", "STATE_CONNECTED!!!!!!!");
+                    *//*Log.e("gattCallback", "STATE_CONNECTED!!!!!!!");
                     BluetoothConnection.getInstance().setGatt(gatt);
                     BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(), true);
                     mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
                     mainFragment.setConnectionOnOff(1);
 
                     isConn = true;
-                    */
+                    *//*
 
                     gatt.discoverServices();
                     break;
@@ -482,28 +482,28 @@ public class SettingFragment extends Fragment {
             BluetoothConnection.getInstance().setGatt(gatt);
             BluetoothConnection.getInstance().setConnectedValue(gatt.getDevice().getAddress(), true);
             BluetoothConnection.getInstance().setIsConnect(1);
-            /*    mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
+            *//*    mainFragment = (MainFragment) (getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_MAIN));
                 mainFragment.setConnectionOnOff(1);
-            */
+            *//*
             isConn = true;
 
 
-            /*SettingFragment settingFragment;
+            *//*SettingFragment settingFragment;
             settingFragment = (SettingFragment)(getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.TAG_SETTING));
             settingFragment.setDevice();
-            */
+            *//*
 
             //.setConnectionOnOff(1);
-     /*       BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
+     *//*       BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
             deviceItem.deviceName = gatt.getDevice().getName();
             deviceItem.deviceAddress = gatt.getDevice().getAddress();
-            deviceAdapter.add(deviceItem, true);*/
+            deviceAdapter.add(deviceItem, true);*//*
 
             //setDevice();
-          /*  BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
+          *//*  BluetoothDeviceItem deviceItem = new BluetoothDeviceItem();
             deviceItem.deviceName = gatt.getDevice().getName();
             deviceItem.deviceAddress = gatt.getDevice().getAddress();
-            deviceAdapter.add(deviceItem, true);*/
+            deviceAdapter.add(deviceItem, true);*//*
 
         }
 
@@ -526,7 +526,7 @@ public class SettingFragment extends Fragment {
             Log.i("onCharacteristicWrite", gatt.getService(SERVICE_UUID).getCharacteristic(MY_UUID_SECURE).getUuid().toString());
             super.onCharacteristicWrite(gatt, characteristic, status);
         }
-    };
+    };*/
 
 
 }

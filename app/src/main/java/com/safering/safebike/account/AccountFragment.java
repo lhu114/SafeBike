@@ -96,6 +96,7 @@ public class AccountFragment extends Fragment {
                             PropertyManager.getInstance().setUserEmail("");
                             PropertyManager.getInstance().setUserJoin("");
                             PropertyManager.getInstance().setUserImagePath("");
+                            PropertyManager.getInstance().setFacebookUser(0);
 
                             Intent intent = new Intent(((MainActivity) getActivity()), LoginActivity.class);
                             startActivity(intent);
@@ -116,22 +117,12 @@ public class AccountFragment extends Fragment {
                     PropertyManager.getInstance().setUserEmail("");
                     PropertyManager.getInstance().setUserJoin("");
                     PropertyManager.getInstance().setUserImagePath("");
-
+                    PropertyManager.getInstance().setFacebookUser(0);
                     Intent intent = new Intent(((MainActivity) getActivity()), LoginActivity.class);
                     startActivity(intent);
                     ((MainActivity) getActivity()).finish();
                 }
-                /*NetworkManager.getInstance().logout(getContext(), new NetworkManager.OnResultListener() {
-                    @Override
-                    public void onSuccess(Object result) {
-                        
-                    }
 
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });*/
             }
         });
 
@@ -170,10 +161,12 @@ public class AccountFragment extends Fragment {
 
     public String getDateFormat(String date){
         String resultDate = "";
-        StringTokenizer tokenizer = new StringTokenizer(date,"-");
-        resultDate += tokenizer.nextToken() + "년 ";
-        resultDate += tokenizer.nextToken() + "월 ";
-        resultDate += tokenizer.nextToken() + "일 가입";
+        if(!date.equals("")) {
+            StringTokenizer tokenizer = new StringTokenizer(date, "-");
+            resultDate += tokenizer.nextToken() + "년 ";
+            resultDate += tokenizer.nextToken() + "월 ";
+            resultDate += tokenizer.nextToken() + "일 가입";
+        }
         return resultDate;
     }
 

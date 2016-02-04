@@ -77,13 +77,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Log.d("safebike", "MainActivity.onCreate");
 
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        Log.d("safebike", Integer.toString(toolbar.getContentInsetLeft()));
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
@@ -101,7 +97,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(GravityCompat.START);
-               // Toast.makeText(MainActivity.this,"drawerOopen",Toast.LENGTH_SHORT).show();
                 setProfile();
             }
         });

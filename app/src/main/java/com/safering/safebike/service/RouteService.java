@@ -865,31 +865,24 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 if (pointInfo.properties.turnType == LEFT_SIDE) {
                     setImageDescription(LEFT_SIDE);
 
-                    BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == RIGHT_SIDE) {
                     setImageDescription(RIGHT_SIDE);
 
-                    BluetoothConnection.getInstance().writeRightValue();
                 } else if (pointInfo.properties.turnType == EIGHT_LEFT_SIDE) {
                     setImageDescription(EIGHT_LEFT_SIDE);
 
-                    BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == TEN_LEFT_SIDE) {
                     setImageDescription(TEN_LEFT_SIDE);
 
-                    BluetoothConnection.getInstance().writeLeftValue();
                 } else if (pointInfo.properties.turnType == TWO_RIGHT_SIDE) {
                     setImageDescription(TWO_RIGHT_SIDE);
 
-                    BluetoothConnection.getInstance().writeRightValue();
                 } else if (pointInfo.properties.turnType == FOUR_RIGHT_SIDE) {
                     setImageDescription(FOUR_RIGHT_SIDE);
 
-                    BluetoothConnection.getInstance().writeRightValue();
                 } else {
                     setImageDescription(0);
 
-                    BluetoothConnection.getInstance().writeOffValue();
                 }
 
                 setTextDescription(Integer.toString(mPointLatLngIndex) + ". " + pointInfo.properties.description, pointInfoDistance);
@@ -926,6 +919,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             float totalSpeed = 0;
             float totalDistance = 0;
 //            int second = (int) ((endTime - startTime / 1000) % 60);
+
             int second = (int) TimeUnit.MILLISECONDS.toSeconds(endTime - startTime);
 
 
@@ -951,8 +945,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             final int calorie = CalculatorCalorie.getInstance().getCalorie(totalSpeed / speedList.size(), 65, totalTime);
             final int speed = Math.round(totalSpeed / speedList.size());
             final int distance = Math.round(totalDistance);
-
-
+            Log.i("spppppeeed",speed + "");
             if(speed > 0) {
 
                 NetworkManager.getInstance().saveExercise(RouteService.this, userEmail, date, calorie, speed, distance, new NetworkManager.OnResultListener() {

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -40,6 +41,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     TextView userJoin;
     TextView textTitle;
     TextView textEditPhoto;
+    TextView textfacebook;
     EditText changeId;
     EditText changePassword;
     EditText changePasswordConfirm;
@@ -48,6 +50,8 @@ public class ProfileEditActivity extends AppCompatActivity {
     DisplayImageOptions options;
     ImageView imageBack;
     InformDialogFragment dialog;
+    View editDisplay;
+    View facebookDisplay;
     public static final int GET_USER_IMAGE = 11;
     public static final int EDIT_SUCCESS = 1;
     public static final int EDIT_FAIL = -1;
@@ -64,7 +68,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         userName = (TextView) findViewById(R.id.text_edit_profilename);
         userPass = (TextView) findViewById(R.id.text_edit_profilepass);
         userPassConfirm = (TextView) findViewById(R.id.text_edit_profilepasscon);
-
+        textfacebook = (TextView)findViewById(R.id.text_facebook_edit);
         imageBack = (ImageView) findViewById(R.id.image_backkey);
 
         textTitle = (TextView) findViewById(R.id.text_custom_title);
@@ -80,6 +84,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         changePasswordConfirm = (EditText) findViewById(R.id.edit_change_password_confirm);
 
         textCompelete = (TextView) findViewById(R.id.btn_edit_compelete);
+        editDisplay = (LinearLayout)findViewById(R.id.profile_edit_layout);
+        facebookDisplay = (LinearLayout)findViewById(R.id.profile_edit_facebook_layout);
+
         textEditPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,10 +154,19 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         setProfile();
         setFont();
+        setDisplay();
 
 
     }
-
+    public void setDisplay(){
+        if(PropertyManager.getInstance().getFacebookUser() == 1){
+            editDisplay.setVisibility(View.GONE);
+            facebookDisplay.setVisibility(View.VISIBLE);
+        }else{
+            editDisplay.setVisibility(View.VISIBLE);
+            facebookDisplay.setVisibility(View.GONE);
+        }
+    }
     private Uri getTempUri() {
         file = new File(Environment.getExternalStorageDirectory(), "temp_" + System.currentTimeMillis() / 1000);
         return Uri.fromFile(file);
@@ -190,7 +206,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //  setProfile();
+
     }
 
     public int checkEditForm() {
@@ -243,17 +259,20 @@ public class ProfileEditActivity extends AppCompatActivity {
         userPass.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
         userPassConfirm.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
         textTitle.setText(R.string.edit_profile_title);
-        textTitle.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this,FontManager.NOTOSANS));
+        textTitle.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
         textEditPhoto.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS));
         textCompelete.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this, FontManager.NOTOSANS_M));
+        textfacebook.setTypeface(FontManager.getInstance().getTypeface(ProfileEditActivity.this,FontManager.NOTOSANS_M));
     }
 
     public String getDateFormat(String date) {
         String resultDate = "";
-        StringTokenizer tokenizer = new StringTokenizer(date, "-");
-        resultDate += tokenizer.nextToken() + "년 ";
-        resultDate += tokenizer.nextToken() + "월 ";
-        resultDate += tokenizer.nextToken() + "일 가입";
+        if (!date.equals("")) {
+            StringTokenizer tokenizer = new StringTokenizer(date, "-");
+            resultDate += tokenizer.nextToken() + "년 ";
+            resultDate += tokenizer.nextToken() + "월 ";
+            resultDate += tokenizer.nextToken() + "일 가입";
+        }
         return resultDate;
     }
 

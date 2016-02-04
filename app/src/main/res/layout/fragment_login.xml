@@ -57,7 +57,36 @@
 
 
 
-        <Button
+    <com.facebook.login.widget.LoginButton
+        xmlns:fb="http://schemas.android.com/apk/res-auto"
+        android:background="@color/colorAccent"
+        android:id="@+id/login_button"
+        android:layout_width="221dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:textSize="7pt"
+        android:visibility="gone"
+        fb:com_facebook_login_text="facebookLogin"
+        fb:com_facebook_logout_text="facebookLogout"
+
+        />
+
+    <Button
+        android:id="@+id/btn_login_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_facebook_login"
+        android:background="@drawable/button_selector"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="417dp"
+        android:textSize="16sp"
+        />
+    <Button
 
             android:id="@+id/btn_login_sign"
             android:layout_width="wrap_content"

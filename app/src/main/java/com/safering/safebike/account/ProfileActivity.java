@@ -90,6 +90,8 @@ public class ProfileActivity extends AppCompatActivity {
         if(!PropertyManager.getInstance().getUserImagePath().equals("")){
             String imagePath = PropertyManager.getInstance().getUserImagePath();
             ImageLoader.getInstance().displayImage(imagePath, imageProfileUser, options);
+
+
         }
     }
 
@@ -103,10 +105,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
     public String getDateFormat(String date){
         String resultDate = "";
-        StringTokenizer tokenizer = new StringTokenizer(date,"-");
-        resultDate += tokenizer.nextToken() + "년 ";
-        resultDate += tokenizer.nextToken() + "월 ";
-        resultDate += tokenizer.nextToken() + "일 가입";
+        if (!date.equals("")) {
+            StringTokenizer tokenizer = new StringTokenizer(date, "-");
+            resultDate += tokenizer.nextToken() + "년 ";
+            resultDate += tokenizer.nextToken() + "월 ";
+            resultDate += tokenizer.nextToken() + "일 가입";
+        }
         return resultDate;
     }
 

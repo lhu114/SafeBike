@@ -1,8 +1,10 @@
 package com.safering.safebike.login;
 
 /**
- * Created by Tacademy on 2015-11-05.
+ * Created by park on 2016-02-03.
  */
-public class LoginResult {
+public class UserLoginResult {
     public LoginItem userlogin;
+
 }
+

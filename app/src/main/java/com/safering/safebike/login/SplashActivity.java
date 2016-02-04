@@ -57,14 +57,11 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             PropertyManager.getInstance().setRecentLatitude(DEFAULT_LATITUDE);
             PropertyManager.getInstance().setRecentLongitude(DEFAULT_LONGITUDE);
 
-            Log.d("safebike", "SplashActivity.onCreate.setDefaultLocation");
-
         }
 
         /*
          * 비정상적으로 종료했을 때 시나리오 처리
          */
-//
     }
 
     public void goMain(){
@@ -89,7 +86,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onConnected(Bundle bundle) {
 
-        if(TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPassword)){
+        if(TextUtils.isEmpty(userEmail)){
 
             mHandler.postDelayed(new Runnable() {
                 @Override

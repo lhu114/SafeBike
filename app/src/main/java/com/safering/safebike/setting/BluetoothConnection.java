@@ -16,7 +16,7 @@ import java.util.UUID;
  * Created by Tacademy on 2015-11-20.
  */
 public class BluetoothConnection {
-    public static UUID SERVICE_UUID = UUID.fromString("1706BBC0-88AB-4B8D-877E-2237916EE929");
+   /* public static UUID SERVICE_UUID = UUID.fromString("1706BBC0-88AB-4B8D-877E-2237916EE929");
     private static UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
 
     private ArrayList<BluetoothDevice> devices;
@@ -62,7 +62,7 @@ public class BluetoothConnection {
 
     }
 
-    /*public BluetoothDevice getDevice(String address){
+    *//*public BluetoothDevice getDevice(String address){
         for(int i = 0; i < devices.size(); i++){
             if(devices.get(i).getAddress().equals(address)){
                 return devices.get(i);
@@ -70,7 +70,7 @@ public class BluetoothConnection {
         }
         return null;
 
-    }*/
+    }*//*
 
     public ArrayList<BluetoothDevice> getDevices(){
         return devices;
@@ -154,5 +154,5 @@ public class BluetoothConnection {
     public void setServerResponse(int status){
         onServerResponse = status;
     }
-
+*/
 }

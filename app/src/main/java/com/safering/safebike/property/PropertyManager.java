@@ -17,7 +17,7 @@ public class PropertyManager {
     public static final String USER_PASSWORD = "userpassword";
     public static final String USER_IMAGE_PATH = "userimagepa";
     public static final String BLUETOOTH_SETTING = "bluetooth";
-
+    public static final String FACEBOOK_USER = "facebookuser";
     public static final String STARTING_LATITUDE = "startingLatitude";
     public static final String STARTING_LONGITUDE = "startingPointLongitude";
     public static final String DESTINATION_LATITUDE = "destinationLatitude";
@@ -28,6 +28,7 @@ public class PropertyManager {
     public static final String RECENT_LONGITUDE = "recentlongitude";
 
     public static final String FIND_ROUTE_SEARCHOPTION = "findroutesearchoption";
+
 
     private static PropertyManager instance;
     SharedPreferences mPrefs;
@@ -157,6 +158,7 @@ public class PropertyManager {
     public void setFindRouteSearchOption(int searchOption) {
         mEditor.putInt(FIND_ROUTE_SEARCHOPTION, searchOption);
         mEditor.commit();
+
     }
 
     public int getFindRouteSearchOption() {
@@ -174,12 +176,14 @@ public class PropertyManager {
         return phoneNum;
     }
 
-    public void setBluetoothSetting(int onoff){
-        mEditor.putInt(BLUETOOTH_SETTING,onoff);
+    public void setFacebookUser(int isfacebookUser){
+        mEditor.putInt(FACEBOOK_USER,isfacebookUser);
         mEditor.commit();
+
     }
-    public int getBluetoothSetting(){
-        return mPrefs.getInt(BLUETOOTH_SETTING,0);
+
+    public int getFacebookUser(){
+        return mPrefs.getInt(FACEBOOK_USER,0);
     }
 
 
