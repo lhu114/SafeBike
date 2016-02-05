@@ -492,19 +492,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                 moveMap(location.getLatitude(), location.getLongitude(), ANIMATE_CAMERA);
 
                 if (mBicycleNaviInfoList.size() > 0) {
-
                     int maxNaviLatLngIndex = mBicycleNaviInfoList.size() - 1;
-                    for(int x = 0; x <maxNaviLatLngIndex; x++){
-                        Log.i("index COunt", "" + x);
-
-                        if(mBicycleNaviInfoList.get(x) != null) {
-                            if(mBicycleNaviInfoList.get(x).properties != null) {
-                                if(mBicycleNaviInfoList.get(x).properties.description != null) {
-                                    Log.i("naviIndexDes", "" + mBicycleNaviInfoList.get(x).properties.description);
-                                }
-                            }
-                        }
-                    }
                     clearAllOrthogonalDistanceList();
 
                     if (naviLatLngIndex + 3 <= maxNaviLatLngIndex) {
@@ -945,7 +933,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
             final int calorie = CalculatorCalorie.getInstance().getCalorie(totalSpeed / speedList.size(), 65, totalTime);
             final int speed = Math.round(totalSpeed / speedList.size());
             final int distance = Math.round(totalDistance);
-            Log.i("spppppeeed",speed + "");
+            Log.i("final speed",speed+"");
             if(speed > 0) {
 
                 NetworkManager.getInstance().saveExercise(RouteService.this, userEmail, date, calorie, speed, distance, new NetworkManager.OnResultListener() {
@@ -1091,7 +1079,6 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
                                     BicycleNavigationInfo info = mBicycleNaviInfoList.get(i);
 
                                     if (info.properties != null && info.properties.description != null && !info.properties.description.equals("")) {
-                                        Log.i("RouteDes : ",""+info.properties.description);
                                         mPointLatLngIndexList.add(i);
                                     }
                                 }

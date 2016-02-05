@@ -113,28 +113,14 @@ public class FriendDirectFragment extends Fragment {
                             friend.pemail = result.usereserch.uemail;
                             friend.pname = result.usereserch.name;
                             friend.photo = result.usereserch.photo;
-                            Log.i("friend pmail", result.usereserch.uemail);
-                            Log.i("friend pname", result.usereserch.name);
-                            Log.i("friend pphoto", result.usereserch.photo);
-/*
-                        for(int i = 0; i < UserFriendList.getInstance().getFriendList().size(); i++){
-                            Log.i("isFriend",UserFriendList.getInstance().getFriendList().get(i).pemail);
-
-                        }
-                        String e = UserFriendList.getInstance().getFriendList().get(0).pemail;
-                        Log.i("isFriendT/F",UserFriendList.getInstance().isFriend(e) + "");
-*/
 
 
                             fAdapter.add(friend);
                         }
                     }
-                    Log.i("friend pphoto", result.usereserch.photo);
 
                 }
-                else{
-                    Log.i("directSearch", "null!");
-                }
+
             }
 
             @Override

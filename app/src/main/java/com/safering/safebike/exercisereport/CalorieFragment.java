@@ -118,7 +118,6 @@ public class CalorieFragment extends Fragment  implements OnChartValueSelectedLi
 
                     parentCal.setText(String.valueOf(Math.round(result.workout.get(0).calorie)) + " kcal");
                     parentSpeed.setText(String.valueOf(Math.round((result.workout.get(0).speed * 3600.0) / 1000)) + " km/h");
-                    Log.i("parentSpeed : ",result.workout.get(0).speed + "");
                     parentDistance.setText(String.valueOf(nf.format(result.workout.get(0).road / 1000.0)) + " km");
                 }
             }
@@ -191,7 +190,6 @@ public class CalorieFragment extends Fragment  implements OnChartValueSelectedLi
                 String date = dateFormat.format(cal.getTime());
                 dateList.add(date);
                 today = date;
-                Log.i("today",today);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

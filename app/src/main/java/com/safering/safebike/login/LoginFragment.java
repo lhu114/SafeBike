@@ -47,7 +47,7 @@ public class LoginFragment extends Fragment {
     TextView textWarning;
     Button btnLogin;
     Button btnSignUp;
-    Button btnFacebook;
+    TextView btnFacebook;
     LoginButton facebookLogin;
     CallbackManager callbackManager;
     public LoginFragment() {
@@ -60,29 +60,18 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         FacebookSdk.sdkInitialize(getContext());
         printKeyHash();
-        Log.i("LoginFratOncreateView", "null");
-
-
         AccessToken.setCurrentAccessToken(null);
-
-        if(AccessToken.getCurrentAccessToken() == null) {
-            Log.i("accesToken:getUser", "null");
-        }else{
-            Log.i("accesToken:getUser", "not null");
-
-        }
-
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-
         textLoginMain = (TextView)view.findViewById(R.id.text_login_main);
         textWarning = (TextView)view.findViewById(R.id.text_login_warning);
         btnLogin = (Button)view.findViewById(R.id.btn_login);
         btnSignUp = (Button)view.findViewById(R.id.btn_login_sign);
-        btnFacebook = (Button)view.findViewById(R.id.btn_login_facebook);
+        btnFacebook = (TextView)view.findViewById(R.id.btn_login_facebook);
         callbackManager = CallbackManager.Factory.create();
         btnFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 facebookLogin.callOnClick();
 
             }
@@ -96,28 +85,16 @@ public class LoginFragment extends Fragment {
         facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
-                Log.i("facebooklog", "suc");
                 getUserInform();
-                Toast.makeText(getContext(), "succ user id : " + loginResult.getAccessToken().getUserId(), Toast.LENGTH_LONG).show();
-
             }
 
             @Override
             public void onCancel() {
                 // App code
-                Log.i("facebooklog", "onCancel");
-
-                Toast.makeText(getContext(), "cancel user id : ", Toast.LENGTH_LONG).show();
-
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
-                Log.i("facebooklog", "onError");
-
-                Toast.makeText(getContext(), "fail user id : " + exception.toString(), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -166,12 +143,9 @@ public class LoginFragment extends Fragment {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d("KeyHashNameNotFound:", e.toString());
         } catch (NoSuchAlgorithmException e) {
-            Log.d("NotSuchAlgorithmh:", e.toString());
         }
     }
 
@@ -183,13 +157,7 @@ public class LoginFragment extends Fragment {
 
     public void getUserInform(){
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if(accessToken == null) {
 
-            Log.i("accesToken:getUser", "null");
-        }else{
-            Log.i("accesToken:getUser", "not null");
-
-        }
         String graphPath = "me/";
         Bundle parameters = new Bundle();
         parameters.putString("fields", "email,name,picture.type(square)");
@@ -197,7 +165,6 @@ public class LoginFragment extends Fragment {
         GraphRequest request = new GraphRequest(accessToken, graphPath,parameters, HttpMethod.GET, new GraphRequest.Callback() {
             @Override
             public void onCompleted(GraphResponse response) {
-                Log.i("response", response.toString());
 
                 String email = response.getJSONObject().optString("email");
                 String id = response.getJSONObject().optString("name");

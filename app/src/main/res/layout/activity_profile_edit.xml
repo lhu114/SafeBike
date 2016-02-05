@@ -92,7 +92,7 @@
             android:text="페이스북으로 로그인시 편집하실수 없습니다."
             android:layout_gravity="center_horizontal"
             android:textSize="16sp"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorGray"
             />
 
     </LinearLayout>

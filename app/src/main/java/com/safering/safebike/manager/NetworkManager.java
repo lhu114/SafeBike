@@ -237,7 +237,6 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Log.i("responseString",responseString);
                 ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
                 listener.onSuccess(result);
 
@@ -533,24 +532,17 @@ public class NetworkManager {
         client.get(context, NAVIGATION_GET_FAVORITE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("safebike", "NetworkManager.getFavorite.onFailure : " + statusCode + "");
-
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Log.d("safebike", "NetworkManager.getFavorite.onSuccess.responseString : " + responseString + "");
                 FavoriteResult result = gson.fromJson(responseString, FavoriteResult.class);
 
                 listener.onSuccess(result);
 
                 if (headers != null) {
                     int count = headers.length;
-
-                    for(int i = 0; i < count; i++) {
-//                        Log.d("safebike", "headers : " + headers[i]);
-                    }
                 }
             }
         });
@@ -569,15 +561,11 @@ public class NetworkManager {
         client.get(context, NAVIGATION_GET_MATCH_FAVORITE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("safebike", "NetworkManager.getMatchFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
-
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Log.d("safebike", "NetworkManager.getMatchFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
-
                 listener.onSuccess(responseString);
             }
         });
@@ -596,14 +584,12 @@ public class NetworkManager {
         client.post(context, NAVIGATION_ADD_FAVORITE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("safebike", "NetworkManager.saveFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Log.d("safebike", "NetworkManager.saveFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onSuccess(statusCode);
             }
@@ -625,14 +611,12 @@ public class NetworkManager {
         client.delete(context, NAVIGATION_REMOVE_FAVORITE_URL, header, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("safebike", "NetworkManager.removeFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Log.d("safebike", "NetworkManager.removeFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onSuccess(statusCode);
             }
@@ -652,14 +636,12 @@ public class NetworkManager {
         client.delete(context, NAVIGATION_REMOVEALL_FAVORITE_URL, header, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("safebike", "NetworkManager.removeAllFavorite.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                  listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Log.d("safebike", "NetworkManager.removeAllFavorite.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                  listener.onSuccess(statusCode);
             }
@@ -684,14 +666,12 @@ public class NetworkManager {
         client.post(context, NAVIGATION_SAVE_EXCERCISE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("safebike", "NetworkManager.saveExercise.onFailure.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onFail(statusCode);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Log.d("safebike", "NetworkManager.saveExercise.onSuccess.statusCode : " + statusCode + " | responseString : " + responseString);
 
                 listener.onSuccess(statusCode);
             }

@@ -162,9 +162,15 @@ public class ProfileEditActivity extends AppCompatActivity {
         if(PropertyManager.getInstance().getFacebookUser() == 1){
             editDisplay.setVisibility(View.GONE);
             facebookDisplay.setVisibility(View.VISIBLE);
+            textEditPhoto.setEnabled(false);
+            textCompelete.setEnabled(false);
         }else{
             editDisplay.setVisibility(View.VISIBLE);
             facebookDisplay.setVisibility(View.GONE);
+            textEditPhoto.setEnabled(true);
+            textCompelete.setEnabled(true);
+
+
         }
     }
     private Uri getTempUri() {
