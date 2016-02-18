@@ -11,6 +11,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="13dp"
         android:layout_marginLeft="30dp"
+
         android:src="@drawable/safebike_logo_s" />
 
     <TextView
@@ -23,9 +24,9 @@
         android:layout_marginTop="21dp"
         android:layout_marginLeft="76dp"
         android:maxLength="10"
+        android:maxWidth="171dp"
         android:singleLine="true"
         android:ellipsize="end"
-        android:maxWidth="200dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 

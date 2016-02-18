@@ -3,9 +3,9 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'bikekey'
+            keyAlias 'bike_20160205'
             keyPassword 'hj9502'
-            storeFile file('C:/Users/park/AndroidStudioProjects/SafeBike/bike_key.jks')
+            storeFile file('C:/Users/park/safebike_keystore/safebike_20160205.jks')
             storePassword 'hj023285'
         }
     }

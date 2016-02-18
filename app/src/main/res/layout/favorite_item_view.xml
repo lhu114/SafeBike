@@ -21,6 +21,7 @@
         android:textColor="#000000"
         android:id="@+id/text_fv_poi_name"
         android:maxLength="14"
+
         android:singleLine="true"
         android:ellipsize="end"
 
