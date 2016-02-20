@@ -62,7 +62,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
         android:orientation="vertical">
-
+<!--
         <TextView
             android:id="@+id/text_show_use"
             android:layout_width="match_parent"
@@ -71,7 +71,7 @@
             android:textColor="@color/colorBlack"
 
             android:text="@string/btn_show_use"
-            />
+            />-->
 
         <TextView
             android:id="@+id/text_qna_email"

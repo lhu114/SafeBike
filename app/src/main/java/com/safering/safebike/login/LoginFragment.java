@@ -35,7 +35,8 @@ import com.safering.safebike.property.PropertyManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -78,7 +79,10 @@ public class LoginFragment extends Fragment {
         });
 
         facebookLogin = (LoginButton) view.findViewById(R.id.login_button);
-        facebookLogin.setReadPermissions("user_friends");
+        List<String> listPermission = Arrays.asList("email","user_friends");
+
+        facebookLogin.setReadPermissions(listPermission);
+        facebookLogin.setReadPermissions();
         facebookLogin.setFragment(this);
 
        // facebookLogin.setLoginBehavior();
@@ -86,6 +90,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 getUserInform();
+
             }
 
             @Override
@@ -157,12 +162,14 @@ public class LoginFragment extends Fragment {
 
     public void getUserInform(){
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        Log.i("permissions : ", accessToken.getPermissions().toString() + "...");
 
         String graphPath = "me/";
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "email,name,picture.type(square)");
+        parameters.putString("fields", "name,email,picture.type(square)");
 
         GraphRequest request = new GraphRequest(accessToken, graphPath,parameters, HttpMethod.GET, new GraphRequest.Callback() {
+
             @Override
             public void onCompleted(GraphResponse response) {
 
@@ -176,8 +183,12 @@ public class LoginFragment extends Fragment {
 
                 }finally {
 
+                    if(email.equals("")) {
+                        email = response.getJSONObject().optString("id") + "@facebook.com";
+                    }
                     PropertyManager.getInstance().setUserEmail(email);
                     PropertyManager.getInstance().setUserId(id);
+
                     PropertyManager.getInstance().setFacebookUser(1);
                     Intent intent = new Intent((LoginActivity) getActivity(), MainActivity.class);
                     startActivity(intent);

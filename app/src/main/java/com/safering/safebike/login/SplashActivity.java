@@ -34,9 +34,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     private static final String DEFAULT_LATITUDE = "37.5670652";
     private static final String DEFAULT_LONGITUDE = "126.9772433";
 
-    ImageView splashImage;
     String userEmail = null;
-    String userPassword = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +43,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
 
         userEmail = PropertyManager.getInstance().getUserEmail();
-        userPassword = PropertyManager.getInstance().getUserPassword();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -88,6 +85,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         if(TextUtils.isEmpty(userEmail)){
 
+
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -96,6 +94,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             },2000);
         }
         else{
+
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {

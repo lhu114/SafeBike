@@ -11,7 +11,7 @@ import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.InformDialogFragment;
 
 public class AccountHelpActivity extends AppCompatActivity {
-    TextView textShow;
+   // TextView textShow;
     TextView textQnA;
     TextView textPolicy;
     TextView textLicense;
@@ -38,21 +38,21 @@ public class AccountHelpActivity extends AppCompatActivity {
         textSafeCopyright = (TextView)findViewById(R.id.text_safebike_copyright);
         textSafeRight = (TextView)findViewById(R.id.text_safebike_right);
 
-        textShow = (TextView)findViewById(R.id.text_show_use);
+        //textShow = (TextView)findViewById(R.id.text_show_use);
         textQnA = (TextView)findViewById(R.id.text_qna_email);
         textPolicy = (TextView)findViewById(R.id.text_policy_profile);
         textLicense = (TextView)findViewById(R.id.text_license);
         imageBackkey = (ImageView)findViewById(R.id.image_backkey);
         dialog = new InformDialogFragment();
 
-
+/*
         textShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.setContent("사용법", "준비중입니다.");
                 dialog.show(getSupportFragmentManager(), "use");
             }
-        });
+        });*/
         textQnA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +91,7 @@ public class AccountHelpActivity extends AppCompatActivity {
     }
 
     public void setFont(){
-        textShow.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
+        //textShow.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
         textQnA.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
         textPolicy.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));
         textLicense.setTypeface(FontManager.getInstance().getTypeface(AccountHelpActivity.this,FontManager.NOTOSANS_M));

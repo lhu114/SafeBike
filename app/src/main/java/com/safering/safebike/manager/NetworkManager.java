@@ -39,7 +39,6 @@ import java.util.ArrayList;
  */
 public class NetworkManager {
 
-    private static final String SERVER = "http:...";
 
     /**
      * 계정
@@ -104,14 +103,6 @@ public class NetworkManager {
     private static final String NAVIGATION_REMOVEALL_FAVORITE_URL = "http://52.69.133.212:3000/favorites/alldelete";
     private static final String NAVIGATION_GET_FAVORITE_URL = "http://52.69.133.212:3000/favorites";
     private static final String NAVIGATION_GET_MATCH_FAVORITE_URL = "http://52.69.133.212:3000/favorites/one";
-    private static final String NAVIGATION_KEY_HEADERS_ACCEPT = "Accept";
-    private static final String NAVIGATION_KEY_HEADERS_APPKEY = "appKey";
-    private static final String NAVIGATION_VALUE_HEADERS_ACCEPT = "application/json";
-    private static final String NAVIGATION_VALUE_HEADERS_APPKEY = "fae4be30-90e4-3c96-b227-0086b07ae5e1";
-    private static final String NAVIGATION_VALUE_POI_RESCOORDTYPE = "WGS84GEO";
-    private static final String NAVIGATION_KEY_POI_VERSION = "version";
-    private static final String NAVIGATION_KEY_POI_SEARCH_KEYWORD = "searchKeyword";
-    private static final String NAVIGATION_KEY_POI_RESCOORDTYPE = "resCoordType";
 
     private static final String NAVIGATION_DESTINATION = "favoritesname";
     private static final String NAVIGATION_CALORIE = "calorie";
@@ -238,6 +229,7 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 ExcerciseResult result = gson.fromJson(responseString, ExcerciseResult.class);
+
                 listener.onSuccess(result);
 
             }
