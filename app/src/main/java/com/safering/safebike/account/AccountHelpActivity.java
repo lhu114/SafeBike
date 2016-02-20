@@ -12,6 +12,7 @@ import com.safering.safebike.manager.InformDialogFragment;
 
 public class AccountHelpActivity extends AppCompatActivity {
    // TextView textShow;
+    //debug용
     TextView textQnA;
     TextView textPolicy;
     TextView textLicense;
