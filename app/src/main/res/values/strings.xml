@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Safe Bike</string>
+    <string name="app_name">Safe Riding</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -48,7 +48,7 @@
     <string name="text_private_policy"><u>개인보호정책</u></string>
     <string name="edit_profile_title">프로필 편집</string>
     <string name="account_help">도움말</string>
-    <string name="main_message">SafeBike 와 함께하는 안전한 주행</string>
+    <string name="main_message">Safe Riding 과 함께하는 안전한 주행</string>
     <string name="running_message">운행중입니다</string>
 
 
@@ -73,7 +73,7 @@
     <string name="btn_band_status">진동밴드 꺼짐</string>
     <string name="btn_backlight_status">후미등 꺼짐</string>
 
-    <string name="nav_safebike">Safe Bike</string>
+    <string name="nav_safebike">Safe Riding</string>
     <string name="nav_exercise_report">기록</string>
     <string name="nav_friend">친구</string>
     <string name="nav_setting">설정</string>
@@ -84,7 +84,7 @@
     <string name="remove_friend">친구삭제</string>
     <string name="search_friend_address">검색</string>
     <string name="search_friend_direct">아이디/이메일 입력</string>
-    <string name="text_login_main">Safe Bike</string>
+    <string name="text_login_main">Safe Riding</string>
     <string name="text_login_warning">안전하게 주행하세요</string>
     <string name="text_account">계정</string>
     <string name="btn_delete_recent">검색 기록 삭제</string>
@@ -111,8 +111,8 @@
     <string name="btn_status_bluetooth" />
     <string name="btn_full_screen" />
     <string name="text_navi_description">길안내</string>
-    <string name="text_main_title">Safe Bike</string>
-    <string name="text_safebike_main_title">Safe Bike</string>
+    <string name="text_main_title">Safe Riding</string>
+    <string name="text_safebike_main_title">Safe Riding</string>
     <string name="text_tab_recent_title">최근검색</string>
     <string name="text_tab_favorite_title">즐겨찾기</string>
     <string name="facebook_app_id">1015097715217833</string>

@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setFont(){
-        textSafeBikeMainTitle.setText("Safe Bike");
+        textSafeBikeMainTitle.setText("Safe Riding");
         textSafeBikeMainTitle.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.BMJUA));
         textUserEmail.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this, FontManager.NOTOSANS));
         textUserId.setTypeface(FontManager.getInstance().getTypeface(MainActivity.this,FontManager.NOTOSANS));

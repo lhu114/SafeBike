@@ -31,7 +31,6 @@
         >
 
     <LinearLayout
-        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -61,7 +60,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/colorBlack"
-            android:text="이 약관은 SafeBike가 제공하는 인터넷 서비스를 이용함에 있어 회원의 권리,의무 및 책임사항을 규정합니다."
+            android:text="이 약관은 Safe Riding이 제공하는 인터넷 서비스를 이용함에 있어 회원의 권리,의무 및 책임사항을 규정합니다."
             />
         <TextView
 

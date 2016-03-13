@@ -8,16 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.navigation.NavigationFragment;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
-import com.safering.safebike.setting.BluetoothConnection;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -113,7 +109,7 @@ public class MainFragment extends Fragment {
     }
 
     public void setFont() {
-        textSafeBikeMainTitle.setText("Safe Bike");
+        textSafeBikeMainTitle.setText("Safe Riding");
         textSafeBikeMainTitle.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.BMJUA));
         textMainMesage.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_R));
         textRunningMesage.setTypeface(FontManager.getInstance().getTypeface(getContext(),FontManager.NOTOSANS_R));

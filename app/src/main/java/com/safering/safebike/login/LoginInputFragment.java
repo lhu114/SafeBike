@@ -2,33 +2,23 @@ package com.safering.safebike.login;
 
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
-import com.loopj.android.http.Base64;
 import com.safering.safebike.MainActivity;
 import com.safering.safebike.R;
+import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.manager.InformDialogFragment;
 import com.safering.safebike.manager.NetworkManager;
-import com.safering.safebike.manager.FontManager;
 import com.safering.safebike.property.PropertyManager;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,14 +75,14 @@ public class LoginInputFragment extends Fragment {
 
                             }
                             else{
-                                dialog.setContent("로그인","로그인에 실패했습니다. 로그인정보를 확인해주세요.");
+                                dialog.setContent("로그인","로그인에 실패했습니다." + "\n" + "로그인정보를 확인해주세요.");
                                 dialog.show(getChildFragmentManager(), "loginfail");
                             }
                         }
 
                         @Override
                         public void onFail(int code) {
-                            dialog.setContent("로그인","로그인에 실패했습니다. 로그인정보를 확인해주세요.");
+                            dialog.setContent("로그인","로그인에 실패했습니다." + "\n" + "로그인정보를 확인해주세요.");
                             dialog.show(getChildFragmentManager(), "loginfail");
 
 

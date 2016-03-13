@@ -147,7 +147,10 @@ public class NavigationNetworkManager {
                  * success에 따른 statusCode 처리
                  */
                 SearchPOIInfoResult result = poiGson.fromJson(responseString, SearchPOIInfoResult.class);
-                listener.onSuccess(result.searchPoiInfo);
+
+                if (result != null) {
+                    listener.onSuccess(result.searchPoiInfo);
+                }
 
                 String code = Integer.toString(statusCode);
 //                Log.d("safebike", "code : " + code + " / responseString : " + responseString);

@@ -50,7 +50,6 @@ import com.safering.safebike.navigation.NavigationNetworkManager;
 import com.safering.safebike.navigation.StartNavigationActivity;
 import com.safering.safebike.property.PropertyManager;
 import com.safering.safebike.property.SpeakVoice;
-import com.safering.safebike.setting.BluetoothConnection;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1355,7 +1354,7 @@ public class RouteService extends Service implements GoogleApiClient.ConnectionC
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         builder.setSmallIcon(R.drawable.noti);
-        builder.setContentTitle("Safe Bike");
+        builder.setContentTitle("Safe Riding");
         builder.setContentText("자전거 내비게이션 동작 중...");
         builder.setAutoCancel(false);
 

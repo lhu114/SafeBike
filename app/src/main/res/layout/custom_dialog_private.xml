@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
-                android:text="SafeBike는 회원의 개인정보를 보호하고 존중합니다."
+                android:text="Safe Riding은 회원의 개인정보를 보호하고 존중합니다."
                 />
             <TextView
 
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
-                android:text="SafeBike는 회원이 제공하는 정보,기타 서비스 이용 과정에서 수집되는 정보 등을 통하여 회원에 관한 정보를 수집합니다."
+                android:text="Safe Riding은 회원이 제공하는 정보,기타 서비스 이용 과정에서 수집되는 정보 등을 통하여 회원에 관한 정보를 수집합니다."
                 />
             <TextView
 
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
-                android:text="SafeBike가 수집한 회원의 개인정보는 본 서비스 제공을 위한 목적으로 사용됩니다."
+                android:text="Safe Riding이 수집한 회원의 개인정보는 본 서비스 제공을 위한 목적으로 사용됩니다."
                 />
             <TextView
 
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
-                android:text="SafeBike가 수집하는 개인정보는 서비스의 제공에 필요한 최소한으로 하되, 필요한 경우 보다 더 자세한 정보를 요구할 수 있습니다."
+                android:text="Safe Riding이 수집하는 개인정보는 서비스의 제공에 필요한 최소한으로 하되, 필요한 경우 보다 더 자세한 정보를 요구할 수 있습니다."
                 />
             <TextView
 
@@ -104,7 +104,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
                 android:layout_marginTop="10dp"
-                android:text="제 3장 (SafeBike의 의무)"
+                android:text="제 3장 (Safe Riding의 의무)"
                 />
             <TextView
 
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
-                android:text="SafeBike는 특별한 사정이 없는 한 회원이 서비스 이용을 원하는날에 서비스를 이용하도록합니다."
+                android:text="Safe Riding은 특별한 사정이 없는 한 회원이 서비스 이용을 원하는날에 서비스를 이용하도록합니다."
                 />
 
             <TextView
@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
-                android:text="SafeBike는 안정적인 서비스의 제공을 위하여 지속적으로 노력하며, 서비스장애가 생길경우 이를 복구하여야 합니다. "
+                android:text="Safe Riding은 안정적인 서비스의 제공을 위하여 지속적으로 노력하며, 서비스장애가 생길경우 이를 복구하여야 합니다. "
 
                 />
 

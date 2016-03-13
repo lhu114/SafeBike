@@ -18,7 +18,7 @@ import com.safering.safebike.manager.FontManager;
 
 public class AgreeDialogFragment extends DialogFragment{
 
-
+    //
     private TextView btnPositive;
 
     @NonNull
